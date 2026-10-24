@@ -13,12 +13,42 @@
     },
     "infisical-mcp": {
       "command": "pnpm",
-      "args": ["dlx", "@infisical/cli", "run", "--env=dev", "--", "pnpm", "dlx", "@infisical/mcp"]
+      "args": ["dlx", "@infisical/mcp"],
+      "env": {
+        "INFISICAL_HOST_URL": "${INFISICAL_HOST_URL}",
+        "INFISICAL_AUTH_METHOD": "${INFISICAL_AUTH_METHOD}",
+        "INFISICAL_UNIVERSAL_AUTH_CLIENT_ID": "${INFISICAL_UNIVERSAL_AUTH_CLIENT_ID}",
+        "INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET": "${INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET}",
+        "INFISICAL_PROJECT_ID": "${INFISICAL_PROJECT_ID}",
+        "INFISICAL_ENVIRONMENT": "${INFISICAL_ENVIRONMENT}",
+        "INFISICAL_MASK_SECRET_VALUES": "false"
+      },
+      "variables": [
+        {
+          "name": "INFISICAL_HOST_URL"
+        },
+        {
+          "name": "INFISICAL_AUTH_METHOD"
+        },
+        {
+          "name": "INFISICAL_UNIVERSAL_AUTH_CLIENT_ID"
+        },
+        {
+          "name": "INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET"
+        },
+        {
+          "name": "INFISICAL_PROJECT_ID"
+        },
+        {
+          "name": "INFISICAL_ENVIRONMENT"
+        }
+      ]
     },
     "github-mcp": {
       "command": "pnpm",
       "args": ["dlx", "github-mcp-server-js"],
       "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}",
         "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
       },
       "variables": [
