@@ -4,18 +4,49 @@
       "serverUrl": "https://mcp.tupynambalucas.dev/mcp",
       "headers": {
         "Authorization": "Bearer ${TUPYNAMBA_GATEWAY_TOKEN}"
-      }
+      },
+      "variables": [
+        {
+          "name": "TUPYNAMBA_GATEWAY_TOKEN"
+        }
+      ]
     },
     "infisical-mcp": {
-      "command": "infisical",
-      "args": ["run", "--env=dev", "--", "pnpm", "dlx", "@infisical/mcp"]
+      "command": "pnpm",
+      "args": ["dlx", "@infisical/cli", "run", "--env=dev", "--", "pnpm", "dlx", "@infisical/mcp"]
     },
     "github-mcp": {
       "command": "pnpm",
       "args": ["dlx", "github-mcp-server-js"],
       "env": {
         "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
-      }
+      },
+      "variables": [
+        {
+          "name": "GITHUB_TOKEN"
+        }
+      ]
+    },
+    "firecrawl-mcp": {
+      "command": "pnpm",
+      "args": ["dlx", "firecrawl-mcp"],
+      "env": {
+        "FIRECRAWL_API_KEY": "${FIRECRAWL_API_KEY}"
+      },
+      "variables": [
+        {
+          "name": "FIRECRAWL_API_KEY"
+        }
+      ]
+    },
+    "context7-mcp": {
+      "command": "pnpm",
+      "args": ["dlx", "@upstash/context7-mcp", "--api-key", "${CONTEXT7_API_KEY}"],
+      "variables": [
+        {
+          "name": "CONTEXT7_API_KEY"
+        }
+      ]
     }
   }
 }

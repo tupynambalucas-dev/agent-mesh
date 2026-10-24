@@ -13,8 +13,8 @@ const { spawn } = require("child_process");
 
 const GATEWAY_URL = process.env.TUPYNAMBA_GATEWAY_URL || "https://mcp.tupynambalucas.dev/mcp";
 const GATEWAY_TIMEOUT_MS = parseInt(process.env.TUPYNAMBA_GATEWAY_TIMEOUT_MS || "300", 10);
-const FALLBACK_COMMAND = process.env.TUPYNAMBA_FALLBACK_COMMAND || "infisical";
-const FALLBACK_ARGS = ["run", "--env=dev", "--", "pnpm", "dlx", "firecrawl-mcp"];
+const FALLBACK_COMMAND = process.env.TUPYNAMBA_FALLBACK_COMMAND || "pnpm";
+const FALLBACK_ARGS = ["dlx", "@infisical/cli", "run", "--env=dev", "--", "pnpm", "dlx", "firecrawl-mcp"];
 
 function checkGatewayHealth(urlStr, timeoutMs) {
   return new Promise((resolve) => {
