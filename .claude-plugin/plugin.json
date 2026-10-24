@@ -1,0 +1,11 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "agent-toolkit",
+  "version": "1.0.0",
+  "description": "Universal enterprise AI agent governance, security guardrails, shared MCP connectors, and domain routing skills for the tupynambalucas-dev organization.",
+  "author": {
+    "name": "Tupynamba Lucas Development Team",
+    "email": "contato@tupynambalucas.dev"
+  },
+  "repository": "https://github.com/tupynambalucas-dev/agent-toolkit"
+}

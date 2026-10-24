@@ -1,0 +1,29 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "agent-toolkit",
+  "displayName": "Tupynamba Lucas Universal Agent Toolkit",
+  "version": "1.0.0",
+  "description": "Universal enterprise AI agent governance, security guardrails, shared MCP connectors, and domain routing skills for the tupynambalucas-dev organization.",
+  "author": {
+    "name": "Tupynamba Lucas Development Team",
+    "email": "contato@tupynambalucas.dev",
+    "url": "https://tupynambalucas.dev"
+  },
+  "homepage": "https://github.com/tupynambalucas-dev/agent-toolkit",
+  "repository": "https://github.com/tupynambalucas-dev/agent-toolkit",
+  "license": "UNLICENSED",
+  "keywords": [
+    "enterprise-governance",
+    "antigravity",
+    "claude-code",
+    "router-expert",
+    "secrets-expert",
+    "conventional-commits",
+    "infisical"
+  ],
+  "suggestedPrompts": [
+    "Route task to specialized domain expert",
+    "Verify cryptographic signing and conventional commit structure",
+    "Audit repository compliance against enterprise governance"
+  ]
+}

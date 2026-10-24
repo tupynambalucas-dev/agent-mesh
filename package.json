@@ -1,0 +1,30 @@
+{
+  "name": "@tupynambalucas-dev/agent-toolkit",
+  "version": "1.0.0",
+  "description": "Universal enterprise AI agent governance, shared MCP connectors, and domain routing skills.",
+  "main": "scripts/mcp-gateway-router.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tupynambalucas-dev/agent-toolkit.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "files": [
+    "plugin.json",
+    ".claude-plugin/",
+    "mcp_config.json",
+    "rules/",
+    "skills/",
+    "scripts/"
+  ],
+  "keywords": [
+    "antigravity",
+    "claude-code",
+    "agent-plugins",
+    "governance",
+    "skills"
+  ],
+  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "license": "UNLICENSED"
+}
