@@ -28,11 +28,20 @@ Select the appropriate interface based on the operational context:
 ## 2. Organization & Repository Scope
 
 - **Organization Name**: `tupynambalucas-dev`
-- **Monorepo Repository**: `tupynambalucas-dev/tupynambalucas`
+- **Managed Repositories**:
+  - `org-core`: Meta-repository, architecture, root orchestration, and submodules.
+  - `agent-toolkit`: Universal AI agent governance plugin, shared MCPs, and skills.
+  - `platform`: Infrastructure manifests, Kubernetes configurations, and runtime services.
+  - `docs`: Docusaurus technical documentation portal and public knowledge base.
+  - `.github`: Organization profile, default community health files, and CI workflows.
+  - `tessel`: Core application product repository.
 - **Functional Teams**:
-  - `core-engineers`: Core software engineers authoring applications and packages.
-  - `infra-ops`: Platform and DevOps engineers managing Kubernetes clusters and CI/CD.
-  - `creative-team`: Designers managing studio assets, brand vectors, and Penpot.
+  - `lead-architects`: Technical leads, system architects, and global code owners (`admin`/`maintain`).
+  - `infra-ops`: Platform and DevOps engineers managing infrastructure and CI/CD (`maintain`).
+  - `core-engineers`: Core software engineers authoring applications and packages (`write`).
+  - `technical-writers`: Technical writers and documentation curators managing Docusaurus (`maintain`/`read`).
+  - `creative-team`: Designers managing studio assets, brand vectors, and UI media (`write`/`read`).
+  - `contractors`: External contractors, consultants, and scoped partners (scoped `write` per engagement).
 
 For detailed team matrix and Fine-Grained PAT permissions, consult [rbac-matrix.md](./references/rbac-matrix.md).
 
@@ -43,27 +52,25 @@ For detailed team matrix and Fine-Grained PAT permissions, consult [rbac-matrix.
 Execute [bootstrap-teams.sh](./scripts/bootstrap-teams.sh) to provision or update functional teams:
 
 ```bash
-bash .agents/plugins/github-organization/skills/github-org-manager/scripts/bootstrap-teams.sh "tupynambalucas-dev"
+bash agent-toolkit/skills/github-org-manager/scripts/bootstrap-teams.sh "tupynambalucas-dev"
 ```
 
-The script idempotently creates or updates the closed teams `@core-engineers`, `@infra-ops`, and
-`@creative-team`.
+The script idempotently creates or updates the closed teams `@lead-architects`, `@infra-ops`,
+`@core-engineers`, `@technical-writers`, `@creative-team`, and `@contractors`.
 
 ---
 
 ## 4. Repository RBAC Binding Runbook
 
-To bind monorepo access to functional teams, execute [sync-team-permissions.sh](./scripts/sync-team-permissions.sh):
+To bind organization repositories to functional teams, execute [sync-team-permissions.sh](./scripts/sync-team-permissions.sh):
 
 ```bash
-bash .agents/plugins/github-organization/skills/github-org-manager/scripts/sync-team-permissions.sh "tupynambalucas-dev" "tupynambalucas-dev"
+# Sync all repositories
+bash agent-toolkit/skills/github-org-manager/scripts/sync-team-permissions.sh "tupynambalucas-dev"
+
+# Or sync a specific repository
+bash agent-toolkit/skills/github-org-manager/scripts/sync-team-permissions.sh "tupynambalucas-dev" "agent-toolkit"
 ```
-
-Permissions applied:
-
-- `@core-engineers`: `push` (Write access to author branches and PRs).
-- `@infra-ops`: `maintain` (Maintain access to workflows, releases, and settings).
-- `@creative-team`: `push` (Write access scoped to creative assets).
 
 ---
 
@@ -75,7 +82,7 @@ schemas, consult [ruleset-schemas.md](./references/ruleset-schemas.md).
 Execute [configure-rulesets.sh](./scripts/configure-rulesets.sh) to apply rulesets:
 
 ```bash
-bash .agents/plugins/github-organization/skills/github-org-manager/scripts/configure-rulesets.sh "tupynambalucas-dev" "tupynambalucas-dev"
+bash agent-toolkit/skills/github-org-manager/scripts/configure-rulesets.sh "tupynambalucas-dev" "org-core"
 ```
 
 Enforced policies:
@@ -92,11 +99,11 @@ Manage pipeline secrets natively within GitHub Actions without bridging cluster 
 
 ```bash
 # Organization-level secrets (shared container registries)
-gh secret set CONTAINER_REGISTRY_TOKEN --org "tupynambalucas-dev" --visibility selected --repos "tupynambalucas-dev"
+gh secret set CONTAINER_REGISTRY_TOKEN --org "tupynambalucas-dev" --visibility selected --repos "org-core,platform,agent-toolkit"
 
 # Environment-level secrets (bound to dev, staging, prod)
-gh secret set CLOUDFLARE_PAGES_TOKEN --env "prod" --repo "tupynambalucas-dev/tupynambalucas"
-gh secret set CODECOV_TOKEN --env "dev" --repo "tupynambalucas-dev/tupynambalucas"
+gh secret set CLOUDFLARE_PAGES_TOKEN --env "prod" --repo "tupynambalucas-dev/docs"
+gh secret set CODECOV_TOKEN --env "dev" --repo "tupynambalucas-dev/platform"
 ```
 
 ---

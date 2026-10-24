@@ -6,9 +6,12 @@ ORG="${1:-tupynambalucas-dev}"
 echo "Configuring teams for organization: ${ORG}..."
 
 declare -A TEAMS=(
-  ["core-engineers"]="Core software engineers and application developers"
+  ["lead-architects"]="Technical leads, system architects, and global code owners"
   ["infra-ops"]="Platform and DevOps engineers managing infrastructure and CI/CD"
+  ["core-engineers"]="Core software engineers and application developers"
+  ["technical-writers"]="Technical writers, documentation maintainers, and content curators"
   ["creative-team"]="Designers and creative professionals managing brand assets"
+  ["contractors"]="External contractors, specialized consultants, and partners"
 )
 
 for SLUG in "${!TEAMS[@]}"; do

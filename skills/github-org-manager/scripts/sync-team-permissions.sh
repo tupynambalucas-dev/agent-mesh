@@ -2,21 +2,70 @@
 set -euo pipefail
 
 ORG="${1:-tupynambalucas-dev}"
-REPO="${2:-tupynambalucas-dev}"
+REPO="${2:-}"
 
-echo "Syncing repository permissions for ${ORG}/${REPO}..."
+apply_repo_permissions() {
+  local target_repo="$1"
+  echo "Syncing repository permissions for ${ORG}/${target_repo}..."
 
-declare -A PERMISSIONS=(
-  ["core-engineers"]="push"
-  ["infra-ops"]="maintain"
-  ["creative-team"]="push"
-)
+  declare -A PERMS=(
+    ["lead-architects"]="maintain"
+    ["infra-ops"]="maintain"
+    ["core-engineers"]="push"
+    ["technical-writers"]="pull"
+    ["creative-team"]="pull"
+  )
 
-for SLUG in "${!PERMISSIONS[@]}"; do
-  PERM="${PERMISSIONS[$SLUG]}"
-  echo "Setting permission '${PERM}' for team '${SLUG}' on ${ORG}/${REPO}..."
-  gh api -X PUT "/orgs/${ORG}/teams/${SLUG}/repos/${ORG}/${REPO}" \
-    -f permission="${PERM}" >/dev/null
-done
+  case "${target_repo}" in
+    "org-core")
+      PERMS["lead-architects"]="admin"
+      PERMS["infra-ops"]="maintain"
+      PERMS["core-engineers"]="push"
+      PERMS["technical-writers"]="pull"
+      PERMS["creative-team"]="pull"
+      ;;
+    "agent-toolkit"|"platform"|".github")
+      PERMS["lead-architects"]="maintain"
+      PERMS["infra-ops"]="maintain"
+      PERMS["core-engineers"]="push"
+      PERMS["technical-writers"]="pull"
+      if [[ "${target_repo}" == ".github" ]]; then
+        PERMS["creative-team"]="push"
+      else
+        PERMS["creative-team"]="pull"
+      fi
+      ;;
+    "docs")
+      PERMS["lead-architects"]="maintain"
+      PERMS["infra-ops"]="pull"
+      PERMS["core-engineers"]="push"
+      PERMS["technical-writers"]="maintain"
+      PERMS["creative-team"]="push"
+      ;;
+    "tessel")
+      PERMS["lead-architects"]="maintain"
+      PERMS["infra-ops"]="pull"
+      PERMS["core-engineers"]="push"
+      PERMS["technical-writers"]="pull"
+      PERMS["creative-team"]="pull"
+      ;;
+  esac
+
+  for SLUG in "${!PERMS[@]}"; do
+    local PERM="${PERMS[$SLUG]}"
+    echo "Setting permission '${PERM}' for team '${SLUG}' on ${ORG}/${target_repo}..."
+    gh api -X PUT "/orgs/${ORG}/teams/${SLUG}/repos/${ORG}/${target_repo}" \
+      -f permission="${PERM}" >/dev/null
+  done
+}
+
+if [[ -n "${REPO}" ]]; then
+  apply_repo_permissions "${REPO}"
+else
+  REPOS=("org-core" "agent-toolkit" "platform" "docs" ".github" "tessel")
+  for R in "${REPOS[@]}"; do
+    apply_repo_permissions "${R}"
+  done
+fi
 
 echo "Repository RBAC sync completed successfully."
