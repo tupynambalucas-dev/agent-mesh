@@ -6,7 +6,7 @@ description: Use this skill to manage, inspect, sync, and rotate secrets using I
 # Secrets Manager Skill
 
 This skill defines the operational runbook and protocols for managing enterprise secrets across
-`dev`, `staging`, and `prod` environments within the `tupynambalucas` monorepo.
+`dev`, `staging`, and `prod` environments within the `tupynambalucas-dev` organization.
 
 ---
 
@@ -16,33 +16,33 @@ Select the appropriate secrets interface based on the operational context:
 
 | Context / Operation               | Preferred Interface | Mechanism                                                         |
 | :-------------------------------- | :------------------ | :---------------------------------------------------------------- |
-| **Agent Autonomous Manipulation** | `@infisical/mcp`    | MCP stdio tool calling (`create-secret`, `update-secret`)         |
-| **Local Process Execution**       | Infisical CLI       | `infisical run --env=dev --path=/corporate -- <command>`          |
+| **Agent Autonomous Manipulation** | `@infisical/mcp`    | MCP stdio tool calling (`list-secrets`, `get-secret`, `create-secret`, `update-secret`, `delete-secret`, `list-projects`) |
+| **Local Process Execution**       | Layered MCP Runner  | `node scripts/mcp-runner.js infisical` (resolves Layer 1 Infisical CLI, Layer 2 `.env`, Layer 3 config) |
 | **Cluster Runtime Sync**          | Kubernetes Operator | `InfisicalSecret` CRD referencing `infisical-auth-credentials`    |
-| **CI/CD Build Pipelines**         | GitHub Actions      | `ext_sync_secrets.sh` synchronizing to GitHub Environment Secrets |
+| **CI/CD Build Pipelines**         | GitHub Actions Sync | Infisical GitHub Actions Integration pushing secrets from `/ci-cd` |
 
 ---
 
 ## 2. Monorepo Project Scope
 
-- **Project ID**: `134783dd-8a83-4dfc-9fd5-979b52bed86d`
-- **Project Slug**: `tupynambalucas-core-ez7a`
+- **Platform Project ID**: `134783dd-8a83-4dfc-9fd5-979b52bed86d`
+- **Platform Project Slug**: `tupynambalucas-dev-platform` (formerly `tupynambalucas-core-ez7a`)
+- **Agent Toolkit Project Slug**: `tupynambalucas-dev-agent-toolkit`
 - **Environments**: `dev`, `staging`, `prod`
 
 ---
 
-## 3. Standard Context Paths
+## 3. Standard Context Paths (`tupynambalucas-dev-platform`)
 
-Secrets are partitioned into four canonical folder paths:
+Secrets are partitioned into three canonical folder paths:
 
-1. `/hub/platform`: Infrastructure credentials (`CLOUDFLARE_TUNNEL_TOKEN_HUB`, `GRAFANA_ADMIN_PASSWORD`).
-2. `/hub/cortex`: AI foundation model API keys (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `FIRECRAWL_API_KEY`).
-3. `/hub/studio`: Studio tooling tokens (`PENPOT_PUBLIC_URI`, `PENPOT_SECRET_KEY`).
-4. `/corporate`: Public product credentials (`CLOUDFLARE_TUNNEL_TOKEN_CORPORATE`, `MONGO_PASSWORD`, `REDIS_PASSWORD`, `FASTIFY_JWT_SECRET`).
+1. `/cluster`: Infrastructure and cluster services (`CLOUDFLARE_TUNNEL_TOKEN_HUB`, `GRAFANA_ADMIN_PASSWORD`, `MONGO_INITDB_ROOT_PASSWORD`, `REDIS_PASSWORD`, in-cluster `FIRECRAWL_API_KEY`, `CORTEX_MCP_TOKEN`).
+2. `/corporate`: In-cluster corporate applications and APIs (`FASTIFY_JWT_SECRET`, `RESEND_API_KEY`, `CORPORATE_DB_URL`).
+3. `/ci-cd`: GitHub Actions pipeline deployment tokens (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`).
 
 ---
 
-## 3. Kubernetes Secret Generation Workflow
+## 4. Kubernetes Secret Generation Workflow
 
 To provision or update the cluster authentication credentials secret:
 
