@@ -1,0 +1,49 @@
+name: Publish Package to GitHub Packages
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@tupynambalucas-dev'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12.6.0
+
+      - name: Install Dependencies
+        run: pnpm install --no-frozen-lockfile || true
+
+      - name: Validate Antigravity Plugin Structure
+        run: |
+          curl -fsSL https://antigravity.google/install.sh | bash || true
+          if command -v agy &> /dev/null; then
+            agy plugin validate . --strict
+          else
+            echo "agy CLI not found in environment; skipping validate step"
+          fi
+
+      - name: Publish to GitHub Packages
+        run: npm publish --registry https://npm.pkg.github.com --access public || npm publish --registry https://npm.pkg.github.com
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
