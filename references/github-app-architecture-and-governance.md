@@ -130,7 +130,109 @@ in `agent-toolkit` inspect and operate on GitHub resources:
 
 ---
 
-## 5. Security Guardrails and Least Privilege Guarantees
+## 5. Caller Identity Resolution and Dynamic Team Router Implementation
+
+To allow developers across all teams (`core-engineers`, `technical-writers`, `creative-team`, `security-managers`, `lead-architects`) to safely invoke `github-org-manager`, the operator deterministically resolves caller privileges through three defensive layers:
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor User as Developer / Agent
+  participant Runner as scripts/resolve-operator-role.js
+  participant Infisical as Infisical Cloud Vault
+  participant GitHub as GitHub REST API
+
+  User->>Runner: Execute Operator Action
+  Runner->>Infisical: Verify Session & Project RBAC
+  alt Infisical Active (Layer 1)
+    Infisical-->>Runner: Inject Scoped Secrets (dev or prod) into RAM
+  else Local Fallback (Layer 2)
+    Runner-->>Runner: Fallback to local .env (BYOT)
+  end
+
+  Runner->>GitHub: GET /user and GET /user/teams
+  GitHub-->>Runner: Return Username and Active Team Slugs
+  
+  Runner->>Runner: Evaluate Domain Matrix
+  alt Member of lead-architects
+    Runner-->>User: Grant Domain 3 (Admin + Security + Developer)
+  else Member of security-managers
+    Runner-->>User: Grant Domain 2 (Security Auditing + Developer)
+  else Member of core-engineers / writers / creative
+    Runner-->>User: Grant Domain 1 (Developer Operations only)
+  end
+
+  Runner->>GitHub: Execute Authorized Action (PR / Commit / Audit / Admin)
+  GitHub-->>User: Enforce Server-Side Permission Intersection
+```
+
+### 5.1 Automated Team Resolution via `resolve-operator-role.js`
+
+The operator executes [`agent-toolkit/skills/github-org-manager/scripts/resolve-operator-role.js`](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-toolkit/skills/github-org-manager/scripts/resolve-operator-role.js) to inspect the caller's active token:
+
+```bash
+# Human-readable status check
+node agent-toolkit/skills/github-org-manager/scripts/resolve-operator-role.js
+
+# Programmatic JSON consumption by agent skills
+node agent-toolkit/skills/github-org-manager/scripts/resolve-operator-role.js --json
+```
+
+Output specification:
+```json
+{
+  "organization": "tupynambalucas-dev",
+  "username": "core-dev-01",
+  "name": "Jane Developer",
+  "teams": ["core-engineers"],
+  "governanceDomain": "domain-1-developer",
+  "privilegeLevel": "level-1",
+  "infisicalProject": "tupynambalucas-dev-agent-toolkit",
+  "infisicalEnvironment": "dev",
+  "capabilities": {
+    "developerOperations": true,
+    "securityAuditing": false,
+    "organizationAdmin": false
+  }
+}
+```
+
+If an engineer in `core-engineers` requests a Domain 3 operation (e.g., deleting a team or changing branch protection), the operator terminates before making destructive API calls:
+
+```text
+Access Denied: Organization Admin operations are restricted strictly to @lead-architects.
+Caller identity: core-dev-01 (Teams: core-engineers)
+Required Privilege Level: level-3 (Current: level-1)
+```
+
+---
+
+## 6. Secret Storage Matrix: Infisical Vault vs. Local `.env` Fallback
+
+Understanding the fundamental operational difference between Infisical and a local `.env` file is critical to enforcing least privilege across teams:
+
+| Dimension | Enterprise Infisical Vault (Layer 1) | Local `.env` Hierarchy (Layer 2 - Fallback) |
+| :--- | :--- | :--- |
+| **Storage Model** | **Zero-Disk in RAM**: Injected via TLS directly into process memory (`process.env`). 0 bytes written to disk. | **Plaintext on Disk**: Stored unencrypted in workspace root (`.env`). High risk of accidental Git commits or leak. |
+| **Team RBAC & Scoping** | **Strict Project & Environment Isolation**: Engineers only see the projects and environments (`dev`) they are assigned. | **Zero Access Control**: Anyone with filesystem access reads all keys. No concept of teams, roles, or environments. |
+| **Secret Rotation & Drift**| **Instantaneous Centralized Rotation**: Updating a secret in Infisical propagates to all developer runs and K8s clusters instantly. | **Severe Configuration Drift**: Every engineer must manually edit local files when keys change. Outdated keys break workflows. |
+| **Audit Trails** | **Tamper-Proof Audit Logs**: Every read, decryption, rotation, and API access is logged with timestamp, user identity, and IP. | **Zero Visibility**: Impossible to determine who read, copied, or leaked a secret from a local `.env`. |
+| **Blast Radius** | **Granularly Partitioned**: Dedicated fallback pools for developers (`tupynambalucas-dev-agent-toolkit`) isolated from production platform secrets. | **Unbounded**: If an admin pastes a production token into `.env`, any script or agent in that workspace can access it. |
+| **Lifecycle Purpose** | **Official Enterprise Standard**: Used by all internal team members and production Kubernetes clusters. | **Bring-Your-Own-Token (BYOT) Contingency**: Temporary contractors without Infisical accounts supply personal keys. |
+
+### 6.1 How Infisical Enforces Team Segregation at the Runtime Boundary
+
+Infisical prevents privilege escalation before code execution begins:
+
+1. **Identity Authentication**: The engineer logs into Infisical using their organizational email via `infisical login`.
+2. **Project Authorization**:
+   - `core-engineers`: Granted access strictly to project `tupynambalucas-dev-agent-toolkit`, environment `dev`.
+   - `lead-architects`: Granted access to project `tupynambalucas-dev-platform` (folders `/cluster`, `/corporate`, `/ci-cd`) and production credentials.
+3. **Execution Isolation**: When `core-engineers` run `infisical run -- <command>`, the CLI only fetches developer fallback tokens (`FIRECRAWL_API_KEY`, `CONTEXT7_API_KEY`, developer PAT). It is mathematically impossible for the developer's runtime to possess the GitHub App private key (`.pem`) or cluster secrets.
+
+---
+
+## 7. Security Guardrails and Least Privilege Guarantees
 
 Even when `github-org-manager` is available to all teams, security boundaries remain immutable:
 
@@ -145,7 +247,7 @@ Even when `github-org-manager` is available to all teams, security boundaries re
 
 ---
 
-## 6. Implementation Runbook: Transitioning to the Centralized Operator
+## 8. Implementation Runbook: Transitioning to the Centralized Operator
 
 1. **Deploy GitHub App**: Register `tupynambalucas-org-manager` with the organization permissions specified in Section 6 of this reference guide.
 2. **Configure Infisical Secret Injection**:
@@ -154,3 +256,4 @@ Even when `github-org-manager` is available to all teams, security boundaries re
    - `GITHUB_APP_PRIVATE_KEY_BASE64`: Base64-encoded `.pem` private key.
 3. **Enhance `mcp-runner.js`**: Add automated JWT exchange so that `github-mcp` launches with an ephemeral App token automatically when running under `infisical run`.
 4. **Distribute Operator Skills**: Allow all teams to consume the developer workflow tools in `github-org-manager` for commit and PR standardization.
+5. **Enforce Pre-flight Role Resolution**: Wire `resolve-operator-role.js` into operator pre-checks to gate administrative commands before dispatch.

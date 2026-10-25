@@ -48,7 +48,23 @@ For detailed team matrix and Fine-Grained PAT permissions, consult [rbac-matrix.
 
 ---
 
-## 3. Team Lifecycle Management Runbook
+## 3. Caller Identity & Governance Domain Pre-flight Resolution
+
+Before executing privileged operations, the operator runs [resolve-operator-role.js](./scripts/resolve-operator-role.js) to resolve the authenticated caller's identity, active organization teams, and permitted governance domain:
+
+```bash
+node agent-toolkit/skills/github-org-manager/scripts/resolve-operator-role.js
+```
+
+| Evaluated Domain | Primary Teams | Allowed Operations |
+| :--- | :--- | :--- |
+| **Domain 1: Developer Operations** | `core-engineers`, `technical-writers`, `creative-team` | Commit authoring, signed PR creation, submodule pointer checks, CI status monitoring. |
+| **Domain 2: Security & Auditing** | `security-managers`, `infra-ops` | Secret scanning alerts, Dependabot triage, CodeQL analysis, commit signature auditing. |
+| **Domain 3: Organization Admin** | `lead-architects` | Team lifecycle (`bootstrap-teams.sh`), repository RBAC binding (`sync-team-permissions.sh`), branch rulesets (`configure-rulesets.sh`), organization secrets. |
+
+---
+
+## 4. Team Lifecycle Management Runbook
 
 Execute [bootstrap-teams.sh](./scripts/bootstrap-teams.sh) to provision or update functional teams:
 
@@ -61,7 +77,7 @@ The script idempotently creates or updates the closed teams `@lead-architects`, 
 
 ---
 
-## 4. Repository RBAC Binding Runbook
+## 5. Repository RBAC Binding Runbook
 
 To bind organization repositories to functional teams, execute [sync-team-permissions.sh](./scripts/sync-team-permissions.sh):
 
@@ -75,7 +91,7 @@ bash agent-toolkit/skills/github-org-manager/scripts/sync-team-permissions.sh "t
 
 ---
 
-## 5. Branch Ruleset Enforcement Runbook
+## 6. Branch Ruleset Enforcement Runbook
 
 Branch protection rulesets guarantee linear history and verified commit signatures. For detailed JSON
 schemas, consult [ruleset-schemas.md](./references/ruleset-schemas.md).
@@ -94,7 +110,7 @@ Enforced policies:
 
 ---
 
-## 6. GitHub Actions Secrets Management
+## 7. GitHub Actions Secrets Management
 
 Manage pipeline secrets natively within GitHub Actions without bridging cluster runtime keys:
 
@@ -109,7 +125,7 @@ gh secret set CODECOV_TOKEN --env "dev" --repo "tupynambalucas-dev/platform"
 
 ---
 
-## 7. Gotchas & Edge Cases
+## 8. Gotchas & Edge Cases
 
 1. **Fine-Grained PAT Organization Policy**: Fine-grained tokens fail with HTTP 403 unless the
    organization owner enables access under `Organization Settings -> Personal access tokens -> Settings`.
