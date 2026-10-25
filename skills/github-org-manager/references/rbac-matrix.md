@@ -13,6 +13,7 @@ rather than direct user bindings.
 | Team Slug           | Description                                                    | Typical Role    | Primary Repositories & Workspaces       |
 | :------------------ | :------------------------------------------------------------- | :-------------- | :-------------------------------------- |
 | `lead-architects`   | Technical leads, system architects, and global code owners     | Admin / Maintain| Global CODEOWNERS, `org-core`, all repos|
+| `security-managers` | Security operations, compliance, vulnerability auditing       | Audit / Read    | All organization repositories (read/sec)|
 | `infra-ops`         | Platform and DevOps engineers managing infrastructure and CI/CD| Maintain        | `platform`, `.github`, `org-core`       |
 | `core-engineers`    | Core software engineers and application developers             | Write           | `agent-toolkit`, `platform`, `tessel`   |
 | `technical-writers` | Technical writers, documentation maintainers, content curators | Maintain / Read | `docs` (maintain), other repos (read)   |
@@ -25,14 +26,14 @@ rather than direct user bindings.
 
 The current active access matrix across organization repositories is enforced as follows:
 
-| Repository        | `lead-architects` | `infra-ops` | `core-engineers` | `technical-writers` | `creative-team` | `contractors` |
-| :---------------- | :---------------: | :---------: | :--------------: | :-----------------: | :-------------: | :-----------: |
-| `org-core`        | `admin`           | `maintain`  | `push`           | `pull`              | `pull`          | None          |
-| `agent-toolkit`   | `maintain`        | `maintain`  | `push`           | `pull`              | `pull`          | Delegated     |
-| `platform`        | `maintain`        | `maintain`  | `push`           | `pull`              | `pull`          | None          |
-| `docs`            | `maintain`        | `pull`      | `push`           | `maintain`          | `push`          | Delegated     |
-| `.github`         | `maintain`        | `maintain`  | `push`           | `pull`              | `push`          | None          |
-| `tessel`          | `maintain`        | `pull`      | `push`           | `pull`              | `pull`          | None          |
+| Repository        | `lead-architects` | `security-managers` | `infra-ops` | `core-engineers` | `technical-writers` | `creative-team` | `contractors` |
+| :---------------- | :---------------: | :-----------------: | :---------: | :--------------: | :-----------------: | :-------------: | :-----------: |
+| `org-core`        | `admin`           | `pull`              | `maintain`  | `push`           | `pull`              | `pull`          | None          |
+| `agent-toolkit`   | `maintain`        | `pull`              | `maintain`  | `push`           | `pull`              | `pull`          | Delegated     |
+| `platform`        | `maintain`        | `pull`              | `maintain`  | `push`           | `pull`              | `pull`          | None          |
+| `docs`            | `maintain`        | `pull`              | `pull`      | `push`           | `maintain`          | `push`          | Delegated     |
+| `.github`         | `maintain`        | `pull`              | `maintain`  | `push`           | `pull`              | `push`          | None          |
+| `tessel`          | `maintain`        | `pull`              | `pull`      | `push`           | `pull`              | `pull`          | None          |
 
 ---
 

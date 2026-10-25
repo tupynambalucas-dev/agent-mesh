@@ -37,6 +37,7 @@ Select the appropriate interface based on the operational context:
   - `tessel`: Core application product repository.
 - **Functional Teams**:
   - `lead-architects`: Technical leads, system architects, and global code owners (`admin`/`maintain`).
+  - `security-managers`: Security operations, compliance, vulnerability auditing, and policy enforcement (audit/`read`).
   - `infra-ops`: Platform and DevOps engineers managing infrastructure and CI/CD (`maintain`).
   - `core-engineers`: Core software engineers authoring applications and packages (`write`).
   - `technical-writers`: Technical writers and documentation curators managing Docusaurus (`maintain`/`read`).
@@ -55,8 +56,8 @@ Execute [bootstrap-teams.sh](./scripts/bootstrap-teams.sh) to provision or updat
 bash agent-toolkit/skills/github-org-manager/scripts/bootstrap-teams.sh "tupynambalucas-dev"
 ```
 
-The script idempotently creates or updates the closed teams `@lead-architects`, `@infra-ops`,
-`@core-engineers`, `@technical-writers`, `@creative-team`, and `@contractors`.
+The script idempotently creates or updates the closed teams `@lead-architects`, `@security-managers`,
+`@infra-ops`, `@core-engineers`, `@technical-writers`, `@creative-team`, and `@contractors`.
 
 ---
 

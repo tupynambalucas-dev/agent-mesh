@@ -7,6 +7,7 @@ echo "Configuring teams for organization: ${ORG}..."
 
 declare -A TEAMS=(
   ["lead-architects"]="Technical leads, system architects, and global code owners"
+  ["security-managers"]="Security operations, compliance, vulnerability auditing"
   ["infra-ops"]="Platform and DevOps engineers managing infrastructure and CI/CD"
   ["core-engineers"]="Core software engineers and application developers"
   ["technical-writers"]="Technical writers, documentation maintainers, and content curators"

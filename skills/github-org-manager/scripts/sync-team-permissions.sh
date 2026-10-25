@@ -10,6 +10,7 @@ apply_repo_permissions() {
 
   declare -A PERMS=(
     ["lead-architects"]="maintain"
+    ["security-managers"]="pull"
     ["infra-ops"]="maintain"
     ["core-engineers"]="push"
     ["technical-writers"]="pull"
@@ -19,6 +20,7 @@ apply_repo_permissions() {
   case "${target_repo}" in
     "org-core")
       PERMS["lead-architects"]="admin"
+      PERMS["security-managers"]="pull"
       PERMS["infra-ops"]="maintain"
       PERMS["core-engineers"]="push"
       PERMS["technical-writers"]="pull"
@@ -26,6 +28,7 @@ apply_repo_permissions() {
       ;;
     "agent-toolkit"|"platform"|".github")
       PERMS["lead-architects"]="maintain"
+      PERMS["security-managers"]="pull"
       PERMS["infra-ops"]="maintain"
       PERMS["core-engineers"]="push"
       PERMS["technical-writers"]="pull"
@@ -37,6 +40,7 @@ apply_repo_permissions() {
       ;;
     "docs")
       PERMS["lead-architects"]="maintain"
+      PERMS["security-managers"]="pull"
       PERMS["infra-ops"]="pull"
       PERMS["core-engineers"]="push"
       PERMS["technical-writers"]="maintain"
@@ -44,6 +48,7 @@ apply_repo_permissions() {
       ;;
     "tessel")
       PERMS["lead-architects"]="maintain"
+      PERMS["security-managers"]="pull"
       PERMS["infra-ops"]="pull"
       PERMS["core-engineers"]="push"
       PERMS["technical-writers"]="pull"
