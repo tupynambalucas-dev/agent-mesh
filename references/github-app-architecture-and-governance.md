@@ -126,7 +126,8 @@ in `agent-toolkit` inspect and operate on GitHub resources:
    - Developers in `core-engineers` can use MCP tools (`create_pull_request`, `get_file_contents`, `list_workflow_runs`) without administrative rights.
    - Operations on teams and members (`list_teams`, `list_team_members`) work for all members, providing necessary context for CODEOWNERS review requests.
 3. **Guardrailed Mutation Fallback**:
-   - For mutations not supported natively by `github-mcp` (e.g., team creation, branch ruleset updates), the operator falls back to the GitHub CLI (`gh`), restricting execution to authorized roles.
+   - For mutations not supported natively by `github-mcp` (e.g., team creation, branch ruleset updates, Actions secrets), the operator falls back to the GitHub CLI (`gh`), restricting execution to authorized roles.
+   - For an in-depth technical analysis comparing community and official GitHub MCP servers, consult [github-mcp-ecosystem-and-domain3-evaluation.md](./github-mcp-ecosystem-and-domain3-evaluation.md).
 
 ---
 
