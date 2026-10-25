@@ -44,7 +44,7 @@ Select the appropriate interface based on the operational context:
   - `creative-team`: Designers managing studio assets, brand vectors, and UI media (`write`/`read`).
   - `contractors`: External contractors, consultants, and scoped partners (scoped `write` per engagement).
 
-For detailed team matrix and Fine-Grained PAT permissions, consult [rbac-matrix.md](./references/rbac-matrix.md).
+For detailed team matrix and Fine-Grained PAT permissions, consult [rbac-matrix.md](./references/rbac-matrix.md). For new developer workstation setup and token vs. GitHub App machine identity governance, consult [developer-onboarding.md](./references/developer-onboarding.md).
 
 ---
 
