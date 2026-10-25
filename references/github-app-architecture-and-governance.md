@@ -1,214 +1,156 @@
-# GitHub Organization Manager Architecture: CLI, MCP, and GitHub App Governance
+# Centralized GitHub Operator Architecture: Multi-Team Governance and GitHub App Integration
 
-This document defines the operational architecture, authentication pipelines, team authorization
-boundaries, and GitHub App integration for the `github-org-manager` skill within `tupynambalucas-dev`.
+This document defines the architecture for transforming `github-org-manager` into a **Universal
+Centralized Operator** serving all functional teams (`lead-architects`, `security-managers`,
+`infra-ops`, `core-engineers`, `technical-writers`, and `creative-team`) across `tupynambalucas-dev`.
 
 ---
 
-## 1. Operational Overview: GitHub CLI vs. GitHub MCP
+## 1. Executive Vision: The Hub-and-Spoke Operator Pattern
 
-The `github-org-manager` skill coordinates organizational governance, team lifecycles, repository
-RBAC permissions, branch rulesets, and pipeline secrets. It utilizes a **hybrid execution model**
-combining the Model Context Protocol (`github-mcp`) with the GitHub CLI (`gh`):
+Instead of maintaining fragmented workflows where developers manually configure commit signing,
+conventional commit formats, and PR rules, `github-org-manager` operates as an **Enterprise
+Governance Operator**:
 
 ```mermaid
 graph TD
   direction TB
 
-  Agent["AI Agent / Operator (github-org-manager)"]
+  subgraph Operator ["Centralized GitHub Operator (github-org-manager)"]
+    Router["Role-Based Tool Router"]
 
-  Agent --> ModeSelector{"Operation Context"}
-
-  ModeSelector -->|Read & Context Auditing| MCP["GitHub MCP (github-mcp)"]
-  ModeSelector -->|Governance Mutations| CLI["GitHub CLI (gh api & gh secret)"]
-
-  subgraph MCP_Scope ["github-mcp Capabilities"]
-    MCP --> M1["Inspect repositories & branches"]
-    MCP --> M2["List teams & inspect members"]
-    MCP --> M3["Audit CodeQL & Secret Scanning alerts"]
-    MCP --> M4["Inspect workflow runs & PRs"]
+    Router --> DevDomain["Domain 1: Developer Operations (All Teams)"]
+    Router --> SecDomain["Domain 2: Security & Auditing (security-managers, lead-architects)"]
+    Router --> AdminDomain["Domain 3: Org Administration (lead-architects only)"]
   end
 
-  subgraph CLI_Scope ["gh CLI Capabilities"]
-    CLI --> C1["Create & delete teams (POST/DELETE /orgs/teams)"]
-    CLI --> C2["Bind repository RBAC (PUT /teams/{slug}/repos)"]
-    CLI --> C3["Enforce branch rulesets (POST /repos/rulesets)"]
-    CLI --> C4["Set Actions secrets (gh secret set --org)"]
+  subgraph Teams ["Consuming Teams"]
+    Core["core-engineers"] --> DevDomain
+    Writers["technical-writers"] --> DevDomain
+    Creative["creative-team"] --> DevDomain
+    SecOps["security-managers"] --> SecDomain
+    Architects["lead-architects"] --> AdminDomain
+    Architects --> DevDomain
+    Architects --> SecDomain
+  end
+
+  subgraph Interfaces ["Execution Interfaces"]
+    DevDomain --> MCP["github-mcp (PRs, Code, Commits, Workflows)"]
+    SecDomain --> MCP
+    AdminDomain --> CLI["GitHub CLI & REST (Teams, Rulesets, Secrets)"]
   end
 ```
 
-### Functional Capabilities Matrix
+---
 
-| Capability / Mutation | `github-mcp` Tooling | GitHub CLI (`gh`) | Primary Rationale |
-| :--- | :---: | :---: | :--- |
-| **List Organization Teams** | Supported (`list_teams`) | Supported (`gh api`) | MCP provides direct model-native querying. |
-| **Inspect Team Members** | Supported (`list_team_members`) | Supported (`gh api`) | Read-only context retrieval via MCP stdio. |
-| **Audit Security Alerts** | Supported (`list_secret_scanning_alerts`) | Supported (`gh api`) | MCP reads CodeQL, Dependabot, and Secret Scanning. |
-| **Create or Delete Teams** | Not Available | Supported (`gh api -X POST`) | Organizational team creation requires REST mutation. |
-| **Assign Repository RBAC** | Not Available | Supported (`gh api -X PUT`) | Team-to-repository permission bindings. |
-| **Branch Ruleset CRUD** | Not Available | Supported (`gh api /rulesets`) | JSON-payload branch protection enforcement. |
-| **Pipeline Secrets CRUD** | Not Available | Supported (`gh secret set`) | Asymmetric sodium encryption for Actions secrets. |
+## 2. Dynamic Team Domains and Capabilities
+
+The centralized operator dynamically routes requests based on the user's team context:
+
+### Domain 1: Developer Operations (Accessible by All Teams)
+
+Engineers across `core-engineers`, `technical-writers`, and `creative-team` use the operator to
+automate routine GitHub actions while guaranteeing 100% compliance with organization rules:
+
+| Operation | Operator Responsibilities | Enforced Organizational Guardrails |
+| :--- | :--- | :--- |
+| **Commit Creation** | Validates message syntax, stages changes, and executes commit. | Conventional Commits v1.0.0 (`feat`, `fix`, etc.), zero emojis, mandatory SSH signature (`-S`). |
+| **Pull Request Creation**| Inspects branch delta, populates GFM template, targets correct base branch. | Blocks direct PRs to `main` for feature work; enforces `develop` base; auto-assigns CODEOWNERS. |
+| **Submodule Synchronization**| Checks submodule HEADs and stages pointer commits in `org-core`. | Verifies clean working trees across all submodules before bumping pointers. |
+| **CI/CD Status Verification** | Monitors workflow runs, CodeQL status, and mergeability. | Validates linear history and checks that required status checks pass before merge. |
+
+### Domain 2: Security and Auditing (Accessible by `security-managers` and `lead-architects`)
+
+| Operation | Operator Responsibilities | Enforced Organizational Guardrails |
+| :--- | :--- | :--- |
+| **Secret Scanning Audit** | Queries open secret scanning alerts across all repositories. | Enforces remediation SLAs and triggers immediate rotation in Infisical. |
+| **Vulnerability Triage** | Reviews Dependabot and CodeQL alerts via `github-mcp`. | Identifies critical CVEs and opens scoped patch branches targeting `develop`. |
+| **Signature Compliance** | Scans Git log history across branches. | Rejects unsigned commits and flags non-compliant author emails. |
+
+### Domain 3: Organization Administration (Strictly Restricted to `lead-architects`)
+
+| Operation | Operator Responsibilities | Enforced Organizational Guardrails |
+| :--- | :--- | :--- |
+| **Team Lifecycle** | Creates, updates, and deletes organization teams via REST API. | Idempotent slug naming (`kebab-case`), closed privacy, clear descriptions. |
+| **Repository RBAC** | Binds team permissions (`admin`, `maintain`, `push`, `pull`). | Principle of Least Privilege across all monorepo workspaces. |
+| **Branch Rulesets** | Configures branch protections and required checks via JSON schemas. | Mandatory signed commits, linear history, minimum 1 approval on `main`. |
+| **Pipeline Secrets** | Encrypts and injects organization-level Actions secrets via `gh secret set`. | Zero plaintext storage; secret rotation synced with Infisical. |
 
 ---
 
-## 2. Team Authorization Matrix: Who Can Operate `github-org-manager`?
+## 3. GitHub App as the Universal Machine Identity
 
-Because `github-org-manager` executes high-impact administrative mutations, access to its runbooks
-and execution credentials is partitioned under the **Principle of Least Privilege**:
+### A. Eliminating Developer PAT Dependency
 
-| Team Slug | Permission Level | Allowed Operations | Prohibited Operations |
-| :--- | :---: | :--- | :--- |
-| **`lead-architects`** | **Full Operator** | Team creation, repo RBAC, rulesets, org secrets, security audit. | None (Global CODEOWNERS and architecture leads). |
-| **`security-managers`**| **Audit Only** | Read-only security audit, vulnerability inspection, team listing. | Cannot alter teams, rulesets, secrets, or repo RBAC. |
-| **`infra-ops`** | **Scoped Operator**| Manage CI/CD runners, sync platform secrets (`gh secret set`). | Cannot alter engineering team topology or branch rulesets. |
-| **`core-engineers`** | **Blocked** | None. Standard application development only. | Cannot execute `github-org-manager` or manage secrets. |
-| **`technical-writers`**| **Blocked** | None. Documentation authoring in `docs` repository only. | Cannot execute `github-org-manager`. |
-| **`creative-team`** | **Blocked** | None. Visual design assets and studio branding only. | Cannot execute `github-org-manager`. |
-| **`contractors`** | **Blocked** | None. External scoped tasks only. | Cannot execute `github-org-manager`. |
+In traditional setups, each developer must generate and manage their own Personal Access Token (PAT).
+This introduces friction: developers may configure incorrect scopes, leave tokens in unencrypted
+files, or exceed rate limits.
 
----
-
-## 3. GitHub App Architecture for `github-org-manager` and MCPs
-
-### A. The Limitation of Personal Access Tokens (PATs)
-
-Traditional PATs present significant enterprise operational risks:
-1. Tied to an individual developer's personal GitHub account.
-2. If the user account is rotated, suspended, or leaves the organization, all agent pipelines break.
-3. Fine-Grained PATs cannot be issued directly by the organization.
-4. Static tokens have long lifespans (up to 1 year) and lack automatic cryptographic rotation.
-
-### B. The Sovereign Solution: GitHub App
-
-A dedicated **GitHub App** (`tupynambalucas-org-manager`) serves as the official machine identity:
+With the **Centralized GitHub App (`tupynambalucas-org-manager`)**:
+- Developers and local agents interact with `github-mcp` using **ephemeral Installation Access Tokens (IAT)** issued by the GitHub App.
+- The App provides a unified rate limit of 5,000 to 15,000 requests per hour.
+- Developers do not need to configure personal tokens for MCP interactions.
 
 ```mermaid
 graph LR
   direction LR
 
-  Infisical["Infisical Cloud (Vault)"] -->|App ID + PEM| Loader["mcp-runner.js / CLI Auth"]
-  Loader -->|RS256 JWT Exchange| GitHubAuth["POST /app/installations/{id}/access_tokens"]
-  GitHubAuth -->|1-Hour Ephemeral Token| Token["Installation Access Token (ghs_...)"]
-
-  Token -->|process.env.GITHUB_TOKEN| MCP["github-mcp Server"]
-  Token -->|GH_TOKEN / gh auth login| CLI["GitHub CLI (gh)"]
+  Dev["Developer / Agent Session"] --> Runner["scripts/mcp-runner.js"]
+  Runner -->|Requests IAT via Infisical Vault| GitHubAPI["GitHub App Auth"]
+  GitHubAPI -->|Issues 1-Hour Token| Runner
+  Runner -->|Injects GITHUB_TOKEN| MCP["github-mcp Process"]
+  MCP -->|Authenticated as Bot| Repo["GitHub Repositories"]
 ```
 
-### C. How GitHub App Tokens Power MCP Servers
+### B. Automated Commit Signing via GitHub App
 
-The `github-mcp` server natively accepts an **Installation Access Token (IAT)** passed via the
-`GITHUB_TOKEN` environment variable. The token format (`ghs_...`) is recognized by the GitHub API
-as an installation bearer token:
-
-1. **Higher Rate Limits**: GitHub Apps receive an organizational rate limit of 5,000 to 15,000 requests per hour (scaling with organization seats), compared to 5,000 shared requests per hour for personal tokens.
-2. **Deterministic Audit Attribution**: All mutations appear in the organization audit log attributed to `tupynambalucas-org-manager[bot]`.
-3. **Automatic Ephemeral Expiration**: Tokens expire automatically after 60 minutes. Even if an agent runtime environment logs a token, the exposure window is minimal.
-
----
-
-## 4. MCP Runner Token Minting Workflow
-
-The following reference implementation illustrates how `scripts/mcp-runner.js` exchanges GitHub
-App credentials stored in Infisical for an ephemeral Installation Access Token before launching
-`github-mcp`:
-
-```javascript
-import { createAppAuth } from "@octokit/auth-app";
-
-async function resolveGitHubAppToken() {
-  const appId = process.env.GITHUB_APP_ID;
-  const privateKey = Buffer.from(
-    process.env.GITHUB_APP_PRIVATE_KEY_BASE64,
-    "base64"
-  ).toString("utf-8");
-  const installationId = Number(process.env.GITHUB_APP_INSTALLATION_ID);
-
-  if (!appId || !privateKey || !installationId) {
-    return process.env.GITHUB_TOKEN; // Fallback to standard token if app credentials absent
-  }
-
-  const auth = createAppAuth({ appId, privateKey });
-  const installationAuth = await auth({
-    type: "installation",
-    installationId,
-  });
-
-  return installationAuth.token; // Ephemeral token valid for 60 minutes
-}
-```
+When the operator performs automated maintenance (e.g., dependency updates, documentation sync,
+or submodule pointer bumps in CI):
+- Commits generated via the GitHub Git Data API using the GitHub App's token are automatically
+  **cryptographically signed by GitHub** and marked with the **Verified** badge.
+- This satisfies the organization's mandatory signed commit ruleset without requiring individual
+  developer private keys in headless CI/CD environments.
 
 ---
 
-## 5. Least-Privilege Verification: Core Engineers Execution Boundary
+## 4. MCP Server Integration Architecture
 
-### User Access Tokens (UAT) vs. Installation Access Tokens (IAT)
+The Model Context Protocol server (`github-mcp`) is the primary interface through which agents
+in `agent-toolkit` inspect and operate on GitHub resources:
 
-When evaluating what happens if a non-admin developer (e.g., from `core-engineers`) interacts
-with the GitHub App or its MCP connectors:
-
-$$\text{Effective Permissions (UAT)} = \text{App Permissions} \cap \text{User Permissions}$$
-
-### The Privilege Ceiling
-
-1. **If Authenticating on Behalf of User (OAuth / UAT Mode)**:
-   - GitHub computes the mathematical intersection between the user's role and the app's scope.
-   - A `core-engineers` member has `write` access on specific repos, but **no organizational admin rights**.
-   - If that user invokes a tool calling `POST /orgs/{org}/teams` or modifying branch rulesets, GitHub returns **`403 Forbidden`**. The user's personal privilege acts as an unbreachable ceiling.
-2. **If Authenticating as the Installation (Bot / IAT Mode)**:
-   - The token acts as the bot itself, wielding full organizational permissions.
-   - **Critical Security Invariant**: The GitHub App private key (`.pem`) must **NEVER** be distributed to developers or committed to local `.env` files. Access to the private key in Infisical must be restricted strictly to `lead-architects` and automated CI/CD runners.
+1. **Token Injection via `scripts/mcp-runner.js`**:
+   - `mcp-runner.js` checks for GitHub App credentials in the environment or Infisical.
+   - If present, it mints a short-lived token (1 hour) and passes it as `process.env.GITHUB_TOKEN`.
+   - If absent, it falls back to a developer's local `.env` token.
+2. **Read/Write Operations in `github-mcp`**:
+   - Developers in `core-engineers` can use MCP tools (`create_pull_request`, `get_file_contents`, `list_workflow_runs`) without administrative rights.
+   - Operations on teams and members (`list_teams`, `list_team_members`) work for all members, providing necessary context for CODEOWNERS review requests.
+3. **Guardrailed Mutation Fallback**:
+   - For mutations not supported natively by `github-mcp` (e.g., team creation, branch ruleset updates), the operator falls back to the GitHub CLI (`gh`), restricting execution to authorized roles.
 
 ---
 
-## 6. Required GitHub App Permissions Specification
+## 5. Security Guardrails and Least Privilege Guarantees
 
-To fulfill the complete governance requirements of `github-org-manager` across both CLI and MCP
-interfaces, configure the GitHub App with the following scopes:
+Even when `github-org-manager` is available to all teams, security boundaries remain immutable:
 
-### Organization Permissions
-
-| Permission | Level | Justification |
-| :--- | :--- | :--- |
-| **Administration** | `write` | Required to manage repository rulesets, audit logs, and security policies. |
-| **Members** | `write` | Required to create, delete, and synchronize teams and manage memberships. |
-| **Secrets** | `write` | Required to set and rotate organization-level GitHub Actions secrets. |
-| **Custom Properties**| `write` | Required to tag repositories and enforce metadata categorization. |
-
-### Repository Permissions
-
-| Permission | Level | Justification |
-| :--- | :--- | :--- |
-| **Administration** | `write` | Required to bind repository RBAC permissions to functional teams. |
-| **Contents** | `write` | Required for autonomous code mutations, submodule updates, and tags. |
-| **Pull Requests** | `write` | Required for agent pull request authoring, review, and merging. |
-| **Secrets** | `write` | Required to set environment and repository-scoped Actions pipeline secrets. |
-| **Metadata** | `read` | Mandatory base permission for repository discovery. |
+1. **Privilege Ceiling (OAuth Mode)**: If an engineer uses the App in User-to-Server mode, GitHub's
+   Permission Intersection guarantees that the developer cannot exceed their personal repository
+   permissions.
+2. **Private Key Protection (Bot Mode)**: The GitHub App private key (`.pem`) is vaulted in Infisical
+   under the `lead-architects` environment. Developers in `core-engineers` have zero access to the
+   underlying private key.
+3. **Zero-Emoji & Conventional Commit Enforcement**: Built directly into the operator's execution
+   logic. Any commit or PR authoring request that fails compliance is rejected prior to dispatch.
 
 ---
 
-## 7. Migration and Deployment Runbook
+## 6. Implementation Runbook: Transitioning to the Centralized Operator
 
-1. **Register the GitHub App**:
-   - Navigate to `https://github.com/organizations/tupynambalucas-dev/settings/apps/new`.
-   - Name: `tupynambalucas-org-manager`.
-   - Homepage: `https://tupynambalucas.dev`.
-   - Permissions: Select the scopes defined in Section 6.
-   - Where to install: `Only on this account`.
-2. **Generate Private Key**:
-   - Download the generated `.pem` private key file.
-   - Record `App ID` and `Client ID`.
-3. **Install the App**:
-   - Install the app on `tupynambalucas-dev` with `All repositories` selected.
-   - Record the `Installation ID` from the installation URL (e.g., `.../installations/12345678`).
-4. **Vault Credentials in Infisical**:
-   - Encode the private key: `base64 -w 0 tupynambalucas-org-manager.private-key.pem`
-   - Store in Infisical project `tupynambalucas-dev-agent-toolkit` (environment `dev` and `prod`):
-     - `GITHUB_APP_ID`: `<App ID>`
-     - `GITHUB_APP_INSTALLATION_ID`: `<Installation ID>`
-     - `GITHUB_APP_PRIVATE_KEY_BASE64`: `<Base64 String>`
-5. **Verify Local MCP Execution**:
-   - Run `agy` or `mcp-runner.js` with Infisical injection:
-     ```bash
-     infisical run --projectId <AGENT_TOOLKIT_PROJECT_ID> --env dev -- agy
-     ```
-   - Verify that `github-mcp` connects using the ephemeral bot token without requiring personal PATs.
+1. **Deploy GitHub App**: Register `tupynambalucas-org-manager` with the organization permissions specified in Section 6 of this reference guide.
+2. **Configure Infisical Secret Injection**:
+   - `GITHUB_APP_ID`: Application identifier.
+   - `GITHUB_APP_INSTALLATION_ID`: Installation identifier for `tupynambalucas-dev`.
+   - `GITHUB_APP_PRIVATE_KEY_BASE64`: Base64-encoded `.pem` private key.
+3. **Enhance `mcp-runner.js`**: Add automated JWT exchange so that `github-mcp` launches with an ephemeral App token automatically when running under `infisical run`.
+4. **Distribute Operator Skills**: Allow all teams to consume the developer workflow tools in `github-org-manager` for commit and PR standardization.
