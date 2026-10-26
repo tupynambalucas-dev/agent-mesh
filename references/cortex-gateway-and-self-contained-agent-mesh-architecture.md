@@ -1,16 +1,17 @@
 # Cortex MCP Engine & Self-Contained Agent Mesh Architecture
 
-This specification establishes the authoritative enterprise architecture linking the **Cortex MCP Engine**
+This specification establishes the authoritative enterprise architecture linking the **Cortex MCP Control Plane**
 in [platform/hub/cortex/mcp](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/platform/hub/cortex/mcp)
 with the **Agent Mesh Workspace** in `agent-mesh` (formerly `agent-toolkit`).
 
-It codifies six foundational architectural decisions:
-1. **Renaming to `agent-mesh`**: Resolves semantic collision with `platform` and `cortex`. The repository represents the decentralized, composable mesh of agent plugins, personas, rules, and skills.
-2. **Canonical MCP Services in `platform/hub/cortex/mcp/services/*`**: Eliminates redundant `packages/` directory fragmentation. All MCP servers live in `services/*` as unified, dual-target components serving as both Kubernetes cluster microservices (HTTP/Streamable HTTP) and standalone publishable CLI tools (Stdio via `pnpm dlx`).
-3. **Enterprise Google Workspace & AppSheet MCPs**: Implements dedicated services for Google Workspace automation (`@tupynambalucas-dev/cortex-mcp-gwork`) and AppSheet hybrid lifecycle management (`@tupynambalucas-dev/cortex-mcp-appsheet`).
-4. **Environment-Aware Playwright Isolation**: Formalizes the operational divergence between containerized headless Playwright daemons in Kubernetes and local headed/DevTools-attached browser automation.
-5. **Autonomous Plugins with `agent-plugin-` Prefix**: Every plugin in `agent-mesh/plugins/<domain>` is an independent pnpm workspace package named `@tupynambalucas-dev/agent-plugin-<domain>`, containing modularized, professional skills broken into focused sub-capabilities.
-6. **Zero-Installation Tool Execution via `pnpm dlx`**: Plugins execute MCP tools locally on demand using `pnpm dlx @tupynambalucas-dev/cortex-mcp-*` or upstream equivalents, providing instant cold-start execution without polluting repository `node_modules`.
+It codifies seven foundational architectural decisions:
+1. **Renaming to `agent-mesh`**: Resolves semantic collision with `platform` and `cortex`. The repository represents the decentralized, composable mesh of agent plugins, personas, rules, skills, and MCP tool servers.
+2. **Consolidation of MCP Servers in `agent-mesh/servers/*`**: All in-house Model Context Protocol implementations (`firecrawl`, `memory`, `google-workspace`, `appsheet`) reside exclusively in `agent-mesh/servers/*` as clean TypeScript packages published to GitHub Packages (`npm.pkg.github.com`).
+3. **Complete Elimination of Custom Dockerfiles**: Eliminates all custom Dockerfiles across the MCP ecosystem. Upstream servers use official pre-built container images (`github`, `grafana`, `kubectl`, `playwright`), while in-house TypeScript MCP servers run directly on official `node:22-alpine` base images using declarative Kubernetes manifests with `npx -y`.
+4. **Purging of `platform/hub/cortex/mcp/services/`**: The `platform` repository ceases hosting application tool code, retaining strictly the **Control Plane Infrastructure**: Envoy `agentgateway`, gRPC `mcp-guardrails`, developer `inspector`, and declarative GitOps manifests in `platform/k8s/manifests/hub/cortex/mcp/`.
+5. **Enterprise Google Workspace & AppSheet MCPs**: Implements dedicated services for Google Workspace automation (`@tupynambalucas-dev/cortex-mcp-gwork`) and AppSheet hybrid lifecycle management (`@tupynambalucas-dev/cortex-mcp-appsheet`).
+6. **Environment-Aware Playwright Isolation**: Replaces custom browser Dockerfiles with the official Microsoft container (`mcr.microsoft.com/playwright/mcp:latest`) in Kubernetes, while supporting interactive headed/DevTools execution locally.
+7. **Autonomous Plugins with `agent-plugin-` Prefix**: Every plugin in `agent-mesh/plugins/<domain>` is an independent pnpm workspace package named `@tupynambalucas-dev/agent-plugin-<domain>`, containing modularized, professional skills.
 
 ---
 
@@ -18,28 +19,14 @@ It codifies six foundational architectural decisions:
 
 ```mermaid
 flowchart TD
-    subgraph PlatformRepo ["platform/ (Cloud Services, GitOps & Infrastructure Monorepo)"]
-        subgraph CortexMCP ["platform/hub/cortex/mcp/ (MCP Data Plane - SSOT)"]
-            subgraph MCPServices ["services/ (Unified Dual-Target MCP Services)"]
-                MCPFirecrawl["services/firecrawl (@tupynambalucas-dev/cortex-mcp-firecrawl)"]
-                MCPMemory["services/memory (@tupynambalucas-dev/cortex-mcp-memory)"]
-                MCPGitHub["services/github (@tupynambalucas-dev/cortex-mcp-github)"]
-                MCPGoogleWorkspace["services/google-workspace (@tupynambalucas-dev/cortex-mcp-gwork)"]
-                MCPAppSheet["services/appsheet (@tupynambalucas-dev/cortex-mcp-appsheet)"]
-                MCPPlaywright["services/playwright (Headless Container Daemon)"]
-                MCPContext7["services/context7 (Framework Doc Engine)"]
-                MCPGrafana["services/grafana (LGTM Observability)"]
-                MCPKubectl["services/kubectl (K8s Diagnostics)"]
-            end
-            ExtMCPGuardrails["guardrails/ (gRPC ExtMCP Transparent Policy Proxy)"]
+    subgraph AgentMeshRepo ["agent-mesh/ (Autonomous Agent Capabilities Monorepo)"]
+        subgraph MCPServersWorkspace ["servers/ (Clean TypeScript MCP Packages - SSOT)"]
+            MCPFirecrawl["servers/firecrawl (@tupynambalucas-dev/cortex-mcp-firecrawl)"]
+            MCPMemory["servers/memory (@tupynambalucas-dev/cortex-mcp-memory)"]
+            MCPGoogleWorkspace["servers/google-workspace (@tupynambalucas-dev/cortex-mcp-gwork)"]
+            MCPAppSheet["servers/appsheet (@tupynambalucas-dev/cortex-mcp-appsheet)"]
         end
-        EnvoyGateway["AgentGateway (Envoy Ingress :8080)"]
-        MCPServices -->|HTTP / Streamable HTTP :8080| EnvoyGateway
-        ExtMCPGuardrails -.->|Request Mutation / Validation| EnvoyGateway
-        MCPServices -. "pnpm publish (bin: Stdio)" .-> GitHubPackages["GitHub Packages Registry (@tupynambalucas-dev)"]
-    end
 
-    subgraph AgentMeshRepo ["agent-mesh/ (Autonomous Agent Mesh Monorepo)"]
         subgraph PluginsWorkspace ["plugins/ (Self-Contained Antigravity & agy Plugins)"]
             PluginGH["@tupynambalucas-dev/agent-plugin-github"]
             PluginDocusaurus["@tupynambalucas-dev/agent-plugin-docusaurus"]
@@ -49,61 +36,130 @@ flowchart TD
             PluginGoogleWorkspace["@tupynambalucas-dev/agent-plugin-google-workspace"]
             PluginSecrets["@tupynambalucas-dev/agent-plugin-secrets (Infisical)"]
         end
+
+        MCPServersWorkspace -. "pnpm publish (dist/index.js + bin: dist/bin.js)" .-> GitHubPackages["GitHub Packages Registry (npm.pkg.github.com)"]
     end
 
-    subgraph ConsumingProjects ["Consuming Workspaces & Developers"]
-        DocsApp["docs/ (Consumes agent-plugin-docusaurus, agent-plugin-meta)"]
-        CoreUmbrella["org-core/ (Consumes all plugins)"]
-        ExternalDev["External Developer (agy plugin install / pnpm add)"]
+    subgraph PlatformRepo ["platform/ (Cloud Services, GitOps & Infrastructure Monorepo)"]
+        subgraph CortexControlPlane ["platform/hub/cortex/mcp/ (MCP Control Plane Only)"]
+            ExtMCPGuardrails["guardrails/ (gRPC ExtMCP Transparent Policy Proxy)"]
+            MCPInspector["inspector/ (Web UI for Dev Testing)"]
+        end
+
+        subgraph KubernetesCluster ["Kubernetes Manifests (Zero Custom Dockerfiles)"]
+            K8sFirecrawl["mcp-firecrawl (image: node:22-alpine + npx -y)"]
+            K8sMemory["mcp-memory (image: node:22-alpine + npx -y)"]
+            K8sGoogleWorkspace["mcp-google-workspace (image: node:22-alpine + npx -y)"]
+            K8sAppSheet["mcp-appsheet (image: node:22-alpine + npx -y)"]
+            K8sContext7["mcp-context7 (image: node:22-alpine + npx -y @upstash/context7-mcp)"]
+            K8sGitHub["mcp-github (image: ghcr.io/github/github-mcp-server:latest)"]
+            K8sPlaywright["mcp-playwright (image: mcr.microsoft.com/playwright/mcp:latest)"]
+            K8sGrafana["mcp-grafana (image: grafana/mcp-grafana:latest)"]
+            K8sKubectl["mcp-kubectl (image: ghcr.io/rohitg00/kubectl-mcp-server:latest)"]
+        end
+
+        EnvoyGateway["AgentGateway (Envoy Ingress :8080)"]
+        KubernetesCluster -->|HTTP / Streamable HTTP :8080| EnvoyGateway
+        ExtMCPGuardrails -.->|Request Mutation & Security Policies| EnvoyGateway
     end
 
+    GitHubPackages ==>|npx -y on container start| KubernetesCluster
     GitHubPackages ==>|pnpm dlx on-demand execution (Stdio fallback)| PluginsWorkspace
     EnvoyGateway ==>|Direct HTTP / SSE streaming (Cluster mode)| PluginsWorkspace
-    PluginsWorkspace ==>|Installed via agy plugin / npm| ConsumingProjects
 ```
 
 ---
 
-## 2. Resolving Repository Naming Redundancy
+## 2. Resolving Repository Naming & Structural Boundaries
 
-To eliminate architectural ambiguity across organizational repositories, nomenclature is strictly aligned:
+To eliminate architectural overlap across organizational repositories, the taxonomy is strictly aligned:
 
-| Candidate Name | Analysis | Final Decision |
+| Submodule | Architectural Role | Bounded Context Contents |
 | :--- | :--- | :--- |
-| **`agent-platform`** | Ambiguous: Collides directly with the foundational `platform/` monorepo. Developers cannot distinguish between cloud infrastructure and agent tooling. | **REJECTED** |
-| **`cortex`** | Conflicting: `cortex` is the internal AI microservice suite in `platform/hub/cortex` (Fastify API, AgentGateway, MongoDB vector RAG). | **REJECTED** |
-| **`agent-toolkit` (Current)** | Constrained: Suggests a static collection of utility scripts rather than a multi-package plugin registry and decentralized mesh. | **TRANSITIONAL** |
-| **`agent-mesh`** | **Optimal**: Represents the decentralized, composable network of autonomous plugins, skills, behavioral rules, and fallback MCP tools. Zero collisions with `platform` or `cortex`. | **ADOPTED AS OFFICIAL TARGET** |
+| **`platform/`** | **Cloud-Native Infrastructure & Control Plane** | Envoy `agentgateway`, gRPC `guardrails`, MongoDB vector store, Kubernetes Helm/Kustomize manifests, Traefik ingress, Cert-Manager, studio web apps, corporate services. |
+| **`agent-mesh/`** *(formerly `agent-toolkit`)* | **AI Agent Substrate & Capability Monorepo** | Antigravity plugins (`plugins/*`), Model Context Protocol servers (`servers/*`), skills, behavioral rules, and smart gateway fallback routers. |
+| **`docs/`** | **Sovereign Documentation Hub** | Docusaurus v3 knowledge base, MDX specifications, Crowdin localization pipelines. |
+| **`.github/`** | **Enterprise Governance** | Organization standards, GitHub Actions reusable workflows, community health, and public profiles. |
 
 ---
 
-## 3. Directory Taxonomy: Why `services/` is the Correct Standard
+## 3. The Zero-Dockerfile Architecture: Pure Manifest Execution
 
-A critical architectural decision is preserving `platform/hub/cortex/mcp/services/` rather than introducing a split `packages/` directory:
+A major optimization in this architecture is the **complete elimination of custom Dockerfiles** for all MCP servers:
 
-### 3.1 Why a Separate `packages/` Directory Was Discarded
-1. **Elimination of Artificial Fragmentation**:
-   Creating a parallel `packages/` directory inside `platform/hub/cortex/mcp/` introduces code duplication and mental overhead. Each tool implementation would exist either twice or as an artificial split where `packages/` has the TypeScript code and `services/` has only a Dockerfile.
-2. **Prevention of Cluster vs CLI Drift**:
-   By keeping the code in a single directory (`services/<name>`), the exact same tool handlers, Zod schemas, and business logic that run in Kubernetes also execute in the standalone CLI. There is zero drift between what the agent runs in production and what it runs locally.
-3. **Workspace Package Capability**:
-   In `pnpm` and `npm`, a package is defined by its `package.json`, not by the directory name containing it. Any directory under `services/*` is already a full-fledged workspace package that can be built, tested, and published to GitHub Packages or npm.
+### 3.1 Upstream & In-House MCP Execution Matrix
 
-### 3.2 Why `services/` is the Architectural Standard in `platform`
-- **Monorepo Uniformity**: Across all bounded contexts in `platform`, containerized workloads and domain services live in `services/`:
-  - `platform/corporate/services/*`
-  - `platform/hub/cortex/memory/services/*`
-  - `platform/hub/cortex/mcp/services/*`
-- **Kubernetes & GitOps Mapping**: Every folder in `services/` maps directly to a Kubernetes `Deployment` and `Service` in Helm charts and Skaffold pipeline manifests (`skaffold.yaml`). Renaming to `servers/` breaks Kubernetes taxonomy (Kubernetes manages *Services*, not *Servers*).
-- **pnpm Workspace Configuration**: `platform/pnpm-workspace.yaml` cleanly includes `'hub/cortex/mcp/services/*'`, giving every MCP service full access to catalog dependencies and shared configs (`@tupynambalucas-dev/shared-config`).
+| MCP Service | Previous State in `platform` | New Zero-Dockerfile Strategy | Kubernetes Manifest Configuration (`platform/k8s/manifests/hub/cortex/mcp/`) |
+| :--- | :--- | :--- | :--- |
+| **`github`** | Custom Dockerfile wrapping upstream | **Official Container Image** | `image: ghcr.io/github/github-mcp-server:latest`<br>`command: ["/server/github-mcp-server"]`<br>`args: ["http", "--listen-host", "0.0.0.0", "--port", "8080"]` |
+| **`playwright`**| Custom Alpine Dockerfile installing Chromium | **Official Microsoft Image** | `image: mcr.microsoft.com/playwright/mcp:latest`<br>`command: ["node", "/app/cli.js"]`<br>`args: ["--headless", "--browser", "chromium", "--no-sandbox", "--port", "8080", "--host", "0.0.0.0"]` |
+| **`grafana`** | Custom Dockerfile wrapping upstream | **Official Container Image** | `image: grafana/mcp-grafana:latest`<br>`args: ["-t", "streamable-http", "--address", "0.0.0.0:8080", "-allowed-hosts", "*", "-allowed-origins", "*"]` |
+| **`kubectl`** | No Dockerfile (Manifest only) | **Official Container Image** | `image: ghcr.io/rohitg00/kubectl-mcp-server:latest`<br>`args: ["--transport", "streamable-http", "--host", "0.0.0.0", "--port", "8080"]` |
+| **`context7`** | Custom Dockerfile installing npm package | **Base Node + npx Execution** | `image: node:22-alpine`<br>`command: ["npx", "-y", "@upstash/context7-mcp"]`<br>`args: ["--transport", "http", "--port", "8080"]` |
+| **`firecrawl`**| Custom TypeScript in `services/firecrawl` | **Base Node + GitHub Packages npx** | `image: node:22-alpine`<br>`command: ["sh", "-c"]`<br>`args: ["npx -y @tupynambalucas-dev/cortex-mcp-firecrawl"]` |
+| **`memory`** | Custom TypeScript in `services/memory` | **Base Node + GitHub Packages npx** | `image: node:22-alpine`<br>`command: ["sh", "-c"]`<br>`args: ["npx -y @tupynambalucas-dev/cortex-mcp-memory"]` |
+| **`google-workspace`**| Greenfield planning | **Base Node + GitHub Packages npx** | `image: node:22-alpine`<br>`command: ["sh", "-c"]`<br>`args: ["npx -y @tupynambalucas-dev/cortex-mcp-gwork"]` |
+| **`appsheet`**| Greenfield planning | **Base Node + GitHub Packages npx** | `image: node:22-alpine`<br>`command: ["sh", "-c"]`<br>`args: ["npx -y @tupynambalucas-dev/cortex-mcp-appsheet"]` |
+
+### 3.2 Architectural Benefits of Zero-Dockerfile Execution
+1. **Radical Acceleration of Skaffold & CI/CD**:
+   `platform/k8s/skaffold.hub.yaml` eliminates 6 Docker build targets. Skaffold no longer builds `cortex-mcp-*` containers, slashing local cluster bootstrap time from minutes to seconds.
+2. **Zero Base OS CVE Maintenance**:
+   Eliminating custom Dockerfiles removes the burden of tracking Linux distribution patches, OpenSSL updates, and container vulnerabilities.
+3. **Single Build Artifact (`.tgz` npm package)**:
+   A single `pnpm publish` to GitHub Packages provides the exact same tested code for both local agents (`pnpm dlx`) and Kubernetes pods (`npx -y`).
+4. **Purged `platform/hub/cortex/mcp/services/`**:
+   The entire `services/` directory is purged from `platform`, leaving `platform/hub/cortex/mcp` strictly as the control plane (`guardrails/` and `inspector/`).
 
 ---
 
-## 4. Google Workspace & Google AppSheet MCP Architecture
+## 4. In-House MCP Servers in `agent-mesh/servers/*`
+
+All in-house MCP servers are structured as clean TypeScript packages within `agent-mesh/servers/*`:
+
+```plaintext
+agent-mesh/
+├── pnpm-workspace.yaml
+├── package.json
+│
+├── servers/                           # Clean TypeScript Model Context Protocol Servers
+│   ├── firecrawl/                     # @tupynambalucas-dev/cortex-mcp-firecrawl
+│   │   ├── package.json               # main: dist/index.js, bin: dist/bin.js
+│   │   ├── tsconfig.json
+│   │   └── src/
+│   │       ├── index.ts               # Fastify HTTP server on port 8080 (for K8s)
+│   │       ├── bin.ts                 # Stdio CLI binary (for pnpm dlx)
+│   │       └── tools/                 # scrape, crawl, search, map, extract
+│   │
+│   ├── memory/                        # @tupynambalucas-dev/cortex-mcp-memory
+│   │   ├── package.json
+│   │   └── src/
+│   │       ├── index.ts               # Fastify HTTP server on port 8080 (for K8s)
+│   │       ├── bin.ts                 # Stdio CLI binary (for pnpm dlx)
+│   │       └── tools/                 # search_knowledge, store_episodic, query_graph
+│   │
+│   ├── google-workspace/              # @tupynambalucas-dev/cortex-mcp-gwork
+│   │   ├── package.json
+│   │   └── src/
+│   │       ├── index.ts               # Fastify HTTP server on port 8080 (for K8s)
+│   │       ├── bin.ts                 # Stdio CLI binary (for pnpm dlx)
+│   │       └── tools/                 # sheets, drive, docs, gmail, calendar
+│   │
+│   └── appsheet/                      # @tupynambalucas-dev/cortex-mcp-appsheet
+│       ├── package.json
+│       └── src/
+│           ├── index.ts               # Fastify HTTP server on port 8080 (for K8s)
+│           ├── bin.ts                 # Stdio CLI binary (for pnpm dlx)
+│           └── tools/                 # list_tables, get_schema, query, mutate, invoke
+```
+
+---
+
+## 5. Google Workspace & Google AppSheet MCP Architecture
 
 The agent ecosystem requires enterprise-grade access to Google Workspace (Drive, Docs, Sheets, Gmail, Calendar) and Google AppSheet.
 
-### 4.1 Authentication Patterns: Cluster Infra vs Local Plugins
+### 5.1 Authentication Patterns: Cluster Infra vs Local Plugins
 
 Connecting to Google APIs requires distinct authentication strategies depending on execution context:
 
@@ -112,65 +168,17 @@ Connecting to Google APIs requires distinct authentication strategies depending 
 | **K8s Infra (Microservice behind Gateway)** | **Google Service Account with Domain-Wide Delegation** or **Workload Identity Federation** | Mounted JSON credentials via Infisical / K8s Secret (`GOOGLE_APPLICATION_CREDENTIALS`). Uses `google-auth-library` JWT signing in-memory. | **Zero Human Interaction**: Headless, deterministic, scoped strictly to organizational service account or delegated user. |
 | **Local Plugin (`pnpm dlx` / Stdio Fallback)** | **Local Service Account Key** or **OAuth 2.0 PKCE User Token** | Reads `GOOGLE_SERVICE_ACCOUNT_JSON` or cached token in `~/.gemini/auth/google-oauth.json`. Can trigger browser consent on initial setup. | **Interactive**: Developer authorizes personal or test Google account on localhost callback. |
 
-### 4.2 Google Workspace MCP (`services/google-workspace`)
+### 5.2 Google Workspace MCP (`servers/google-workspace`)
 Published as `@tupynambalucas-dev/cortex-mcp-gwork`, this service unifies core Workspace capabilities:
 - **Google Sheets API v4**: Reading ranges, appending rows, updating cell formatting, setting frozen headers, adding data validation dropdowns, batch updates.
 - **Google Drive API v3**: Creating folders, searching files (`name contains '...'`), setting permissions (`anyoneWithLink`, `domain`, `user`), moving files.
 - **Google Docs API v1**: Creating documents, batch inserting styled text, generating Diátaxis templates.
 - **Gmail & Calendar APIs**: Reading thread metadata, creating draft emails, querying calendar event free/busy blocks.
 
-### 4.3 Google AppSheet MCP (`services/appsheet`)
+### 5.3 Google AppSheet MCP (`servers/appsheet`)
 Published as `@tupynambalucas-dev/cortex-mcp-appsheet`, this service executes the **Hybrid AppSheet Lifecycle**:
-
-```mermaid
-flowchart TD
-    subgraph GreenfieldTrajectory ["Greenfield Flow: Prompt-to-App Generation"]
-        NLPrompt["User Prompt: 'Build a Field Service Inspection App'"]
-        EntityModeler["Antigravity Data Modeler (AppSheet Conventions)"]
-        GSheetsAPI["Google Sheets API v4 (Provision Multi-Tab Workbook)"]
-        InitEndpoint["AppSheet Direct Ingestion (/start/initialize?docId=...)"]
-        AppEditor["AppSheet App Generated with Tables & Views"]
-
-        NLPrompt --> EntityModeler
-        EntityModeler --> GSheetsAPI
-        GSheetsAPI -->|docId| InitEndpoint
-        InitEndpoint --> AppEditor
-    end
-
-    subgraph BrownfieldTrajectory ["Brownfield Flow: Operational Management via MCP"]
-        AgentAction["Agent Operation (Query / Mutation / Action)"]
-        AppSheetMCP["AppSheet MCP Server (cortex-mcp-appsheet)"]
-        InboundREST["AppSheet Inbound REST API v2 (/api/v2/apps/.../Action)"]
-        DataStore["Underlying Database (Google Sheets / Cloud SQL)"]
-
-        AgentAction --> AppSheetMCP
-        AppSheetMCP -->|REST POST + ApplicationAccessKey| InboundREST
-        InboundREST <--> DataStore
-    end
-```
-
-#### Core AppSheet MCP Tools:
-1. `appsheet_list_tables`: Lists all configured tables in target application.
-2. `appsheet_get_schema`: Retrieves columns, keys, types, and virtual column formulas.
-3. `appsheet_query_data`: Queries records using AppSheet expressions (`Filter(Table, [Status] = "Open")`).
-4. `appsheet_mutate_rows`: Executes `Add`, `Edit`, or `Delete` actions on table records.
-5. `appsheet_invoke_action`: Dispatches configured AppSheet actions, bots, and webhook notifications.
-6. `appsheet_sync_underlying_db`: Evolves Google Sheets schema with new column headers and triggers table structure regeneration.
-
----
-
-## 5. Playwright MCP: Cluster Headless Daemon vs Local DevTools
-
-A common architectural trap is treating browser automation identically across cloud clusters and local workstations. The operational constraints differ fundamentally:
-
-| Dimension | K8s Infrastructure Daemon (`services/playwright`) | Local Workstation Execution (`agent-mesh`) |
-| :--- | :--- | :--- |
-| **Execution Environment** | Alpine Linux container in Kubernetes pod behind `agentgateway`. | Developer machine OS (Windows 11, macOS, Linux). |
-| **Browser Binary** | Containerized Chromium (`/usr/bin/chromium-browser`) launched with `--no-sandbox --disable-dev-shm-usage`. | Local Chrome / Chromium or Chrome DevTools MCP. |
-| **Display Mode** | **Headless Only**: Runs with `headless: true` (or virtual Xvfb framebuffer). No window appears. | **Headed or Headless**: Can render browser window for interactive debugging. |
-| **Authentication & Sessions** | **Pre-Authenticated Cookies**: Reads `storageState.json` mounted from K8s Secret. Cannot prompt for human MFA or CAPTCHA. | **Interactive Auth**: Can open login screen, allow Google 2FA, and export session to `~/.gemini/auth/`. |
-| **Network & DNS** | Operates inside Kubernetes cluster network; uses `host.docker.internal` (via guardrail mutation) to reach host. | Operates directly on host network; connects to `localhost:3000`, `localhost:5173`. |
-| **Chrome DevTools Connection** | Disconnected from developer's desktop browser. | Can attach to active Chrome instance via `--remote-debugging-port=9222`. |
+1. **Greenfield Prompt-to-App**: Automates multi-table Google Sheet generation via Sheets API and triggers direct initialization via `https://www.appsheet.com/start/initialize?docId={SPREADSHEET_ID}`.
+2. **Brownfield Operational Management**: Connects to AppSheet Inbound REST API v2 (`/api/v2/apps/{appId}/tables/{tableName}/Action`) to query schemas, filter rows, execute mutations, and trigger actions.
 
 ---
 
@@ -228,7 +236,7 @@ mcp:
           key: '$GITHUB_PERSONAL_ACCESS_TOKEN'
     - name: context7
       mcp:
-        host: https://mcp.context7.com/mcp
+        host: http://mcp-context7:8080/mcp
       policies:
         backendAuth:
           key: '$CONTEXT7_API_KEY'
@@ -259,69 +267,37 @@ mcp:
 
 ## 7. The Agent Mesh Workspace Structure (`agent-mesh`)
 
-In `agent-mesh` (within `agent-toolkit`), plugins are structured as independent pnpm workspace packages. Skills are broken down into **modular, single-responsibility capabilities**:
+In `agent-mesh`, root `pnpm-workspace.yaml` manages both plugins and servers:
+
+```yaml
+packages:
+  - 'plugins/*'
+  - 'servers/*'
+  - 'packages/*'
+```
 
 ```plaintext
 agent-mesh/
 ├── pnpm-workspace.yaml
-├── package.json                       # Root workspace orchestration
+├── package.json
 │
-├── plugins/
-│   ├── docusaurus/                    # Dedicated Sovereign Documentation Plugin
-│   │   ├── package.json               # @tupynambalucas-dev/agent-plugin-docusaurus
-│   │   ├── plugin.json                # Antigravity manifest: name "docusaurus-engineer"
-│   │   └── skills/
-│   │       ├── docusaurus-architect/  # Diátaxis framework, navigation, _category_.json
-│   │       ├── docusaurus-mdx-author/ # MDX v3 parser compliance, React components, JSX
-│   │       └── docusaurus-validator/  # Broken link auditing, linting, Crowdin sync
-│   │
-│   ├── meta/                          # Consolidated AI Meta-Engineering Plugin
-│   │   ├── package.json               # @tupynambalucas-dev/agent-plugin-meta
-│   │   ├── plugin.json                # Antigravity manifest: name "meta-agent-skills"
-│   │   └── skills/
-│   │       ├── markdown-architect/    # GFM standards, tables, zero-emoji validation
-│   │       ├── agent-router-architect/# AGENTS.md context routers, XML tags, hierarchy
-│   │       ├── skill-architect/       # SKILL.md authoring, frontmatter schemas, evals
-│   │       └── plugin-manifest-architect/ # plugin.json authoring, MCP config bindings
-│   │
-│   ├── github/                        # GitHub App Operator Plugin
-│   │   ├── package.json               # @tupynambalucas-dev/agent-plugin-github
-│   │   ├── plugin.json                # Antigravity manifest: name "github-operator"
-│   │   ├── mcp_config.json            # Gateway with Stdio fallback
-│   │   └── skills/
-│   │       └── github-org-manager/
-│   │
-│   ├── google-workspace/              # Google Workspace & AppSheet Automation Plugin
-│   │   ├── package.json               # @tupynambalucas-dev/agent-plugin-google-workspace
-│   │   ├── plugin.json                # Antigravity manifest: name "google-workspace"
-│   │   ├── mcp_config.json            # Gateway with Stdio fallback
-│   │   └── skills/
-│   │       ├── appsheet-architect/    # Prompt-to-app modeling, Sheets provisioning
-│   │       └── workspace-automator/   # Drive, Docs, and Sheets automation
-│   │
-│   ├── web/                           # Web Scraping & Headless Automation Plugin
-│   │   ├── package.json               # @tupynambalucas-dev/agent-plugin-web
-│   │   ├── plugin.json                # Antigravity manifest: name "web-researcher"
-│   │   ├── mcp_config.json            # Executes cortex-mcp-firecrawl via pnpm dlx
-│   │   └── skills/
-│   │       ├── web-scraper/
-│   │       └── browser-automator/
-│   │
-│   ├── knowledge/                     # Memory & Framework Documentation Plugin
-│   │   ├── package.json               # @tupynambalucas-dev/agent-plugin-knowledge
-│   │   ├── plugin.json                # Antigravity manifest: name "knowledge-retriever"
-│   │   ├── mcp_config.json            # Executes cortex-mcp-memory & context7 via pnpm dlx
-│   │   └── skills/
-│   │       └── rag-retriever/
-│   │
-│   └── secrets/                       # Enterprise Secrets Governance Plugin
-│       ├── package.json               # @tupynambalucas-dev/agent-plugin-secrets
-│       ├── plugin.json                # Antigravity manifest: name "secrets-governance"
-│       └── skills/
-│           └── secrets-expert/
+├── plugins/                           # Self-Contained Antigravity & agy Plugins
+│   ├── docusaurus/                    # @tupynambalucas-dev/agent-plugin-docusaurus
+│   ├── meta/                          # @tupynambalucas-dev/agent-plugin-meta
+│   ├── github/                        # @tupynambalucas-dev/agent-plugin-github
+│   ├── google-workspace/              # @tupynambalucas-dev/agent-plugin-google-workspace
+│   ├── web/                           # @tupynambalucas-dev/agent-plugin-web
+│   ├── knowledge/                     # @tupynambalucas-dev/agent-plugin-knowledge
+│   └── secrets/                       # @tupynambalucas-dev/agent-plugin-secrets
 │
-└── packages/                          # Shared Plugin Support Libraries
-    ├── core/                          # Base Zod schemas, types, and IPC helpers
+├── servers/                           # Clean TypeScript Model Context Protocol Servers
+│   ├── firecrawl/                     # @tupynambalucas-dev/cortex-mcp-firecrawl
+│   ├── memory/                        # @tupynambalucas-dev/cortex-mcp-memory
+│   ├── google-workspace/              # @tupynambalucas-dev/cortex-mcp-gwork
+│   └── appsheet/                      # @tupynambalucas-dev/cortex-mcp-appsheet
+│
+└── packages/                          # Shared Agent Mesh Libraries
+    ├── core/                          # Base Zod schemas and IPC types
     └── runner/                        # Smart Gateway probing & fallback router
 ```
 
@@ -358,14 +334,14 @@ sequenceDiagram
 
 ---
 
-## 9. Migration & Implementation Checklist
+## 9. Migration & Execution Checklist
 
-1. [x] Audit `platform/hub/cortex/mcp/services/*` structure and eliminate redundant `packages/` directory.
-2. [x] Revert `platform/pnpm-workspace.yaml` to track `hub/cortex/mcp/services/*` as canonical workspace packages.
-3. [x] Document Google Workspace (`services/google-workspace`) and AppSheet (`services/appsheet`) MCP specifications.
-4. [x] Document Playwright operational differences between K8s container daemons and local workstations.
-5. [x] Update AgentGateway configuration to define targets for Workspace, AppSheet, Playwright, and custom MCPs.
-6. [ ] Scaffold `agent-mesh/plugins/docusaurus` with modular Diátaxis skills (`docusaurus-architect`, `docusaurus-mdx-author`, `docusaurus-validator`).
-7. [ ] Scaffold `agent-mesh/plugins/meta` consolidating `markdown-architect`, `agent-router-architect`, `skill-architect`, and `plugin-manifest-architect`.
-8. [ ] Implement the Smart Gateway Probe in `scripts/mcp-runner.js` with 300ms health-checking and dynamic Stdio fallback.
-9. [ ] Create dedicated runtime specification: `agent-toolkit/references/cortex-mcp-infrastructure-vs-local-fallback-runtime.md`.
+1. [x] Document the Zero-Dockerfile Architecture and official upstream image mappings.
+2. [x] Document manifest-based `node:22-alpine` execution for custom MCP servers.
+3. [x] Update AgentGateway configuration to define targets for Workspace, AppSheet, Playwright, and custom MCPs.
+4. [ ] Move `platform/hub/cortex/mcp/services/firecrawl` and `services/memory` to `agent-toolkit/servers/`.
+5. [ ] Purge `platform/hub/cortex/mcp/services/` and remove from `platform/pnpm-workspace.yaml`.
+6. [ ] Update `platform/k8s/manifests/hub/cortex/mcp/*.yaml` to use official images (`github`, `grafana`, `playwright`, `kubectl`) and `node:22-alpine` with `npx -y` (`firecrawl`, `memory`, `context7`).
+7. [ ] Clean `platform/k8s/skaffold.hub.yaml` to remove unneeded custom Docker builds.
+8. [ ] Update `agent-toolkit/pnpm-workspace.yaml` to include `'servers/*'`.
+9. [ ] Rename repository from `agent-toolkit` to `agent-mesh` and update `org-core/.gitmodules`.
