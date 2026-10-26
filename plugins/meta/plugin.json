@@ -1,0 +1,11 @@
+{
+  "name": "meta-agent-skills",
+  "version": "1.0.0",
+  "description": "Antigravity plugin providing authoritative meta-engineering skills for agent context routers, modular skills, and GFM standards.",
+  "skills": [
+    "./skills/markdown-architect",
+    "./skills/agent-router-architect",
+    "./skills/skill-architect",
+    "./skills/plugin-manifest-architect"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "@tupynambalucas-dev/agent-plugin-meta",
+  "version": "1.0.0",
+  "description": "Enterprise Antigravity plugin consolidating AI meta-engineering, AGENTS.md routing, skill design, and GFM governance.",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "keywords": [
+    "antigravity-plugin",
+    "meta-agent",
+    "router",
+    "skills",
+    "markdown"
+  ],
+  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "license": "MIT"
+}

@@ -1,0 +1,10 @@
+{
+  "name": "docusaurus-engineer",
+  "version": "1.0.0",
+  "description": "Antigravity plugin for Diataxis documentation architecture, MDX v3 authoring, and link validation.",
+  "skills": [
+    "./skills/docusaurus-architect",
+    "./skills/docusaurus-mdx-author",
+    "./skills/docusaurus-validator"
+  ]
+}

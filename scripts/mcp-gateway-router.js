@@ -1,36 +1,35 @@
 #!/usr/bin/env node
 
 /**
- * Enterprise MCP Gateway Router & Health-Checking Fallback Proxy.
- * Probes the remote Cloud MCP Gateway with a fast 300ms timeout.
- * When the cloud endpoint is healthy, acts as a Streamable HTTP proxy.
- * When unreachable, spawns local Infisical-wrapped fallback processes.
+ * Authoritative Smart MCP Gateway Router & Failover Engine
+ * Enterprise Standard for tupynambalucas.dev
  */
 
 const http = require("http");
 const https = require("https");
 const { spawn } = require("child_process");
 
-const GATEWAY_URL = process.env.TUPYNAMBA_GATEWAY_URL || "https://mcp.tupynambalucas.dev/mcp";
-const GATEWAY_TIMEOUT_MS = parseInt(process.env.TUPYNAMBA_GATEWAY_TIMEOUT_MS || "300", 10);
-const FALLBACK_COMMAND = process.env.TUPYNAMBA_FALLBACK_COMMAND || "pnpm";
-const FALLBACK_ARGS = ["dlx", "@infisical/cli", "run", "--env=dev", "--", "pnpm", "dlx", "firecrawl-mcp"];
+const TARGET_SERVICE = process.argv[2]; // e.g., "firecrawl", "github", "google-workspace", "memory", "appsheet", "context7", "playwright"
+const GATEWAY_BASE_URL = process.env.CORTEX_GATEWAY_URL || "http://localhost:8080";
+const PROBE_TIMEOUT_MS = parseInt(process.env.CORTEX_PROBE_TIMEOUT_MS || "300", 10);
 
-function checkGatewayHealth(urlStr, timeoutMs) {
+/**
+ * Fast non-blocking health probe on Envoy AgentGateway
+ */
+function probeGateway(baseUrl, timeoutMs) {
   return new Promise((resolve) => {
     try {
-      const parsedUrl = new URL(urlStr);
+      const parsedUrl = new URL(baseUrl);
       const client = parsedUrl.protocol === "https:" ? https : http;
-      const healthPath = parsedUrl.pathname.replace(/\/mcp\/?$/, "") + "/health";
 
       const req = client.get(
         {
           hostname: parsedUrl.hostname,
           port: parsedUrl.port || (parsedUrl.protocol === "https:" ? 443 : 80),
-          path: healthPath,
+          path: "/health",
           timeout: timeoutMs,
           headers: {
-            "User-Agent": "agent-toolkit-router/1.0.0",
+            "User-Agent": "cortex-mcp-smart-router/1.0.0",
           },
         },
         (res) => {
@@ -49,24 +48,78 @@ function checkGatewayHealth(urlStr, timeoutMs) {
   });
 }
 
-async function main() {
-  const isHealthy = await checkGatewayHealth(GATEWAY_URL, GATEWAY_TIMEOUT_MS);
+/**
+ * Fallback command mapping for decentralized execution
+ */
+const FALLBACK_REGISTRY = {
+  "firecrawl": {
+    pkg: "@tupynambalucas-dev/cortex-mcp-firecrawl",
+    upstream: "firecrawl-mcp"
+  },
+  "memory": {
+    pkg: "@tupynambalucas-dev/cortex-mcp-memory",
+    upstream: "@modelcontextprotocol/server-memory"
+  },
+  "github": {
+    pkg: "@tupynambalucas-dev/cortex-mcp-github",
+    upstream: "github-mcp-server-js"
+  },
+  "google-workspace": {
+    pkg: "@tupynambalucas-dev/cortex-mcp-gwork",
+    upstream: "@aaronsb/google-workspace-mcp"
+  },
+  "appsheet": {
+    pkg: "@tupynambalucas-dev/cortex-mcp-appsheet",
+    upstream: null
+  },
+  "context7": {
+    pkg: "@upstash/context7-mcp",
+    upstream: "@upstash/context7-mcp"
+  },
+  "playwright": {
+    pkg: "@playwright/mcp",
+    upstream: "@modelcontextprotocol/server-playwright"
+  }
+};
 
-  if (isHealthy) {
-    // Cloud Gateway mode (remote Streamable HTTP)
-    process.stderr.write(`[router] Routing MCP requests to Cloud Gateway: ${GATEWAY_URL}\n`);
-    // Connect stdio to remote streamable endpoint or bridge
-  } else {
-    // Local Fallback mode
-    process.stderr.write(`[router] Cloud Gateway offline/unreachable. Launching local Infisical fallback.\n`);
-    const child = spawn(FALLBACK_COMMAND, FALLBACK_ARGS, {
+async function main() {
+  if (!TARGET_SERVICE || !FALLBACK_REGISTRY[TARGET_SERVICE]) {
+    process.stderr.write(`[cortex-router] Error: Unknown target service '${TARGET_SERVICE}'.\n`);
+    process.exit(1);
+  }
+
+  const isGatewayHealthy = await probeGateway(GATEWAY_BASE_URL, PROBE_TIMEOUT_MS);
+
+  if (isGatewayHealthy) {
+    // Mode A: Cloud Gateway Ingress
+    process.stderr.write(`[cortex-router] AgentGateway healthy. Routing '${TARGET_SERVICE}' via ${GATEWAY_BASE_URL}/mcp\n`);
+
+    const sseBridge = spawn("npx", [
+      "-y",
+      "mcp-remote",
+      `${GATEWAY_BASE_URL}/mcp`
+    ], {
       stdio: "inherit",
       shell: process.platform === "win32",
     });
 
-    child.on("exit", (code) => {
-      process.exit(code || 0);
+    sseBridge.on("exit", (code) => process.exit(code || 0));
+  } else {
+    // Mode B: Local Standalone Fallback
+    const targetConfig = FALLBACK_REGISTRY[TARGET_SERVICE];
+    const executable = targetConfig.pkg;
+
+    process.stderr.write(`[cortex-router] AgentGateway offline. Engaging local fallback: pnpm dlx ${executable}\n`);
+
+    const fallbackProcess = spawn("pnpm", [
+      "dlx",
+      executable
+    ], {
+      stdio: "inherit",
+      shell: process.platform === "win32",
     });
+
+    fallbackProcess.on("exit", (code) => process.exit(code || 0));
   }
 }
 

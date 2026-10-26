@@ -1,0 +1,18 @@
+{
+  "name": "@tupynambalucas-dev/agent-plugin-docusaurus",
+  "version": "1.0.0",
+  "description": "Enterprise Antigravity plugin for sovereign Docusaurus documentation and Diataxis governance.",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "keywords": [
+    "antigravity-plugin",
+    "docusaurus",
+    "diataxis",
+    "mdx",
+    "documentation"
+  ],
+  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "license": "MIT"
+}
