@@ -1,0 +1,44 @@
+{
+  "name": "@tupynambalucas-dev/cortex-mcp-gwork",
+  "version": "1.0.0",
+  "description": "Enterprise Model Context Protocol server for Google Workspace (Drive, Sheets, Docs, Calendar) automation.",
+  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "license": "MIT",
+  "homepage": "https://docs.tupynambalucas.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tupynambalucas-dev/agent-mesh.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "cortex-mcp-gwork": "./dist/bin.js"
+  },
+  "scripts": {
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.6.1",
+    "dotenv": "^16.4.7",
+    "fastify": "^5.2.1",
+    "googleapis": "^144.0.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "rimraf": "^6.0.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  },
+  "files": [
+    "dist"
+  ]
+}

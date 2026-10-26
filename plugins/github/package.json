@@ -1,0 +1,19 @@
+{
+  "name": "@tupynambalucas-dev/agent-plugin-github",
+  "version": "1.0.0",
+  "description": "Enterprise Antigravity plugin for GitHub organization operations, branch rulesets, security alert triage, and workflow management.",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "keywords": [
+    "antigravity-plugin",
+    "github",
+    "github-app",
+    "governance",
+    "rulesets",
+    "security"
+  ],
+  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "license": "MIT"
+}

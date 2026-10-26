@@ -1,0 +1,25 @@
+{
+  "name": "agent-plugin-google-workspace",
+  "version": "1.0.0",
+  "description": "Enterprise Antigravity plugin for Google Workspace automation across Drive, Sheets, Docs, and Calendar.",
+  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "homepage": "https://docs.tupynambalucas.dev",
+  "repository": "https://github.com/tupynambalucas-dev/agent-mesh",
+  "keywords": [
+    "google-workspace",
+    "google-drive",
+    "google-sheets",
+    "google-docs"
+  ],
+  "skills": [
+    "gwork-drive-manager",
+    "gwork-sheets-builder",
+    "gwork-docs-publisher"
+  ],
+  "mcpServers": {
+    "cortex-gwork": {
+      "command": "node",
+      "args": ["../../scripts/mcp-gateway-router.js", "google-workspace"]
+    }
+  }
+}

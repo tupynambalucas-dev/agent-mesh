@@ -8,6 +8,8 @@
 const http = require("http");
 const https = require("https");
 const { spawn } = require("child_process");
+const path = require("path");
+const fs = require("fs");
 
 const TARGET_SERVICE = process.argv[2]; // e.g., "firecrawl", "github", "google-workspace", "memory", "appsheet", "context7", "playwright"
 const GATEWAY_BASE_URL = process.env.CORTEX_GATEWAY_URL || "http://localhost:8080";
@@ -104,23 +106,50 @@ async function main() {
     });
 
     sseBridge.on("exit", (code) => process.exit(code || 0));
-  } else {
-    // Mode B: Local Standalone Fallback
-    const targetConfig = FALLBACK_REGISTRY[TARGET_SERVICE];
-    const executable = targetConfig.pkg;
+    return;
+  }
 
-    process.stderr.write(`[cortex-router] AgentGateway offline. Engaging local fallback: pnpm dlx ${executable}\n`);
+  // Mode B: Local Standalone Fallback
+  // Check if running inside agent-mesh repository with local package available
+  const localMcpDir = path.resolve(__dirname, "..", "mcp", TARGET_SERVICE);
+  const localJsBin = path.join(localMcpDir, "dist", "bin.js");
+  const localTsBin = path.join(localMcpDir, "src", "bin.ts");
 
-    const fallbackProcess = spawn("pnpm", [
-      "dlx",
-      executable
-    ], {
+  if (fs.existsSync(localJsBin)) {
+    process.stderr.write(`[cortex-router] AgentGateway offline. Engaging local compiled binary: node ${localJsBin}\n`);
+    const localProcess = spawn("node", [localJsBin], {
       stdio: "inherit",
       shell: process.platform === "win32",
     });
-
-    fallbackProcess.on("exit", (code) => process.exit(code || 0));
+    localProcess.on("exit", (code) => process.exit(code || 0));
+    return;
   }
+
+  if (fs.existsSync(localTsBin)) {
+    process.stderr.write(`[cortex-router] AgentGateway offline. Engaging local TypeScript execution: npx tsx ${localTsBin}\n`);
+    const localProcess = spawn("npx", ["-y", "tsx", localTsBin], {
+      stdio: "inherit",
+      shell: process.platform === "win32",
+    });
+    localProcess.on("exit", (code) => process.exit(code || 0));
+    return;
+  }
+
+  // Registry package execution via pnpm dlx
+  const targetConfig = FALLBACK_REGISTRY[TARGET_SERVICE];
+  const executable = targetConfig.pkg;
+
+  process.stderr.write(`[cortex-router] AgentGateway offline. Engaging registry package fallback: pnpm dlx ${executable}\n`);
+
+  const fallbackProcess = spawn("pnpm", [
+    "dlx",
+    executable
+  ], {
+    stdio: "inherit",
+    shell: process.platform === "win32",
+  });
+
+  fallbackProcess.on("exit", (code) => process.exit(code || 0));
 }
 
 if (require.main === module) {
