@@ -3,8 +3,7 @@ import { firecrawlClient } from '../client.js';
 
 export const extractToolDefinition = {
   name: 'extract',
-  description:
-    'Extracts structured information from one or more web pages matching a JSON schema or prompt.',
+  description: 'Uses Firecrawl AI extraction capabilities to extract structured, schema-compliant JSON data from one or more URLs.',
   inputSchema: {
     type: 'object',
     properties: {
@@ -15,19 +14,19 @@ export const extractToolDefinition = {
       },
       prompt: {
         type: 'string',
-        description: 'Natural language prompt describing what to extract',
+        description: 'Natural language instructions on what to extract',
       },
       schema: {
         type: 'object',
-        description: 'JSON Schema object describing the output shape',
+        description: 'Optional JSON Schema defining the desired return format',
       },
       systemPrompt: {
         type: 'string',
-        description: 'System prompt instructions for extraction',
+        description: 'System-level prompt to customize AI extraction behavior',
       },
       allowExternalLinks: {
         type: 'boolean',
-        description: 'Allow following external links during extraction',
+        description: 'Whether to allow extraction from external domains',
       },
     },
     required: ['urls'],
@@ -44,7 +43,7 @@ export const extractToolSchema = z.object({
 
 export async function handleExtractTool(args: unknown) {
   const parsed = extractToolSchema.parse(args);
-  const result = await firecrawlClient.v1.extract(parsed.urls, {
+  const result = await (firecrawlClient as any).asyncExtract(parsed.urls, {
     prompt: parsed.prompt,
     schema: parsed.schema,
     systemPrompt: parsed.systemPrompt,

@@ -1,7 +1,7 @@
 import { google } from 'googleapis';
 import { config } from '../config.js';
 
-export function getGoogleAuthClient() {
+export function getGoogleAuthClient(): any {
   const scopes = [
     'https://www.googleapis.com/auth/drive',
     'https://www.googleapis.com/auth/spreadsheets',

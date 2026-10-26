@@ -3,30 +3,30 @@ import { firecrawlClient } from '../client.js';
 
 export const mapToolDefinition = {
   name: 'map',
-  description: 'Maps and discovers all indexed URLs and sitemap routes for a given website.',
+  description: 'Fast endpoint to map and retrieve all discoverable links on a website without extracting page bodies.',
   inputSchema: {
     type: 'object',
     properties: {
       url: {
         type: 'string',
-        description: 'The URL of the website to map',
+        description: 'The website URL to map',
       },
       search: {
         type: 'string',
-        description: 'Search query to filter discovered URLs',
+        description: 'Optional search keyword to filter discovered paths',
       },
       limit: {
         type: 'number',
-        description: 'Maximum number of URLs to return (default: 50)',
+        description: 'Maximum number of links to return (default: 100)',
       },
       sitemap: {
         type: 'string',
         enum: ['include', 'skip', 'only'],
-        description: 'How to handle sitemaps ("include", "skip", or "only")',
+        description: 'Sitemap parsing strategy',
       },
       includeSubdomains: {
         type: 'boolean',
-        description: 'Include links to subdomains',
+        description: 'Whether to include links on subdomains',
       },
     },
     required: ['url'],
@@ -34,16 +34,16 @@ export const mapToolDefinition = {
 };
 
 export const mapToolSchema = z.object({
-  url: z.string().describe('The URL of the website to map'),
+  url: z.string().describe('The website URL to map'),
   search: z.string().optional(),
-  limit: z.number().optional().default(50),
+  limit: z.number().optional().default(100),
   sitemap: z.enum(['include', 'skip', 'only']).optional(),
   includeSubdomains: z.boolean().optional(),
 });
 
 export async function handleMapTool(args: unknown) {
   const parsed = mapToolSchema.parse(args);
-  const result = await firecrawlClient.map(parsed.url, {
+  const result = await (firecrawlClient as any).mapUrl(parsed.url, {
     search: parsed.search,
     limit: parsed.limit,
     sitemap: parsed.sitemap,

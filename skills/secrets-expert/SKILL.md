@@ -27,7 +27,7 @@ Select the appropriate secrets interface based on the operational context:
 
 - **Platform Project ID**: `134783dd-8a83-4dfc-9fd5-979b52bed86d`
 - **Platform Project Slug**: `tupynambalucas-dev-platform` (formerly `tupynambalucas-core-ez7a`)
-- **Agent Toolkit Project Slug**: `tupynambalucas-dev-agent-toolkit`
+- **Agent Mesh Project Slug**: `tupynambalucas-dev-agent-mesh`
 - **Environments**: `dev`, `staging`, `prod`
 
 ---

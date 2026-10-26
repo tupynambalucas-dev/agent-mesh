@@ -8,7 +8,7 @@ This verification report documents the completed migration and architectural tra
 
 | Architectural Vector | Legacy State | Modern Agent Mesh State | Verification Status |
 | :--- | :--- | :--- | :--- |
-| **MCP Tool Location** | `platform/hub/cortex/mcp/services/*` | `agent-toolkit/mcp/*` (`agent-mesh`) | VERIFIED & OPERATIONAL |
+| **MCP Tool Location** | `platform/hub/cortex/mcp/services/*` | `agent-mesh/mcp/*` (`agent-mesh`) | VERIFIED & OPERATIONAL |
 | **Docker Build Overhead** | 6 custom Dockerfiles built in `skaffold.hub.yaml` | Zero custom Dockerfiles (official containers + `node:22-alpine` with `npx -y`) | PURGED & VERIFIED |
 | **Control Plane Boundary** | Tool code mixed with Envoy routing | Pure Control Plane (`guardrails`, `inspector`, GitOps manifests) | DECOUPLED & VERIFIED |
 | **Gateway Probe & Fallback** | Hardcoded HTTP or crashing on cluster offline | 300ms non-blocking Envoy probe with smart 3-tier Stdio fallback | TESTED & VERIFIED (5/5 MCPs) |
@@ -24,11 +24,11 @@ All 5 in-house MCP servers are now packaged as clean TypeScript modules equipped
 
 | MCP Package Name | Directory | Primary Capabilities | Dual Transport Verification |
 | :--- | :--- | :--- | :--- |
-| `@tupynambalucas-dev/cortex-mcp-firecrawl` | `agent-toolkit/mcp/firecrawl` | Web scraping, crawling, structured markdown extraction, sitemap mapping | PASS (`cortex-firecrawl-mcp` v1.0.0) |
-| `@tupynambalucas-dev/cortex-mcp-memory` | `agent-toolkit/mcp/memory` | Semantic RAG vector search, episodic chat store, knowledge graph querying | PASS (`cortex-memory-mcp` v1.0.0) |
-| `@tupynambalucas-dev/cortex-mcp-github` | `agent-toolkit/mcp/github` | Organization RBAC, ruleset enforcement, Dependabot & secret alert triage via GitHub App | PASS (`cortex-github-mcp` v1.0.0) |
-| `@tupynambalucas-dev/cortex-mcp-gwork` | `agent-toolkit/mcp/google-workspace` | Google Drive folder taxonomy, multi-sheet workbook generation, Diátaxis Docs publishing | PASS (`cortex-gwork-mcp` v1.0.0) |
-| `@tupynambalucas-dev/cortex-mcp-appsheet` | `agent-toolkit/mcp/appsheet` | Relational schema modeling, REST API v2 Find/Add/Edit/Delete, Action execution | PASS (`cortex-appsheet-mcp` v1.0.0) |
+| `@tupynambalucas-dev/cortex-mcp-firecrawl` | `agent-mesh/mcp/firecrawl` | Web scraping, crawling, structured markdown extraction, sitemap mapping | PASS (`cortex-firecrawl-mcp` v1.0.0) |
+| `@tupynambalucas-dev/cortex-mcp-memory` | `agent-mesh/mcp/memory` | Semantic RAG vector search, episodic chat store, knowledge graph querying | PASS (`cortex-memory-mcp` v1.0.0) |
+| `@tupynambalucas-dev/cortex-mcp-github` | `agent-mesh/mcp/github` | Organization RBAC, ruleset enforcement, Dependabot & secret alert triage via GitHub App | PASS (`cortex-github-mcp` v1.0.0) |
+| `@tupynambalucas-dev/cortex-mcp-gwork` | `agent-mesh/mcp/google-workspace` | Google Drive folder taxonomy, multi-sheet workbook generation, Diátaxis Docs publishing | PASS (`cortex-gwork-mcp` v1.0.0) |
+| `@tupynambalucas-dev/cortex-mcp-appsheet` | `agent-mesh/mcp/appsheet` | Relational schema modeling, REST API v2 Find/Add/Edit/Delete, Action execution | PASS (`cortex-appsheet-mcp` v1.0.0) |
 
 ---
 
@@ -68,7 +68,7 @@ This eliminates redundant image building during development and cuts cluster syn
 
 ## 4. Live Gateway Probe & Fallback Test Results
 
-The Smart Router ([agent-toolkit/scripts/mcp-gateway-router.js](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-toolkit/scripts/mcp-gateway-router.js)) was verified against all 5 in-house MCP servers with Envoy offline. Each server received an official JSON-RPC 2.0 `initialize` request over standard input:
+The Smart Router ([agent-mesh/scripts/mcp-gateway-router.js](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/scripts/mcp-gateway-router.js)) was verified against all 5 in-house MCP servers with Envoy offline. Each server received an official JSON-RPC 2.0 `initialize` request over standard input:
 
 ```json
 {
@@ -87,35 +87,35 @@ The Smart Router ([agent-toolkit/scripts/mcp-gateway-router.js](file:///C:/Users
 
 #### 1. Firecrawl MCP Server
 ```text
-STDERR: [cortex-router] AgentGateway offline. Engaging local TypeScript execution: npx tsx .../agent-toolkit/mcp/firecrawl/src/bin.ts
+STDERR: [cortex-router] AgentGateway offline. Engaging local TypeScript execution: npx tsx .../agent-mesh/mcp/firecrawl/src/bin.ts
 STDERR: Cortex Firecrawl MCP server running on stdio
 STDOUT: {"result":{"protocolVersion":"2024-11-05","capabilities":{"tools":{}},"serverInfo":{"name":"cortex-firecrawl-mcp","version":"1.0.0"}},"jsonrpc":"2.0","id":1}
 ```
 
 #### 2. Memory MCP Server
 ```text
-STDERR: [cortex-router] AgentGateway offline. Engaging local TypeScript execution: npx tsx .../agent-toolkit/mcp/memory/src/bin.ts
+STDERR: [cortex-router] AgentGateway offline. Engaging local TypeScript execution: npx tsx .../agent-mesh/mcp/memory/src/bin.ts
 STDERR: Cortex Memory MCP server running on stdio
 STDOUT: {"result":{"protocolVersion":"2024-11-05","capabilities":{"tools":{}},"serverInfo":{"name":"cortex-memory-mcp","version":"1.0.0"}},"jsonrpc":"2.0","id":1}
 ```
 
 #### 3. GitHub App MCP Server
 ```text
-STDERR: [cortex-router] AgentGateway offline. Engaging local TypeScript execution: npx tsx .../agent-toolkit/mcp/github/src/bin.ts
+STDERR: [cortex-router] AgentGateway offline. Engaging local TypeScript execution: npx tsx .../agent-mesh/mcp/github/src/bin.ts
 STDERR: Cortex GitHub MCP server running on stdio
 STDOUT: {"result":{"protocolVersion":"2024-11-05","capabilities":{"tools":{}},"serverInfo":{"name":"cortex-github-mcp","version":"1.0.0"}},"jsonrpc":"2.0","id":1}
 ```
 
 #### 4. Google Workspace MCP Server
 ```text
-STDERR: [cortex-router] AgentGateway offline. Engaging local TypeScript execution: npx tsx .../agent-toolkit/mcp/google-workspace/src/bin.ts
+STDERR: [cortex-router] AgentGateway offline. Engaging local TypeScript execution: npx tsx .../agent-mesh/mcp/google-workspace/src/bin.ts
 STDERR: Cortex Google Workspace MCP server running on stdio
 STDOUT: {"result":{"protocolVersion":"2024-11-05","capabilities":{"tools":{}},"serverInfo":{"name":"cortex-gwork-mcp","version":"1.0.0"}},"jsonrpc":"2.0","id":1}
 ```
 
 #### 5. AppSheet MCP Server
 ```text
-STDERR: [cortex-router] AgentGateway offline. Engaging local TypeScript execution: npx tsx .../agent-toolkit/mcp/appsheet/src/bin.ts
+STDERR: [cortex-router] AgentGateway offline. Engaging local TypeScript execution: npx tsx .../agent-mesh/mcp/appsheet/src/bin.ts
 STDERR: Cortex AppSheet MCP server running on stdio
 STDOUT: {"result":{"protocolVersion":"2024-11-05","capabilities":{"tools":{}},"serverInfo":{"name":"cortex-appsheet-mcp","version":"1.0.0"}},"jsonrpc":"2.0","id":1}
 ```
@@ -126,7 +126,7 @@ STDOUT: {"result":{"protocolVersion":"2024-11-05","capabilities":{"tools":{}},"s
 
 ## 5. Domain Plugins & Modular Skills Inventory
 
-Six independent domain plugins have been established in [agent-toolkit/plugins/](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-toolkit/plugins), comprising 19 specialized skills:
+Six independent domain plugins have been established in [agent-mesh/plugins/](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/plugins), comprising 19 specialized skills:
 
 ### 5.1 `@tupynambalucas-dev/agent-plugin-github` (`plugins/github`)
 1. **`github-org-operator`**: Automates organization RBAC, team creation, membership assignments, repository provisioning, and repository transfer runbooks.

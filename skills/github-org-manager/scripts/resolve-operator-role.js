@@ -73,7 +73,7 @@ const hasContractors = teamSet.has("contractors");
 
 let primaryDomain = "domain-1-developer";
 let privilegeLevel = "level-1";
-let infisicalProject = "tupynambalucas-dev-agent-toolkit";
+let infisicalProject = "tupynambalucas-dev-agent-mesh";
 let infisicalEnv = "dev";
 
 if (hasLeadArchitects) {
@@ -84,7 +84,7 @@ if (hasLeadArchitects) {
 } else if (hasSecurityManagers) {
   primaryDomain = "domain-2-security";
   privilegeLevel = "level-2";
-  infisicalProject = "tupynambalucas-dev-agent-toolkit";
+  infisicalProject = "tupynambalucas-dev-agent-mesh";
   infisicalEnv = "dev";
 } else if (hasInfraOps) {
   primaryDomain = "domain-2-security";

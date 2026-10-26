@@ -1,11 +1,11 @@
 {
-  "name": "@tupynambalucas-dev/agent-toolkit",
+  "name": "@tupynambalucas-dev/agent-mesh",
   "version": "1.0.0",
-  "description": "Universal enterprise AI agent governance, shared MCP connectors, and domain routing skills.",
+  "description": "Universal enterprise AI agent mesh: governance, MCP gateway router, domain plugins, and modular skills.",
   "main": "scripts/mcp-gateway-router.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tupynambalucas-dev/agent-toolkit.git"
+    "url": "git+https://github.com/tupynambalucas-dev/agent-mesh.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
@@ -16,11 +16,14 @@
     "mcp_config.json",
     "rules/",
     "skills/",
-    "scripts/"
+    "scripts/",
+    "plugins/",
+    "mcp/"
   ],
   "keywords": [
     "antigravity",
     "claude-code",
+    "agent-mesh",
     "agent-plugins",
     "governance",
     "skills"

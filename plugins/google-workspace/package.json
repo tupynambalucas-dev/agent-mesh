@@ -2,6 +2,10 @@
   "name": "@tupynambalucas-dev/agent-plugin-google-workspace",
   "version": "1.0.0",
   "description": "Enterprise Antigravity plugin for Google Workspace automation across Drive, Sheets, Docs, and Calendar.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tupynambalucas-dev/agent-mesh.git"
+  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
     "access": "public"

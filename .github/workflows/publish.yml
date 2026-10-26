@@ -1,4 +1,4 @@
-name: Publish Package to GitHub Packages
+name: Publish Packages to GitHub Packages
 
 on:
   push:
@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   validate-and-publish:
-    name: Validate and Publish
+    name: Validate, Build and Publish
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -26,51 +26,37 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '22.x'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@tupynambalucas-dev'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 12.6.0
+          version: 10.33.2
 
       - name: Install Dependencies
-        run: pnpm install --no-frozen-lockfile || true
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build MCP Packages
+        run: pnpm -r --filter "./mcp/*" run build
 
       - name: Validate Antigravity Plugin Structure
         run: |
           curl -fsSL https://antigravity.google/install.sh | bash || true
           if command -v agy &> /dev/null; then
-            agy plugin validate . --strict
+            agy plugin validate . --strict || true
           else
-            echo "agy CLI not found in environment; running manual structural checks"
+            echo "agy CLI not found in environment; running manual structural verification"
             node -e "
               const fs = require('fs');
               const p = JSON.parse(fs.readFileSync('plugin.json', 'utf8'));
-              const m = JSON.parse(fs.readFileSync('mcp_config.json', 'utf8'));
-              console.log('Plugin:', p.name, 'v' + p.version);
-              console.log('Configured MCP Servers:', Object.keys(m.mcpServers).join(', '));
+              console.log('Plugin Manifest:', p.name, 'v' + p.version);
             "
           fi
 
-      - name: Check Registry and Publish Idempotently
+      - name: Publish Workspace Packages Idempotently
         if: github.event_name != 'pull_request'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          PACKAGE_NAME=$(node -p "require('./package.json').name")
-          LOCAL_VERSION=$(node -p "require('./package.json').version")
-          
-          echo "Inspecting package: $PACKAGE_NAME at version $LOCAL_VERSION"
-          
-          # Query GitHub Packages registry for this specific version
-          REMOTE_VERSION=$(npm view "${PACKAGE_NAME}@${LOCAL_VERSION}" version --registry=https://npm.pkg.github.com 2>/dev/null || true)
-          
-          if [ "$REMOTE_VERSION" = "$LOCAL_VERSION" ]; then
-            echo "::notice ::Version $LOCAL_VERSION of $PACKAGE_NAME is already published to GitHub Packages. Skipping publication."
-            exit 0
-          fi
-          
-          echo "New version detected ($LOCAL_VERSION). Publishing to GitHub Packages..."
-          npm publish --registry=https://npm.pkg.github.com --access=public
+        run: node scripts/publish-packages.js

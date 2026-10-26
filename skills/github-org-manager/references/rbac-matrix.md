@@ -15,7 +15,7 @@ rather than direct user bindings.
 | `lead-architects`   | Technical leads, system architects, and global code owners     | Admin / Maintain| Global CODEOWNERS, `org-core`, all repos|
 | `security-managers` | Security operations, compliance, vulnerability auditing       | Audit / Read    | All organization repositories (read/sec)|
 | `infra-ops`         | Platform and DevOps engineers managing infrastructure and CI/CD| Maintain        | `platform`, `.github`, `org-core`       |
-| `core-engineers`    | Core software engineers and application developers             | Write           | `agent-toolkit`, `platform`, `tessel`   |
+| `core-engineers`    | Core software engineers and application developers             | Write           | `agent-mesh`, `platform`, `tessel`   |
 | `technical-writers` | Technical writers, documentation maintainers, content curators | Maintain / Read | `docs` (maintain), other repos (read)   |
 | `creative-team`     | Designers and creative professionals managing brand assets     | Write / Read    | `docs` (write), `.github` (write)       |
 | `contractors`       | External contractors, specialized consultants, and partners   | Write (scoped)  | Delegated repositories only (on demand) |
@@ -29,7 +29,7 @@ The current active access matrix across organization repositories is enforced as
 | Repository        | `lead-architects` | `security-managers` | `infra-ops` | `core-engineers` | `technical-writers` | `creative-team` | `contractors` |
 | :---------------- | :---------------: | :-----------------: | :---------: | :--------------: | :-----------------: | :-------------: | :-----------: |
 | `org-core`        | `admin`           | `pull`              | `maintain`  | `push`           | `pull`              | `pull`          | None          |
-| `agent-toolkit`   | `maintain`        | `pull`              | `maintain`  | `push`           | `pull`              | `pull`          | Delegated     |
+| `agent-mesh`      | `maintain`        | `pull`              | `maintain`  | `push`           | `pull`              | `pull`          | Delegated     |
 | `platform`        | `maintain`        | `pull`              | `maintain`  | `push`           | `pull`              | `pull`          | None          |
 | `docs`            | `maintain`        | `pull`              | `pull`      | `push`           | `maintain`          | `push`          | Delegated     |
 | `.github`         | `maintain`        | `pull`              | `maintain`  | `push`           | `pull`              | `push`          | None          |

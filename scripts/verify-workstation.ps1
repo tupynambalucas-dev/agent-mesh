@@ -151,6 +151,6 @@ if ($failedGates -eq 0) {
     exit 0
 } else {
     Write-Host "FALHA: $failedGates gate(s) de conformidade falharam." -ForegroundColor Red
-    Write-Host "Execute '.\agent-toolkit\scripts\verify-workstation.ps1 -Fix' para correcao automatica." -ForegroundColor Yellow
+    Write-Host "Execute '.\agent-mesh\scripts\verify-workstation.ps1 -Fix' para correcao automatica." -ForegroundColor Yellow
     exit 1
 }

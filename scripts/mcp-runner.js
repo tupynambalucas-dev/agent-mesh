@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * Universal Layered MCP Runner for agent-toolkit.
+ * Universal Layered MCP Runner for agent-mesh.
  * Implements deterministic 3-tier secret resolution:
  *   Layer 1: Runtime process.env (Infisical CLI session, host environment)
- *   Layer 2: Local .env hierarchy (CWD, parent directories up to Git root, agent-toolkit/.env)
+ *   Layer 2: Local .env hierarchy (CWD, parent directories up to Git root, agent-mesh/.env)
  *   Layer 3: Antigravity user config (~/.gemini/config/config.json)
  */
 

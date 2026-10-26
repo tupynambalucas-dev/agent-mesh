@@ -26,7 +26,7 @@ export async function handleCreateSpreadsheet(args: unknown) {
   });
   const parsed = schema.parse(args);
   const auth = getGoogleAuthClient();
-  const sheets = google.sheets({ version: 'v4', auth });
+  const sheets = (google as any).sheets({ version: 'v4', auth });
 
   const res = await sheets.spreadsheets.create({
     requestBody: {
@@ -45,7 +45,7 @@ export async function handleCreateSpreadsheet(args: unknown) {
           {
             spreadsheetId: res.data.spreadsheetId,
             spreadsheetUrl: res.data.spreadsheetUrl,
-            sheets: res.data.sheets?.map((s) => s.properties?.title),
+            sheets: res.data.sheets?.map((s: any) => s.properties?.title),
           },
           null,
           2

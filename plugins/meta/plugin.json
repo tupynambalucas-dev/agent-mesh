@@ -1,11 +1,21 @@
 {
-  "name": "meta-agent-skills",
+  "name": "agent-plugin-meta",
   "version": "1.0.0",
-  "description": "Antigravity plugin providing authoritative meta-engineering skills for agent context routers, modular skills, and GFM standards.",
+  "description": "Enterprise Antigravity plugin providing authoritative meta-engineering skills for agent context routers, modular skills, and GFM standards.",
+  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "homepage": "https://docs.tupynambalucas.dev",
+  "repository": "https://github.com/tupynambalucas-dev/agent-mesh",
+  "keywords": [
+    "meta",
+    "agent-mesh",
+    "agent-router",
+    "markdown",
+    "skills"
+  ],
   "skills": [
-    "./skills/markdown-architect",
-    "./skills/agent-router-architect",
-    "./skills/skill-architect",
-    "./skills/plugin-manifest-architect"
+    "markdown-architect",
+    "agent-router-architect",
+    "skill-architect",
+    "plugin-manifest-architect"
   ]
 }

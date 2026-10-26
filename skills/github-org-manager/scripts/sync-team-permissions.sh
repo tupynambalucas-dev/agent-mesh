@@ -26,7 +26,7 @@ apply_repo_permissions() {
       PERMS["technical-writers"]="pull"
       PERMS["creative-team"]="pull"
       ;;
-    "agent-toolkit"|"platform"|".github")
+    "agent-mesh"|"platform"|".github")
       PERMS["lead-architects"]="maintain"
       PERMS["security-managers"]="pull"
       PERMS["infra-ops"]="maintain"
@@ -67,7 +67,7 @@ apply_repo_permissions() {
 if [[ -n "${REPO}" ]]; then
   apply_repo_permissions "${REPO}"
 else
-  REPOS=("org-core" "agent-toolkit" "platform" "docs" ".github" "tessel")
+  REPOS=("org-core" "agent-mesh" "platform" "docs" ".github" "tessel")
   for R in "${REPOS[@]}"; do
     apply_repo_permissions "${R}"
   done

@@ -1,10 +1,19 @@
 {
-  "name": "docusaurus-engineer",
+  "name": "agent-plugin-docusaurus",
   "version": "1.0.0",
   "description": "Antigravity plugin for Diataxis documentation architecture, MDX v3 authoring, and link validation.",
+  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "homepage": "https://docs.tupynambalucas.dev",
+  "repository": "https://github.com/tupynambalucas-dev/agent-mesh",
+  "keywords": [
+    "docusaurus",
+    "diataxis",
+    "mdx",
+    "technical-documentation"
+  ],
   "skills": [
-    "./skills/docusaurus-architect",
-    "./skills/docusaurus-mdx-author",
-    "./skills/docusaurus-validator"
+    "docusaurus-architect",
+    "docusaurus-mdx-author",
+    "docusaurus-validator"
   ]
 }

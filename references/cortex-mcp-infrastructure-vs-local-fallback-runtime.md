@@ -389,7 +389,7 @@ To verify that an agent operates correctly in both modes:
    ```
 2. Run the smart router:
    ```bash
-   node agent-toolkit/scripts/mcp-gateway-router.js firecrawl
+   node agent-mesh/scripts/mcp-gateway-router.js firecrawl
    ```
 3. **Expected Output**:
    ```text
@@ -403,7 +403,7 @@ To verify that an agent operates correctly in both modes:
    ```
 2. Run the smart router again:
    ```bash
-   node agent-toolkit/scripts/mcp-gateway-router.js firecrawl
+   node agent-mesh/scripts/mcp-gateway-router.js firecrawl
    ```
 3. **Expected Output**:
    ```text

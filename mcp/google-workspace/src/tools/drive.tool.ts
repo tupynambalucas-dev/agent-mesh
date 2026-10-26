@@ -22,7 +22,7 @@ export async function handleSearchDriveFiles(args: unknown) {
   });
   const parsed = schema.parse(args);
   const auth = getGoogleAuthClient();
-  const drive = google.drive({ version: 'v3', auth });
+  const drive = (google as any).drive({ version: 'v3', auth });
 
   const res = await drive.files.list({
     q: parsed.query,

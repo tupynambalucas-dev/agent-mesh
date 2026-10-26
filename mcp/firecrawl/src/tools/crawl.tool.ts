@@ -3,8 +3,7 @@ import { firecrawlClient } from '../client.js';
 
 export const crawlToolDefinition = {
   name: 'crawl',
-  description:
-    'Crawls all accessible subpages of a website starting from a base URL, returning extracted content for all discovered pages.',
+  description: 'Initiates a website crawl starting from a base URL, discovering and extracting content across linked sub-pages.',
   inputSchema: {
     type: 'object',
     properties: {
@@ -18,30 +17,30 @@ export const crawlToolDefinition = {
       },
       maxDiscoveryDepth: {
         type: 'number',
-        description: 'Maximum link discovery depth to crawl',
+        description: 'Maximum depth level to traverse links',
       },
       allowExternalLinks: {
         type: 'boolean',
-        description: 'Allow crawling external links outside the domain',
+        description: 'Whether to traverse outbound external domain links',
       },
       allowSubdomains: {
         type: 'boolean',
-        description: 'Allow crawling subdomains of the base URL domain',
+        description: 'Whether to traverse subdomains of the base URL',
       },
       sitemap: {
         type: 'string',
         enum: ['include', 'skip', 'only'],
-        description: 'How to handle sitemaps ("include", "skip", or "only")',
+        description: 'Sitemap discovery mode',
       },
       includePaths: {
         type: 'array',
         items: { type: 'string' },
-        description: 'URL patterns/paths to include',
+        description: 'URL path patterns to explicitly include',
       },
       excludePaths: {
         type: 'array',
         items: { type: 'string' },
-        description: 'URL patterns/paths to exclude',
+        description: 'URL path patterns to explicitly exclude',
       },
     },
     required: ['url'],
@@ -61,7 +60,7 @@ export const crawlToolSchema = z.object({
 
 export async function handleCrawlTool(args: unknown) {
   const parsed = crawlToolSchema.parse(args);
-  const result = await firecrawlClient.crawl(parsed.url, {
+  const result = await (firecrawlClient as any).crawlUrl(parsed.url, {
     limit: parsed.limit,
     maxDiscoveryDepth: parsed.maxDiscoveryDepth,
     allowExternalLinks: parsed.allowExternalLinks,

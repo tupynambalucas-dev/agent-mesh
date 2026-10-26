@@ -22,7 +22,7 @@ export async function handleCreateDocument(args: unknown) {
   });
   const parsed = schema.parse(args);
   const auth = getGoogleAuthClient();
-  const docs = google.docs({ version: 'v1', auth });
+  const docs = (google as any).docs({ version: 'v1', auth });
 
   const doc = await docs.documents.create({
     requestBody: { title: parsed.title },

@@ -30,7 +30,7 @@ Select the appropriate interface based on the operational context:
 - **Organization Name**: `tupynambalucas-dev`
 - **Managed Repositories**:
   - `org-core`: Meta-repository, architecture, root orchestration, and submodules.
-  - `agent-toolkit`: Universal AI agent governance plugin, shared MCPs, and skills.
+  - `agent-mesh`: Universal AI agent governance plugin, shared MCPs, and skills.
   - `platform`: Infrastructure manifests, Kubernetes configurations, and runtime services.
   - `docs`: Docusaurus technical documentation portal and public knowledge base.
   - `.github`: Organization profile, default community health files, and CI workflows.
@@ -53,7 +53,7 @@ For detailed team matrix and Fine-Grained PAT permissions, consult [rbac-matrix.
 Before executing privileged operations, the operator runs [resolve-operator-role.js](./scripts/resolve-operator-role.js) to resolve the authenticated caller's identity, active organization teams, and permitted governance domain:
 
 ```bash
-node agent-toolkit/skills/github-org-manager/scripts/resolve-operator-role.js
+node agent-mesh/skills/github-org-manager/scripts/resolve-operator-role.js
 ```
 
 | Evaluated Domain | Primary Teams | Allowed Operations |
@@ -69,7 +69,7 @@ node agent-toolkit/skills/github-org-manager/scripts/resolve-operator-role.js
 Execute [bootstrap-teams.sh](./scripts/bootstrap-teams.sh) to provision or update functional teams:
 
 ```bash
-bash agent-toolkit/skills/github-org-manager/scripts/bootstrap-teams.sh "tupynambalucas-dev"
+bash agent-mesh/skills/github-org-manager/scripts/bootstrap-teams.sh "tupynambalucas-dev"
 ```
 
 The script idempotently creates or updates the closed teams `@lead-architects`, `@security-managers`,
@@ -83,10 +83,10 @@ To bind organization repositories to functional teams, execute [sync-team-permis
 
 ```bash
 # Sync all repositories
-bash agent-toolkit/skills/github-org-manager/scripts/sync-team-permissions.sh "tupynambalucas-dev"
+bash agent-mesh/skills/github-org-manager/scripts/sync-team-permissions.sh "tupynambalucas-dev"
 
 # Or sync a specific repository
-bash agent-toolkit/skills/github-org-manager/scripts/sync-team-permissions.sh "tupynambalucas-dev" "agent-toolkit"
+bash agent-mesh/skills/github-org-manager/scripts/sync-team-permissions.sh "tupynambalucas-dev" "agent-mesh"
 ```
 
 ---
@@ -99,7 +99,7 @@ schemas, consult [ruleset-schemas.md](./references/ruleset-schemas.md).
 Execute [configure-rulesets.sh](./scripts/configure-rulesets.sh) to apply rulesets:
 
 ```bash
-bash agent-toolkit/skills/github-org-manager/scripts/configure-rulesets.sh "tupynambalucas-dev" "org-core"
+bash agent-mesh/skills/github-org-manager/scripts/configure-rulesets.sh "tupynambalucas-dev" "org-core"
 ```
 
 Enforced policies:
@@ -116,7 +116,7 @@ Manage pipeline secrets natively within GitHub Actions without bridging cluster 
 
 ```bash
 # Organization-level secrets (shared container registries)
-gh secret set CONTAINER_REGISTRY_TOKEN --org "tupynambalucas-dev" --visibility selected --repos "org-core,platform,agent-toolkit"
+gh secret set CONTAINER_REGISTRY_TOKEN --org "tupynambalucas-dev" --visibility selected --repos "org-core,platform,agent-mesh"
 
 # Environment-level secrets (bound to dev, staging, prod)
 gh secret set CLOUDFLARE_PAGES_TOKEN --env "prod" --repo "tupynambalucas-dev/docs"

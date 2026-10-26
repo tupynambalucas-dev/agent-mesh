@@ -2,6 +2,10 @@
   "name": "@tupynambalucas-dev/agent-plugin-appsheet",
   "version": "1.0.0",
   "description": "Enterprise Antigravity plugin for Google AppSheet prompt-to-app generation, REST API v2 data operations, and UI/UX design.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tupynambalucas-dev/agent-mesh.git"
+  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
     "access": "public"

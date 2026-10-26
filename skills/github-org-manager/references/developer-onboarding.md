@@ -76,7 +76,7 @@ gh auth setup-git
 Run the pre-flight operator script to confirm organization membership and domain authorization:
 
 ```bash
-node agent-toolkit/skills/github-org-manager/scripts/resolve-operator-role.js
+node agent-mesh/skills/github-org-manager/scripts/resolve-operator-role.js
 ```
 
 Example verified output for a core engineer:
@@ -87,7 +87,7 @@ Caller Identity Verification:
   Teams:               core-engineers
   Governance Domain:   domain-1-developer
   Privilege Level:     level-1
-  Infisical Target:    tupynambalucas-dev-agent-toolkit [dev]
+  Infisical Target:    tupynambalucas-dev-agent-mesh [dev]
 
 Permitted Operations:
   [x] Domain 1: Developer Operations (PRs, signed commits, submodule bumps)

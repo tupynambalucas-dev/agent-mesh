@@ -127,5 +127,5 @@ Write-Host ""
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host "Bootstrapping concluido com sucesso!" -ForegroundColor Green
 Write-Host "Execute o verificador pre-flight agora para validar os 7 gates:" -ForegroundColor Cyan
-Write-Host "  powershell -ExecutionPolicy Bypass -File agent-toolkit/scripts/verify-workstation.ps1" -ForegroundColor Yellow
+Write-Host "  powershell -ExecutionPolicy Bypass -File agent-mesh/scripts/verify-workstation.ps1" -ForegroundColor Yellow
 Write-Host "==========================================================" -ForegroundColor Cyan

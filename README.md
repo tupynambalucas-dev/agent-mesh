@@ -1,6 +1,6 @@
-# Universal Agent Toolkit (`@tupynambalucas-dev/agent-toolkit`)
+# Universal Agent Mesh (`@tupynambalucas-dev/agent-mesh`)
 
-Universal enterprise AI agent governance, security guardrails, shared MCP connectors, and domain routing skills for the `tupynambalucas-dev` organization.
+Universal enterprise AI agent governance, security guardrails, shared MCP connectors, domain plugins, and modular skills for the `tupynambalucas-dev` organization.
 
 Compatible natively with **Google Antigravity (`agy`)**, **Anthropic Claude Code**, **Cursor**, and **GitHub Copilot**.
 
@@ -9,15 +9,28 @@ Compatible natively with **Google Antigravity (`agy`)**, **Anthropic Claude Code
 ## 1. Directory Structure
 
 ```text
-agent-toolkit/
-├── package.json             # NPM package manifest for GitHub Packages
+agent-mesh/
+├── package.json             # Root NPM package manifest for GitHub Packages
 ├── plugin.json              # Antigravity & Agent Plugins 1.0 manifest
 ├── .claude-plugin/
 │   └── plugin.json          # Claude Code plugin manifest
 ├── mcp_config.json          # Standardized MCP server configuration definitions
 ├── rules/
 │   └── AGENTS.md            # Enterprise governance constraints and always-on rules
-├── skills/
+├── plugins/                 # Self-contained domain plugins
+│   ├── appsheet/            # @tupynambalucas-dev/agent-plugin-appsheet
+│   ├── docusaurus/          # @tupynambalucas-dev/agent-plugin-docusaurus
+│   ├── github/              # @tupynambalucas-dev/agent-plugin-github
+│   ├── google-workspace/    # @tupynambalucas-dev/agent-plugin-google-workspace
+│   ├── meta/                # @tupynambalucas-dev/agent-plugin-meta
+│   └── secrets/             # @tupynambalucas-dev/agent-plugin-secrets
+├── mcp/                     # Modular MCP server packages
+│   ├── appsheet/            # @tupynambalucas-dev/cortex-mcp-appsheet
+│   ├── firecrawl/           # @tupynambalucas-dev/cortex-mcp-firecrawl
+│   ├── github/              # @tupynambalucas-dev/cortex-mcp-github
+│   ├── google-workspace/    # @tupynambalucas-dev/cortex-mcp-gwork
+│   └── memory/              # @tupynambalucas-dev/cortex-mcp-memory
+├── skills/                  # Core governance and meta-engineering skills
 │   ├── agent-router-expert/ # Domain query orchestrator and AGENTS.md router
 │   ├── markdown-expert/     # Syntax, Prettier formatting, and Markdown standards
 │   ├── plugin-expert/       # Antigravity and Agent plugin authoring standards
@@ -26,7 +39,8 @@ agent-toolkit/
 │   └── github-org-manager/  # GitHub RBAC, functional teams, and ruleset enforcement
 └── scripts/
     ├── mcp-runner.js        # 3-tier fallback environment loader for MCP servers
-    └── mcp-gateway-router.js# Zero-downtime healthcheck proxy for gateway tools
+    ├── mcp-gateway-router.js# Zero-downtime healthcheck proxy for gateway tools
+    └── publish-packages.js  # Idempotent GitHub Packages multi-package publisher
 ```
 
 ---
@@ -52,7 +66,7 @@ graph TD
 
 #### A. Execution Inside `org-core` (Meta-Repository)
 
-When `agent-toolkit` is run from within the root `org-core` directory:
+When `agent-mesh` is run from within the root `org-core` directory:
 
 - `scripts/mcp-runner.js` automatically searches up the directory tree to find `org-core/.env`.
 - Alternatively, launch the agent session using Infisical:
@@ -63,7 +77,7 @@ When `agent-toolkit` is run from within the root `org-core` directory:
 
 #### B. Execution as a Standalone Workspace
 
-When opening `agent-toolkit` independently:
+When opening `agent-mesh` independently:
 
 - Copy the provided template to create a local `.env`:
   ```bash
@@ -72,7 +86,7 @@ When opening `agent-toolkit` independently:
 - Populate `.env` with development tokens. This allows complete functionality without needing `infisical login`.
 - If using Infisical directly:
   ```bash
-  infisical run --projectId <AGENT_TOOLKIT_PROJECT_ID> --env dev -- npm test
+  infisical run --projectId <AGENT_MESH_PROJECT_ID> --env dev -- npm test
   ```
 
 ### Required Environment Variables
@@ -96,23 +110,23 @@ When opening `agent-toolkit` independently:
 
 ```bash
 # Global installation from remote repository
-agy plugin install https://github.com/tupynambalucas-dev/agent-toolkit
+agy plugin install https://github.com/tupynambalucas-dev/agent-mesh
 
 # Local development installation from workspace root
-agy plugin install ./agent-toolkit
+agy plugin install ./agent-mesh
 ```
 
 ### B. Claude Code Installation
 
 ```bash
-/plugin marketplace add tupynambalucas-dev/agent-toolkit
-/plugin install agent-toolkit
+/plugin marketplace add tupynambalucas-dev/agent-mesh
+/plugin install agent-mesh
 ```
 
 ### C. Repository DevDependency (GitHub Packages)
 
 ```bash
-pnpm add -D @tupynambalucas-dev/agent-toolkit
+pnpm add -D @tupynambalucas-dev/agent-mesh
 ```
 
 Reference in `.agents/plugins.json`:
@@ -120,7 +134,7 @@ Reference in `.agents/plugins.json`:
 ```json
 {
   "entries": [
-    { "path": "node_modules/@tupynambalucas-dev/agent-toolkit" }
+    { "path": "node_modules/@tupynambalucas-dev/agent-mesh" }
   ]
 }
 ```

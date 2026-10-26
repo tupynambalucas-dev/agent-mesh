@@ -3,15 +3,14 @@ import { firecrawlClient } from '../client.js';
 
 export const batchScrapeToolDefinition = {
   name: 'batch_scrape',
-  description:
-    'Scrapes multiple URLs simultaneously, returning extracted content for all requested pages.',
+  description: 'Asynchronously scrape multiple URLs concurrently with unified format options.',
   inputSchema: {
     type: 'object',
     properties: {
       urls: {
         type: 'array',
         items: { type: 'string' },
-        description: 'Array of URLs to scrape',
+        description: 'Array of webpage URLs to scrape concurrently',
       },
       formats: {
         type: 'array',
@@ -19,12 +18,11 @@ export const batchScrapeToolDefinition = {
           type: 'string',
           enum: ['markdown', 'html', 'rawHtml', 'links', 'screenshot', 'json'],
         },
-        description: 'Formats to return in the response (default: ["markdown"])',
+        description: 'Response formats (default: ["markdown"])',
       },
       onlyMainContent: {
         type: 'boolean',
-        description:
-          'Extract only main content, excluding headers, navs, and footers (default: true)',
+        description: 'Extract only main content (default: true)',
       },
     },
     required: ['urls'],
@@ -32,7 +30,7 @@ export const batchScrapeToolDefinition = {
 };
 
 export const batchScrapeToolSchema = z.object({
-  urls: z.array(z.string()).describe('Array of URLs to scrape'),
+  urls: z.array(z.string()).describe('Array of webpage URLs to scrape concurrently'),
   formats: z
     .array(z.enum(['markdown', 'html', 'rawHtml', 'links', 'screenshot', 'json']))
     .optional()
@@ -42,11 +40,9 @@ export const batchScrapeToolSchema = z.object({
 
 export async function handleBatchScrapeTool(args: unknown) {
   const parsed = batchScrapeToolSchema.parse(args);
-  const result = await firecrawlClient.batchScrape(parsed.urls, {
-    options: {
-      formats: parsed.formats,
-      onlyMainContent: parsed.onlyMainContent,
-    },
+  const result = await (firecrawlClient as any).batchScrapeUrls(parsed.urls, {
+    formats: parsed.formats,
+    onlyMainContent: parsed.onlyMainContent,
   });
 
   return {

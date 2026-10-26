@@ -67,7 +67,7 @@ export const scrapeToolSchema = z.object({
 
 export async function handleScrapeTool(args: unknown) {
   const parsed = scrapeToolSchema.parse(args);
-  const result = await firecrawlClient.scrape(parsed.url, {
+  const result = await (firecrawlClient as any).scrapeUrl(parsed.url, {
     formats: parsed.formats,
     onlyMainContent: parsed.onlyMainContent,
     includeTags: parsed.includeTags,
