@@ -1,199 +1,202 @@
-# Cortex Gateway, Self-Contained Agent Mesh & Dual-Tier Fallback Architecture
+# Cortex MCP Engine & Self-Contained Agent Mesh Architecture
 
-This architecture specification formalizes the systemic relationship between the **cloud-native Cortex
-MCP runtime** in `platform/hub/cortex`, the **developer-facing agent ecosystem** (`agent-toolkit` / `agent-mesh`),
-the **dual-tier gateway-to-local fallback protocol**, the **repository nomenclature resolution**, and the
-**self-contained GitHub Packages plugin standard** installable via `agy plugin install`.
+This specification defines the unified enterprise architecture linking the **Cortex MCP Engine** in
+[platform/hub/cortex/mcp](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/platform/hub/cortex/mcp)
+with the **Agent Mesh Workspace** in `agent-toolkit` (or `agent-mesh`).
 
----
-
-## 1. Executive Problem Statement & Architectural Context
-
-An audit of the existing codebase reveals three structural architectural realities:
-1. **The Cloud-Native Cortex Data Plane Already Exists**: Inside [platform/hub/cortex/mcp](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/platform/hub/cortex/mcp),
-   an enterprise Kubernetes data plane is already deployed, featuring an Envoy-based AI Gateway (`agentgateway`),
-   Traefik ingress routing, gRPC ExtMCP policy guardrails, and persistent MongoDB vector memory.
-2. **Developers Work Outside the Cluster**: Human developers, CI/CD runners, and IDE agents often operate
-   without the Kubernetes infrastructure running locally (`pnpm infra:dev` might be stopped, or the developer is
-   offline/in a lightweight standalone clone).
-3. **Naming Redundancy**: Naming the agent repository `agent-platform` collides with the existing `platform` monorepo.
-   Naming it `cortex` collides with the backend microservices bounded context in `platform/hub/cortex`.
-4. **Plugin Portability Requirement**: Plugins cannot be tightly coupled to an internal monorepo structure.
-   Every plugin must be **100% self-contained**, capable of being published to **GitHub Packages**
-   (`@tupynambalucas-dev/plugin-*`) and installed into any repository via `agy plugin install` or declared in
-   `.agents/plugins.json`.
+It formalizes two foundational architectural decisions:
+1. **SSOT for MCP Servers**: All Model Context Protocol servers reside exclusively in `platform/hub/cortex/mcp`
+   and are published as standalone npm packages (`@tupynambalucas-dev/cortex-mcp-*`).
+2. **Individual `package.json` for Every Plugin**: Each plugin in `plugins/<plugin-name>` is an autonomous
+   pnpm workspace package (`@tupynambalucas-dev/plugin-*`) containing its own `package.json`, `plugin.json`,
+   skills, rules, and scoped MCP configurations, enabling direct publishing to GitHub Packages and installation via
+   `agy plugin install`.
 
 ---
 
-## 2. Resolving Repository Naming Redundancy
-
-To eliminate semantic collisions across the organization, the enterprise naming hierarchy is codified as follows:
+## 1. High-Level Dependency Graph & Separation of Concerns
 
 ```mermaid
 flowchart TD
-    subgraph MetaRepo ["1. Umbrella Orchestration"]
-        OrgCore["org-core (Zero Business Code - Submodule Pointers & Meta Governance)"]
+    subgraph PlatformRepo ["platform/ (Cloud Services & Infrastructure Monorepo)"]
+        subgraph CortexHub ["platform/hub/cortex/mcp/ (MCP Data Plane - SSOT)"]
+            MCPGitHub["@tupynambalucas-dev/cortex-mcp-github"]
+            MCPAppSheet["@tupynambalucas-dev/cortex-mcp-appsheet"]
+            MCPGWork["@tupynambalucas-dev/cortex-mcp-google-workspace"]
+            MCPFirecrawl["@tupynambalucas-dev/cortex-mcp-firecrawl"]
+            MCPContext7["@tupynambalucas-dev/cortex-mcp-context7"]
+            MCPMemory["@tupynambalucas-dev/cortex-mcp-memory"]
+        end
+        EnvoyGateway["AgentGateway (Cluster HTTP/SSE Ingress: 8080)"]
+        CortexHub -. "Deploys to K8s" .-> EnvoyGateway
+        CortexHub -. "Publishes to npm / GitHub Packages" .-> NPMRegistry["npm / GitHub Packages Registry"]
     end
 
-    subgraph ServiceRepo ["2. Cloud & Application Monorepo"]
-        Platform["platform/ (Kubernetes Infrastructure & Services)"]
-        Hub["platform/hub/ (Internal Platform Services)"]
-        Cortex["platform/hub/cortex/ (AI Backend: Envoy Gateway, gRPC Guardrails, Vector DB)"]
-        Platform --> Hub --> Cortex
+    subgraph AgentMeshRepo ["agent-toolkit / agent-mesh (Autonomous Agent Monorepo)"]
+        subgraph PluginsWorkspace ["plugins/ (Self-Contained agy Plugins)"]
+            PluginGH["@tupynambalucas-dev/plugin-github"]
+            PluginAppSheet["@tupynambalucas-dev/plugin-appsheet"]
+            PluginGWork["@tupynambalucas-dev/plugin-google-workspace"]
+            PluginSecrets["@tupynambalucas-dev/plugin-secrets"]
+            PluginMeta["@tupynambalucas-dev/plugin-meta"]
+        end
     end
 
-    subgraph AgentRepo ["3. Sovereign Agent Ecosystem Monorepo"]
-        AgentMesh["agent-mesh/ (formerly agent-toolkit)"]
-        Plugins["plugins/ (Self-Contained GitHub Packages & agy Plugins)"]
-        LocalMCPs["mcps/ (Local Stdio Fallback Runners)"]
-        AgentMesh --> Plugins
-        AgentMesh --> LocalMCPs
+    subgraph ConsumingProjects ["Consuming Workspaces & Developers"]
+        DocsApp["docs/ (Consumes plugin-meta, plugin-github)"]
+        CoreUmbrella["org-core/ (Consumes all plugins)"]
+        ExternalDev["External Developer Workstation (agy plugin install)"]
     end
 
-    OrgCore -.-> Platform
-    OrgCore -.-> AgentMesh
+    NPMRegistry ==>|Provides CLI Binaries & Stdio Fallback| PluginsWorkspace
+    PluginsWorkspace ==>|Installed via agy plugin / npm| ConsumingProjects
 ```
-
-### Comparative Analysis of Candidate Names
-
-| Candidate Name | Technical Assessment | Verdict |
-| :--- | :--- | :--- |
-| **`agent-platform`** | **Redundant**: Creates confusion with `platform/`. Developers cannot distinguish between platform services and agent tools. | **REJECTED** |
-| **`cortex`** | **Redundant & Conflicting**: `cortex` is already the registered Kubernetes namespace and microservice suite in `platform/hub/cortex`. | **REJECTED** |
-| **`agent-toolkit` (Current)** | **Functional but Constrained**: Accurately describes utilities, but understates the monorepo's expanded role as a plugin registry. | **ACCEPTABLE (Short Term)** |
-| **`agent-mesh`** | **Optimal**: Represents the decentralized, interconnected network of self-contained plugins, local fallback MCPs, and autonomous skills. Zero naming collisions. | **RECOMMENDED TARGET** |
-| **`agents`** | **Minimalist**: Direct parity with the root `.agents/` folder across all project workspaces. | **STRONG ALTERNATIVE** |
 
 ---
 
-## 3. Dual-Tier MCP Topology: Remote Gateway vs. Local Fallback
+## 2. The MCP Engine in `platform/hub/cortex/mcp` (Single Source of Truth)
 
-The organization establishes a resilient, two-tier architecture that guarantees agents never experience downtime:
+Rather than maintaining duplicate MCP tool code in the agent repository, all MCP server implementations
+reside strictly in [platform/hub/cortex/mcp/services/](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/platform/hub/cortex/mcp/services).
+
+### 2.1 Dual-Target Execution Architecture
+Every MCP package in `platform` is engineered with a **Dual Target**:
 
 ```mermaid
-flowchart TD
-    subgraph AgentExecution ["Developer Workstation / CI Runner"]
-        AgyCLI["Antigravity CLI (agy) / Claude Code"]
-        Plugin["Self-Contained Plugin (e.g. plugins/github, plugins/appsheet)"]
-        FallbackRunner["mcps/shared-runner (scripts/mcp-runner.js)"]
-        AgyCLI --> Plugin
-        Plugin --> FallbackRunner
-    end
+flowchart LR
+    MCPPkg["@tupynambalucas-dev/cortex-mcp-* (in platform/hub/cortex/mcp/services/*)"]
+    
+    TargetA["Mode A: Cluster Container (HTTP / SSE)"]
+    TargetB["Mode B: Standalone Stdio CLI (npx / pnpm exec)"]
+    
+    MCPPkg -->|Docker Build + Skaffold| TargetA
+    MCPPkg -->|pnpm publish (bin in package.json)| TargetB
 
-    subgraph Tier1Remote ["Tier 1: Cloud-Native Cortex Data Plane (platform/hub/cortex)"]
-        K8sCluster["Kubernetes Cluster / Docker Compose"]
-        AgentGateway["Envoy AI Gateway (http://agentgateway:8080/mcp)"]
-        ExtMCP["gRPC ExtMCP Policy Guardrails"]
-        RemoteAdapters["Containerized MCP Adapters (GitHub, Firecrawl, Context7, Memory)"]
-        K8sCluster --> AgentGateway
-        AgentGateway --> ExtMCP
-        AgentGateway --> RemoteAdapters
-    end
-
-    subgraph Tier2Local ["Tier 2: Local Stdio Fallback Plane (agent-mesh/mcps)"]
-        LocalStdio["Local Node.js Stdio MCP Process (pnpm dlx)"]
-        LocalVault["Infisical Local CLI / Layered .env Resolution"]
-        FallbackRunner -->|If Gateway Offline| LocalStdio
-        LocalVault --> LocalStdio
-    end
-
-    FallbackRunner -->|Probe /healthz: 200 OK| AgentGateway
+    TargetA --> EnvoyGW["AgentGateway (Kubernetes Ingress: 8080)"]
+    TargetB --> LocalStdio["Local Stdio Process in Developer IDE / CI"]
 ```
 
-### 3.1 Tier 1: Cloud-Native Cortex Gateway (Primary When Active)
-- **Deployment**: Runs inside the Kubernetes cluster (`platform/hub/cortex/mcp`).
-- **Protocol**: Streamable HTTP and Server-Sent Events (SSE) exposed via `agentgateway`.
-- **Capabilities**:
-  - Enforces gRPC ExtMCP policy guardrails (validating payload schemas, transparent URL mutation).
-  - Centralized rate-limiting, Prometheus metrics, and distributed OpenTelemetry tracing.
-  - Native integration with the MongoDB semantic vector memory substrate (`cortex/memory`).
+1. **Mode A (Cluster Microservice)**:
+   - Packaged into Docker images and deployed into the `cortex` Kubernetes namespace behind `agentgateway` and Traefik.
+   - Enforces gRPC ExtMCP policy guardrails, distributed OpenTelemetry tracing, and cluster rate-limits.
+2. **Mode B (Standalone Stdio CLI)**:
+   - Configured with a `"bin"` CLI entrypoint in `package.json` (e.g. `cortex-mcp-github`, `cortex-mcp-firecrawl`).
+   - Packaged and published to GitHub Packages.
+   - Can be executed directly via `npx @tupynambalucas-dev/cortex-mcp-github` or `pnpm exec cortex-mcp-github` over standard input/output (stdio) without requiring Docker or Kubernetes.
 
-### 3.2 Tier 2: Local Stdio Fallback Plane (Secondary / Resilient)
-- **Deployment**: Runs on the developer's local workstation via `mcps/shared-runner` (Node.js stdio).
-- **Triggers**: Activates automatically whenever:
-  1. The Kubernetes cluster is offline or stopped.
-  2. The developer is working on a standalone repository clone.
-  3. CI/CD runners execute isolated headless test suites.
-- **Current Reference**: Exactly mirrors the current working behavior of `agent-toolkit/scripts/mcp-runner.js`,
-  which boots `firecrawl-mcp`, `@upstash/context7-mcp`, and `github-mcp-server-js` directly via `pnpm dlx`.
+### 2.2 Canonical MCP Packages in `platform`
 
-### 3.3 Dynamic Failover Protocol
-When an agent invokes an MCP tool, the client wrapper executes a deterministic 300ms probe:
-1. `GET http://localhost:8080/healthz` (or configured `CORTEX_GATEWAY_URL`).
-2. **If HTTP 200**: Routes request to Tier 1 Remote Gateway.
-3. **If Connection Refused / Timeout**: Automatically spawns Tier 2 Local Stdio process without throwing an error to the user.
+| Service Directory | Published Package Name | Stdio CLI Binary | Description |
+| :--- | :--- | :--- | :--- |
+| `cortex/mcp/services/github` | `@tupynambalucas-dev/cortex-mcp-github` | `cortex-mcp-github` | GitHub App-authenticated operator (PRs, commits, rulesets). |
+| `cortex/mcp/services/firecrawl` | `@tupynambalucas-dev/cortex-mcp-firecrawl` | `cortex-mcp-firecrawl` | High-fidelity web scraping, crawling, and research tools. |
+| `cortex/mcp/services/context7` | `@tupynambalucas-dev/cortex-mcp-context7` | `cortex-mcp-context7` | Real-time framework documentation and snippet retrieval. |
+| `cortex/mcp/services/memory` | `@tupynambalucas-dev/cortex-mcp-memory` | `cortex-mcp-memory` | MongoDB semantic vector RAG memory queries. |
+| `cortex/mcp/services/appsheet` | `@tupynambalucas-dev/cortex-mcp-appsheet` | `cortex-mcp-appsheet` | AppSheet REST API database querying and row mutations. |
+| `cortex/mcp/services/google-workspace` | `@tupynambalucas-dev/cortex-mcp-gwork` | `cortex-mcp-gwork` | Google Drive, Docs, and Sheets programmatic manipulation. |
 
 ---
 
-## 4. Self-Contained Plugin Packaging Standard
+## 3. The Agent Mesh Workspace (`agent-toolkit` / `agent-mesh`)
 
-To allow plugins to be published as independent GitHub Packages (`npm.pkg.github.com/@tupynambalucas-dev/*`)
-and installed via `agy plugin install` in any project, each plugin must adhere to strict **hermetic autonomy**.
+With the MCP implementations safely housed in `platform`, the agent repository is liberated to focus strictly
+on **Agent Behavioral Governance, Personas, Skills, Rules, and Plugin Bundling**.
 
-### 4.1 Invariants for Self-Contained Plugins
-1. **Zero Path Traversals**: Plugins must NEVER reference `cd ../..` or reach outside their own directory tree.
-2. **Independent Manifest (`package.json`)**: Each plugin defines its own metadata, dependencies, and publishing coordinates.
-3. **Independent Plugin Manifest (`plugin.json`)**: Declares plugin name, schema, description, and entrypoints.
-4. **Scoped MCP Configuration (`mcp_config.json`)**: Declares only the MCP tools required for that specific plugin.
-5. **Encapsulated Skills & Rules**: All skills and rules must reside strictly within `skills/` and `rules/` inside the plugin.
+### 3.1 Root `pnpm-workspace.yaml` in `agent-toolkit`
+```yaml
+packages:
+  - 'plugins/*'
+  - 'packages/*'
+```
 
-### 4.2 Standard Directory Layout for `plugins/<plugin-name>`
+### 3.2 Individual `package.json` Standard for Every Plugin
+
+Every plugin in `plugins/<plugin-name>` is an autonomous npm package with its own `package.json` alongside
+its Antigravity `plugin.json` manifest:
 
 ```plaintext
-plugins/github/
-├── package.json               # Defines @tupynambalucas-dev/plugin-github
-├── plugin.json                # Antigravity manifest: name "github-operator"
-├── mcp_config.json            # Connects to GitHub MCP (Tier 1 Gateway or Tier 2 Fallback)
-├── tsconfig.json              # Scoped TypeScript configuration
+agent-toolkit/ (or agent-mesh/)
+├── pnpm-workspace.yaml
+├── package.json (root orchestration)
 │
-├── skills/                    # Bundled Agent Skills
-│   └── github-org-manager/
-│       ├── SKILL.md           # Progressive disclosure instructions
-│       └── scripts/           # Self-contained helper scripts
+├── plugins/
+│   ├── github/
+│   │   ├── package.json                   # Defines @tupynambalucas-dev/plugin-github
+│   │   ├── plugin.json                    # Antigravity manifest: name "github-operator"
+│   │   ├── mcp_config.json                # Connects to cortex-mcp-github
+│   │   ├── skills/
+│   │   │   └── github-org-manager/
+│   │   │       ├── SKILL.md
+│   │   │       └── scripts/
+│   │   └── rules/
+│   │       └── git-governance.md
+│   │
+│   ├── google-workspace/
+│   │   ├── package.json                   # Defines @tupynambalucas-dev/plugin-google-workspace
+│   │   ├── plugin.json                    # Antigravity manifest: name "google-workspace"
+│   │   ├── mcp_config.json                # Connects to cortex-mcp-gwork
+│   │   └── skills/
+│   │       └── workspace-automator/
+│   │
+│   ├── appsheet/
+│   │   ├── package.json                   # Defines @tupynambalucas-dev/plugin-appsheet
+│   │   ├── plugin.json                    # Antigravity manifest: name "appsheet"
+│   │   ├── mcp_config.json                # Connects to cortex-mcp-appsheet
+│   │   └── skills/
+│   │       └── appsheet-architect/
+│   │
+│   ├── secrets/
+│   │   ├── package.json                   # Defines @tupynambalucas-dev/plugin-secrets
+│   │   ├── plugin.json                    # Antigravity manifest: name "secrets-governance"
+│   │   └── skills/
+│   │       └── secrets-expert/
+│   │
+│   └── meta/
+│       ├── package.json                   # Defines @tupynambalucas-dev/plugin-meta
+│       ├── plugin.json                    # Antigravity manifest: name "meta-agent-skills"
+│       └── skills/
+│           ├── agent-router-expert/
+│           ├── markdown-expert/
+│           └── skill-expert/
 │
-├── rules/                     # Bundled Behavioral Rules
-│   └── git-governance.md      # Conventional commits & signature invariants
-│
-└── scripts/                   # Local execution shims
-    └── mcp-runner.js          # Self-contained fallback runner
+└── packages/                              # Shared Plugin SDKs
+    ├── core/                              # Base Zod schemas and IPC types
+    └── runner/                            # Fallback health-checker and secret resolver
 ```
 
-### 4.3 Manifest Specifications
+---
 
-#### `plugins/github/package.json`
+## 4. Anatomy of a Self-Contained Plugin (`plugins/github`)
+
+### 4.1 `plugins/github/package.json`
 ```json
 {
   "name": "@tupynambalucas-dev/plugin-github",
   "version": "1.0.0",
-  "description": "Self-contained Antigravity plugin for GitHub organization operations, commit signing, and ruleset governance.",
+  "description": "Antigravity plugin for GitHub organization management, commit signing, and ruleset governance.",
   "type": "module",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tupynambalucas-dev/agent-mesh.git",
     "directory": "plugins/github"
   },
-  "scripts": {
-    "build": "tsc",
-    "test": "vitest run"
-  },
   "dependencies": {
-    "@octokit/auth-app": "^7.1.4",
-    "octokit": "^4.1.0"
+    "@tupynambalucas-dev/cortex-mcp-github": "^1.0.0"
   },
   "files": [
     "plugin.json",
     "mcp_config.json",
     "skills",
-    "rules",
-    "scripts"
+    "rules"
   ]
 }
 ```
 
-#### `plugins/github/plugin.json`
+### 4.2 `plugins/github/plugin.json`
 ```json
 {
   "$schema": "https://antigravity.google/schemas/v1/plugin.json",
@@ -209,81 +212,109 @@ plugins/github/
 }
 ```
 
----
-
-## 5. Plugin Distribution & Consumption Models
-
-A self-contained plugin can be consumed across the ecosystem through three standard mechanisms:
-
-### Model 1: Installation via Antigravity CLI (`agy plugin install`)
-Developers or CI runners can install the plugin directly from GitHub without cloning the monorepo:
-```bash
-agy plugin install github:tupynambalucas-dev/agent-mesh/plugins/github
-```
-Or when published to the global registry:
-```bash
-agy plugin install @tupynambalucas-dev/plugin-github
-```
-
-### Model 2: Workspace Manifest Declaration (`.agents/plugins.json`)
-Consuming repositories (such as `platform` or `docs`) declare the plugin in their project `.agents/plugins.json`:
+### 4.3 `plugins/github/mcp_config.json`
+The plugin connects to the tool via the published `@tupynambalucas-dev/cortex-mcp-github` binary, falling back
+automatically when the remote gateway is offline:
 ```json
 {
-  "entries": [
-    {
-      "path": "node_modules/@tupynambalucas-dev/plugin-github"
+  "mcpServers": {
+    "github-mcp": {
+      "command": "pnpm",
+      "args": ["exec", "cortex-mcp-github"]
     }
-  ]
-}
-```
-And add the dependency in their `package.json`:
-```json
-{
-  "devDependencies": {
-    "@tupynambalucas-dev/plugin-github": "github:tupynambalucas-dev/agent-mesh?path=plugins/github"
   }
 }
 ```
 
-### Model 3: Local Submodule Linking (Within `org-core`)
-Inside the `org-core` umbrella meta-repository, `plugins.json` can link directly to the checked-out submodule:
+---
+
+## 5. Dual-Tier Fallback Execution Flow
+
+When an agent operates in any workspace, tool execution follows a resilient, layered strategy:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Agent as Antigravity Agent
+    participant Plugin as @tupynambalucas-dev/plugin-github
+    participant Runner as cortex-mcp-github (CLI Entrypoint)
+    participant Gateway as AgentGateway (platform/hub/cortex)
+    participant GitHubAPI as GitHub REST / GraphQL API
+
+    Agent->>Plugin: Invoke Tool (e.g. list_repository_rulesets)
+    Plugin->>Runner: Execute Stdio command
+    Runner->>Gateway: Fast Probe (GET /healthz, 300ms timeout)
+    alt Gateway Online (Kubernetes Active)
+        Gateway-->>Runner: 200 OK
+        Runner->>Gateway: Forward Request over SSE
+        Gateway->>GitHubAPI: Execute Request with gRPC Guardrails
+        GitHubAPI-->>Gateway: Response
+        Gateway-->>Runner: SSE Response Stream
+    else Gateway Offline (Cluster Inactive / Offline Workstation)
+        Runner->>Runner: Fallback to Embedded Octokit Stdio Engine
+        Runner->>GitHubAPI: Execute Direct API Call (via Infisical GITHUB_APP token)
+        GitHubAPI-->>Runner: Response
+    end
+    Runner-->>Plugin: Return Tool Output
+    Plugin-->>Agent: Deliver Result into Context Window
+```
+
+---
+
+## 6. Distribution & Consumption Across Projects
+
+This decoupled architecture allows effortless consumption across three distinct modes:
+
+### Mode 1: Installation via Antigravity CLI (`agy plugin install`)
+Any developer on any machine can install a plugin directly from GitHub Packages or git:
+```bash
+agy plugin install github:tupynambalucas-dev/agent-mesh/plugins/github
+```
+Antigravity automatically pulls the plugin, detects `plugin.json`, installs the declared dependency
+`@tupynambalucas-dev/cortex-mcp-github`, and mounts the skills and rules instantly.
+
+### Mode 2: Project Dependency via `package.json` & `.agents/plugins.json`
+A monorepo service (like `platform` or `docs`) can declare the plugin in `package.json`:
+```json
+{
+  "devDependencies": {
+    "@tupynambalucas-dev/plugin-github": "workspace:*",
+    "@tupynambalucas-dev/plugin-meta": "workspace:*"
+  }
+}
+```
+And declare it in `.agents/plugins.json`:
 ```json
 {
   "entries": [
-    {
-      "path": "agent-toolkit/plugins/github"
-    },
-    {
-      "path": "agent-toolkit/plugins/secrets"
-    }
+    { "path": "node_modules/@tupynambalucas-dev/plugin-github" },
+    { "path": "node_modules/@tupynambalucas-dev/plugin-meta" }
+  ]
+}
+```
+
+### Mode 3: Umbrella Meta-Repository Discovery (`org-core`)
+In `org-core/.agents/plugins.json`, the meta-repository links directly to the checked-out plugins in the
+`agent-toolkit` (or `agent-mesh`) submodule:
+```json
+{
+  "entries": [
+    { "path": "agent-toolkit/plugins/github" },
+    { "path": "agent-toolkit/plugins/secrets" },
+    { "path": "agent-toolkit/plugins/meta" }
   ]
 }
 ```
 
 ---
 
-## 6. Matrix of Self-Contained Plugins
+## 7. Strategic Synthesis: The Four Golden Rules
 
-| Plugin Name | Directory | Primary Skills & Rules | Underlying MCP Integration | Target Consumption |
-| :--- | :--- | :--- | :--- | :--- |
-| **`github-operator`** | `plugins/github/` | `github-org-manager`, `git-governance` | GitHub App (`@octokit/auth-app`) with Tier 1/Tier 2 fallback | All organizational repositories |
-| **`google-workspace`**| `plugins/google-workspace/` | `workspace-automator`, `google-api-dev` | Google Drive, Docs, and Sheets REST APIs | Product & Content repositories |
-| **`appsheet-architect`**| `plugins/appsheet/` | `appsheet-architect`, `prompt-to-app` | AppSheet Inbound REST API + Sheets Generator | Enterprise line-of-business applications |
-| **`secrets-governance`**| `plugins/secrets/` | `secrets-expert`, `zero-disk-secrets` | Infisical Universal Auth MCP adapter | All organizational repositories |
-| **`meta-governance`** | `plugins/meta/` | `agent-router-expert`, `markdown-expert`, `skill-expert` | Local filesystem & Diátaxis engine | All organizational repositories |
-
----
-
-## 7. Implementation & Migration Runbook
-
-1. **Step 1: Create Monorepo Root Configs**:
-   - Add `pnpm-workspace.yaml` in `agent-toolkit` declaring `plugins/*`, `mcps/*`, `packages/*`.
-2. **Step 2: Scaffold `plugins/github`**:
-   - Extract `github-org-manager` skill and rules into `plugins/github/`.
-   - Implement self-contained `package.json`, `plugin.json`, and local fallback runner.
-3. **Step 3: Implement Dual-Tier Probing in `mcps/shared-runner`**:
-   - Add health check probe to `mcp-runner.js` to dynamically connect to Cortex Gateway (`platform/hub/cortex`) when active, falling back to local Stdio.
-4. **Step 4: Update Consuming Repositories**:
-   - Update `platform/.agents/plugins.json` and `docs/.agents/plugins.json` to reference the modular plugin entrypoints.
-5. **Step 5: Atomic Repository Rename (Optional)**:
-   - When aligned, rename the GitHub repository from `agent-toolkit` to `agent-mesh`, updating `org-core/.gitmodules` pointers in a single cryptographically signed commit.
+1. **Rule 1 (SSOT for MCPs)**: Never write or maintain MCP server code in `agent-toolkit`. All MCP tool servers
+   belong in `platform/hub/cortex/mcp/services/` and are distributed as `@tupynambalucas-dev/cortex-mcp-*`.
+2. **Rule 2 (Every Plugin is an npm Package)**: Every plugin in `plugins/*` must contain its own `package.json`
+   defining `@tupynambalucas-dev/plugin-*` and its own `plugin.json`.
+3. **Rule 3 (Dual Target for MCPs)**: Every MCP in `cortex/mcp` must support both containerized HTTP/SSE for
+   Kubernetes and a standalone Stdio `"bin"` CLI for developer workstations.
+4. **Rule 4 (No Naming Redundancy)**: Reject `agent-platform` and `cortex` as names for the agent repository.
+   The canonical name is **`agent-mesh`** (or **`agents`**).
