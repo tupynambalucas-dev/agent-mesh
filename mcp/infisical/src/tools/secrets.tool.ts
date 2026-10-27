@@ -12,6 +12,15 @@ export function registerSecretsTools(server: Server): void {
     return {
       tools: [
         {
+          name: 'infisical_list_projects',
+          description:
+            'Lists all Infisical workspaces/projects accessible to the authenticated Machine Identity, including their project IDs, names, slugs, and environment configurations.',
+          inputSchema: {
+            type: 'object',
+            properties: {},
+          },
+        },
+        {
           name: 'infisical_list_secrets',
           description:
             'Lists all secrets in an Infisical project environment and directory path.',
@@ -158,6 +167,23 @@ export function registerSecretsTools(server: Server): void {
     const hostUrl = config.HOST_URL.replace(/\/$/, '');
 
     switch (name) {
+      case 'infisical_list_projects': {
+        const token = await getInfisicalAccessToken();
+        const res = await fetch(`${hostUrl}/api/v1/workspace`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!res.ok) {
+          const err = await res.text();
+          throw new Error(`Failed to list projects (${res.status}): ${err}`);
+        }
+
+        const data = await res.json();
+        return {
+          content: [{ type: 'text', text: JSON.stringify(data, null, 2) }],
+        };
+      }
+
       case 'infisical_list_secrets': {
         const schema = z.object({
           projectId: z.string().optional().default(config.PROJECT_ID),

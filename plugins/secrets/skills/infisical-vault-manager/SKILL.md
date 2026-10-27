@@ -12,6 +12,7 @@ Manages, audits, and provisions organization secrets across Infisical projects a
 ## 1. When to Use
 
 Activate this skill when:
+- Discovering all accessible projects and environments (`infisical_list_projects`).
 - Listing registered secrets in an environment (`infisical_list_secrets`).
 - Fetching specific credentials for local execution (`infisical_get_secret`).
 - Provisioning new API keys or tokens into Infisical (`infisical_create_secret`).
@@ -22,18 +23,27 @@ Activate this skill when:
 
 ## 2. Operational Workflows
 
-### Workflow A: Listing Environment Secrets
+### Workflow A: Discovering Projects and Environments
+```json
+{
+  "tool": "infisical_list_projects",
+  "arguments": {}
+}
+```
+
+### Workflow B: Listing Environment Secrets
 ```json
 {
   "tool": "infisical_list_secrets",
   "arguments": {
+    "projectId": "134783dd-8a83-4dfc-9fd5-979b52bed86d",
     "environment": "dev",
     "secretPath": "/"
   }
 }
 ```
 
-### Workflow B: Provisioning a New Secret
+### Workflow C: Provisioning a New Secret
 ```json
 {
   "tool": "infisical_create_secret",
@@ -46,7 +56,7 @@ Activate this skill when:
 }
 ```
 
-### Workflow C: Updating Rotated Credentials
+### Workflow D: Updating Rotated Credentials
 ```json
 {
   "tool": "infisical_update_secret",
