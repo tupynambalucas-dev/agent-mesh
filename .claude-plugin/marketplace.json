@@ -50,6 +50,12 @@
       "description": "Enterprise technical documentation retrieval and deep web research powered by Context7 and Firecrawl.",
       "version": "1.0.0",
       "source": "./plugins/research"
+    },
+    {
+      "name": "agent-plugin-web",
+      "description": "Enterprise headless browser automation, UI testing, and web scraping powered by Playwright and Firecrawl.",
+      "version": "1.0.0",
+      "source": "./plugins/web"
     }
   ]
 }

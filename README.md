@@ -10,7 +10,7 @@ Compatible natively with **Google Antigravity (`agy`)**, **Anthropic Claude Code
 
 `agent-mesh` operates as an **Enterprise Agent Marketplace and Monorepo Hub**. Rather than bundling all tools and instructions into a single monolithic plugin, the substrate partitions capabilities into sovereign, independently versioned, and granularly importable packages:
 
-- **7 Domain Plugins** ([plugins/](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/plugins)): Self-contained Antigravity and Claude Code plugins with dedicated manifests, scoped MCP servers, and modular skills.
+- **8 Domain Plugins** ([plugins/](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/plugins)): Self-contained Antigravity and Claude Code plugins with dedicated manifests, scoped MCP servers, and modular skills.
 - **6 MCP Servers** ([mcp/](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/mcp)): Dual-transport TypeScript services operating as Kubernetes microservices (HTTP on port 8080) and local Stdio binaries for smart gateway failover.
 - **1 Marketplace Registry** ([.claude-plugin/marketplace.json](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/.claude-plugin/marketplace.json)): Canonical manifest enabling selective plugin discovery and installation in Claude Code.
 - **Enterprise Rules** ([rules/AGENTS.md](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/rules/AGENTS.md)): Authoritative organizational governance constraints (commit signing, conventional commits, zero-emoji invariant, secret hygiene).
@@ -23,14 +23,15 @@ agent-mesh/
 │   └── marketplace.json     # Claude Code Plugin Marketplace registry
 ├── rules/
 │   └── AGENTS.md            # Enterprise governance constraints and always-on rules
-├── plugins/                 # 7 Sovereign Domain Plugins
-│   ├── appsheet/            # @tupynambalucas-dev/agent-plugin-appsheet
+├── plugins/                 # 8 Sovereign Domain Plugins
+│   ├── appsheet/            # @tupynambalucas-dev/agent-plugin-appsheet (AppSheet API + Playwright)
 │   ├── docusaurus/          # @tupynambalucas-dev/agent-plugin-docusaurus
 │   ├── github/              # @tupynambalucas-dev/agent-plugin-github
 │   ├── google-workspace/    # @tupynambalucas-dev/agent-plugin-google-workspace
 │   ├── meta/                # @tupynambalucas-dev/agent-plugin-meta
 │   ├── research/            # @tupynambalucas-dev/agent-plugin-research (Context7 + Firecrawl)
-│   └── secrets/             # @tupynambalucas-dev/agent-plugin-secrets
+│   ├── secrets/             # @tupynambalucas-dev/agent-plugin-secrets
+│   └── web/                 # @tupynambalucas-dev/agent-plugin-web (Playwright + Firecrawl)
 ├── mcp/                     # 6 In-House Dual-Transport MCP Servers
 │   ├── appsheet/            # @tupynambalucas-dev/cortex-mcp-appsheet
 │   ├── firecrawl/           # @tupynambalucas-dev/cortex-mcp-firecrawl

@@ -7,6 +7,14 @@
         "CORTEX_GATEWAY_URL": "http://localhost:8080",
         "CORTEX_PROBE_TIMEOUT_MS": "300"
       }
+    },
+    "playwright": {
+      "command": "node",
+      "args": ["../../scripts/mcp-gateway-router.js", "playwright"],
+      "env": {
+        "CORTEX_GATEWAY_URL": "http://localhost:8080",
+        "CORTEX_PROBE_TIMEOUT_MS": "300"
+      }
     }
   }
 }

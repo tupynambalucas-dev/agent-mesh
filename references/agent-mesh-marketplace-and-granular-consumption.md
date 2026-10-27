@@ -67,7 +67,12 @@ agent-mesh/
 │   │   ├── mcp_config.json              # Scoped Firecrawl + Context7 routing
 │   │   ├── package.json
 │   │   └── skills/                      # 2 research skills (documentation-researcher, web-deep-researcher)
-│   └── secrets/                         # @tupynambalucas-dev/agent-plugin-secrets
+│   ├── secrets/                         # @tupynambalucas-dev/agent-plugin-secrets
+│   └── web/                             # @tupynambalucas-dev/agent-plugin-web
+│       ├── plugin.json
+│       ├── mcp_config.json              # Scoped Playwright + Firecrawl routing
+│       ├── package.json
+│       └── skills/                      # 2 web skills (browser-automator, web-scraper)
 │       ├── plugin.json
 │       ├── mcp_config.json
 │       ├── package.json
@@ -235,12 +240,28 @@ All 6 domain plugins have been verified using the official Antigravity plugin va
 
 | Plugin Name | Manifest Path | Validator Status | Modular Skills | Scoped MCP Server |
 | :--- | :--- | :--- | :--- | :--- |
-| `agent-plugin-appsheet` | `plugins/appsheet/plugin.json` | 100% PASS (0 warnings) | 3 skills | `cortex-appsheet` |
+| `agent-plugin-appsheet` | `plugins/appsheet/plugin.json` | 100% PASS (0 warnings) | 3 skills | `cortex-appsheet`, `playwright` |
 | `agent-plugin-docusaurus`| `plugins/docusaurus/plugin.json` | 100% PASS (0 warnings) | 3 skills | N/A |
-| `agent-plugin-github` | `plugins/github/plugin.json` | 100% PASS (0 warnings) | 3 skills | `cortex-github` |
+| `agent-plugin-github` | `plugins/github/plugin.json` | 100% PASS (0 warnings) | 4 skills | `cortex-github` |
 | `agent-plugin-google-workspace` | `plugins/google-workspace/plugin.json` | 100% PASS (0 warnings) | 3 skills | `cortex-gwork` |
 | `agent-plugin-meta` | `plugins/meta/plugin.json` | 100% PASS (0 warnings) | 4 skills | N/A |
 | `agent-plugin-research` | `plugins/research/plugin.json` | 100% PASS (0 warnings) | 2 skills | `cortex-firecrawl`, `context7` |
 | `agent-plugin-secrets` | `plugins/secrets/plugin.json` | 100% PASS (0 warnings) | 2 skills | `cortex-infisical` |
+| `agent-plugin-web` | `plugins/web/plugin.json` | 100% PASS (0 warnings) | 2 skills | `playwright`, `cortex-firecrawl` |
 
-All 13 packages are published and maintained in GitHub Packages under `@tupynambalucas-dev/*`.
+### 5.2 Live MCP Verification & JSON-RPC Test Matrix
+
+All 8 MCP server targets were validated using direct JSON-RPC 2.0 handshake (`initialize`) and tool introspection (`tools/list`) through `scripts/mcp-gateway-router.js`:
+
+| Target Service | Handshake Name & Version | Status | Verified Tool Count | Core Tool Capabilities |
+| :--- | :--- | :--- | :--- | :--- |
+| `appsheet` | `cortex-appsheet-mcp@1.0.0` | **PASS** | 3 tools | `find_records`, `mutate_records`, `invoke_action` |
+| `firecrawl` | `cortex-firecrawl-mcp@1.0.0` | **PASS** | 6 tools | `scrape`, `crawl`, `search`, `map`, `extract`, `batch_scrape` |
+| `github` | `cortex-github-mcp@1.0.0` | **PASS** | 6 tools | `get_repo_info`, `list_org_repos`, `list_rulesets`, `get_ruleset`, `list_dependabot_alerts`, `list_secret_scanning_alerts` |
+| `google-workspace` | `cortex-gwork-mcp@1.0.0` | **PASS** | 3 tools | `search_drive_files`, `create_spreadsheet`, `create_document` |
+| `infisical` | `cortex-infisical-mcp@1.0.0` | **PASS** | 5 tools | `infisical_list_secrets`, `infisical_get_secret`, `infisical_create_secret`, `infisical_update_secret`, `infisical_delete_secret` |
+| `memory` | `cortex-memory-mcp@1.0.0` | **PASS** | 4 tools | `search_knowledge`, `store_episodic`, `query_graph`, `ingest_document` |
+| `context7` | `Context7@4.4.4` | **PASS** | 2 tools | `resolve-library-id`, `query-docs` |
+| `playwright` | `Playwright@1.64.0-alpha` | **PASS** | 25 tools | `browser_navigate`, `browser_click`, `browser_type`, `browser_fill_form`, `browser_take_screenshot`, `browser_snapshot`, `browser_wait_for`, etc. |
+
+All 13 workspace packages are published and maintained in GitHub Packages under `@tupynambalucas-dev/*`.
