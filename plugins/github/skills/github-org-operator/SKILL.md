@@ -22,3 +22,20 @@ Activate this skill when:
 2. Organization target is strictly `tupynambalucas-dev`.
 3. Default visibility for new organization projects is `private` unless explicitly directed.
 4. Always enforce the Zero-Emoji Policy across repository descriptions and team names.
+
+## Script Helpers & Runbooks
+
+- **Role Verification Pre-flight**:
+  ```bash
+  node ./scripts/resolve-operator-role.js
+  ```
+- **Bootstrap Functional Teams**:
+  ```bash
+  bash ./scripts/bootstrap-teams.sh "tupynambalucas-dev"
+  ```
+- **Synchronize Repository Permissions**:
+  ```bash
+  bash ./scripts/sync-team-permissions.sh "tupynambalucas-dev"
+  ```
+
+For detailed team matrix and Fine-Grained PAT permissions, consult [rbac-matrix.md](./references/rbac-matrix.md). For new developer workstation setup and token vs. GitHub App machine identity governance, consult [developer-onboarding.md](./references/developer-onboarding.md).

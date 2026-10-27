@@ -20,3 +20,12 @@ Activate this skill when:
 
 - All organization repositories MUST enforce cryptographic commit signing (`git commit -S`).
 - Direct pushes to `main` MUST be blocked; changes must flow via Pull Requests with required passing status checks.
+
+## Script Helpers & Runbooks
+
+- **Apply Branch Protection Rulesets**:
+  ```bash
+  bash ./scripts/configure-rulesets.sh "tupynambalucas-dev" "<target_repo>"
+  ```
+
+For detailed JSON schemas and ruleset definitions, consult [ruleset-schemas.md](./references/ruleset-schemas.md).

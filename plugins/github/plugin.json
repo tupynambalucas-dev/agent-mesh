@@ -11,17 +11,5 @@
     "governance",
     "rulesets",
     "security"
-  ],
-  "skills": [
-    "github-org-operator",
-    "github-ruleset-enforcer",
-    "github-security-auditor",
-    "github-actions-manager"
-  ],
-  "mcpServers": {
-    "cortex-github": {
-      "command": "node",
-      "args": ["../../scripts/mcp-gateway-router.js", "github"]
-    }
-  }
+  ]
 }

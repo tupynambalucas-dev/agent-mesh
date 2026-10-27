@@ -11,11 +11,8 @@
     "registry": "https://npm.pkg.github.com"
   },
   "files": [
-    "plugin.json",
     ".claude-plugin/",
-    "mcp_config.json",
     "rules/",
-    "skills/",
     "scripts/",
     "plugins/",
     "mcp/"

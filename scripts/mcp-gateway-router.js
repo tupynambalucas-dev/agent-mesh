@@ -74,6 +74,10 @@ const FALLBACK_REGISTRY = {
     pkg: "@tupynambalucas-dev/cortex-mcp-appsheet",
     upstream: null
   },
+  "infisical": {
+    pkg: "@tupynambalucas-dev/cortex-mcp-infisical",
+    upstream: "@infisical/mcp"
+  },
   "context7": {
     pkg: "@upstash/context7-mcp",
     upstream: "@upstash/context7-mcp"

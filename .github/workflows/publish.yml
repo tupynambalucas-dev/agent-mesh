@@ -41,19 +41,28 @@ jobs:
       - name: Build MCP Packages
         run: pnpm -r --filter "./mcp/*" run build
 
-      - name: Validate Antigravity Plugin Structure
+      - name: Validate Antigravity Domain Plugins
         run: |
           curl -fsSL https://antigravity.google/install.sh | bash || true
-          if command -v agy &> /dev/null; then
-            agy plugin validate . --strict || true
-          else
-            echo "agy CLI not found in environment; running manual structural verification"
-            node -e "
-              const fs = require('fs');
-              const p = JSON.parse(fs.readFileSync('plugin.json', 'utf8'));
-              console.log('Plugin Manifest:', p.name, 'v' + p.version);
-            "
-          fi
+          node -e "
+            const { execSync } = require('child_process');
+            const fs = require('fs');
+            const path = require('path');
+            const plugins = fs.readdirSync('plugins');
+            let hasAgy = false;
+            try { execSync('agy --version', { stdio: 'ignore' }); hasAgy = true; } catch {}
+            for (const p of plugins) {
+              const full = path.join('plugins', p);
+              if (!fs.statSync(full).isDirectory()) continue;
+              console.log('Validating domain plugin:', p);
+              if (hasAgy) {
+                execSync('agy plugin validate . --strict', { cwd: full, stdio: 'inherit' });
+              } else {
+                const manifest = JSON.parse(fs.readFileSync(path.join(full, 'plugin.json'), 'utf8'));
+                console.log('Manifest OK:', manifest.name, 'v' + manifest.version);
+              }
+            }
+          "
 
       - name: Publish Workspace Packages Idempotently
         if: github.event_name != 'pull_request'

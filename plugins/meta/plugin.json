@@ -11,11 +11,5 @@
     "agent-router",
     "markdown",
     "skills"
-  ],
-  "skills": [
-    "markdown-architect",
-    "agent-router-architect",
-    "skill-architect",
-    "plugin-manifest-architect"
   ]
 }

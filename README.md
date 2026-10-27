@@ -1,167 +1,210 @@
 # Universal Agent Mesh (`@tupynambalucas-dev/agent-mesh`)
 
-Universal enterprise AI agent governance, security guardrails, shared MCP connectors, domain plugins, and modular skills for the `tupynambalucas-dev` organization.
+Universal enterprise AI agent substrate, domain plugin marketplace, modular skills, and Model Context Protocol (MCP) servers for the `tupynambalucas-dev` organization.
 
 Compatible natively with **Google Antigravity (`agy`)**, **Anthropic Claude Code**, **Cursor**, and **GitHub Copilot**.
 
 ---
 
-## 1. Directory Structure
+## 1. Architecture Overview
+
+`agent-mesh` operates as an **Enterprise Agent Marketplace and Monorepo Hub**. Rather than bundling all tools and instructions into a single monolithic plugin, the substrate partitions capabilities into sovereign, independently versioned, and granularly importable packages:
+
+- **6 Domain Plugins** ([plugins/](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/plugins)): Self-contained Antigravity and Claude Code plugins with dedicated manifests, scoped MCP servers, and modular skills.
+- **6 MCP Servers** ([mcp/](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/mcp)): Dual-transport TypeScript services operating as Kubernetes microservices (HTTP on port 8080) and local Stdio binaries for smart gateway failover.
+- **1 Marketplace Registry** ([.claude-plugin/marketplace.json](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/.claude-plugin/marketplace.json)): Canonical manifest enabling selective plugin discovery and installation in Claude Code.
+- **Enterprise Rules** ([rules/AGENTS.md](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/rules/AGENTS.md)): Authoritative organizational governance constraints (commit signing, conventional commits, zero-emoji invariant, secret hygiene).
 
 ```text
 agent-mesh/
-├── package.json             # Root NPM package manifest for GitHub Packages
-├── plugin.json              # Antigravity & Agent Plugins 1.0 manifest
+├── package.json             # Root monorepo workspace orchestrator
+├── pnpm-workspace.yaml      # Monorepo packages mapping (plugins/*, mcp/*)
 ├── .claude-plugin/
-│   └── plugin.json          # Claude Code plugin manifest
-├── mcp_config.json          # Standardized MCP server configuration definitions
+│   └── marketplace.json     # Claude Code Plugin Marketplace registry
 ├── rules/
 │   └── AGENTS.md            # Enterprise governance constraints and always-on rules
-├── plugins/                 # Self-contained domain plugins
+├── plugins/                 # 6 Sovereign Domain Plugins
 │   ├── appsheet/            # @tupynambalucas-dev/agent-plugin-appsheet
 │   ├── docusaurus/          # @tupynambalucas-dev/agent-plugin-docusaurus
 │   ├── github/              # @tupynambalucas-dev/agent-plugin-github
 │   ├── google-workspace/    # @tupynambalucas-dev/agent-plugin-google-workspace
 │   ├── meta/                # @tupynambalucas-dev/agent-plugin-meta
 │   └── secrets/             # @tupynambalucas-dev/agent-plugin-secrets
-├── mcp/                     # Modular MCP server packages
+├── mcp/                     # 6 In-House Dual-Transport MCP Servers
 │   ├── appsheet/            # @tupynambalucas-dev/cortex-mcp-appsheet
 │   ├── firecrawl/           # @tupynambalucas-dev/cortex-mcp-firecrawl
 │   ├── github/              # @tupynambalucas-dev/cortex-mcp-github
 │   ├── google-workspace/    # @tupynambalucas-dev/cortex-mcp-gwork
+│   ├── infisical/           # @tupynambalucas-dev/cortex-mcp-infisical
 │   └── memory/              # @tupynambalucas-dev/cortex-mcp-memory
-├── skills/                  # Core governance and meta-engineering skills
-│   ├── agent-router-expert/ # Domain query orchestrator and AGENTS.md router
-│   ├── markdown-expert/     # Syntax, Prettier formatting, and Markdown standards
-│   ├── plugin-expert/       # Antigravity and Agent plugin authoring standards
-│   ├── skill-expert/        # Skill validation, evaluation, and progressive disclosure
-│   ├── secrets-expert/      # Infisical integration, Universal Auth, and secret hygiene
-│   └── github-org-manager/  # GitHub RBAC, functional teams, and ruleset enforcement
 └── scripts/
-    ├── mcp-runner.js        # 3-tier fallback environment loader for MCP servers
-    ├── mcp-gateway-router.js# Zero-downtime healthcheck proxy for gateway tools
+    ├── mcp-runner.js        # 3-tier fallback environment loader for legacy tools
+    ├── mcp-gateway-router.js# Zero-downtime healthcheck proxy and fallback router
     └── publish-packages.js  # Idempotent GitHub Packages multi-package publisher
 ```
 
 ---
 
-## 2. Environment Variables and Secret Governance
+## 2. Granular Consumption Guide
 
-The plugin requires API credentials and configuration tokens to operate its MCP connectors. To prevent blocking developers during local development, `scripts/mcp-runner.js` implements a **3-tier fallback resolution pipeline**:
+`agent-mesh` supports multiple integration topologies depending on whether the consumer repository has the `agent-mesh` folder mounted locally (as a Git submodule) or operates in total isolation.
 
-```mermaid
-graph TD
-  direction TB
+### Scenario A: Local Monorepo Integration (Inside `org-core`)
 
-  Start["MCP Tool Request"] --> Layer1{"Layer 1: Process Environment?"}
-  Layer1 -- Yes --> Exec["Execute MCP Server Process"]
-  Layer1 -- No --> Layer2{"Layer 2: Local or Parent .env?"}
-  Layer2 -- Yes --> LoadEnv["Inject .env Variables"] --> Exec
-  Layer2 -- No --> Layer3{"Layer 3: Infisical CLI Available?"}
-  Layer3 -- Yes --> InfisicalExport["Export via Infisical CLI"] --> Exec
-  Layer3 -- No --> Warn["Log Diagnostic Notice and Fallback"]
-```
+When operating inside the `org-core` meta-repository where `agent-mesh` is mounted as a Git submodule, plugins are discovered directly from local disk with zero network overhead.
 
-### Execution Scenarios
+#### 1. Load All Domain Plugins Simultaneously
 
-#### A. Execution Inside `org-core` (Meta-Repository)
-
-When `agent-mesh` is run from within the root `org-core` directory:
-
-- `scripts/mcp-runner.js` automatically searches up the directory tree to find `org-core/.env`.
-- Alternatively, launch the agent session using Infisical:
-  ```bash
-  infisical run --projectId <PROJECT_ID> --env dev -- agy
-  ```
-- All environment variables are inherited seamlessly across the entire workspace.
-
-#### B. Execution as a Standalone Workspace
-
-When opening `agent-mesh` independently:
-
-- Copy the provided template to create a local `.env`:
-  ```bash
-  cp .env.example .env
-  ```
-- Populate `.env` with development tokens. This allows complete functionality without needing `infisical login`.
-- If using Infisical directly:
-  ```bash
-  infisical run --projectId <AGENT_MESH_PROJECT_ID> --env dev -- npm test
-  ```
-
-### Required Environment Variables
-
-| Variable Name | Required By | Description & Permissions |
-| :--- | :--- | :--- |
-| `GITHUB_TOKEN` | `github-mcp` | Fine-Grained PAT with `repo`, `members:write`, and `secrets:write` scopes. |
-| `INFISICAL_UNIVERSAL_AUTH_CLIENT_ID` | `infisical-mcp` | Machine Identity Client ID configured in Infisical Cloud. |
-| `INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET` | `infisical-mcp` | Machine Identity Client Secret with access to organization projects. |
-| `INFISICAL_PROJECT_ID` | `infisical-mcp` | Target Infisical Project ID. |
-| `INFISICAL_ENVIRONMENT` | `infisical-mcp` | Environment slug (`dev`, `staging`, `prod`). |
-| `CONTEXT7_API_KEY` | `context7-mcp` | Context7 API key for querying technical documentation. |
-| `FIRECRAWL_API_KEY` | `firecrawl-mcp` | Firecrawl API key for deep web and API documentation crawling. |
-| `TUPYNAMBA_GATEWAY_TOKEN` | `enterprise-gateway` | Shared bearer token for internal Cortex AgentGateway proxy. |
-
----
-
-## 3. Installation and Setup
-
-### A. Antigravity CLI Plugin Installation
-
-```bash
-# Global installation from remote repository
-agy plugin install https://github.com/tupynambalucas-dev/agent-mesh
-
-# Local development installation from workspace root
-agy plugin install ./agent-mesh
-```
-
-### B. Claude Code Installation
-
-```bash
-/plugin marketplace add tupynambalucas-dev/agent-mesh
-/plugin install agent-mesh
-```
-
-### C. Repository DevDependency (GitHub Packages)
-
-```bash
-pnpm add -D @tupynambalucas-dev/agent-mesh
-```
-
-Reference in `.agents/plugins.json`:
+Configure [.agents/plugins.json](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/.agents/plugins.json) in your project root:
 
 ```json
 {
   "entries": [
-    { "path": "node_modules/@tupynambalucas-dev/agent-mesh" }
+    {
+      "path": "agent-mesh/plugins"
+    }
+  ]
+}
+```
+
+*Mechanism*: Antigravity scans `entries` directories **one level deep**. Pointing to `agent-mesh/plugins` automatically discovers all 6 plugins (`appsheet`, `docusaurus`, `github`, `google-workspace`, `meta`, `secrets`) and loads their 19 modular skills and scoped MCP servers.
+
+#### 2. Selectively Load Specific Domain Plugins
+
+To minimize context window token consumption, load only the plugins required by the active task using `include_only`:
+
+```json
+{
+  "entries": [
+    {
+      "path": "agent-mesh/plugins",
+      "include_only": ["github", "secrets", "meta"]
+    }
+  ]
+}
+```
+
+Or declare direct paths to individual plugin folders:
+
+```json
+{
+  "entries": [
+    { "path": "agent-mesh/plugins/docusaurus" },
+    { "path": "agent-mesh/plugins/meta" }
   ]
 }
 ```
 
 ---
 
-## 4. Verification and Validation
+### Scenario B: Standalone Workspace Integration (Without `agent-mesh` Local Directory)
 
-Verify plugin integrity and strict manifest conformance using the Antigravity CLI:
+When working in an independent repository (e.g. `tessel`, external client projects, or a fresh workstation checkout) where `agent-mesh` is **not** present on disk and [.agents/plugins.json](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/.agents/plugins.json) does not exist:
+
+#### 1. Via NPM Packages (GitHub Packages Registry)
+
+Install only the domain plugins required by your project:
 
 ```bash
-agy plugin validate . --strict
+# Example for a documentation portal:
+pnpm add -D @tupynambalucas-dev/agent-plugin-docusaurus @tupynambalucas-dev/agent-plugin-meta
+
+# Example for a platform service:
+pnpm add -D @tupynambalucas-dev/agent-plugin-github @tupynambalucas-dev/agent-plugin-secrets
+```
+
+Create `.agents/plugins.json` in the root of your standalone project:
+
+```json
+{
+  "entries": [
+    { "path": "node_modules/@tupynambalucas-dev/agent-plugin-docusaurus" },
+    { "path": "node_modules/@tupynambalucas-dev/agent-plugin-meta" }
+  ]
+}
+```
+
+*Benefit*: Zero token waste. The agent does not load AppSheet, Kubernetes, or GitHub administration skills into sessions that only touch documentation or backend APIs.
+
+#### 2. Via Antigravity CLI Plugin Installer (`agy`)
+
+Install plugins directly into your workstation's global configuration (`~/.gemini/config/plugins/`):
+
+```bash
+# Install individual domain plugin globally
+agy plugin install @tupynambalucas-dev/agent-plugin-github
+
+# Or install from git URL:
+agy plugin install https://github.com/tupynambalucas-dev/agent-mesh --path plugins/github
+```
+
+#### 3. Via Claude Code Plugin Marketplace
+
+Register the `tupynambalucas-dev` marketplace in Claude Code:
+
+```bash
+/plugin marketplace add tupynambalucas-dev/agent-mesh
+```
+
+Selectively install only the plugins you need for your active workflow:
+
+```bash
+/plugin install agent-plugin-github@tupynambalucas-dev
+/plugin install agent-plugin-secrets@tupynambalucas-dev
+/plugin install agent-plugin-meta@tupynambalucas-dev
 ```
 
 ---
 
-## 5. Governance Constraints
+## 3. In-House MCP Packages Inventory (`mcp/*`)
 
-All contributions and agent executions must adhere to organizational policies:
+All 6 in-house MCP servers are compiled TypeScript packages with dual transports:
 
-1. **Cryptographic Signing**: Every Git commit must be signed using SSH (`git commit -S -m "..."`).
-2. **Conventional Commits**: Commit messages must adhere to the Conventional Commits v1.0.0 specification.
-3. **Zero-Emoji Policy**: Emojis are strictly forbidden across all code, PRs, comments, and agent interactions.
-4. **Secret Hygiene**: Plaintext credentials must never be committed to source control or logged in terminal outputs.
+| MCP Package Name | Directory | Primary Capabilities | Dual Transports |
+| :--- | :--- | :--- | :--- |
+| `@tupynambalucas-dev/cortex-mcp-firecrawl` | `mcp/firecrawl` | Deep web scraping, crawling, markdown extraction | Fastify :8080 & Stdio (`bin.js`) |
+| `@tupynambalucas-dev/cortex-mcp-memory` | `mcp/memory` | Semantic RAG vector store, episodic memory | Fastify :8080 & Stdio (`bin.js`) |
+| `@tupynambalucas-dev/cortex-mcp-github` | `mcp/github` | Organization RBAC, rulesets, security triage | Fastify :8080 & Stdio (`bin.js`) |
+| `@tupynambalucas-dev/cortex-mcp-gwork` | `mcp/google-workspace` | Drive folders, Sheets synthesis, Docs publishing | Fastify :8080 & Stdio (`bin.js`) |
+| `@tupynambalucas-dev/cortex-mcp-appsheet` | `mcp/appsheet` | Relational schema modeling, REST API v2 CRUD | Fastify :8080 & Stdio (`bin.js`) |
+| `@tupynambalucas-dev/cortex-mcp-infisical` | `mcp/infisical` | Universal Auth machine tokens, secret CRUD | Fastify :8080 & Stdio (`bin.js`) |
+
+### Direct CLI Execution
+
+Any in-house MCP server can be executed directly via `npx` or `pnpm dlx`:
+
+```bash
+# Execute Firecrawl MCP server on stdio
+npx -y @tupynambalucas-dev/cortex-mcp-firecrawl
+
+# Execute Infisical MCP server on stdio
+npx -y @tupynambalucas-dev/cortex-mcp-infisical
+```
+
+### Smart Gateway Router & Zero-Downtime Fallback
+
+Plugins invoke MCP tools through [scripts/mcp-gateway-router.js](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/scripts/mcp-gateway-router.js). The router performs a 300ms non-blocking probe on the cluster Envoy AgentGateway:
+- If AgentGateway is healthy: routes requests over Streamable HTTP to `http://localhost:8080/mcp`.
+- If AgentGateway is offline: spawns the local compiled binary `node mcp/<target>/dist/bin.js` with zero interruption to developer sessions.
 
 ---
 
-## License
+## 4. Multi-Package Deployment Engine
 
-This package is licensed under the [MIT License](https://github.com/tupynambalucas-dev/.github/blob/main/LICENSE).
+Package publishing is orchestrated via [.github/workflows/publish.yml](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/.github/workflows/publish.yml) and [scripts/publish-packages.js](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/scripts/publish-packages.js).
+
+When changes are pushed to `main`, the workflow:
+1. Validates all domain plugins using `agy plugin validate . --strict`.
+2. Compiles all TypeScript MCP packages (`tsc -p tsconfig.build.json`).
+3. Evaluates all 13 workspace packages against `https://npm.pkg.github.com`.
+4. Idempotently publishes new versions to the GitHub Packages registry.
+
+---
+
+## 5. Governance Standards
+
+All commits, pull requests, and agent contributions must strictly comply with:
+- **Cryptographic SSH Signatures**: `git commit -S -m "..."`.
+- **Conventional Commits**: `<type>(<scope>): <description>`.
+- **Zero-Emoji Policy**: Emojis are strictly prohibited in code, commits, PRs, and chat.
+- **Secret Hygiene**: Zero plaintext credentials committed to Git.

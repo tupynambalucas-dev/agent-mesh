@@ -10,16 +10,5 @@
     "google-drive",
     "google-sheets",
     "google-docs"
-  ],
-  "skills": [
-    "gwork-drive-manager",
-    "gwork-sheets-builder",
-    "gwork-docs-publisher"
-  ],
-  "mcpServers": {
-    "cortex-gwork": {
-      "command": "node",
-      "args": ["../../scripts/mcp-gateway-router.js", "google-workspace"]
-    }
-  }
+  ]
 }

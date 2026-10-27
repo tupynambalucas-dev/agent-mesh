@@ -1,0 +1,49 @@
+{
+  "name": "tupynambalucas-dev",
+  "owner": {
+    "name": "Tupynamba Lucas Development Team",
+    "email": "contato@tupynambalucas.dev",
+    "url": "https://tupynambalucas.dev"
+  },
+  "metadata": {
+    "description": "Official Tupynamba Lucas Enterprise Agent Mesh Marketplace providing domain plugins, governance rules, and smart MCP tools."
+  },
+  "plugins": [
+    {
+      "name": "agent-plugin-github",
+      "description": "Enterprise GitHub organization operations, branch rulesets, security alert triage, and workflow management.",
+      "version": "1.0.0",
+      "source": "./plugins/github"
+    },
+    {
+      "name": "agent-plugin-secrets",
+      "description": "Enterprise Infisical secret vault management, environment sync, and zero-downtime rotation.",
+      "version": "1.0.0",
+      "source": "./plugins/secrets"
+    },
+    {
+      "name": "agent-plugin-meta",
+      "description": "Authoritative AI meta-engineering skills: AGENTS.md routing, modular skills, and GFM standards.",
+      "version": "1.0.0",
+      "source": "./plugins/meta"
+    },
+    {
+      "name": "agent-plugin-docusaurus",
+      "description": "Sovereign Docusaurus documentation architecture, MDX v3 authoring, and Diátaxis compliance.",
+      "version": "1.0.0",
+      "source": "./plugins/docusaurus"
+    },
+    {
+      "name": "agent-plugin-google-workspace",
+      "description": "Enterprise Google Workspace automation across Drive, Sheets, and Docs.",
+      "version": "1.0.0",
+      "source": "./plugins/google-workspace"
+    },
+    {
+      "name": "agent-plugin-appsheet",
+      "description": "Google AppSheet prompt-to-app schema generation, REST API v2 operations, and UI/UX design.",
+      "version": "1.0.0",
+      "source": "./plugins/appsheet"
+    }
+  ]
+}

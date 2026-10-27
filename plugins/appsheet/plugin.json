@@ -10,16 +10,5 @@
     "prompt-to-app",
     "appsheet-api",
     "relational-modeling"
-  ],
-  "skills": [
-    "appsheet-prompt-architect",
-    "appsheet-data-operator",
-    "appsheet-ui-designer"
-  ],
-  "mcpServers": {
-    "cortex-appsheet": {
-      "command": "node",
-      "args": ["../../scripts/mcp-gateway-router.js", "appsheet"]
-    }
-  }
+  ]
 }

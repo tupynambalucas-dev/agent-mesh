@@ -10,10 +10,5 @@
     "diataxis",
     "mdx",
     "technical-documentation"
-  ],
-  "skills": [
-    "docusaurus-architect",
-    "docusaurus-mdx-author",
-    "docusaurus-validator"
   ]
 }
