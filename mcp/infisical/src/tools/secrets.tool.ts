@@ -21,6 +21,59 @@ export function registerSecretsTools(server: Server): void {
           },
         },
         {
+          name: 'infisical_create_project',
+          description:
+            'Creates a new Infisical project/workspace in the organization with default environments (dev, staging, prod).',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              projectName: {
+                type: 'string',
+                description: 'The name of the new project (max 64 chars).',
+              },
+              projectDescription: {
+                type: 'string',
+                description: 'Optional description of the project (max 1024 chars).',
+              },
+              slug: {
+                type: 'string',
+                description: 'Optional URL-friendly slug for the project (5-64 chars).',
+              },
+            },
+            required: ['projectName'],
+          },
+        },
+        {
+          name: 'infisical_get_project',
+          description:
+            'Retrieves details of a specific Infisical workspace/project including environments, KMS configuration, and metadata.',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              projectId: {
+                type: 'string',
+                description: 'The Infisical project ID (workspaceId).',
+              },
+            },
+            required: ['projectId'],
+          },
+        },
+        {
+          name: 'infisical_delete_project',
+          description:
+            'Permanently deletes an Infisical project and all associated secrets and environments.',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              projectId: {
+                type: 'string',
+                description: 'The Infisical project ID to delete.',
+              },
+            },
+            required: ['projectId'],
+          },
+        },
+        {
           name: 'infisical_list_secrets',
           description:
             'Lists all secrets in an Infisical project environment and directory path.',
@@ -176,6 +229,86 @@ export function registerSecretsTools(server: Server): void {
         if (!res.ok) {
           const err = await res.text();
           throw new Error(`Failed to list projects (${res.status}): ${err}`);
+        }
+
+        const data = await res.json();
+        return {
+          content: [{ type: 'text', text: JSON.stringify(data, null, 2) }],
+        };
+      }
+
+      case 'infisical_create_project': {
+        const schema = z.object({
+          projectName: z.string().min(1).max(64),
+          projectDescription: z.string().max(1024).optional(),
+          slug: z.string().min(5).max(64).optional(),
+        });
+        const parsed = schema.parse(args || {});
+        const token = await getInfisicalAccessToken();
+
+        const res = await fetch(`${hostUrl}/api/v1/projects`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            projectName: parsed.projectName,
+            projectDescription: parsed.projectDescription,
+            slug: parsed.slug,
+            type: 'secret-manager',
+            shouldCreateDefaultEnvs: true,
+          }),
+        });
+
+        if (!res.ok) {
+          const err = await res.text();
+          throw new Error(`Failed to create project (${res.status}): ${err}`);
+        }
+
+        const data = await res.json();
+        return {
+          content: [{ type: 'text', text: JSON.stringify(data, null, 2) }],
+        };
+      }
+
+      case 'infisical_get_project': {
+        const schema = z.object({
+          projectId: z.string().min(1),
+        });
+        const parsed = schema.parse(args || {});
+        const token = await getInfisicalAccessToken();
+
+        const res = await fetch(`${hostUrl}/api/v1/workspace/${encodeURIComponent(parsed.projectId)}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!res.ok) {
+          const err = await res.text();
+          throw new Error(`Failed to get project (${res.status}): ${err}`);
+        }
+
+        const data = await res.json();
+        return {
+          content: [{ type: 'text', text: JSON.stringify(data, null, 2) }],
+        };
+      }
+
+      case 'infisical_delete_project': {
+        const schema = z.object({
+          projectId: z.string().min(1),
+        });
+        const parsed = schema.parse(args || {});
+        const token = await getInfisicalAccessToken();
+
+        const res = await fetch(`${hostUrl}/api/v1/projects/${encodeURIComponent(parsed.projectId)}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!res.ok) {
+          const err = await res.text();
+          throw new Error(`Failed to delete project (${res.status}): ${err}`);
         }
 
         const data = await res.json();

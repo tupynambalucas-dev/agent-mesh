@@ -13,6 +13,9 @@ Manages, audits, and provisions organization secrets across Infisical projects a
 
 Activate this skill when:
 - Discovering all accessible projects and environments (`infisical_list_projects`).
+- Creating a new project/workspace in the organization (`infisical_create_project`).
+- Inspecting project details and environments (`infisical_get_project`).
+- Deleting an unused project/workspace (`infisical_delete_project`).
 - Listing registered secrets in an environment (`infisical_list_secrets`).
 - Fetching specific credentials for local execution (`infisical_get_secret`).
 - Provisioning new API keys or tokens into Infisical (`infisical_create_secret`).
@@ -23,7 +26,19 @@ Activate this skill when:
 
 ## 2. Operational Workflows
 
-### Workflow A: Discovering Projects and Environments
+### Workflow A: Provisioning a New Project
+```json
+{
+  "tool": "infisical_create_project",
+  "arguments": {
+    "projectName": "Mobile App Services",
+    "projectDescription": "Secrets and credentials for mobile clients",
+    "slug": "mobile-app-services"
+  }
+}
+```
+
+### Workflow B: Discovering Projects and Environments
 ```json
 {
   "tool": "infisical_list_projects",
@@ -31,7 +46,7 @@ Activate this skill when:
 }
 ```
 
-### Workflow B: Listing Environment Secrets
+### Workflow C: Listing Environment Secrets
 ```json
 {
   "tool": "infisical_list_secrets",

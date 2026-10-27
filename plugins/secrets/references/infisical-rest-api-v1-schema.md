@@ -26,7 +26,34 @@ Content-Type: application/json
 
 ---
 
-## 2. Workspace and Projects Discovery
+## 2. Workspace and Projects Discovery & Management
+
+### Create Project
+```http
+POST /api/v1/projects
+Authorization: Bearer {accessToken}
+Content-Type: application/json
+
+{
+  "projectName": "New Service Workspace",
+  "projectDescription": "Managed by cortex-infisical",
+  "slug": "new-service-workspace",
+  "type": "secret-manager",
+  "shouldCreateDefaultEnvs": true
+}
+```
+
+### Get Project Details
+```http
+GET /api/v1/workspace/{projectId}
+Authorization: Bearer {accessToken}
+```
+
+### Delete Project
+```http
+DELETE /api/v1/projects/{projectId}
+Authorization: Bearer {accessToken}
+```
 
 ### List Accessible Workspaces
 ```http
