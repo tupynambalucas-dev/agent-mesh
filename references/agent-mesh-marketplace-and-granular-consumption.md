@@ -62,6 +62,11 @@ agent-mesh/
 │   │   ├── plugin.json
 │   │   ├── package.json
 │   │   └── skills/                      # 4 meta-governance skills (skill, plugin, router, markdown)
+│   ├── research/                        # @tupynambalucas-dev/agent-plugin-research
+│   │   ├── plugin.json
+│   │   ├── mcp_config.json              # Scoped Firecrawl + Context7 routing
+│   │   ├── package.json
+│   │   └── skills/                      # 2 research skills (documentation-researcher, web-deep-researcher)
 │   └── secrets/                         # @tupynambalucas-dev/agent-plugin-secrets
 │       ├── plugin.json
 │       ├── mcp_config.json
@@ -235,6 +240,7 @@ All 6 domain plugins have been verified using the official Antigravity plugin va
 | `agent-plugin-github` | `plugins/github/plugin.json` | 100% PASS (0 warnings) | 3 skills | `cortex-github` |
 | `agent-plugin-google-workspace` | `plugins/google-workspace/plugin.json` | 100% PASS (0 warnings) | 3 skills | `cortex-gwork` |
 | `agent-plugin-meta` | `plugins/meta/plugin.json` | 100% PASS (0 warnings) | 4 skills | N/A |
-| `agent-plugin-secrets` | `plugins/secrets/plugin.json` | 100% PASS (0 warnings) | 3 skills | `cortex-infisical` |
+| `agent-plugin-research` | `plugins/research/plugin.json` | 100% PASS (0 warnings) | 2 skills | `cortex-firecrawl`, `context7` |
+| `agent-plugin-secrets` | `plugins/secrets/plugin.json` | 100% PASS (0 warnings) | 2 skills | `cortex-infisical` |
 
 All 13 packages are published and maintained in GitHub Packages under `@tupynambalucas-dev/*`.

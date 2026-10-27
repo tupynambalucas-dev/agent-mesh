@@ -1,0 +1,23 @@
+{
+  "name": "@tupynambalucas-dev/agent-plugin-research",
+  "version": "1.0.0",
+  "description": "Enterprise Antigravity plugin for technical documentation retrieval and deep web research powered by Context7 and Firecrawl.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tupynambalucas-dev/agent-mesh.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "keywords": [
+    "antigravity-plugin",
+    "research",
+    "context7",
+    "firecrawl",
+    "documentation",
+    "web-scraping"
+  ],
+  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "license": "MIT"
+}

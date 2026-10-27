@@ -44,6 +44,12 @@
       "description": "Google AppSheet prompt-to-app schema generation, REST API v2 operations, and UI/UX design.",
       "version": "1.0.0",
       "source": "./plugins/appsheet"
+    },
+    {
+      "name": "agent-plugin-research",
+      "description": "Enterprise technical documentation retrieval and deep web research powered by Context7 and Firecrawl.",
+      "version": "1.0.0",
+      "source": "./plugins/research"
     }
   ]
 }
