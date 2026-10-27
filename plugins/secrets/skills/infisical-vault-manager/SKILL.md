@@ -3,20 +3,66 @@ name: infisical-vault-manager
 description: Manages secrets across Infisical Cloud projects, folders, and environments, issues Machine Identity credentials, and enforces secret hygiene.
 ---
 
-# Infisical Vault Manager Skill
+# Infisical Vault Manager
 
-Use this skill to create, update, delete, and inspect secrets managed inside Infisical Cloud projects and environments.
+Manages, audits, and provisions organization secrets across Infisical projects and environments using `cortex-infisical` MCP tools.
 
-## Activation Triggers
+---
+
+## 1. When to Use
 
 Activate this skill when:
-- Retrieving environment variables for local development or CI/CD pipelines.
-- Injecting secrets dynamically via the Infisical CLI (`infisical run -- ...`).
-- Configuring Machine Identities and Universal Auth client credentials.
-- Auditing secret version history or folder structures.
+- Listing registered secrets in an environment (`infisical_list_secrets`).
+- Fetching specific credentials for local execution (`infisical_get_secret`).
+- Provisioning new API keys or tokens into Infisical (`infisical_create_secret`).
+- Updating rotated credentials (`infisical_update_secret`).
+- Revoking expired credentials (`infisical_delete_secret`).
 
-## Secret Hygiene Invariant
+---
 
-1. Plaintext secrets MUST NEVER be printed to terminal output, logs, or chat responses.
-2. Reference secret values using environment variable syntax (`${SECRET_KEY}`).
-3. Always store secrets in their respective project folder path (`/services/...`, `/platform/...`).
+## 2. Operational Workflows
+
+### Workflow A: Listing Environment Secrets
+```json
+{
+  "tool": "infisical_list_secrets",
+  "arguments": {
+    "environment": "dev",
+    "secretPath": "/"
+  }
+}
+```
+
+### Workflow B: Provisioning a New Secret
+```json
+{
+  "tool": "infisical_create_secret",
+  "arguments": {
+    "secretName": "NEW_SERVICE_API_KEY",
+    "secretValue": "token-value",
+    "environment": "dev",
+    "secretPath": "/"
+  }
+}
+```
+
+### Workflow C: Updating Rotated Credentials
+```json
+{
+  "tool": "infisical_update_secret",
+  "arguments": {
+    "secretName": "FIRECRAWL_API_KEY",
+    "secretValue": "new-firecrawl-key",
+    "environment": "dev",
+    "secretPath": "/"
+  }
+}
+```
+
+---
+
+## 3. Reference Links
+
+- [Infisical REST API v1 Specification](../../references/infisical-rest-api-v1-schema.md)
+- [Kubernetes InfisicalSecret CRD](../../references/kubernetes-infisicalsecret-crd.md)
+- [Secrets Domain Rules](../../rules/AGENTS.md)

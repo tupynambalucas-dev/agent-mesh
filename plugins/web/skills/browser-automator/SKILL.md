@@ -5,55 +5,57 @@ description: Automates browser sessions, page navigation, form interactions, UI 
 
 # Browser Automator
 
-This skill guides interactive and automated browser workflows using the **Playwright MCP Server** (`playwright`).
+Orchestrates interactive and automated browser workflows, end-to-end testing, and visual inspections using the **Playwright MCP Server** (`playwright`).
 
 ---
 
 ## 1. When to Use
 
 Activate this skill when:
-- Interacting with dynamic web applications or SaaS portals (e.g. AppSheet Studio, Google Cloud Console, GitHub Web UI).
-- Clicking buttons, selecting dropdown options, filling input fields, and submitting forms.
-- Capturing screenshots (`browser_take_screenshot`) or DOM accessibility trees (`browser_snapshot`) for visual verification.
-- Evaluating JavaScript expressions inside the browser context (`browser_evaluate`).
+- Interacting with dynamic web applications or SaaS consoles (AppSheet Studio, Cloud Consoles, Web Portals).
+- Clicking buttons, typing into fields, submitting forms, and interacting with select menus.
+- Capturing screenshots (`browser_take_screenshot`) or accessibility tree snapshots (`browser_snapshot`).
+- Handling alert/confirm dialogs and evaluating client-side JavaScript.
 
 Do NOT activate this skill when:
 - Retrieving static or article content where visual rendering is unnecessary (use `web-scraper` or `documentation-researcher`).
-- Querying structured APIs directly (use HTTP client tools or dedicated domain MCPs).
+- Querying structured REST APIs directly.
 
 ---
 
 ## 2. Operational Workflows
 
-### Workflow A: Navigation and Snapshot
+### Workflow A: Navigation and Accessibility Inspection
 ```json
 // Step 1: Navigate to target URL
 {
   "tool": "browser_navigate",
   "arguments": {
-    "url": "https://www.appsheet.com/Template/AppDef?appName=MyEnterpriseApp"
+    "url": "https://example.com/login"
   }
 }
 
-// Step 2: Capture page state snapshot
+// Step 2: Capture accessibility tree snapshot
 {
   "tool": "browser_snapshot",
-  "arguments": {}
+  "arguments": {
+    "boxes": true
+  }
 }
 ```
 
 ### Workflow B: Form Filling and Interaction
 ```json
-// Step 1: Fill form field
+// Step 1: Fill inputs
 {
   "tool": "browser_type",
   "arguments": {
-    "selector": "input#search-box",
-    "text": "Production Orders"
+    "selector": "input#email",
+    "text": "admin@example.com"
   }
 }
 
-// Step 2: Click submit or confirmation button
+// Step 2: Click button
 {
   "tool": "browser_click",
   "arguments": {
@@ -61,17 +63,17 @@ Do NOT activate this skill when:
   }
 }
 
-// Step 3: Wait for network to settle
+// Step 3: Wait for navigation or element
 {
   "tool": "browser_wait_for",
   "arguments": {
-    "selector": ".results-table",
-    "timeout": 5000
+    "selector": ".dashboard-container",
+    "timeout": 10000
   }
 }
 ```
 
-### Workflow C: Visual Verification via Screenshot
+### Workflow C: Visual Snapshot via Full-Page Screenshot
 ```json
 {
   "tool": "browser_take_screenshot",
@@ -83,8 +85,7 @@ Do NOT activate this skill when:
 
 ---
 
-## 3. Best Practices
+## 3. Reference Links
 
-- Always capture a `browser_snapshot` after navigation to identify stable selectors and element bounds.
-- Use `browser_wait_for` after actions that trigger asynchronous frontend transitions.
-- Handle modal dialogs proactively via `browser_handle_dialog` before clicking trigger elements.
+- [Playwright MCP Tool Catalog Reference](../../references/playwright-mcp-tool-catalog.md)
+- [Web Domain Rules](../../rules/AGENTS.md)

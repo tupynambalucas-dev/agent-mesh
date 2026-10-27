@@ -238,16 +238,16 @@ npx -y @tupynambalucas-dev/cortex-mcp-gwork
 
 All 6 domain plugins have been verified using the official Antigravity plugin validator:
 
-| Plugin Name | Manifest Path | Validator Status | Modular Skills | Scoped MCP Server |
-| :--- | :--- | :--- | :--- | :--- |
-| `agent-plugin-appsheet` | `plugins/appsheet/plugin.json` | 100% PASS (0 warnings) | 3 skills | `cortex-appsheet`, `playwright` |
-| `agent-plugin-docusaurus`| `plugins/docusaurus/plugin.json` | 100% PASS (0 warnings) | 3 skills | N/A |
-| `agent-plugin-github` | `plugins/github/plugin.json` | 100% PASS (0 warnings) | 4 skills | `cortex-github` |
-| `agent-plugin-google-workspace` | `plugins/google-workspace/plugin.json` | 100% PASS (0 warnings) | 3 skills | `cortex-gwork` |
-| `agent-plugin-meta` | `plugins/meta/plugin.json` | 100% PASS (0 warnings) | 4 skills | N/A |
-| `agent-plugin-research` | `plugins/research/plugin.json` | 100% PASS (0 warnings) | 2 skills | `cortex-firecrawl`, `context7` |
-| `agent-plugin-secrets` | `plugins/secrets/plugin.json` | 100% PASS (0 warnings) | 2 skills | `cortex-infisical` |
-| `agent-plugin-web` | `plugins/web/plugin.json` | 100% PASS (0 warnings) | 2 skills | `playwright`, `cortex-firecrawl` |
+| Plugin Name | Manifest Path | Validator Status | Modular Skills | Rules | Scoped MCP Server |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `agent-plugin-appsheet` | `plugins/appsheet/plugin.json` | 100% PASS (0 warnings) | 3 skills | 1 rule | `cortex-appsheet`, `playwright` |
+| `agent-plugin-docusaurus`| `plugins/docusaurus/plugin.json` | 100% PASS (0 warnings) | 3 skills | 1 rule | N/A |
+| `agent-plugin-github` | `plugins/github/plugin.json` | 100% PASS (0 warnings) | 4 skills | 1 rule | `cortex-github` |
+| `agent-plugin-google-workspace` | `plugins/google-workspace/plugin.json` | 100% PASS (0 warnings) | 3 skills | 1 rule | `cortex-gwork` |
+| `agent-plugin-meta` | `plugins/meta/plugin.json` | 100% PASS (0 warnings) | 4 skills | 1 rule | N/A |
+| `agent-plugin-research` | `plugins/research/plugin.json` | 100% PASS (0 warnings) | 2 skills | 1 rule | `cortex-firecrawl`, `context7` |
+| `agent-plugin-secrets` | `plugins/secrets/plugin.json` | 100% PASS (0 warnings) | 2 skills | 1 rule | `cortex-infisical` |
+| `agent-plugin-web` | `plugins/web/plugin.json` | 100% PASS (0 warnings) | 2 skills | 1 rule | `playwright`, `cortex-firecrawl` |
 
 ### 5.2 Live MCP Verification & JSON-RPC Test Matrix
 

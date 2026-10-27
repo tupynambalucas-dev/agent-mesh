@@ -1,0 +1,19 @@
+---
+trigger: always_on
+---
+
+# Research Domain Rules
+
+1. Source Attribution Invariant:
+   - Every fact, API method, and syntax specification retrieved via Context7 or Firecrawl MUST cite its canonical source (URL or library identifier).
+
+2. Token-Conservation Scraping:
+   - When scraping with Firecrawl, always enable `onlyMainContent: true` to strip navigation bars, headers, and advertisements.
+   - Run `map` exploration before executing multi-page `crawl` jobs to avoid fetching unneeded subtrees.
+
+3. Zero Speculative APIs:
+   - Never speculate on library function parameters or type definitions when Context7 can provide the exact upstream signature.
+   - If a library is not found in Context7, state this explicitly before resorting to general web search.
+
+4. Zero-Emoji Invariant:
+   - Emojis are strictly prohibited in research reports, documentation summaries, and comparative benchmarks.

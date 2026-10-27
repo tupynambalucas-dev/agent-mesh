@@ -5,7 +5,7 @@ description: Executes deep web scraping, crawling, site mapping, and structured 
 
 # Web Deep Researcher
 
-This skill guides the automated discovery, mapping, scraping, and content extraction of external websites using the **Firecrawl MCP Server** (`cortex-firecrawl`).
+Automates the discovery, mapping, scraping, and content extraction of external websites using the **Firecrawl MCP Server** (`cortex-firecrawl`).
 
 ---
 
@@ -26,52 +26,55 @@ Do NOT activate this skill when:
 ## 2. Operational Workflows
 
 ### Workflow A: Single Page Scraping (`scrape`)
-Use when you have a specific URL and need the clean markdown representation:
-
 ```json
 {
-  "url": "https://example.com/docs/getting-started",
-  "formats": ["markdown"],
-  "onlyMainContent": true
+  "tool": "scrape",
+  "arguments": {
+    "url": "https://example.com/docs/getting-started",
+    "formats": ["markdown"],
+    "onlyMainContent": true
+  }
 }
 ```
 
 ### Workflow B: Domain Exploration (`map`)
-Use to explore the navigation tree and discover relevant endpoint paths before deep scraping:
-
 ```json
 {
-  "url": "https://example.com/docs",
-  "search": "authentication",
-  "limit": 20
+  "tool": "map",
+  "arguments": {
+    "url": "https://example.com/docs",
+    "search": "authentication",
+    "limit": 20
+  }
 }
 ```
 
 ### Workflow C: Subtree Crawling (`crawl`)
-Use when an entire section or multi-page documentation tree needs to be ingested:
-
 ```json
 {
-  "url": "https://example.com/docs/api",
-  "limit": 10,
-  "maxDepth": 2
+  "tool": "crawl",
+  "arguments": {
+    "url": "https://example.com/docs/api",
+    "limit": 10,
+    "maxDepth": 2
+  }
 }
 ```
 
 ### Workflow D: Web Search (`search`)
-Use when target URLs are unknown and live search results are needed:
-
 ```json
 {
-  "query": "fastify streamable http mcp transport configuration",
-  "limit": 5
+  "tool": "search",
+  "arguments": {
+    "query": "fastify streamable http mcp transport configuration",
+    "limit": 5
+  }
 }
 ```
 
 ---
 
-## 3. Best Practices
+## 3. Reference Links
 
-- Prefer `onlyMainContent: true` when scraping to strip headers, footers, and advertisement navigation bars.
-- Use `map` prior to initiating large `crawl` jobs to prevent unnecessary page consumption.
-- Synthesize scraped output into concise markdown reports adhering to the Zero-Emoji standard.
+- [Firecrawl Scraping Catalog](../../references/firecrawl-scraping-catalog.md)
+- [Research Domain Rules](../../rules/AGENTS.md)

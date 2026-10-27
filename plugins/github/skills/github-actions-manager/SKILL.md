@@ -3,21 +3,43 @@ name: github-actions-manager
 description: Orchestrates GitHub Actions workflows, triggers runs, polls job logs, and diagnoses CI/CD failures.
 ---
 
-# GitHub Actions Manager Skill
+# GitHub Actions Manager
 
-Use this skill to inspect, trigger, monitor, and troubleshoot GitHub Actions workflows, matrix builds, and deployment runs.
+Monitors, diagnoses, and manages GitHub Actions continuous integration and deployment workflows.
 
-## Activation Triggers
+---
+
+## 1. When to Use
 
 Activate this skill when:
-- Triaging failed CI/CD workflow runs.
-- Triggering workflow dispatch events with custom inputs.
-- Inspecting step logs to identify compilation or test failures.
-- Managing repository workflow secrets and variables.
-- Verifying release pipeline deployments.
+- Triaging failed GitHub Actions workflow runs or pull request checks.
+- Inspecting step logs and error traces from CI/CD pipelines.
+- Triggering repository dispatch events or workflow dispatches via GitHub CLI (`gh`).
+- Auditing workflow configurations (`.github/workflows/*.yml`) for security and best practices.
 
-## Troubleshooting Standard
+---
 
-1. Query workflow run status via `gh run list --repo <repo>`.
-2. Inspect failing step output via `gh run view <run-id> --log-failed`.
-3. Provide targeted root cause analysis and code patch solutions.
+## 2. Operational Workflows
+
+### Workflow A: Workflow Run Inspection via GitHub CLI
+```bash
+# List recent runs for the current repository
+gh run list --limit 5
+
+# View details of a specific failed run
+gh run view <run-id> --log-failed
+```
+
+### Workflow B: Rerunning Failed Jobs
+```bash
+# Rerun only failed jobs in a workflow
+gh run rerun <run-id> --failed
+```
+
+---
+
+## 3. Best Practices
+
+- Always check secret availability in Infisical before triggering production deployments.
+- Ensure all actions use pinned SHAs or trusted release tags.
+- Refer to [GitHub Domain Rules](../../rules/AGENTS.md) for commit and PR requirements.

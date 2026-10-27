@@ -5,14 +5,14 @@ description: Queries live, official framework and library documentation, APIs, t
 
 # Documentation Researcher
 
-This skill guides the retrieval and synthesis of real-time technical documentation, API specifications, and code examples for open-source libraries and frameworks using the **Context7 MCP Server**.
+Retrieves official, live, version-accurate documentation for open-source libraries, packages, and frameworks using the **Context7 MCP Server**.
 
 ---
 
 ## 1. When to Use
 
 Activate this skill when:
-- Researching API syntax, signatures, types, or methods for external libraries (e.g., React, Express, Docusaurus, Fastify, Octokit).
+- Researching API syntax, signatures, types, or methods for external libraries (React, Express, Docusaurus, Fastify, Playwright, Octokit).
 - Validating version-specific features or breaking changes during upgrades.
 - Seeking official documentation examples when internal codebase context is insufficient.
 
@@ -22,42 +22,46 @@ Do NOT activate this skill when:
 
 ---
 
-## 2. Operational Workflow
-
-Follow this procedure sequentially:
+## 2. Operational Workflows
 
 ```
-[Target Library] ──> resolve-library-id ──> [Library ID] ──> get-library-docs ──> [Structured Synthesis]
+[Target Library] ──> resolve-library-id ──> [Library ID] ──> query-docs ──> [Structured Synthesis]
 ```
 
 ### Step 1: Identify Library Identifier
-Call `resolve-library-id` with the package or framework name to resolve the authoritative Context7 library identifier.
+Call `resolve-library-id` with the package or framework name to resolve the authoritative Context7 library identifier:
 
 ```json
 {
-  "libraryName": "docusaurus"
+  "tool": "resolve-library-id",
+  "arguments": {
+    "libraryName": "docusaurus",
+    "query": "sidebar configuration auto-generated category"
+  }
 }
 ```
 
 ### Step 2: Retrieve Targeted Documentation
-Call `get-library-docs` using the resolved identifier and an optional query topic to pinpoint relevant documentation chunks.
+Call `query-docs` using the resolved identifier and query topic:
 
 ```json
 {
-  "libraryId": "/facebook/docusaurus",
-  "query": "sidebar configuration auto-generated category"
+  "tool": "query-docs",
+  "arguments": {
+    "libraryId": "/websites/docusaurus_io/3.9.2",
+    "query": "category json sidebar configuration label position"
+  }
 }
 ```
 
 ### Step 3: Verify and Synthesize
-- Validate that the retrieved version aligns with the consumer project's package version.
+- Validate that the retrieved version aligns with the project package version.
 - Extract concrete code snippets, configuration options, and typing details.
 - Provide direct citations and clean Markdown examples without redundant commentary.
 
 ---
 
-## 3. Best Practices
+## 3. Reference Links
 
-- Always resolve the canonical library ID before querying documentation chunks.
-- Refine the `query` argument with specific method names or features to keep retrieved context compact.
-- Never output speculative API signatures if Context7 returns definitive specifications.
+- [Context7 Query Catalog](../../references/context7-query-catalog.md)
+- [Research Domain Rules](../../rules/AGENTS.md)

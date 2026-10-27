@@ -3,33 +3,43 @@ name: docusaurus-validator
 description: Audits Docusaurus documentation for broken internal links, MDX syntax errors, build failures, and Crowdin localization isolation.
 ---
 
-# Docusaurus Documentation Validator
+# Docusaurus Validator
 
-This skill establishes the verification pipeline and localization boundaries for documentation repositories.
-
----
-
-## 1. Single-Pass Deferred Validation
-
-- **No Intermediate Tests**: Do NOT run verification commands after each individual edit. Batch all changes first.
-- **Verification Execution**: Execute build validation once at the conclusion of the documentation task:
-  ```bash
-  pnpm --filter @tupynambalucas-dev/docs build
-  ```
-- **Strictly No Dev Servers**: Never spawn dev servers (`pnpm start`, `pnpm dev`) or preview daemons in automated agent sessions.
+Audits, tests, and validates Docusaurus workspaces for link integrity, MDX parser errors, and build health.
 
 ---
 
-## 2. Link Integrity Rules
+## 1. When to Use
 
-- **Absolute Docusaurus Paths**: Use site-absolute paths (e.g., `(/reference/cortex/gateway)`) rather than fragile relative paths (`../../`).
-- **Strip Extensions from Link Targets**: Omit `.md` and `.mdx` extensions in internal links; Docusaurus resolves routes automatically.
-- **Remote Links**: Preserve external URLs (`https://...`) without altering query parameters.
+Activate this skill when:
+- Validating documentation prior to committing or creating pull requests.
+- Troubleshooting build errors (e.g. `MDX compile failed`, `Broken links found`).
+- Verifying that no edits have touched localized directories (`i18n/`).
+- Enforcing Zero-Emoji compliance across documentation files.
 
 ---
 
-## 3. Localization (L10n) Isolation
+## 2. Operational Workflows
 
-- **Source Language Exclusivity**: All documentation must be authored strictly in en-US.
-- **Never Edit Target Locales**: Never manually modify files in `locales/` or `i18n/`. All translations are managed asynchronously via Crowdin automation.
-- Commit clean English source files to trigger automated Crowdin sync pull requests.
+### Workflow A: Build & Link Verification
+1. Run local build check:
+   ```bash
+   pnpm run build
+   ```
+2. Inspect output for broken link warnings:
+   - Relative links must point to existing `.md` files or resolved URL paths.
+   - Anchor links (`#heading-id`) must match generated GitHub slugs.
+
+### Workflow B: Crowdin Boundary Enforcement
+Verify git diff to confirm no edits were made in `i18n/`:
+```bash
+git diff --name-only | grep -E '^i18n/'
+```
+If localized files are detected, revert them and apply changes exclusively to `docs/`.
+
+---
+
+## 3. Reference Links
+
+- [Docusaurus Domain Rules](../../rules/AGENTS.md)
+- [Docusaurus v3 MDX Specification](../../references/docusaurus-v3-mdx-spec.md)

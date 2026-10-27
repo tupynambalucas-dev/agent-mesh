@@ -5,43 +5,33 @@ description: Authors and validates Antigravity plugin manifests (plugin.json), p
 
 # Plugin Manifest Architect
 
-This skill guides the authoring of `plugin.json` manifests, workspace dependencies, and MCP server configuration bindings.
+Designs, validates, and refactors Antigravity plugin manifests, MCP configurations, and Claude Code marketplace manifests.
 
 ---
 
-## 1. Antigravity `plugin.json` Schema
+## 1. When to Use
 
-Every plugin in `plugins/<domain>` MUST contain a root `plugin.json`:
-
-```json
-{
-  "name": "plugin-domain-name",
-  "version": "1.0.0",
-  "description": "Concise summary of the plugin domain and capabilities.",
-  "skills": [
-    "./skills/skill-a",
-    "./skills/skill-b"
-  ],
-  "rules": [
-    "./rules/rule-a.md"
-  ]
-}
-```
+Activate this skill when:
+- Creating a new domain plugin in `plugins/<name>/`.
+- Authoring `plugin.json` or `mcp_config.json`.
+- Registering domain plugins into Claude Code marketplace (`.claude-plugin/marketplace.json`).
+- Validating plugins via `agy plugin validate . --strict`.
 
 ---
 
-## 2. Package Workspace Integration
+## 2. Operational Workflows
 
-Each plugin is an independent package published under `@tupynambalucas-dev/agent-plugin-<domain>`:
-
-- Declared in `package.json` with `"publishConfig": { "registry": "https://npm.pkg.github.com", "access": "public" }`.
-- Tracked in root `pnpm-workspace.yaml` under `plugins/*`.
-- Exposes clean npm exports for consumption in parent or external workspaces.
+### Workflow A: New Domain Plugin Scaffolding
+1. Create directory `plugins/<name>`.
+2. Author `plugin.json` adhering to [plugin-manifest-schema.md](../../references/plugin-manifest-schema.md).
+3. If the plugin provides tools, author `mcp_config.json` routing through `mcp-gateway-router.js`.
+4. Create `skills/` directory and place domain skills.
+5. Create `package.json` for npm package publishing.
+6. Validate using `agy plugin validate . --strict`.
 
 ---
 
-## 3. Scoped MCP Configurations
+## 3. Reference Links
 
-When a plugin bundles an MCP server:
-- Bind it in `mcp_config.json` using the Smart Gateway Router (`scripts/mcp-gateway-router.js`) to provide automated cluster/local failover.
-- Avoid hardcoding absolute local paths or fixed credentials.
+- [Plugin Manifest Schema Reference](../../references/plugin-manifest-schema.md)
+- [Enterprise Meta Governance Rules](../../rules/AGENTS.md)

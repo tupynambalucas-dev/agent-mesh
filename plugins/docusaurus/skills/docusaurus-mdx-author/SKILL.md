@@ -5,47 +5,47 @@ description: Authors and refactors Docusaurus technical documents ensuring stric
 
 # Docusaurus MDX Author
 
-This skill guides the authoring of rich, error-free MDX v3 documentation adhering to strict JSX syntax standards.
+Authors, refactors, and validates technical markdown documents for Docusaurus v3 websites with strict MDX parser compliance.
 
 ---
 
-## 1. Syntax & Parser Rules for MDX v3
+## 1. When to Use
 
-- **All-MDX Policy**: Technical content files must strictly use the `.mdx` extension.
-- **JavaScript Comments Only**: Standard HTML comments (`<!-- comment -->`) break MDX compilation. Always use `{/* comment */}`.
-- **Escape Special Characters**: Raw `{`, `}`, and `<` must be escaped when intended as literal text: `\{`, `\}`, and `\<`.
-- **Self-Closing Tags**: All JSX and HTML void elements MUST be explicitly self-closed: `<br />`, `<hr />`, `<img src="..." />`.
-- **Markdown inside HTML/JSX**: Isolate markdown formatting inside raw HTML/JSX tags with empty lines above and below.
+Activate this skill when:
+- Writing new technical documentation articles or API documentation.
+- Converting standard Markdown files into MDX v3 compliant format.
+- Adding interactive React components (`Tabs`, `TabItem`, `DocCardList`).
+- Implementing standard admonitions (`:::note`, `:::tip`, `:::info`, `:::warning`, `:::danger`).
 
 ---
 
-## 2. Admonitions & Callouts
+## 2. Operational Workflows
 
-Use native Docusaurus colon admonitions with titles rather than GitHub quote alerts:
+### Workflow A: Authoring Compliant MDX Documents
+1. Add YAML frontmatter with `title`, `description`, and optional `sidebar_position`.
+2. Ensure all void HTML elements self-close (`<br />`, `<hr />`, `<img />`).
+3. Replace HTML comments `<!-- comment -->` with JSX `{/* comment */}`.
+4. Escape curly braces outside code fences (use `\{` or enclose in backticks).
+5. Specify language identifiers on all fenced code blocks.
 
+### Workflow B: Component Embeds
 ```mdx
-:::note[Context]
-Background technical information or architecture notes.
-:::
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-:::tip[Performance Optimization]
-Recommendations to improve build speeds or query throughput.
-:::
-
-:::caution[Breaking Changes]
-Deprecation notices and breaking API shifts.
-:::
-
-:::danger[Security Risk]
-Actions that could leak secrets or compromise cluster boundaries.
-:::
+<Tabs>
+  <TabItem value="pnpm" label="pnpm" default>
+    ```bash
+    pnpm add @tupynambalucas-dev/agent-mesh
+    ```
+  </TabItem>
+</Tabs>
 ```
 
 ---
 
-## 3. Formatting & Code Blocks
+## 3. Reference Links
 
-- Indent strictly with 2 spaces.
-- Use hyphens (`-`) for unordered lists; asterisks (`*`) or pluses (`+`) are forbidden.
-- Always declare the code fence language explicitly (` ```yaml `, ` ```typescript `, ` ```bash `).
-- Use ` ```mermaid ` fences for flowcharts, sequence diagrams, and state diagrams.
+- [Docusaurus v3 MDX Specification](../../references/docusaurus-v3-mdx-spec.md)
+- [Diátaxis Quadrant Templates](../../references/diataxis-quadrant-templates.md)
+- [Docusaurus Domain Rules](../../rules/AGENTS.md)

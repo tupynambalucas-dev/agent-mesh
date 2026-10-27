@@ -3,21 +3,62 @@ name: github-security-auditor
 description: Interrogates GitHub Security APIs (Secret Scanning, Dependabot, Code Scanning) leveraging GitHub App installation credentials.
 ---
 
-# GitHub Security Auditor Skill
+# GitHub Security Auditor
 
-Use this skill to audit, triage, and remediate security alerts across organization repositories. Operates using GitHub App machine identities to bypass Personal Access Token HTTP 403 restrictions on security endpoints.
+Interrogates and triages GitHub Security advisories, Dependabot alerts, and secret scanning detections using `cortex-github` MCP tools.
 
-## Activation Triggers
+---
+
+## 1. When to Use
 
 Activate this skill when:
-- Triaging Dependabot vulnerability alerts.
-- Inspecting secret scanning alerts and leaked token incidents.
-- Reviewing CodeQL and static analysis code scanning alerts.
-- Conducting an organization-wide security posture audit.
+- Performing security hygiene audits across organization repositories.
+- Listing open Dependabot vulnerabilities (`list_dependabot_alerts`).
+- Triaging exposed credential alerts (`list_secret_scanning_alerts`).
+- Validating branch and tag ruleset enforcement (`list_rulesets`, `get_ruleset`).
 
-## Operational Guidelines
+---
 
-1. Never log or output secret alert values in plaintext.
-2. Cross-reference CVE and GHSA identifiers against official security advisories.
-3. Prioritize Critical and High severity vulnerabilities.
-4. Report remediation steps: bump dependency, revoke exposed credentials, and trigger fresh CI scans.
+## 2. Operational Workflows
+
+### Workflow A: Querying Dependabot Alerts
+```json
+{
+  "tool": "list_dependabot_alerts",
+  "arguments": {
+    "owner": "tupynambalucas-dev",
+    "repo": "agent-mesh",
+    "state": "open"
+  }
+}
+```
+
+### Workflow B: Querying Secret Scanning Detections
+```json
+{
+  "tool": "list_secret_scanning_alerts",
+  "arguments": {
+    "owner": "tupynambalucas-dev",
+    "repo": "agent-mesh",
+    "state": "open"
+  }
+}
+```
+
+### Workflow C: Auditing Repository Protection Rulesets
+```json
+{
+  "tool": "list_rulesets",
+  "arguments": {
+    "owner": "tupynambalucas-dev",
+    "repo": "agent-mesh"
+  }
+}
+```
+
+---
+
+## 3. Reference Links
+
+- [GitHub App MCP Server Specification](../../references/github-app-mcp-spec.md)
+- [GitHub Domain Rules](../../rules/AGENTS.md)

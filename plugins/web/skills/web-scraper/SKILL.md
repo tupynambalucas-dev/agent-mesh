@@ -5,7 +5,7 @@ description: Scrapes web pages, maps domain hierarchies, and extracts clean mark
 
 # Web Scraper
 
-This skill guides the scraping and structured extraction of web pages into clean Markdown using the **Firecrawl MCP Server** (`cortex-firecrawl`).
+Guides the scraping, crawling, and structured extraction of web content into clean Markdown using the **Firecrawl MCP Server** (`cortex-firecrawl`).
 
 ---
 
@@ -16,6 +16,10 @@ Activate this skill when:
 - Mapping links and sub-routes on a target web domain.
 - Performing structured data extraction from public websites.
 
+Do NOT activate this skill when:
+- Querying structured library and framework documentation (use `documentation-researcher` with Context7).
+- Interacting with forms, buttons, or authenticated UI flows (use `browser-automator`).
+
 ---
 
 ## 2. Operational Workflows
@@ -25,7 +29,7 @@ Activate this skill when:
 {
   "tool": "scrape",
   "arguments": {
-    "url": "https://example.com/blog/article-name",
+    "url": "https://example.com/blog/article",
     "formats": ["markdown"],
     "onlyMainContent": true
   }
@@ -45,7 +49,7 @@ Activate this skill when:
 
 ---
 
-## 3. Best Practices
+## 3. Reference Links
 
-- Use `onlyMainContent: true` to eliminate unwanted boilerplate and navigation bars.
-- Use `map` to inspect target structure before triggering multi-page extractions.
+- [Firecrawl Extraction Patterns](../../references/firecrawl-extraction-patterns.md)
+- [Web Domain Rules](../../rules/AGENTS.md)

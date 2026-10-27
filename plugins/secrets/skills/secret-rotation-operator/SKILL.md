@@ -3,21 +3,38 @@ name: secret-rotation-operator
 description: Orchestrates zero-downtime secret rotation, regenerates GitHub App private keys, rotates database credentials, and synchronizes Kubernetes InfisicalSecret custom resources.
 ---
 
-# Secret Rotation Operator Skill
+# Secret Rotation Operator
 
-Use this skill to orchestrate safe, zero-downtime secret rotation and verify synchronization between Infisical Cloud and Kubernetes runtime environments.
+Orchestrates zero-downtime credential rotation for database passwords, API tokens, and GitHub App private keys.
 
-## Activation Triggers
+---
+
+## 1. When to Use
 
 Activate this skill when:
-- Rotating expired access tokens or database passwords.
-- Generating new GitHub App private keys and uploading them to Infisical.
-- Triggering an immediate reconcile of Kubernetes `InfisicalSecret` resources.
-- Verifying that pods restart cleanly with updated secret values.
+- Executing credential rotation runbooks for enterprise services.
+- Rotating GitHub App private keys without service interruption.
+- Updating Kubernetes workloads after secret rotation via `InfisicalSecret` resync triggers.
+- Revoking old credentials post-rotation verification.
 
-## Zero-Downtime Rotation Standard
+---
 
-1. Issue new credential alongside old credential (grace period).
-2. Update Infisical secret value in the target environment.
-3. Trigger Kubernetes rollout restart or let the Infisical Operator perform automatic reloading.
-4. Verify application health probe before revoking the deprecated credential.
+## 2. Operational Workflows
+
+### Workflow A: Zero-Downtime Credential Rotation Procedure
+1. **Generate New Credential**: Generate new key/token with the target upstream service (e.g. GitHub App, Database).
+2. **Dual-Credential Enrollment**: If the upstream supports dual credentials, keep the old key active while enrolling the new key in Infisical via `infisical_update_secret`.
+3. **Trigger Cluster Resync**: Kubernetes InfisicalSecret operator polls every 60s or trigger a rollout restart:
+   ```bash
+   kubectl rollout restart deployment/cortex-gateway -n hub
+   ```
+4. **Verify Health**: Test cluster connectivity and gateway health via `/health`.
+5. **Revoke Old Credential**: Safely revoke the deprecated key upstream.
+
+---
+
+## 3. Reference Links
+
+- [Infisical REST API v1 Specification](../../references/infisical-rest-api-v1-schema.md)
+- [Kubernetes InfisicalSecret CRD](../../references/kubernetes-infisicalsecret-crd.md)
+- [Secrets Domain Rules](../../rules/AGENTS.md)

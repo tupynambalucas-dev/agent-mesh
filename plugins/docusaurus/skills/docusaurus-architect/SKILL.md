@@ -3,63 +3,42 @@ name: docusaurus-architect
 description: Designs and maintains technical documentation taxonomies, Diátaxis quadrant structuring, and navigation hierarchy (_category_.json) for Docusaurus workspaces.
 ---
 
-# Docusaurus Documentation Architect
+# Docusaurus Architect
 
-This skill establishes the taxonomy, directory layouts, and information architecture for sovereign Docusaurus documentation.
-
----
-
-## 1. The Diátaxis Framework
-
-All documentation in the knowledge base MUST be structured around user needs into four distinct quadrants:
-
-```
-                      PRACTICAL                THEORETICAL
-              +------------------------+------------------------+
-              |                        |                        |
-   LEARNING   |       TUTORIALS        |      EXPLANATION       |
-              |   (Learning-oriented)  | (Understanding-oriented)|
-              |                        |                        |
-              +------------------------+------------------------+
-              |                        |                        |
-   WORKING    |      HOW-TO GUIDES     |       REFERENCE        |
-              |    (Goal-oriented)     | (Information-oriented) |
-              |                        |                        |
-              +------------------------+------------------------+
-```
-
-### Classification Rules:
-- `tutorials/`: Lessons for newcomers to achieve a practical outcome from scratch.
-- `guides/`: Concrete steps solving a specific real-world problem or workflow.
-- `reference/`: Technical machinery, APIs, configuration schemas, parameters, and flags.
-- `explanation/`: Deep-dive architectural background, trade-offs, and rationale.
+Structures and maintains enterprise documentation taxonomies adhering to the Diátaxis documentation framework and Docusaurus v3 standards.
 
 ---
 
-## 2. Category Structuring & Navigation
+## 1. When to Use
 
-When documenting complex features spanning multiple files:
-
-- Place documents inside a category subfolder within the appropriate quadrant (e.g., `reference/gateway/`).
-- Every subfolder MUST contain a `_category_.json` declaring its sidebar label, position, and generated index link:
-  ```json
-  {
-    "label": "Gateway Architecture",
-    "position": 1,
-    "link": {
-      "type": "generated-index",
-      "description": "Comprehensive reference specifications for the Cortex MCP Envoy Gateway."
-    }
-  }
-  ```
-- Standalone single-document topics should sit directly at the root of the quadrant without a folder.
+Activate this skill when:
+- Designing new documentation collections, sections, or directory structures.
+- Auditing document categorization across the 4 Diátaxis quadrants (Tutorials, How-To Guides, Reference, Explanation).
+- Authoring or editing `_category_.json` navigation manifests and `sidebars.js`.
+- Managing sidebar ordering, generated category landing pages, and category links.
 
 ---
 
-## 3. Upstream Vendor Documentation Adaptation
+## 2. Operational Workflows
 
-When mirroring official third-party documentation (e.g., Traefik, Kubernetes, Envoy):
-1. Place the docs inside an isolated subfolder: `reference/<vendor-name>/`.
-2. Consolidate scrapers' `about/` and `index.md` files into a top-level `intro.mdx` with an upstream attribution banner.
-3. Conclude `intro.mdx` with a `<DocCardList />` component rendering child cards.
-4. Strip web UI noise: floating menus, cookie notices, feedback widgets, and promotional banners.
+### Workflow A: New Documentation Section Scaffolding
+1. Identify target quadrant:
+   - `tutorials/`: Onboarding workflows.
+   - `how-to-guides/`: Goal-oriented runbooks.
+   - `reference/`: Specifications, schemas, APIs.
+   - `explanation/`: Architectural decisions and context.
+2. Create directory and author `_category_.json` conforming to [category-and-sidebar-schema.md](../../references/category-and-sidebar-schema.md).
+3. Place initial landing page or generated index configuration.
+
+### Workflow B: Navigation Rebalancing
+1. Inspect existing sidebar positions across siblings.
+2. Assign floating positions (`position: 1.5`) when inserting items between existing integer positions to avoid cascading renames.
+3. Verify that `slug` paths conform to kebab-case URL naming.
+
+---
+
+## 3. Reference Links
+
+- [Diátaxis Quadrant Templates](../../references/diataxis-quadrant-templates.md)
+- [Category and Sidebar Schema](../../references/category-and-sidebar-schema.md)
+- [Docusaurus Domain Rules](../../rules/AGENTS.md)

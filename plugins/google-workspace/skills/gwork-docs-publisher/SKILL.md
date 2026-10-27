@@ -3,19 +3,38 @@ name: gwork-docs-publisher
 description: Converts markdown technical plans and specifications into richly formatted Google Docs conforming to organizational typographic standards.
 ---
 
-# Google Docs Publisher Skill
+# Google Workspace Docs Publisher
 
-Use this skill to publish architectural specifications, Diátaxis documentation, and executive reports directly to Google Docs.
+Converts Markdown technical plans, architectural designs, and Diátaxis documentation into formatted Google Docs using `cortex-gwork`.
 
-## Activation Triggers
+---
+
+## 1. When to Use
 
 Activate this skill when:
-- Publishing an architectural specification or Diátaxis guide to Google Docs for executive review.
-- Converting local Markdown documents into shared cloud documents.
-- Updating document headings, paragraph text, or tabular data in an existing Google Doc.
+- Publishing a project plan or specification as a shared Google Doc (`create_document`).
+- Exporting architectural proposals to Google Workspace for stakeholder review.
+- Formatting document typographic structure (Headings, Tables, Lists).
 
-## Formatting Guidelines
+---
 
-1. Map Markdown `#` to `HEADING_1`, `##` to `HEADING_2`, and `###` to `HEADING_3`.
-2. Format code snippets using monospace styling.
-3. Preserve Zero-Emoji policy strictly across all document contents.
+## 2. Operational Workflows
+
+### Workflow A: Publishing a Technical Specification
+```json
+{
+  "tool": "create_document",
+  "arguments": {
+    "title": "[Plan] Enterprise Architecture Specification",
+    "content": "# Enterprise Architecture Specification\n\n## 1. Executive Summary\n...",
+    "folderId": "OPTIONAL_TARGET_FOLDER_ID"
+  }
+}
+```
+
+---
+
+## 3. Reference Links
+
+- [Google Docs v1 Styling Schema](../../references/docs-v1-styling-schema.md)
+- [Google Workspace Domain Rules](../../rules/AGENTS.md)

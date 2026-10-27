@@ -1,23 +1,71 @@
 ---
 name: appsheet-ui-designer
-description: Models and validates UI/UX configurations including deck views, table views, form views, card views, and conditional format rules.
+description: Models and validates UI/UX configurations including deck views, table views, form views, card views, and conditional format rules, and automates AppSheet Studio via Playwright.
 ---
 
-# AppSheet UI Designer Skill
+# AppSheet UI Designer
 
-Use this skill to design, specify, and audit the visual presentation, views, and format rules of AppSheet applications.
+Guides the configuration, styling, and headless automation of user interfaces in Google AppSheet applications.
 
-## Activation Triggers
+---
+
+## 1. When to Use
 
 Activate this skill when:
-- Designing custom views (deck, card, table, gallery, detail, form, chart, dashboard).
-- Defining conditional format rules (text colors, highlight badges, icons based on column states).
-- Specifying custom action button display properties and prominence (prominent, inline, overlay).
-- Auditing UX accessibility and mobile responsiveness.
+- Designing view hierarchies (Deck, Table, Gallery, Detail, Form, Card, Calendar, Map).
+- Defining conditional Format Rules (text colors, highlight icons, badges).
+- Automating AppSheet Studio UI tasks via Playwright MCP (`browser_*` tools), such as Schema Regeneration (`Data > Tables > Regenerate Structure`) or branding customization.
 
-## Design Best Practices
+---
 
-1. Form Views: Group related fields into Sections or Pages with clear headers.
-2. Card Views: Highlight primary status and key metrics prominently.
-3. Format Rules: Use semantic colors (e.g. green for Completed, red for Blocked, amber for Pending).
-4. Zero-Emoji Invariant: Do not include emoji characters in format rules, column display names, or view names.
+## 2. Operational Workflows
+
+### Workflow A: Semantic Schema-Driven UI Conventions
+AppSheet automatically constructs rich UI elements when backing columns adhere to standard conventions:
+- `Photo`, `Image` -> Displays rich thumbnail and header banners.
+- `LatLong` -> Generates interactive Google Maps pins and route navigators.
+- `Percent` -> Renders animated progress bars and completion meters.
+- `Enum` -> Renders interactive button chips or dropdown pickers.
+
+### Workflow B: Headless Studio Automation via Playwright
+When schema structure or view definitions need automated updates in the AppSheet console:
+
+```json
+// Step 1: Navigate to AppSheet Studio
+{
+  "tool": "browser_navigate",
+  "arguments": {
+    "url": "https://www.appsheet.com/Template/AppDef?appName=YOUR_APP_ID#Data.Tables"
+  }
+}
+
+// Step 2: Take snapshot to locate table element
+{
+  "tool": "browser_snapshot",
+  "arguments": { "boxes": true }
+}
+
+// Step 3: Click Regenerate Structure button
+{
+  "tool": "browser_click",
+  "arguments": {
+    "selector": "button:has-text('Regenerate Structure')"
+  }
+}
+
+// Step 4: Confirm dialog and wait for sync
+{
+  "tool": "browser_wait_for",
+  "arguments": {
+    "selector": "div[role='status']:has-text('Structure regenerated')",
+    "timeout": 15000
+  }
+}
+```
+
+---
+
+## 3. Reference Links
+
+- [AppSheet Studio UI Playwright Selectors](../../references/studio-ui-playwright-selectors.md)
+- [Data Types & Expressions Reference](../../references/type-mapping-and-expressions.md)
