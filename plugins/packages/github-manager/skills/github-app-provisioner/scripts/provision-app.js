@@ -9,11 +9,15 @@
  *   node provision-app.js --profile=assistant
  */
 
-const http = require('http');
-const https = require('https');
-const { exec } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+import http from 'node:http';
+import https from 'node:https';
+import { exec } from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PORT = 3333;
 const ORG_NAME = 'tupynambalucas-dev';
@@ -61,6 +65,7 @@ const MANIFEST = {
   url: 'https://docs.tupynambalucas.dev',
   description: selected.description,
   hook_attributes: {
+    url: 'https://docs.tupynambalucas.dev/webhook',
     active: false,
   },
   redirect_url: `http://localhost:${PORT}/callback`,
@@ -135,11 +140,13 @@ const server = http.createServer(async (req, res) => {
     <h2>GitHub App Manifest Provisioning</h2>
     <p>Creating <strong>${selected.appName}</strong> (Profile: <code>${profile}</code>) in organization <strong>${ORG_NAME}</strong>.</p>
     <form id="manifestForm" action="https://github.com/organizations/${ORG_NAME}/settings/apps/new" method="post">
-      <input type="hidden" name="manifest" value='${JSON.stringify(MANIFEST)}' />
+      <textarea id="manifestInput" name="manifest" style="display:none"></textarea>
       <button type="submit">Click Here to Confirm on GitHub</button>
     </form>
   </div>
   <script>
+    const manifestJson = ${JSON.stringify(JSON.stringify(MANIFEST))};
+    document.getElementById('manifestInput').value = manifestJson;
     document.getElementById('manifestForm').submit();
   </script>
 </body>
@@ -176,9 +183,10 @@ const server = http.createServer(async (req, res) => {
       console.log(`GITHUB_APP_CLIENT_ID=${appData.client_id}`);
       console.log(`GITHUB_APP_SLUG=${appData.slug}`);
 
-      // Save .pem file locally if desired
+      // Save .pem file locally into agent-mesh root
+      const agentMeshRoot = path.resolve(__dirname, '../../../../');
       const pemFileName = `${appData.slug}.private-key.pem`;
-      const pemPath = path.resolve(process.cwd(), pemFileName);
+      const pemPath = path.resolve(agentMeshRoot, pemFileName);
       fs.writeFileSync(pemPath, appData.pem, { mode: 0o600 });
       console.log(`Private key written to: ${pemPath}`);
       console.log('======================================================\n');
