@@ -1,7 +1,7 @@
 {
-  "name": "@tupynambalucas-dev/agent-mcp-gwork",
+  "name": "@tupynambalucas-dev/agent-mcp-infisical",
   "version": "1.0.0",
-  "description": "Enterprise Model Context Protocol server for Google Workspace (Drive, Sheets, Docs, Calendar) automation.",
+  "description": "Enterprise Model Context Protocol server for Infisical secret management, Universal Auth machine credentials, and vault synchronization.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "MIT",
   "homepage": "https://docs.tupynambalucas.dev",
@@ -16,8 +16,7 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "agent-mcp-gwork": "./dist/bin.js",
-    "agent-mcp-google-workspace": "./dist/bin.js"
+    "agent-mcp-infisical": "./dist/bin.js"
   },
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",
@@ -27,17 +26,16 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.6.1",
-    "dotenv": "^16.4.7",
-    "fastify": "^5.2.1",
-    "googleapis": "^144.0.0",
-    "zod": "^3.24.2"
+    "@modelcontextprotocol/sdk": "catalog:mcp-stack",
+    "dotenv": "catalog:shared",
+    "fastify": "catalog:mcp-stack",
+    "zod": "catalog:shared"
   },
   "devDependencies": {
-    "@types/node": "^22.13.0",
-    "rimraf": "^6.0.1",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.3"
+    "@types/node": "catalog:",
+    "rimraf": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
   },
   "files": [
     "dist"

@@ -39,7 +39,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Build MCP Packages
-        run: pnpm -r --filter "./mcp/*" run build
+        run: pnpm -r --filter "./mcp/packages/*" run build
 
       - name: Validate Antigravity Domain Plugins
         run: |
@@ -48,11 +48,11 @@ jobs:
             const { execSync } = require('child_process');
             const fs = require('fs');
             const path = require('path');
-            const plugins = fs.readdirSync('plugins');
+            const plugins = fs.readdirSync('plugins/packages');
             let hasAgy = false;
             try { execSync('agy --version', { stdio: 'ignore' }); hasAgy = true; } catch {}
             for (const p of plugins) {
-              const full = path.join('plugins', p);
+              const full = path.join('plugins', 'packages', p);
               if (!fs.statSync(full).isDirectory()) continue;
               console.log('Validating domain plugin:', p);
               if (hasAgy) {

@@ -9,7 +9,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const packagesDirs = ['plugins', 'mcp'];
+const packagesDirs = ['plugins/packages', 'mcp/packages', 'plugins', 'mcp'];
 const packages = [];
 
 // Include root package if present and publishable

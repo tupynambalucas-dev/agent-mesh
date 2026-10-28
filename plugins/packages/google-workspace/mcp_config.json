@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "cortex-github": {
+    "cortex-gwork": {
       "command": "node",
-      "args": ["../../scripts/mcp-gateway-router.js", "github"],
+      "args": ["../../../scripts/mcp-gateway-router.js", "google-workspace"],
       "env": {
         "CORTEX_GATEWAY_URL": "http://localhost:8080",
         "CORTEX_PROBE_TIMEOUT_MS": "300"

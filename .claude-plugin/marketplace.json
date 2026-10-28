@@ -13,49 +13,49 @@
       "name": "agent-plugin-github",
       "description": "Enterprise GitHub organization operations, branch rulesets, security alert triage, and workflow management.",
       "version": "1.0.0",
-      "source": "./plugins/github"
+      "source": "./plugins/packages/github"
     },
     {
       "name": "agent-plugin-secrets",
       "description": "Enterprise Infisical secret vault management, environment sync, and zero-downtime rotation.",
       "version": "1.0.0",
-      "source": "./plugins/secrets"
+      "source": "./plugins/packages/secrets"
     },
     {
       "name": "agent-plugin-meta",
       "description": "Authoritative AI meta-engineering skills: AGENTS.md routing, modular skills, and GFM standards.",
       "version": "1.0.0",
-      "source": "./plugins/meta"
+      "source": "./plugins/packages/meta"
     },
     {
       "name": "agent-plugin-docusaurus",
       "description": "Sovereign Docusaurus documentation architecture, MDX v3 authoring, and Diátaxis compliance.",
       "version": "1.0.0",
-      "source": "./plugins/docusaurus"
+      "source": "./plugins/packages/docusaurus"
     },
     {
       "name": "agent-plugin-google-workspace",
       "description": "Enterprise Google Workspace automation across Drive, Sheets, and Docs.",
       "version": "1.0.0",
-      "source": "./plugins/google-workspace"
+      "source": "./plugins/packages/google-workspace"
     },
     {
       "name": "agent-plugin-appsheet",
       "description": "Google AppSheet prompt-to-app schema generation, REST API v2 operations, and UI/UX design.",
       "version": "1.0.0",
-      "source": "./plugins/appsheet"
+      "source": "./plugins/packages/appsheet"
     },
     {
       "name": "agent-plugin-research",
       "description": "Enterprise technical documentation retrieval and deep web research powered by Context7 and Firecrawl.",
       "version": "1.0.0",
-      "source": "./plugins/research"
+      "source": "./plugins/packages/research"
     },
     {
       "name": "agent-plugin-web",
       "description": "Enterprise headless browser automation, UI testing, and web scraping powered by Playwright and Firecrawl.",
       "version": "1.0.0",
-      "source": "./plugins/web"
+      "source": "./plugins/packages/web"
     }
   ]
 }

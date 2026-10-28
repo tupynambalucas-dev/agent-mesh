@@ -1,4 +1,28 @@
 packages:
-  - 'plugins/*'
-  - 'mcp/*'
+  - 'mcp/packages/*'
+  - 'plugins/packages/*'
   - 'packages/*'
+
+catalog:
+  '@types/node': ^22.13.0
+  typescript: ^5.7.3
+  tsx: ^4.19.2
+  rimraf: ^6.0.1
+  turbo: ^2.4.4
+  dotenv: ^16.4.7
+
+catalogs:
+  shared:
+    zod: ^3.24.2
+    dotenv: ^16.4.7
+
+  mcp-stack:
+    '@modelcontextprotocol/sdk': ^1.6.1
+    fastify: ^5.2.1
+    firecrawl: ^1.13.4
+    '@octokit/auth-app': ^7.1.5
+    '@octokit/core': ^6.1.4
+    googleapis: ^144.0.0
+
+  plugins-stack:
+    '@types/node': ^22.13.0

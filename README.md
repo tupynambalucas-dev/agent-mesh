@@ -17,29 +17,36 @@ Compatible natively with **Google Antigravity (`agy`)**, **Anthropic Claude Code
 
 ```text
 agent-mesh/
-├── package.json             # Root monorepo workspace orchestrator
-├── pnpm-workspace.yaml      # Monorepo packages mapping (plugins/*, mcp/*)
+├── package.json             # Root monorepo workspace orchestrator (Turborepo)
+├── turbo.json               # Turborepo task pipeline configuration
+├── pnpm-workspace.yaml      # Monorepo packages mapping with pnpm catalogs
+├── AGENTS.md                # Sovereign root context router for agent-mesh
 ├── .claude-plugin/
 │   └── marketplace.json     # Claude Code Plugin Marketplace registry
 ├── rules/
 │   └── AGENTS.md            # Enterprise governance constraints and always-on rules
 ├── plugins/                 # 8 Sovereign Domain Plugins
-│   ├── appsheet/            # @tupynambalucas-dev/agent-plugin-appsheet (AppSheet API + Playwright)
-│   ├── docusaurus/          # @tupynambalucas-dev/agent-plugin-docusaurus
-│   ├── github/              # @tupynambalucas-dev/agent-plugin-github
-│   ├── google-workspace/    # @tupynambalucas-dev/agent-plugin-google-workspace
-│   ├── meta/                # @tupynambalucas-dev/agent-plugin-meta
-│   ├── research/            # @tupynambalucas-dev/agent-plugin-research (Context7 + Firecrawl)
-│   ├── secrets/             # @tupynambalucas-dev/agent-plugin-secrets
-│   └── web/                 # @tupynambalucas-dev/agent-plugin-web (Playwright + Firecrawl)
+│   ├── AGENTS.md            # Plugins subsystem context router
+│   └── packages/            # Domain plugin packages
+│       ├── appsheet/        # @tupynambalucas-dev/agent-plugin-appsheet
+│       ├── docusaurus/      # @tupynambalucas-dev/agent-plugin-docusaurus
+│       ├── github/          # @tupynambalucas-dev/agent-plugin-github
+│       ├── google-workspace/# @tupynambalucas-dev/agent-plugin-google-workspace
+│       ├── meta/            # @tupynambalucas-dev/agent-plugin-meta
+│       ├── research/        # @tupynambalucas-dev/agent-plugin-research (Context7 + Firecrawl)
+│       ├── secrets/         # @tupynambalucas-dev/agent-plugin-secrets
+│       └── web/             # @tupynambalucas-dev/agent-plugin-web (Playwright + Firecrawl)
 ├── mcp/                     # 6 In-House Dual-Transport MCP Servers
-│   ├── appsheet/            # @tupynambalucas-dev/agent-mcp-appsheet
-│   ├── firecrawl/           # @tupynambalucas-dev/agent-mcp-firecrawl
-│   ├── github/              # @tupynambalucas-dev/agent-mcp-github
-│   ├── google-workspace/    # @tupynambalucas-dev/agent-mcp-gwork
-│   ├── infisical/           # @tupynambalucas-dev/agent-mcp-infisical
-│   └── memory/              # @tupynambalucas-dev/agent-mcp-memory
+│   ├── AGENTS.md            # MCP subsystem context router
+│   └── packages/            # MCP server packages
+│       ├── appsheet/        # @tupynambalucas-dev/agent-mcp-appsheet
+│       ├── firecrawl/       # @tupynambalucas-dev/agent-mcp-firecrawl
+│       ├── github/          # @tupynambalucas-dev/agent-mcp-github
+│       ├── google-workspace/# @tupynambalucas-dev/agent-mcp-gwork
+│       ├── infisical/       # @tupynambalucas-dev/agent-mcp-infisical
+│       └── memory/          # @tupynambalucas-dev/agent-mcp-memory
 └── scripts/
+    ├── AGENTS.md            # Scripts subsystem context router
     ├── mcp-runner.js        # 3-tier fallback environment loader for legacy tools
     ├── mcp-gateway-router.js# Zero-downtime healthcheck proxy and fallback router
     └── publish-packages.js  # Idempotent GitHub Packages multi-package publisher
@@ -63,7 +70,7 @@ Configure [.agents/plugins.json](file:///C:/Users/tupyn/projects/organizations/t
 {
   "entries": [
     {
-      "path": "agent-mesh/plugins"
+      "path": "agent-mesh/plugins/packages"
     }
   ]
 }

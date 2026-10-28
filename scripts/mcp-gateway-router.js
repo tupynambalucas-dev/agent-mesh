@@ -115,7 +115,10 @@ async function main() {
 
   // Mode B: Local Standalone Fallback
   // Check if running inside agent-mesh repository with local package available
-  const localMcpDir = path.resolve(__dirname, "..", "mcp", TARGET_SERVICE);
+  let localMcpDir = path.resolve(__dirname, "..", "mcp", "packages", TARGET_SERVICE);
+  if (!fs.existsSync(localMcpDir)) {
+    localMcpDir = path.resolve(__dirname, "..", "mcp", TARGET_SERVICE);
+  }
   const localJsBin = path.join(localMcpDir, "dist", "bin.js");
   const localTsBin = path.join(localMcpDir, "src", "bin.ts");
 

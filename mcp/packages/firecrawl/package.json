@@ -1,7 +1,7 @@
 {
-  "name": "@tupynambalucas-dev/agent-mcp-infisical",
+  "name": "@tupynambalucas-dev/agent-mcp-firecrawl",
   "version": "1.0.0",
-  "description": "Enterprise Model Context Protocol server for Infisical secret management, Universal Auth machine credentials, and vault synchronization.",
+  "description": "Enterprise Model Context Protocol server for Firecrawl advanced web scraping, crawling, and extraction.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "MIT",
   "homepage": "https://docs.tupynambalucas.dev",
@@ -16,7 +16,7 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "agent-mcp-infisical": "./dist/bin.js"
+    "agent-mcp-firecrawl": "./dist/bin.js"
   },
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",
@@ -26,16 +26,17 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.6.1",
-    "dotenv": "^16.4.7",
-    "fastify": "^5.2.1",
-    "zod": "^3.24.2"
+    "@modelcontextprotocol/sdk": "catalog:mcp-stack",
+    "dotenv": "catalog:shared",
+    "fastify": "catalog:mcp-stack",
+    "firecrawl": "catalog:mcp-stack",
+    "zod": "catalog:shared"
   },
   "devDependencies": {
-    "@types/node": "^22.13.0",
-    "rimraf": "^6.0.1",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.3"
+    "@types/node": "catalog:",
+    "rimraf": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
   },
   "files": [
     "dist"

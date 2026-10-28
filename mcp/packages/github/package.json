@@ -26,18 +26,18 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.6.1",
-    "@octokit/auth-app": "^7.1.5",
-    "@octokit/core": "^6.1.4",
-    "dotenv": "^16.4.7",
-    "fastify": "^5.2.1",
-    "zod": "^3.24.2"
+    "@modelcontextprotocol/sdk": "catalog:mcp-stack",
+    "@octokit/auth-app": "catalog:mcp-stack",
+    "@octokit/core": "catalog:mcp-stack",
+    "dotenv": "catalog:shared",
+    "fastify": "catalog:mcp-stack",
+    "zod": "catalog:shared"
   },
   "devDependencies": {
-    "@types/node": "^22.13.0",
-    "rimraf": "^6.0.1",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.3"
+    "@types/node": "catalog:",
+    "rimraf": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
   },
   "files": [
     "dist"

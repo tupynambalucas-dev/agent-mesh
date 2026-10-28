@@ -3,12 +3,47 @@
   "version": "1.0.0",
   "description": "Universal enterprise AI agent mesh: governance, MCP gateway router, domain plugins, and modular skills.",
   "main": "scripts/mcp-gateway-router.js",
+  "packageManager": "pnpm@10.33.2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tupynambalucas-dev/agent-mesh.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
+  },
+  "scripts": {
+    "// Pipeline Tasks (Turborepo)": "-------------------------------------------",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "clean": "turbo run clean",
+    "typecheck": "turbo run typecheck",
+    "// MCP Context (All In-House MCP Packages)": "-------------------------------",
+    "mcp:build": "turbo run build --filter=\"@tupynambalucas-dev/agent-mcp-*\"",
+    "mcp:dev": "turbo run dev --filter=\"@tupynambalucas-dev/agent-mcp-*\"",
+    "mcp:clean": "turbo run clean --filter=\"@tupynambalucas-dev/agent-mcp-*\"",
+    "mcp:typecheck": "turbo run typecheck --filter=\"@tupynambalucas-dev/agent-mcp-*\"",
+    "// Individual MCP Target Scripts": "-----------------------------------------",
+    "mcp:appsheet:build": "pnpm --filter @tupynambalucas-dev/agent-mcp-appsheet build",
+    "mcp:appsheet:dev": "pnpm --filter @tupynambalucas-dev/agent-mcp-appsheet dev",
+    "mcp:firecrawl:build": "pnpm --filter @tupynambalucas-dev/agent-mcp-firecrawl build",
+    "mcp:firecrawl:dev": "pnpm --filter @tupynambalucas-dev/agent-mcp-firecrawl dev",
+    "mcp:github:build": "pnpm --filter @tupynambalucas-dev/agent-mcp-github build",
+    "mcp:github:dev": "pnpm --filter @tupynambalucas-dev/agent-mcp-github dev",
+    "mcp:gwork:build": "pnpm --filter @tupynambalucas-dev/agent-mcp-gwork build",
+    "mcp:gwork:dev": "pnpm --filter @tupynambalucas-dev/agent-mcp-gwork dev",
+    "mcp:infisical:build": "pnpm --filter @tupynambalucas-dev/agent-mcp-infisical build",
+    "mcp:infisical:dev": "pnpm --filter @tupynambalucas-dev/agent-mcp-infisical dev",
+    "mcp:memory:build": "pnpm --filter @tupynambalucas-dev/agent-mcp-memory build",
+    "mcp:memory:dev": "pnpm --filter @tupynambalucas-dev/agent-mcp-memory dev",
+    "// Packaging & Deployment": "------------------------------------------------",
+    "packages:publish": "node scripts/publish-packages.js"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "rimraf": "catalog:",
+    "tsx": "catalog:",
+    "turbo": "catalog:",
+    "typescript": "catalog:"
   },
   "files": [
     ".claude-plugin/",
