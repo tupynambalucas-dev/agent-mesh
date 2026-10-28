@@ -13,7 +13,8 @@ This document defines the bounded context for all Antigravity and Claude Code do
 
 - [appsheet](./packages/appsheet/plugin.json): `@tupynambalucas-dev/agent-plugin-appsheet` - Greenfield prompt-to-app architect and Brownfield REST operator.
 - [docusaurus](./packages/docusaurus/plugin.json): `@tupynambalucas-dev/agent-plugin-docusaurus` - Diátaxis taxonomy design, MDX v3 authoring, and link audits.
-- [github](./packages/github/plugin.json): `@tupynambalucas-dev/agent-plugin-github` - Organization RBAC, ruleset enforcement, and security auditing.
+- [github-manager](./packages/github-manager/plugin.json): `@tupynambalucas-dev/agent-plugin-github-manager` - Organization RBAC, ruleset enforcement, security auditing, and app provisioning.
+- [github-assistant](./packages/github-assistant/plugin.json): `@tupynambalucas-dev/agent-plugin-github-assistant` - Developer Git workflows, Conventional Commits, Pull Requests, and Actions CI/CD triage.
 - [google-workspace](./packages/google-workspace/plugin.json): `@tupynambalucas-dev/agent-plugin-google-workspace` - Drive folder taxonomy, Sheets builder, Docs publisher.
 - [meta](./packages/meta/plugin.json): `@tupynambalucas-dev/agent-plugin-meta` - AGENTS.md routing, modular skills, and plugin manifest architecture.
 - [research](./packages/research/plugin.json): `@tupynambalucas-dev/agent-plugin-research` - Upstream documentation researcher via Context7 and Firecrawl.

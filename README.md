@@ -25,12 +25,13 @@ agent-mesh/
 │   └── marketplace.json     # Claude Code Plugin Marketplace registry
 ├── rules/
 │   └── AGENTS.md            # Enterprise governance constraints and always-on rules
-├── plugins/                 # 8 Sovereign Domain Plugins
+├── plugins/                 # 9 Sovereign Domain Plugins
 │   ├── AGENTS.md            # Plugins subsystem context router
 │   └── packages/            # Domain plugin packages
 │       ├── appsheet/        # @tupynambalucas-dev/agent-plugin-appsheet
 │       ├── docusaurus/      # @tupynambalucas-dev/agent-plugin-docusaurus
-│       ├── github/          # @tupynambalucas-dev/agent-plugin-github
+│       ├── github-assistant/# @tupynambalucas-dev/agent-plugin-github-assistant
+│       ├── github-manager/  # @tupynambalucas-dev/agent-plugin-github-manager
 │       ├── google-workspace/# @tupynambalucas-dev/agent-plugin-google-workspace
 │       ├── meta/            # @tupynambalucas-dev/agent-plugin-meta
 │       ├── research/        # @tupynambalucas-dev/agent-plugin-research (Context7 + Firecrawl)
@@ -76,7 +77,7 @@ Configure [.agents/plugins.json](file:///C:/Users/tupyn/projects/organizations/t
 }
 ```
 
-*Mechanism*: Antigravity scans `entries` directories **one level deep**. Pointing to `agent-mesh/plugins` automatically discovers all 6 plugins (`appsheet`, `docusaurus`, `github`, `google-workspace`, `meta`, `secrets`) and loads their 19 modular skills and scoped MCP servers.
+*Mechanism*: Antigravity scans `entries` directories **one level deep**. Pointing to `agent-mesh/plugins/packages` automatically discovers all 9 plugins (`appsheet`, `docusaurus`, `github-assistant`, `github-manager`, `google-workspace`, `meta`, `research`, `secrets`, `web`) and loads their modular skills and scoped MCP servers.
 
 #### 2. Selectively Load Specific Domain Plugins
 
@@ -86,8 +87,8 @@ To minimize context window token consumption, load only the plugins required by 
 {
   "entries": [
     {
-      "path": "agent-mesh/plugins",
-      "include_only": ["github", "secrets", "meta"]
+      "path": "agent-mesh/plugins/packages",
+      "include_only": ["github-assistant", "secrets", "meta"]
     }
   ]
 }
@@ -98,8 +99,8 @@ Or declare direct paths to individual plugin folders:
 ```json
 {
   "entries": [
-    { "path": "agent-mesh/plugins/docusaurus" },
-    { "path": "agent-mesh/plugins/meta" }
+    { "path": "agent-mesh/plugins/packages/docusaurus" },
+    { "path": "agent-mesh/plugins/packages/meta" }
   ]
 }
 ```
@@ -119,7 +120,7 @@ Install only the domain plugins required by your project:
 pnpm add -D @tupynambalucas-dev/agent-plugin-docusaurus @tupynambalucas-dev/agent-plugin-meta
 
 # Example for a platform service:
-pnpm add -D @tupynambalucas-dev/agent-plugin-github @tupynambalucas-dev/agent-plugin-secrets
+pnpm add -D @tupynambalucas-dev/agent-plugin-github-assistant @tupynambalucas-dev/agent-plugin-secrets
 ```
 
 Create `.agents/plugins.json` in the root of your standalone project:
@@ -141,10 +142,11 @@ Install plugins directly into your workstation's global configuration (`~/.gemin
 
 ```bash
 # Install individual domain plugin globally
-agy plugin install @tupynambalucas-dev/agent-plugin-github
+agy plugin install @tupynambalucas-dev/agent-plugin-github-assistant
+agy plugin install @tupynambalucas-dev/agent-plugin-github-manager
 
 # Or install from git URL:
-agy plugin install https://github.com/tupynambalucas-dev/agent-mesh --path plugins/github
+agy plugin install https://github.com/tupynambalucas-dev/agent-mesh --path plugins/packages/github-assistant
 ```
 
 #### 3. Via Claude Code Plugin Marketplace
@@ -158,7 +160,8 @@ Register the `tupynambalucas-dev` marketplace in Claude Code:
 Selectively install only the plugins you need for your active workflow:
 
 ```bash
-/plugin install agent-plugin-github@tupynambalucas-dev
+/plugin install agent-plugin-github-assistant@tupynambalucas-dev
+/plugin install agent-plugin-github-manager@tupynambalucas-dev
 /plugin install agent-plugin-secrets@tupynambalucas-dev
 /plugin install agent-plugin-meta@tupynambalucas-dev
 ```

@@ -1,7 +1,7 @@
 {
-  "name": "@tupynambalucas-dev/agent-plugin-github",
+  "name": "@tupynambalucas-dev/agent-plugin-github-assistant",
   "version": "1.0.0",
-  "description": "Enterprise Antigravity plugin for GitHub organization operations, branch rulesets, security alert triage, and workflow management.",
+  "description": "Developer GitHub assistant for Git workflows, Conventional Commits, Pull Requests, and Actions CI/CD triage.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tupynambalucas-dev/agent-mesh.git"
@@ -13,10 +13,11 @@
   "keywords": [
     "antigravity-plugin",
     "github",
-    "github-app",
-    "governance",
-    "rulesets",
-    "security"
+    "developer-experience",
+    "git-flow",
+    "conventional-commits",
+    "actions",
+    "ci-cd"
   ],
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "MIT"

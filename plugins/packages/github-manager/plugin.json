@@ -1,7 +1,7 @@
 {
-  "name": "agent-plugin-github",
+  "name": "agent-plugin-github-manager",
   "version": "1.0.0",
-  "description": "Enterprise Antigravity plugin for GitHub organization operations, branch rulesets, security alert triage, and workflow management.",
+  "description": "Enterprise GitHub organization governance, team RBAC, branch protection rulesets, security alert triage, and app provisioning.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "homepage": "https://docs.tupynambalucas.dev",
   "repository": "https://github.com/tupynambalucas-dev/agent-mesh",
@@ -10,6 +10,7 @@
     "github-app",
     "governance",
     "rulesets",
-    "security"
+    "security",
+    "rbac"
   ]
 }

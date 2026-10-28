@@ -42,4 +42,4 @@ gh run rerun <run-id> --failed
 
 - Always check secret availability in Infisical before triggering production deployments.
 - Ensure all actions use pinned SHAs or trusted release tags.
-- Refer to [GitHub Domain Rules](../../rules/AGENTS.md) for commit and PR requirements.
+- Refer to [GitHub Developer Workflow Rules](../../rules/AGENTS.md) for commit and PR requirements.

@@ -10,10 +10,16 @@
   },
   "plugins": [
     {
-      "name": "agent-plugin-github",
-      "description": "Enterprise GitHub organization operations, branch rulesets, security alert triage, and workflow management.",
+      "name": "agent-plugin-github-manager",
+      "description": "Enterprise GitHub organization governance, team RBAC, branch protection rulesets, security alert triage, and app provisioning.",
       "version": "1.0.0",
-      "source": "./plugins/packages/github"
+      "source": "./plugins/packages/github-manager"
+    },
+    {
+      "name": "agent-plugin-github-assistant",
+      "description": "Developer GitHub assistant for Git workflows, Conventional Commits, Pull Requests, and Actions CI/CD triage.",
+      "version": "1.0.0",
+      "source": "./plugins/packages/github-assistant"
     },
     {
       "name": "agent-plugin-secrets",

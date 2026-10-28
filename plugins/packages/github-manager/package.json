@@ -1,0 +1,23 @@
+{
+  "name": "@tupynambalucas-dev/agent-plugin-github-manager",
+  "version": "1.0.0",
+  "description": "Enterprise GitHub organization governance, team RBAC, branch protection rulesets, security alert triage, and app provisioning.",
+  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "license": "MIT",
+  "homepage": "https://docs.tupynambalucas.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tupynambalucas-dev/agent-mesh.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "type": "module",
+  "files": [
+    "plugin.json",
+    "skills",
+    "rules",
+    "references"
+  ]
+}
