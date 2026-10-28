@@ -198,7 +198,11 @@ importers:
 
   plugins/meta: {}
 
+  plugins/research: {}
+
   plugins/secrets: {}
+
+  plugins/web: {}
 
 packages:
 

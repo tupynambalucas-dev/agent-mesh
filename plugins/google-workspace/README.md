@@ -11,4 +11,4 @@ Enterprise Antigravity plugin for sovereign Google Workspace automation, includi
 ## Connection Mode
 
 - Mode A: Cluster Envoy AgentGateway (`http://localhost:8080/mcp`)
-- Mode B: Automatic fallback via `pnpm dlx @tupynambalucas-dev/cortex-mcp-gwork`
+- Mode B: Automatic fallback via `pnpm dlx @tupynambalucas-dev/agent-mcp-gwork`

@@ -1,5 +1,5 @@
 {
-  "name": "@tupynambalucas-dev/cortex-mcp-infisical",
+  "name": "@tupynambalucas-dev/agent-mcp-infisical",
   "version": "1.0.0",
   "description": "Enterprise Model Context Protocol server for Infisical secret management, Universal Auth machine credentials, and vault synchronization.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
@@ -16,7 +16,7 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "cortex-mcp-infisical": "./dist/bin.js"
+    "agent-mcp-infisical": "./dist/bin.js"
   },
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",

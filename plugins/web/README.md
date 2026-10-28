@@ -22,4 +22,4 @@ Enterprise Antigravity and Claude Code plugin for headless browser automation, U
 ## 3. Included MCP Servers
 
 - **`playwright`**: Browser automation and interaction primitives (`@playwright/mcp`).
-- **`cortex-firecrawl`**: Web scraping and crawl extraction (`@tupynambalucas-dev/cortex-mcp-firecrawl`).
+- **`cortex-firecrawl`**: Web scraping and crawl extraction (`@tupynambalucas-dev/agent-mcp-firecrawl`).

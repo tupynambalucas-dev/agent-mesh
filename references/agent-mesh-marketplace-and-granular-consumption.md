@@ -78,12 +78,12 @@ agent-mesh/
 │       ├── package.json
 │       └── skills/                      # 3 secrets skills (infisical, rotation, sync)
 ├── mcp/                                 # 6 In-House Dual-Transport MCP Servers
-│   ├── appsheet/                        # @tupynambalucas-dev/cortex-mcp-appsheet
-│   ├── firecrawl/                       # @tupynambalucas-dev/cortex-mcp-firecrawl
-│   ├── github/                          # @tupynambalucas-dev/cortex-mcp-github
-│   ├── google-workspace/                # @tupynambalucas-dev/cortex-mcp-gwork
-│   ├── infisical/                       # @tupynambalucas-dev/cortex-mcp-infisical
-│   └── memory/                          # @tupynambalucas-dev/cortex-mcp-memory
+│   ├── appsheet/                        # @tupynambalucas-dev/agent-mcp-appsheet
+│   ├── firecrawl/                       # @tupynambalucas-dev/agent-mcp-firecrawl
+│   ├── github/                          # @tupynambalucas-dev/agent-mcp-github
+│   ├── google-workspace/                # @tupynambalucas-dev/agent-mcp-gwork
+│   ├── infisical/                       # @tupynambalucas-dev/agent-mcp-infisical
+│   └── memory/                          # @tupynambalucas-dev/agent-mcp-memory
 └── scripts/
     ├── mcp-gateway-router.js            # Zero-downtime healthcheck proxy and fallback router
     ├── mcp-runner.js                    # 3-tier fallback environment loader for legacy tools
@@ -99,7 +99,7 @@ Every MCP server in `mcp/*` is written in TypeScript and implements **dual trans
 1. **HTTP Microservice Mode (`src/index.ts`)**: Built with Fastify on port `8080`. Designed to run inside the Kubernetes cluster behind the Cortex AgentGateway (Envoy-based), handling tool requests with distributed caching and centralized monitoring.
 2. **Stdio Binary Mode (`src/bin.ts`)**: Invoked by CLI agents (Antigravity, Claude Code, Cursor) when operating locally or during gateway failover. Implements standard JSON-RPC 2.0 communication over standard input/output.
 
-### 3.2 Infisical MCP Server (`@tupynambalucas-dev/cortex-mcp-infisical`)
+### 3.2 Infisical MCP Server (`@tupynambalucas-dev/agent-mcp-infisical`)
 The Infisical MCP server was custom built to replace external or ad-hoc secret management scripts. It features:
 - **Authentication**: Native Universal Auth (`POST /api/v1/auth/universal-auth/login`) with automatic machine token renewal and in-memory caching.
 - **Three-Tier Configuration Fallback**:
@@ -223,13 +223,13 @@ Selectively install domain plugins:
 MCP servers can be spawned on-demand in any environment using `npx` or `pnpm dlx`:
 ```bash
 # Execute Infisical MCP server on stdio
-npx -y @tupynambalucas-dev/cortex-mcp-infisical
+npx -y @tupynambalucas-dev/agent-mcp-infisical
 
 # Execute Firecrawl MCP server on stdio
-npx -y @tupynambalucas-dev/cortex-mcp-firecrawl
+npx -y @tupynambalucas-dev/agent-mcp-firecrawl
 
 # Execute Google Workspace MCP server on stdio
-npx -y @tupynambalucas-dev/cortex-mcp-gwork
+npx -y @tupynambalucas-dev/agent-mcp-gwork
 ```
 
 ---

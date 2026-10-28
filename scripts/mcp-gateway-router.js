@@ -55,27 +55,27 @@ function probeGateway(baseUrl, timeoutMs) {
  */
 const FALLBACK_REGISTRY = {
   "firecrawl": {
-    pkg: "@tupynambalucas-dev/cortex-mcp-firecrawl",
+    pkg: "@tupynambalucas-dev/agent-mcp-firecrawl",
     upstream: "firecrawl-mcp"
   },
   "memory": {
-    pkg: "@tupynambalucas-dev/cortex-mcp-memory",
+    pkg: "@tupynambalucas-dev/agent-mcp-memory",
     upstream: "@modelcontextprotocol/server-memory"
   },
   "github": {
-    pkg: "@tupynambalucas-dev/cortex-mcp-github",
+    pkg: "@tupynambalucas-dev/agent-mcp-github",
     upstream: "github-mcp-server-js"
   },
   "google-workspace": {
-    pkg: "@tupynambalucas-dev/cortex-mcp-gwork",
+    pkg: "@tupynambalucas-dev/agent-mcp-gwork",
     upstream: "@aaronsb/google-workspace-mcp"
   },
   "appsheet": {
-    pkg: "@tupynambalucas-dev/cortex-mcp-appsheet",
+    pkg: "@tupynambalucas-dev/agent-mcp-appsheet",
     upstream: null
   },
   "infisical": {
-    pkg: "@tupynambalucas-dev/cortex-mcp-infisical",
+    pkg: "@tupynambalucas-dev/agent-mcp-infisical",
     upstream: "@infisical/mcp"
   },
   "context7": {

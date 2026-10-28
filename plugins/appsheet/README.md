@@ -11,4 +11,4 @@ Enterprise Antigravity plugin for Google AppSheet hybrid lifecycle orchestration
 ## Connection Mode
 
 - Mode A: Cluster Envoy AgentGateway (`http://localhost:8080/mcp`)
-- Mode B: Automatic fallback via `pnpm dlx @tupynambalucas-dev/cortex-mcp-appsheet`
+- Mode B: Automatic fallback via `pnpm dlx @tupynambalucas-dev/agent-mcp-appsheet`

@@ -33,12 +33,12 @@ agent-mesh/
 │   ├── secrets/             # @tupynambalucas-dev/agent-plugin-secrets
 │   └── web/                 # @tupynambalucas-dev/agent-plugin-web (Playwright + Firecrawl)
 ├── mcp/                     # 6 In-House Dual-Transport MCP Servers
-│   ├── appsheet/            # @tupynambalucas-dev/cortex-mcp-appsheet
-│   ├── firecrawl/           # @tupynambalucas-dev/cortex-mcp-firecrawl
-│   ├── github/              # @tupynambalucas-dev/cortex-mcp-github
-│   ├── google-workspace/    # @tupynambalucas-dev/cortex-mcp-gwork
-│   ├── infisical/           # @tupynambalucas-dev/cortex-mcp-infisical
-│   └── memory/              # @tupynambalucas-dev/cortex-mcp-memory
+│   ├── appsheet/            # @tupynambalucas-dev/agent-mcp-appsheet
+│   ├── firecrawl/           # @tupynambalucas-dev/agent-mcp-firecrawl
+│   ├── github/              # @tupynambalucas-dev/agent-mcp-github
+│   ├── google-workspace/    # @tupynambalucas-dev/agent-mcp-gwork
+│   ├── infisical/           # @tupynambalucas-dev/agent-mcp-infisical
+│   └── memory/              # @tupynambalucas-dev/agent-mcp-memory
 └── scripts/
     ├── mcp-runner.js        # 3-tier fallback environment loader for legacy tools
     ├── mcp-gateway-router.js# Zero-downtime healthcheck proxy and fallback router
@@ -164,12 +164,12 @@ All 6 in-house MCP servers are compiled TypeScript packages with dual transports
 
 | MCP Package Name | Directory | Primary Capabilities | Dual Transports |
 | :--- | :--- | :--- | :--- |
-| `@tupynambalucas-dev/cortex-mcp-firecrawl` | `mcp/firecrawl` | Deep web scraping, crawling, markdown extraction | Fastify :8080 & Stdio (`bin.js`) |
-| `@tupynambalucas-dev/cortex-mcp-memory` | `mcp/memory` | Semantic RAG vector store, episodic memory | Fastify :8080 & Stdio (`bin.js`) |
-| `@tupynambalucas-dev/cortex-mcp-github` | `mcp/github` | Organization RBAC, rulesets, security triage | Fastify :8080 & Stdio (`bin.js`) |
-| `@tupynambalucas-dev/cortex-mcp-gwork` | `mcp/google-workspace` | Drive folders, Sheets synthesis, Docs publishing | Fastify :8080 & Stdio (`bin.js`) |
-| `@tupynambalucas-dev/cortex-mcp-appsheet` | `mcp/appsheet` | Relational schema modeling, REST API v2 CRUD | Fastify :8080 & Stdio (`bin.js`) |
-| `@tupynambalucas-dev/cortex-mcp-infisical` | `mcp/infisical` | Universal Auth machine tokens, secret CRUD | Fastify :8080 & Stdio (`bin.js`) |
+| `@tupynambalucas-dev/agent-mcp-firecrawl` | `mcp/firecrawl` | Deep web scraping, crawling, markdown extraction | Fastify :8080 & Stdio (`bin.js`) |
+| `@tupynambalucas-dev/agent-mcp-memory` | `mcp/memory` | Semantic RAG vector store, episodic memory | Fastify :8080 & Stdio (`bin.js`) |
+| `@tupynambalucas-dev/agent-mcp-github` | `mcp/github` | Organization RBAC, rulesets, security triage | Fastify :8080 & Stdio (`bin.js`) |
+| `@tupynambalucas-dev/agent-mcp-gwork` | `mcp/google-workspace` | Drive folders, Sheets synthesis, Docs publishing | Fastify :8080 & Stdio (`bin.js`) |
+| `@tupynambalucas-dev/agent-mcp-appsheet` | `mcp/appsheet` | Relational schema modeling, REST API v2 CRUD | Fastify :8080 & Stdio (`bin.js`) |
+| `@tupynambalucas-dev/agent-mcp-infisical` | `mcp/infisical` | Universal Auth machine tokens, secret CRUD | Fastify :8080 & Stdio (`bin.js`) |
 
 ### Direct CLI Execution
 
@@ -177,10 +177,10 @@ Any in-house MCP server can be executed directly via `npx` or `pnpm dlx`:
 
 ```bash
 # Execute Firecrawl MCP server on stdio
-npx -y @tupynambalucas-dev/cortex-mcp-firecrawl
+npx -y @tupynambalucas-dev/agent-mcp-firecrawl
 
 # Execute Infisical MCP server on stdio
-npx -y @tupynambalucas-dev/cortex-mcp-infisical
+npx -y @tupynambalucas-dev/agent-mcp-infisical
 ```
 
 ### Smart Gateway Router & Zero-Downtime Fallback

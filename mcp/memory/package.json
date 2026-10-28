@@ -1,7 +1,7 @@
 {
-  "name": "@tupynambalucas-dev/cortex-mcp-memory",
+  "name": "@tupynambalucas-dev/agent-mcp-memory",
   "version": "1.0.0",
-  "description": "Enterprise Model Context Protocol server for Cortex Memory semantic search, graph querying, and episodic store.",
+  "description": "Enterprise Model Context Protocol server for semantic search, knowledge graph querying, and episodic store.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "MIT",
   "homepage": "https://docs.tupynambalucas.dev",
@@ -16,7 +16,7 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "cortex-mcp-memory": "./dist/bin.js"
+    "agent-mcp-memory": "./dist/bin.js"
   },
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",

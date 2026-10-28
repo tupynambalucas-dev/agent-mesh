@@ -1,5 +1,5 @@
 {
-  "name": "@tupynambalucas-dev/cortex-mcp-gwork",
+  "name": "@tupynambalucas-dev/agent-mcp-gwork",
   "version": "1.0.0",
   "description": "Enterprise Model Context Protocol server for Google Workspace (Drive, Sheets, Docs, Calendar) automation.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
@@ -16,7 +16,8 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "cortex-mcp-gwork": "./dist/bin.js"
+    "agent-mcp-gwork": "./dist/bin.js",
+    "agent-mcp-google-workspace": "./dist/bin.js"
   },
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",
