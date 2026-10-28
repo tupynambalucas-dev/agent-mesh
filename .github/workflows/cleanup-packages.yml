@@ -1,0 +1,63 @@
+name: Cleanup Obsolete Packages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  cleanup:
+    name: Purge Obsolete Packages from Registry
+    runs-on: ubuntu-latest
+    steps:
+      - name: List and Delete Obsolete Packages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "=== Auditing Obsolete Registry Packages ==="
+          
+          OBSOLETE_PACKAGES=(
+            "cortex-mcp-appsheet"
+            "cortex-mcp-firecrawl"
+            "cortex-mcp-github"
+            "cortex-mcp-gwork"
+            "cortex-mcp-memory"
+            "cortex-mcp-infisical"
+            "agent-plugin-github"
+          )
+          
+          for pkg in "${OBSOLETE_PACKAGES[@]}"; do
+            echo ""
+            echo "----------------------------------------"
+            echo "Processing obsolete package: $pkg"
+            
+            # Check if package exists
+            HTTP_STATUS=$(gh api -i "/orgs/tupynambalucas-dev/packages/npm/$pkg" 2>&1 | grep "HTTP/" | awk '{print $2}' || true)
+            echo "Status probe for $pkg: $HTTP_STATUS"
+            
+            if [ "$HTTP_STATUS" = "200" ]; then
+              echo "Package $pkg found. Deleting package..."
+              if gh api --method DELETE "/orgs/tupynambalucas-dev/packages/npm/$pkg"; then
+                echo "Successfully deleted entire package: $pkg"
+              else
+                echo "Direct deletion failed. Attempting to delete package versions first..."
+                VERSIONS=$(gh api "/orgs/tupynambalucas-dev/packages/npm/$pkg/versions" --jq '.[].id' 2>/dev/null || true)
+                for vid in $VERSIONS; do
+                  echo "Deleting version $vid of $pkg..."
+                  gh api --method DELETE "/orgs/tupynambalucas-dev/packages/npm/$pkg/versions/$vid" || true
+                done
+                echo "Retrying entire package deletion..."
+                gh api --method DELETE "/orgs/tupynambalucas-dev/packages/npm/$pkg" || true
+              fi
+            elif [ "$HTTP_STATUS" = "404" ]; then
+              echo "Package $pkg does not exist or was already deleted."
+            else
+              echo "Attempting deletion of $pkg anyway..."
+              gh api --method DELETE "/orgs/tupynambalucas-dev/packages/npm/$pkg" || echo "Deletion call completed with code $?"
+            fi
+          done
+          
+          echo ""
+          echo "=== Cleanup execution finished ==="
