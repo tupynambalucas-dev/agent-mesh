@@ -74,7 +74,7 @@ function openBrowser(url) {
     process.platform === 'darwin'
       ? 'open'
       : process.platform === 'win32'
-      ? 'start'
+      ? 'start ""'
       : 'xdg-open';
   exec(`${start} "${url}"`);
 }
@@ -211,10 +211,16 @@ const server = http.createServer(async (req, res) => {
       res.end(successHtml);
 
       setTimeout(() => {
+        const installUrl = `https://github.com/organizations/${ORG_NAME}/settings/apps/${appData.slug}/installations`;
+        console.log(`Opening installation page: ${installUrl}`);
+        openBrowser(installUrl);
+      }, 1000);
+
+      setTimeout(() => {
         console.log('Provisioning complete. Closing server.');
         server.close();
         process.exit(0);
-      }, 3000);
+      }, 5000);
     } catch (err) {
       console.error('Error exchanging code:', err.message);
       res.writeHead(500, { 'Content-Type': 'text/plain' });
@@ -226,5 +232,6 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, () => {
   console.log(`GitHub App Provisioner listening on http://localhost:${PORT}`);
   console.log(`Initiating flow for profile '${profile}' (${selected.appName})...`);
+  console.log(`If your browser did not open automatically, please open: http://localhost:${PORT}`);
   openBrowser(`http://localhost:${PORT}`);
 });
