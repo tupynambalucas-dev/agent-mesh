@@ -110,6 +110,38 @@ To eliminate manual CLI invocation, `agent-mesh` provides [`scripts/start-debug-
 - External network interfaces cannot access the debugging port.
 - No third-party proxy, relay, or cloud tunneling is permitted.
 
+### 4.5 Deep Dive: Why the `--remote-debugging-port` Flag is Mandatorily Required
+
+A common inquiry is whether the `--remote-debugging-port` flag is strictly required, or if an active browser session can be attached to dynamically without any launch flags. 
+
+Based on official Chromium core security specifications, Playwright upstream architecture, and web platform standards, the flag is **strictly, 100% mandatory**. The technical and architectural justifications are detailed below:
+
+#### 1. Chromium Sandboxing & Security Boundaries
+The Chrome DevTools Protocol (CDP) provides unconditional, unrestricted control over the browser:
+- **Full Credential & Session Access**: Any client connecting to the CDP port can extract plaintext cookies, session tokens, and local storage across every origin, completely bypassing the Same-Origin Policy (SOP).
+- **Arbitrary Script Execution**: Allows evaluating arbitrary JavaScript in any open tab with browser-level privileges.
+- **Full Network Interception**: Permits snooping, modifying, or redirecting all HTTP/HTTPS and WebSocket traffic.
+- **Zero Authentication by Design**: The CDP loopback socket does not perform cryptographic handshake authentication. Whoever connects to `127.0.0.1:9222` owns the browser.
+
+Because of this immense power, Chromium's security architecture mandates that **CDP must never be active during standard user browsing**. If the debugging port could be opened dynamically by an internal script or running process, any malicious website or background malware could silently open port 9222, connect to it, and steal banking or GitHub sessions. The explicit command-line flag acts as an intentional, audited **security gate**.
+
+#### 2. Absence of Runtime Flags or Settings
+- There is **no toggle** in `vivaldi://settings`, `chrome://settings`, or `chrome://flags` to dynamically toggle the remote debugging server on or off in a running process.
+- The remote debugging server component (`DevToolsHttpHandler`) in Chromium C++ source code is only initialized during the browser process startup sequence if the command line explicitly contains `--remote-debugging-port` or `--remote-debugging-pipe`.
+
+#### 3. Evaluation of Theoretical Alternatives
+
+| Alternative Mechanism | Feasibility | Why It Is Rejected in Enterprise Architecture |
+| :--- | :--- | :--- |
+| **Chrome Extension (`chrome.debugger` API)** | Feasible with caveats | Requires developing and packing a custom extension, enabling Developer Mode, and installing a Native Messaging Host. Displays an intrusive, permanent yellow banner (`"Browser is being debugged"`) on every tab. Violates our "zero software to install" invariant. |
+| **Process Memory Injection (`chrome.dll`)** | High risk / Unstable | Injects shellcode into the running `vivaldi.exe` process to call `StartRemoteDebuggingServer`. Causes process instability, crashes, and immediately triggers Windows Defender and enterprise EDR heuristics. Completely unacceptable for production. |
+| **Playwright `launchPersistentContext`** | Standard Playwright API | Launches a *new* browser process and internally injects the remote debugging flag anyway. Fails with a profile lock error if Vivaldi is already open with that profile. Does not attach to the developer's already-open window. |
+
+#### 4. Practical Workflow Solution
+To make working with the mandatory flag seamless and frictionless:
+1. **One-Click Script**: Use [`scripts/start-debug-browser.ps1`](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/scripts/start-debug-browser.ps1) to launch or verify the debugging browser.
+2. **Dedicated Dev Shortcut**: Create a taskbar or desktop shortcut named `"Vivaldi (Dev Mode)"` with `--remote-debugging-port=9222` in the Target field. Because Vivaldi natively preserves and restores tabs across restarts, launching via this shortcut restores all active tabs and logins while activating CDP for the agent.
+
 ---
 
 ## 5. Developer Browser Ecosystem Evaluation: Vivaldi vs Alternatives
