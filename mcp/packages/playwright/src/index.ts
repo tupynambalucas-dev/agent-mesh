@@ -11,7 +11,7 @@ fastify.all('/mcp', async (req, reply) => {
     reply.hijack();
     const server = new Server(
       {
-        name: 'agent-mcp-playwright',
+        name: 'playwright-mcp',
         version: '1.0.0',
       },
       {
@@ -32,7 +32,7 @@ fastify.all('/mcp', async (req, reply) => {
 });
 
 fastify.get('/health', () => {
-  return { status: 'healthy', service: 'agent-mcp-playwright' };
+  return { status: 'healthy', service: 'playwright-mcp' };
 });
 
 fastify.listen({ port: config.PORT, host: config.HOST }, (err) => {

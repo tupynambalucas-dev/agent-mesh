@@ -7,7 +7,7 @@ import { registerToolHandlers } from './tools/index.js';
 async function main() {
   const server = new Server(
     {
-      name: 'agent-mcp-playwright',
+      name: 'playwright-mcp',
       version: '1.0.0',
     },
     {

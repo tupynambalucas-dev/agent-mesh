@@ -1,4 +1,4 @@
-# @tupynambalucas-dev/agent-mcp-github
+# @tupynambalucas-dev/mcp-github
 
 Model Context Protocol server for GitHub App authenticated organization RBAC, rulesets, and security auditing.
 
@@ -6,7 +6,7 @@ Model Context Protocol server for GitHub App authenticated organization RBAC, ru
 
 ## Overview
 
-`@tupynambalucas-dev/agent-mcp-github` provides a dual-transport interface (Fastify Streamable HTTP on `:8080` and Stdio via `dist/bin.js`) enabling AI agents to interact securely with the GitHub API using machine-level GitHub App credentials.
+`@tupynambalucas-dev/mcp-github` provides a dual-transport interface (Fastify Streamable HTTP on `:8080` and Stdio via `dist/bin.js`) enabling AI agents to interact securely with the GitHub API using machine-level GitHub App credentials.
 
 ---
 

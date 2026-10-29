@@ -60,7 +60,7 @@ PLAYWRIGHT_MCP_EXTENSION_TOKEN=IFfNwHXwLCURaEPRlwZbPkvgd8bzXT4dUNFbdeNuC-Q
 Because `agent-mesh/.gitignore` strictly excludes `.env`, this secret is never exposed to Git repositories or remote branches.
 
 ### Layer 2: Runtime Automatic Loading via `dotenv`
-The package `@tupynambalucas-dev/agent-mcp-playwright` executes `dotenv.config()` at the very top of `src/config.ts`. Any variable present in `agent-mesh/.env` is automatically parsed into `process.env` before any server logic executes.
+The package `@tupynambalucas-dev/mcp-playwright` executes `dotenv.config()` at the very top of `src/config.ts`. Any variable present in `agent-mesh/.env` is automatically parsed into `process.env` before any server logic executes.
 
 ### Layer 3: Infisical Machine Identity (Enterprise Sync)
 For team members and CI synchronization, the token can be securely stored in Infisical:
@@ -81,7 +81,7 @@ sequenceDiagram
   autonumber
   participant Dev as Developer Browser (Vivaldi/Chrome + Extension)
   participant Router as mcp-gateway-router.js
-  participant MCP as @tupynambalucas-dev/agent-mcp-playwright
+  participant MCP as @tupynambalucas-dev/mcp-playwright
   participant Env as agent-mesh/.env
 
   Note over Dev: Extension installed with Token T

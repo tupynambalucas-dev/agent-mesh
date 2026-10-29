@@ -1,6 +1,6 @@
 # Playwright MCP Tool Catalog Reference
 
-The `@tupynambalucas-dev/agent-mcp-playwright` server provides specialized universal browser automation and inspection tools, with native dual-mode desktop inspection capabilities.
+The `@tupynambalucas-dev/mcp-playwright` server provides specialized universal browser automation and inspection tools, with native dual-mode desktop inspection capabilities.
 
 ---
 

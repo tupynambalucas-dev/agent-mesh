@@ -2,11 +2,11 @@
   <parent src="../../AGENTS.md" type="bounded-context-rules" />
   <parent src="../../../AGENTS.md" type="global-rules" />
   <system-instruction>
-    AGENT: You are operating in the @tupynambalucas-dev/agent-mcp-playwright package context. If you have not read the parent mcp/AGENTS.md and root AGENTS.md in this session, read them first.
+    AGENT: You are operating in the @tupynambalucas-dev/mcp-playwright package context. If you have not read the parent mcp/AGENTS.md and root AGENTS.md in this session, read them first.
   </system-instruction>
 </context-hierarchy>
 
-# Playwright MCP Server Agent Context (`@tupynambalucas-dev/agent-mcp-playwright`)
+# Playwright MCP Server Agent Context (`@tupynambalucas-dev/mcp-playwright`)
 
 This bounded context encapsulates the in-house Model Context Protocol server providing sovereign browser automation, multi-platform desktop pairing via Extension Bridge, and headless containerized execution.
 

@@ -34,7 +34,7 @@ Every `README.md` must follow a clear, professional hierarchy:
 6. **Governance Standards (`## 5. Governance Standards`)**: SSH commit signing, Conventional Commits, Zero-Emoji invariant.
 
 ### Layer-2 / Layer-3 (Subsystem & Package) Layout
-1. **H1 (`#`)**: Package name (e.g. `@tupynambalucas-dev/agent-mcp-playwright`).
+1. **H1 (`#`)**: Package name (e.g. `@tupynambalucas-dev/mcp-playwright`).
 2. **Overview (`## Overview`)**: Concise description of capabilities and runtime requirements.
 3. **Features / Tools Catalog (`## Features` or `## Tools Exposed`)**: Structured table detailing exposed tools, parameters, or exports.
 4. **Configuration (`## Configuration`)**: Environment variables table (`Variable`, `Required`, `Description`).

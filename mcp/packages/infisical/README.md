@@ -1,4 +1,4 @@
-# @tupynambalucas-dev/agent-mcp-infisical
+# @tupynambalucas-dev/mcp-infisical
 
 Model Context Protocol server for Infisical Vault Universal Auth machine identity and secret lifecycle management.
 
@@ -6,7 +6,7 @@ Model Context Protocol server for Infisical Vault Universal Auth machine identit
 
 ## Overview
 
-`@tupynambalucas-dev/agent-mcp-infisical` provides a dual-transport interface (Fastify Streamable HTTP on `:8080` and Stdio via `dist/bin.js`) enabling AI agents to manage secrets and projects across environments (`dev`, `staging`, `prod`) using Machine Identity authentication.
+`@tupynambalucas-dev/mcp-infisical` provides a dual-transport interface (Fastify Streamable HTTP on `:8080` and Stdio via `dist/bin.js`) enabling AI agents to manage secrets and projects across environments (`dev`, `staging`, `prod`) using Machine Identity authentication.
 
 ---
 

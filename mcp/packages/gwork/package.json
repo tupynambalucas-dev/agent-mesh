@@ -16,8 +16,7 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "mcp-gwork": "./dist/bin.js",
-    "agent-mcp-google-workspace": "./dist/bin.js"
+    "mcp-gwork": "./dist/bin.js"
   },
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",

@@ -2,11 +2,11 @@
   <parent src="../../AGENTS.md" type="bounded-context-rules" />
   <parent src="../../../AGENTS.md" type="global-rules" />
   <system-instruction>
-    AGENT: You are operating in the @tupynambalucas-dev/agent-mcp-gwork package context. If you have not read the parent mcp/AGENTS.md and root AGENTS.md in this session, read them first.
+    AGENT: You are operating in the @tupynambalucas-dev/mcp-gwork package context. If you have not read the parent mcp/AGENTS.md and root AGENTS.md in this session, read them first.
   </system-instruction>
 </context-hierarchy>
 
-# Google Workspace MCP Server Agent Context (`@tupynambalucas-dev/agent-mcp-gwork`)
+# Google Workspace MCP Server Agent Context (`@tupynambalucas-dev/mcp-gwork`)
 
 This bounded context encapsulates the in-house Model Context Protocol server providing Google Drive, Google Sheets, and Google Docs lifecycle automation.
 

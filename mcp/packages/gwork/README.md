@@ -1,4 +1,4 @@
-# @tupynambalucas-dev/agent-mcp-gwork
+# @tupynambalucas-dev/mcp-gwork
 
 Model Context Protocol server for Google Drive, Google Sheets, and Google Docs lifecycle automation.
 
@@ -6,7 +6,7 @@ Model Context Protocol server for Google Drive, Google Sheets, and Google Docs l
 
 ## Overview
 
-`@tupynambalucas-dev/agent-mcp-gwork` provides a dual-transport interface (Fastify Streamable HTTP on `:8080` and Stdio via `dist/bin.js`) enabling AI agents to search Drive, build multi-sheet tabular databases for AppSheet, and publish rich documents.
+`@tupynambalucas-dev/mcp-gwork` provides a dual-transport interface (Fastify Streamable HTTP on `:8080` and Stdio via `dist/bin.js`) enabling AI agents to search Drive, build multi-sheet tabular databases for AppSheet, and publish rich documents.
 
 ---
 

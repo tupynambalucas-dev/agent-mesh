@@ -1,10 +1,10 @@
-# @tupynambalucas-dev/agent-mcp-playwright
+# @tupynambalucas-dev/mcp-playwright
 
 Enterprise Model Context Protocol server for sovereign browser automation, multi-platform desktop pairing, and headless containerized execution.
 
 ## Overview
 
-`@tupynambalucas-dev/agent-mcp-playwright` provides a dual-transport MCP interface (Fastify Streamable HTTP on `:8080` and Stdio CLI runner) for AI agents operating within the Tupynamba Lucas agent mesh ecosystem.
+`@tupynambalucas-dev/mcp-playwright` provides a dual-transport MCP interface (Fastify Streamable HTTP on `:8080` and Stdio CLI runner) for AI agents operating within the Tupynamba Lucas agent mesh ecosystem.
 
 ## Key Features
 
@@ -18,13 +18,13 @@ Enterprise Model Context Protocol server for sovereign browser automation, multi
 
 ### Development Mode
 ```bash
-pnpm --filter @tupynambalucas-dev/agent-mcp-playwright dev
+pnpm --filter @tupynambalucas-dev/mcp-playwright dev
 ```
 
 ### Build & Typecheck
 ```bash
-pnpm --filter @tupynambalucas-dev/agent-mcp-playwright build
-pnpm --filter @tupynambalucas-dev/agent-mcp-playwright typecheck
+pnpm --filter @tupynambalucas-dev/mcp-playwright build
+pnpm --filter @tupynambalucas-dev/mcp-playwright typecheck
 ```
 
 ### Stdio Mode

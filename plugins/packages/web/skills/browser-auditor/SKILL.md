@@ -5,7 +5,7 @@ description: Inspects and pairs with the developer's active desktop browser sess
 
 # Browser Desktop Inspector
 
-Pairs interactively with the developer's active daily-driver browser session (Vivaldi, Google Chrome, Microsoft Edge, Brave) using **`@tupynambalucas-dev/agent-mcp-playwright`**.
+Pairs interactively with the developer's active daily-driver browser session (Vivaldi, Google Chrome, Microsoft Edge, Brave) using **`@tupynambalucas-dev/mcp-playwright`**.
 
 ---
 

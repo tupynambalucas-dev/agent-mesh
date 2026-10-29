@@ -1,4 +1,4 @@
-# @tupynambalucas-dev/agent-mcp-appsheet
+# @tupynambalucas-dev/mcp-appsheet
 
 Model Context Protocol server for Google AppSheet REST API v2 automation and schema management.
 
@@ -6,7 +6,7 @@ Model Context Protocol server for Google AppSheet REST API v2 automation and sch
 
 ## Overview
 
-`@tupynambalucas-dev/agent-mcp-appsheet` provides dual-transport access (Fastify Streamable HTTP on `:8080` and Stdio via `dist/bin.js`) for AI agents interacting with AppSheet applications.
+`@tupynambalucas-dev/mcp-appsheet` provides dual-transport access (Fastify Streamable HTTP on `:8080` and Stdio via `dist/bin.js`) for AI agents interacting with AppSheet applications.
 
 ## Tools Exposed
 

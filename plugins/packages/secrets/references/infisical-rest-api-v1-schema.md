@@ -1,6 +1,6 @@
 # Infisical REST API v1 Specification Reference
 
-The `@tupynambalucas-dev/agent-mcp-infisical` server interacts with Infisical Cloud (`https://app.infisical.com`) via REST API v1 and Universal Auth.
+The `@tupynambalucas-dev/mcp-infisical` server interacts with Infisical Cloud (`https://app.infisical.com`) via REST API v1 and Universal Auth.
 
 ---
 

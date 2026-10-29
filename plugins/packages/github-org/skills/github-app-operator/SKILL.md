@@ -31,10 +31,10 @@ Activate this skill when:
 
 ```bash
 # Provision the high-privilege organization manager app:
-node plugins/packages/github-manager/skills/github-app-provisioner/scripts/provision-app.js --profile=manager
+node plugins/packages/github-org/skills/github-app-operator/scripts/provision-app.js --profile=manager
 
 # Provision the developer productivity assistant app:
-node plugins/packages/github-manager/skills/github-app-provisioner/scripts/provision-app.js --profile=assistant
+node plugins/packages/github-org/skills/github-app-operator/scripts/provision-app.js --profile=assistant
 ```
 
 Upon execution:

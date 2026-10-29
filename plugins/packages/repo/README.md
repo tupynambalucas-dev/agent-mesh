@@ -37,7 +37,7 @@ To activate in a workspace, declare in `.agents/plugins.json`:
 ```json
 {
   "entries": [
-    { "path": "agent-mesh/plugins/packages/repo-manager" }
+    { "path": "agent-mesh/plugins/packages/repo" }
   ]
 }
 ```
