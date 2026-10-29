@@ -1,8 +1,7 @@
 <context-hierarchy>
-  <parent src="../AGENTS.md" type="bounded-context-rules" />
-  <parent src="../../AGENTS.md" type="global-rules" />
+  <parent src="../AGENTS.md" type="global-rules" />
   <system-instruction>
-    AGENT: You are operating in the Scripts bounded context of agent-mesh. If you have not read the parent AGENTS.md in this session, read it first.
+    AGENT: You are operating in the scripts bounded context of agent-mesh. If you have not read "../AGENTS.md" in this session, read it first before proceeding.
   </system-instruction>
 </context-hierarchy>
 

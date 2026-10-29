@@ -1,8 +1,7 @@
 <context-hierarchy>
-  <parent src="../AGENTS.md" type="bounded-context-rules" />
-  <parent src="../../AGENTS.md" type="global-rules" />
+  <parent src="../AGENTS.md" type="global-rules" />
   <system-instruction>
-    AGENT: You are operating in the MCP Servers bounded context of agent-mesh. If you have not read the parent AGENTS.md in this session, read it first before proceeding.
+    AGENT: You are operating in the mcp bounded context of agent-mesh. If you have not read "../AGENTS.md" in this session, read it first before proceeding.
   </system-instruction>
 </context-hierarchy>
 

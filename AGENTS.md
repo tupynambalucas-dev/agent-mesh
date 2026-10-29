@@ -1,10 +1,3 @@
-<context-hierarchy>
-  <parent src="../AGENTS.md" type="global-rules" />
-  <system-instruction>
-    AGENT: You are operating in the agent-mesh monorepo context. If you have not read the parent org-core AGENTS.md in this session, read it first.
-  </system-instruction>
-</context-hierarchy>
-
 # tupynambalucas.dev Agent Mesh Monorepo Context
 
 This document serves as the sovereign root context router (Layer 1) for AI agents operating in the
@@ -38,6 +31,10 @@ The `agent-mesh` repository is structured as a pnpm monorepo managed with Turbor
 - MUST use relative paths for all Markdown links. Absolute filesystem paths are strictly forbidden.
 - **Secret Hygiene**: Secrets are resolved via Infisical Universal Auth or local `.env` cascade. Plaintext secrets must never be logged or committed.
 - **Context Routing**: When working within a sub-package or directory, agents MUST read the corresponding local `AGENTS.md` before executing modifications.
+
+## Umbrella Meta-Repository Alignment
+
+When mounted as a Git submodule inside the `tupynambalucas-dev/org-core` umbrella meta-repository, this repository adheres to the parent organization governance defined in `org-core`. When cloned independently as a standalone repository, this document serves as the self-sovereign root context.
 
 ## Required Skills
 
