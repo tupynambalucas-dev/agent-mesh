@@ -5,7 +5,7 @@ trigger: always_on
 # Repository Management Domain Rules
 
 0. Autonomous Domain Mandate:
-   - When requested to create, audit, align, or format repository root files (`README.md`, `LICENSE.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CHANGELOG.md`, `GOVERNANCE.md`), monorepo configurations (`pnpm-workspace.yaml`, `turbo.json`), or TypeScript configurations (`tsconfig*.json`), the agent MUST autonomously engage the `repo` skills (`readme-architect`, `community-health-architect`, `license-architect`, `monorepo-architect`) without waiting for explicit skill invocations from the user.
+   - When requested to create, audit, align, or format repository root files (`README.md`, `LICENSE.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CHANGELOG.md`, `GOVERNANCE.md`), monorepo configurations (`pnpm-workspace.yaml`, `turbo.json`), package manifests (`package.json`), or TypeScript configurations (`tsconfig*.json`), the agent MUST autonomously engage the `repo` skills (`readme-architect`, `community-health-architect`, `license-architect`, `monorepo-architect`) without waiting for explicit skill invocations from the user.
 
 1. The AGENTS-README Co-existence Invariant:
    - Wherever an `AGENTS.md` bounded context router file exists in a directory, a corresponding `README.md` file MUST also exist within that same directory.
@@ -26,3 +26,11 @@ trigger: always_on
 5. Monorepo Catalogs & TSConfig Architecture:
    - Workspace packages MUST consume shared dependencies strictly via pnpm catalogs (`catalog:` or `catalog:<name>`). Hardcoding raw version strings in package dependencies is prohibited.
    - Monorepos MUST implement modern TypeScript Project References (`tsconfig.base.json`, solution-style `tsconfig.json` with `files: []`, and package-level `tsconfig.json`). Legacy `tsconfig.build.json` files are strictly prohibited.
+
+6. Enterprise Package Name & Scope Invariant:
+   - All `package.json` manifests across repositories in the organization MUST use the `@tupynambalucas-dev/` npm scope.
+   - Package names MUST adhere strictly to the deterministic domain taxonomy:
+     - `agent-mesh` plugins: `@tupynambalucas-dev/plugin-<slug>`
+     - `agent-mesh` MCP servers: `@tupynambalucas-dev/mcp-<slug>`
+     - `platform` packages/services: `@tupynambalucas-dev/<domain>-<subsystem>` (e.g., `corporate-api`, `corporate-web`, `corporate-core`, `cortex-memory-api`, `studio-assets`, `tools-github`, `shared-config`, `k8s`, `renderer`).
+     - Standalone repositories: `@tupynambalucas-dev/<repo>-<service>` and `@tupynambalucas-dev/plugin-<slug>`.

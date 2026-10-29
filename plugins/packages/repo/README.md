@@ -15,7 +15,7 @@ Enterprise Antigravity and Claude Code domain plugin for repository governance, 
 | Skill | Primary Focus | Target Files |
 | :--- | :--- | :--- |
 | [**`readme-architect`**](./skills/readme-architect/SKILL.md) | Authors and audits `README.md` files across monorepos and packages, enforcing recursive directory navigation, GitHub Flavored Markdown standards, and the AGENTS-README co-existence invariant. | `README.md` across all directories. |
-| [**`monorepo-architect`**](./skills/monorepo-architect/SKILL.md) | Designs and maintains enterprise monorepo workspace configurations, pnpm catalogs, Turborepo pipelines, and hierarchical project-referenced TypeScript architectures. | `pnpm-workspace.yaml`, `turbo.json`, `tsconfig.base.json`, `tsconfig*.json`. |
+| [**`monorepo-architect`**](./skills/monorepo-architect/SKILL.md) | Designs and maintains enterprise monorepo workspace configurations, pnpm catalogs, package manifest naming taxonomies (`@tupynambalucas-dev/*`), Turborepo pipelines, and hierarchical project-referenced TypeScript architectures. | `package.json`, `pnpm-workspace.yaml`, `turbo.json`, `tsconfig.base.json`, `tsconfig*.json`. |
 | [**`community-health-architect`**](./skills/community-health-architect/SKILL.md) | Authors and audits standard GitHub community health and governance files, including Contributor Covenant, security policies, and changelogs. | `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CHANGELOG.md`, `GOVERNANCE.md`. |
 | [**`license-architect`**](./skills/license-architect/SKILL.md) | Authors and audits LICENSE files, SPDX identifiers, copyright notices, and open-source compliance across monorepos and package manifests. | `LICENSE`, `LICENSE.md`, `package.json` license fields. |
 
@@ -26,7 +26,7 @@ Enterprise Antigravity and Claude Code domain plugin for repository governance, 
 - [plugin.json](./plugin.json): Agent Plugins 1.0.0 manifest declaring identity, version, author, and keywords.
 - [rules/AGENTS.md](./rules/AGENTS.md): Active domain rules, AGENTS-README co-existence invariant, monorepo catalog and tsconfig rules, and Autonomous Domain Mandate.
 - [skills/readme-architect/SKILL.md](./skills/readme-architect/SKILL.md): README hierarchy guidelines and recursive directory navigation rules.
-- [skills/monorepo-architect/SKILL.md](./skills/monorepo-architect/SKILL.md): Monorepo orchestration, pnpm catalogs, and TypeScript project references.
+- [skills/monorepo-architect/SKILL.md](./skills/monorepo-architect/SKILL.md): Monorepo orchestration, pnpm catalogs, package manifest scoping (`@tupynambalucas-dev/*`), and TypeScript project references.
 - [skills/community-health-architect/SKILL.md](./skills/community-health-architect/SKILL.md): GitHub community health file templates and standards.
 - [skills/license-architect/SKILL.md](./skills/license-architect/SKILL.md): License architecture, SPDX identifiers, and manifest alignment.
 
