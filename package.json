@@ -49,10 +49,10 @@
   },
   "files": [
     ".claude-plugin/",
-    "rules/",
     "scripts/",
     "plugins/",
-    "mcp/"
+    "mcp/",
+    "references/"
   ],
   "keywords": [
     "antigravity",

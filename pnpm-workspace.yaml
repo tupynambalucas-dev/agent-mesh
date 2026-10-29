@@ -1,7 +1,6 @@
 packages:
   - 'mcp/packages/*'
   - 'plugins/packages/*'
-  - 'packages/*'
 
 catalog:
   '@types/node': ^22.13.0
