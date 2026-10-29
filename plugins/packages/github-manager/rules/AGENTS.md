@@ -4,6 +4,9 @@ trigger: always_on
 
 # GitHub Domain Rules
 
+0. Autonomous Domain Mandate:
+   - When requested to provision repositories, configure teams, audit branch protection rulesets, inspect Dependabot/Secret Scanning alerts, or configure GitHub Apps, the agent MUST autonomously engage the GitHub Manager skills (`github-org-operator`, `github-ruleset-enforcer`, `github-security-auditor`, `github-app-provisioner`) and tools without waiting for explicit skill invocations from the user.
+
 1. Cryptographic SSH Commit Signing:
    - All Git commits and annotated tags MUST be signed with SSH keys: `git commit -S -m "..."`.
    - Never push unsigned commits to any organizational repository.

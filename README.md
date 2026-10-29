@@ -10,10 +10,10 @@ Compatible natively with **Google Antigravity (`agy`)**, **Anthropic Claude Code
 
 `agent-mesh` operates as an **Enterprise Agent Marketplace and Monorepo Hub**. Rather than bundling all tools and instructions into a single monolithic plugin, the substrate partitions capabilities into sovereign, independently versioned, and granularly importable packages:
 
-- **8 Domain Plugins** ([plugins/](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/plugins)): Self-contained Antigravity and Claude Code plugins with dedicated manifests, scoped MCP servers, and modular skills.
-- **6 MCP Servers** ([mcp/](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/mcp)): Dual-transport TypeScript services operating as Kubernetes microservices (HTTP on port 8080) and local Stdio binaries for smart gateway failover.
-- **1 Marketplace Registry** ([.claude-plugin/marketplace.json](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/.claude-plugin/marketplace.json)): Canonical manifest enabling selective plugin discovery and installation in Claude Code.
-- **Enterprise Rules** ([rules/AGENTS.md](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/rules/AGENTS.md)): Authoritative organizational governance constraints (commit signing, conventional commits, zero-emoji invariant, secret hygiene).
+- **9 Domain Plugins** ([plugins/](./plugins/README.md)): Self-contained Antigravity and Claude Code plugins with dedicated manifests, scoped MCP servers, domain rules, and modular skills.
+- **7 MCP Servers** ([mcp/](./mcp/README.md)): Dual-transport TypeScript services operating as Kubernetes microservices (HTTP on port 8080) and local Stdio binaries for smart gateway failover.
+- **1 Marketplace Registry** ([.claude-plugin/marketplace.json](./.claude-plugin/marketplace.json)): Canonical manifest enabling selective plugin discovery and installation in Claude Code.
+- **Orchestration Scripts** ([scripts/](./scripts/README.md)): Smart MCP gateway router, fallback runners, and package publisher.
 
 ```text
 agent-mesh/
@@ -21,12 +21,12 @@ agent-mesh/
 ├── turbo.json               # Turborepo task pipeline configuration
 ├── pnpm-workspace.yaml      # Monorepo packages mapping with pnpm catalogs
 ├── AGENTS.md                # Sovereign root context router for agent-mesh
+├── README.md                # Primary developer documentation
 ├── .claude-plugin/
 │   └── marketplace.json     # Claude Code Plugin Marketplace registry
-├── rules/
-│   └── AGENTS.md            # Enterprise governance constraints and always-on rules
 ├── plugins/                 # 9 Sovereign Domain Plugins
 │   ├── AGENTS.md            # Plugins subsystem context router
+│   ├── README.md            # Plugins subsystem documentation
 │   └── packages/            # Domain plugin packages
 │       ├── appsheet/        # @tupynambalucas-dev/agent-plugin-appsheet
 │       ├── docusaurus/      # @tupynambalucas-dev/agent-plugin-docusaurus
@@ -37,17 +37,20 @@ agent-mesh/
 │       ├── research/        # @tupynambalucas-dev/agent-plugin-research (Context7 + Firecrawl)
 │       ├── secrets/         # @tupynambalucas-dev/agent-plugin-secrets
 │       └── web/             # @tupynambalucas-dev/agent-plugin-web (Playwright + Firecrawl)
-├── mcp/                     # 6 In-House Dual-Transport MCP Servers
+├── mcp/                     # 7 In-House Dual-Transport MCP Servers
 │   ├── AGENTS.md            # MCP subsystem context router
+│   ├── README.md            # MCP subsystem documentation
 │   └── packages/            # MCP server packages
 │       ├── appsheet/        # @tupynambalucas-dev/agent-mcp-appsheet
 │       ├── firecrawl/       # @tupynambalucas-dev/agent-mcp-firecrawl
 │       ├── github/          # @tupynambalucas-dev/agent-mcp-github
 │       ├── google-workspace/# @tupynambalucas-dev/agent-mcp-gwork
 │       ├── infisical/       # @tupynambalucas-dev/agent-mcp-infisical
-│       └── memory/          # @tupynambalucas-dev/agent-mcp-memory
+│       ├── memory/          # @tupynambalucas-dev/agent-mcp-memory
+│       └── playwright/      # @tupynambalucas-dev/agent-mcp-playwright
 └── scripts/
     ├── AGENTS.md            # Scripts subsystem context router
+    ├── README.md            # Scripts subsystem documentation
     ├── mcp-runner.js        # 3-tier fallback environment loader for legacy tools
     ├── mcp-gateway-router.js# Zero-downtime healthcheck proxy and fallback router
     └── publish-packages.js  # Idempotent GitHub Packages multi-package publisher
@@ -65,7 +68,7 @@ When operating inside the `org-core` meta-repository where `agent-mesh` is mount
 
 #### 1. Load All Domain Plugins Simultaneously
 
-Configure [.agents/plugins.json](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/.agents/plugins.json) in your project root:
+Configure [.agents/plugins.json](../.agents/plugins.json) in your project root:
 
 ```json
 {
@@ -77,7 +80,7 @@ Configure [.agents/plugins.json](file:///C:/Users/tupyn/projects/organizations/t
 }
 ```
 
-*Mechanism*: Antigravity scans `entries` directories **one level deep**. Pointing to `agent-mesh/plugins/packages` automatically discovers all 9 plugins (`appsheet`, `docusaurus`, `github-assistant`, `github-manager`, `google-workspace`, `meta`, `research`, `secrets`, `web`) and loads their modular skills and scoped MCP servers.
+*Mechanism*: Antigravity scans `entries` directories **one level deep**. Pointing to `agent-mesh/plugins/packages` automatically discovers all 9 plugins (`appsheet`, `docusaurus`, `github-assistant`, `github-manager`, `google-workspace`, `meta`, `research`, `secrets`, `web`) and loads their modular skills, active rules, and scoped MCP servers.
 
 #### 2. Selectively Load Specific Domain Plugins
 
@@ -109,7 +112,7 @@ Or declare direct paths to individual plugin folders:
 
 ### Scenario B: Standalone Workspace Integration (Without `agent-mesh` Local Directory)
 
-When working in an independent repository (e.g. `tessel`, external client projects, or a fresh workstation checkout) where `agent-mesh` is **not** present on disk and [.agents/plugins.json](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/.agents/plugins.json) does not exist:
+When working in an independent repository where `agent-mesh` is not present on disk and `.agents/plugins.json` does not exist:
 
 #### 1. Via NPM Packages (GitHub Packages Registry)
 
@@ -133,8 +136,6 @@ Create `.agents/plugins.json` in the root of your standalone project:
   ]
 }
 ```
-
-*Benefit*: Zero token waste. The agent does not load AppSheet, Kubernetes, or GitHub administration skills into sessions that only touch documentation or backend APIs.
 
 #### 2. Via Antigravity CLI Plugin Installer (`agy`)
 
@@ -168,47 +169,24 @@ Selectively install only the plugins you need for your active workflow:
 
 ---
 
-## 3. In-House MCP Packages Inventory (`mcp/*`)
+## 3. Subsystem Overview
 
-All 6 in-house MCP servers are compiled TypeScript packages with dual transports:
-
-| MCP Package Name | Directory | Primary Capabilities | Dual Transports |
+| Subsystem | Context Router | Documentation | Description |
 | :--- | :--- | :--- | :--- |
-| `@tupynambalucas-dev/agent-mcp-firecrawl` | `mcp/firecrawl` | Deep web scraping, crawling, markdown extraction | Fastify :8080 & Stdio (`bin.js`) |
-| `@tupynambalucas-dev/agent-mcp-memory` | `mcp/memory` | Semantic RAG vector store, episodic memory | Fastify :8080 & Stdio (`bin.js`) |
-| `@tupynambalucas-dev/agent-mcp-github` | `mcp/github` | Organization RBAC, rulesets, security triage | Fastify :8080 & Stdio (`bin.js`) |
-| `@tupynambalucas-dev/agent-mcp-gwork` | `mcp/google-workspace` | Drive folders, Sheets synthesis, Docs publishing | Fastify :8080 & Stdio (`bin.js`) |
-| `@tupynambalucas-dev/agent-mcp-appsheet` | `mcp/appsheet` | Relational schema modeling, REST API v2 CRUD | Fastify :8080 & Stdio (`bin.js`) |
-| `@tupynambalucas-dev/agent-mcp-infisical` | `mcp/infisical` | Universal Auth machine tokens, secret CRUD | Fastify :8080 & Stdio (`bin.js`) |
-
-### Direct CLI Execution
-
-Any in-house MCP server can be executed directly via `npx` or `pnpm dlx`:
-
-```bash
-# Execute Firecrawl MCP server on stdio
-npx -y @tupynambalucas-dev/agent-mcp-firecrawl
-
-# Execute Infisical MCP server on stdio
-npx -y @tupynambalucas-dev/agent-mcp-infisical
-```
-
-### Smart Gateway Router & Zero-Downtime Fallback
-
-Plugins invoke MCP tools through [scripts/mcp-gateway-router.js](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/scripts/mcp-gateway-router.js). The router performs a 300ms non-blocking probe on the cluster Envoy AgentGateway:
-- If AgentGateway is healthy: routes requests over Streamable HTTP to `http://localhost:8080/mcp`.
-- If AgentGateway is offline: spawns the local compiled binary `node mcp/<target>/dist/bin.js` with zero interruption to developer sessions.
+| **Model Context Protocol** | [mcp/AGENTS.md](./mcp/AGENTS.md) | [mcp/README.md](./mcp/README.md) | 7 dual-transport MCP servers for browser automation, web research, Google Workspace, GitHub RBAC, secrets, and vector memory. |
+| **Domain Plugins** | [plugins/AGENTS.md](./plugins/AGENTS.md) | [plugins/README.md](./plugins/README.md) | 9 domain plugins bundling modular skills, authoritative rules, and tool configurations. |
+| **Scripts** | [scripts/AGENTS.md](./scripts/AGENTS.md) | [scripts/README.md](./scripts/README.md) | Zero-downtime gateway routing proxy, legacy tool runners, and multi-package publisher. |
 
 ---
 
 ## 4. Multi-Package Deployment Engine
 
-Package publishing is orchestrated via [.github/workflows/publish.yml](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/.github/workflows/publish.yml) and [scripts/publish-packages.js](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/scripts/publish-packages.js).
+Package publishing is orchestrated via [.github/workflows/publish.yml](./.github/workflows/publish.yml) and [scripts/publish-packages.js](./scripts/publish-packages.js).
 
 When changes are pushed to `main`, the workflow:
 1. Validates all domain plugins using `agy plugin validate . --strict`.
-2. Compiles all TypeScript MCP packages (`tsc -p tsconfig.build.json`).
-3. Evaluates all 13 workspace packages against `https://npm.pkg.github.com`.
+2. Compiles all TypeScript MCP packages (`pnpm mcp:build`).
+3. Evaluates workspace packages against `https://npm.pkg.github.com`.
 4. Idempotently publishes new versions to the GitHub Packages registry.
 
 ---
@@ -218,5 +196,5 @@ When changes are pushed to `main`, the workflow:
 All commits, pull requests, and agent contributions must strictly comply with:
 - **Cryptographic SSH Signatures**: `git commit -S -m "..."`.
 - **Conventional Commits**: `<type>(<scope>): <description>`.
-- **Zero-Emoji Policy**: Emojis are strictly prohibited in code, commits, PRs, and chat.
+- **Zero-Emoji Policy**: Emojis are strictly prohibited in code, commits, PRs, documentation, and chat.
 - **Secret Hygiene**: Zero plaintext credentials committed to Git.

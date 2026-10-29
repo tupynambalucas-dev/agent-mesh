@@ -1,3 +1,10 @@
+<context-hierarchy>
+  <parent src="../AGENTS.md" type="global-rules" />
+  <system-instruction>
+    AGENT: You are operating in the agent-mesh monorepo context. If you have not read the parent org-core AGENTS.md in this session, read it first.
+  </system-instruction>
+</context-hierarchy>
+
 # tupynambalucas.dev Agent Mesh Monorepo Context
 
 This document serves as the sovereign root context router (Layer 1) for AI agents operating in the
@@ -8,7 +15,6 @@ This document serves as the sovereign root context router (Layer 1) for AI agent
 - [README.md](./README.md): Primary developer documentation, package architecture, and setup guide.
 - [mcp](./mcp/AGENTS.md): In-house Model Context Protocol (MCP) packages, dual-transport servers, and protocol definitions.
 - [plugins](./plugins/AGENTS.md): Antigravity and Claude Code domain plugins, modular skills, and rule sets.
-- [rules](./rules/AGENTS.md): Enterprise AI agent governance constraints, security policies, and commit standards.
 - [scripts](./scripts/AGENTS.md): Smart MCP gateway router, fallback runners, package publisher, and setup automation.
 - [references](./references/agent-mesh-marketplace-and-granular-consumption.md): Granular consumption runbook and architecture blueprints.
 
@@ -18,7 +24,7 @@ The `agent-mesh` repository is structured as a pnpm monorepo managed with Turbor
 
 - **Build Pipeline**: Turborepo coordinates build, dev, clean, and typecheck tasks with intelligent workspace caching (`turbo run build --filter="@tupynambalucas-dev/agent-mcp-*"`).
 - **Dependency Catalogs**: Pnpm catalogs (`catalog:`, `catalog:shared`, `catalog:mcp-stack`, `catalog:plugins-stack`) eliminate version drift across all packages.
-- **Dual-Transport MCP Servers**: Packages in `mcp/packages/*` provide both Streamable HTTP (Fastify) and Stdio (`dist/bin.js`) transports for zero-friction local or cluster operation.
+- **Dual-Transport MCP Servers**: Packages in `mcp/packages/*` provide both Streamable HTTP (Fastify on `:8080`) and Stdio (`dist/bin.js`) transports for zero-friction local or cluster operation.
 - **Domain Plugins**: Packages in `plugins/packages/*` implement bounded skills, references, and domain-specific validation rules for AI agents.
 
 ## Scoped Guardrails

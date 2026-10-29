@@ -1,19 +1,21 @@
 <context-hierarchy>
   <parent src="../AGENTS.md" type="bounded-context-rules" />
+  <parent src="../../AGENTS.md" type="global-rules" />
   <system-instruction>
-    AGENT: You are operating in the Scripts bounded context of agent-mesh. If you have not read the root AGENTS.md in this session, read it first.
+    AGENT: You are operating in the Scripts bounded context of agent-mesh. If you have not read the parent AGENTS.md in this session, read it first.
   </system-instruction>
 </context-hierarchy>
 
 # Scripts Subsystem Agent Context
 
-This document defines the bounded context for all orchestration and automation scripts in `scripts/`.
+This document defines the bounded context router for all orchestration and automation scripts in `scripts/`.
 
 ## Scripts Layout
 
 - [mcp-gateway-router.js](./mcp-gateway-router.js): Zero-downtime Envoy AgentGateway health check probe (300ms) and local compiled binary fallback router.
 - [mcp-runner.js](./mcp-runner.js): Three-tier environment fallback runner for legacy tools.
-- [publish-packages.js](./publish-packages.js): Idempotent multi-package publisher for GitHub Packages (`npm.pkg.github.com`). Note: GitHub App provisioning is encapsulated within the `github-app-provisioner` skill in `plugins/packages/github-manager`.
+- [publish-packages.js](./publish-packages.js): Idempotent multi-package publisher for GitHub Packages (`npm.pkg.github.com`).
+- [README.md](./README.md): Developer documentation and operational runbooks for automation scripts.
 
 ## Operational Guardrails
 

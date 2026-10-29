@@ -4,6 +4,9 @@ trigger: always_on
 
 # GitHub Developer Workflow Rules
 
+0. Autonomous Domain Mandate:
+   - When requested to commit changes, create branches, open pull requests, review CI/CD workflows, or diagnose GitHub Actions failures, the agent MUST autonomously engage the GitHub Assistant skills (`github-flow-coach`, `github-actions-manager`) without waiting for explicit skill invocations from the user.
+
 1. Cryptographic SSH Commit Signing:
    - All Git commits and annotated tags MUST be signed with SSH keys: `git commit -S -m "..."`.
    - Never push unsigned commits to any organizational repository.

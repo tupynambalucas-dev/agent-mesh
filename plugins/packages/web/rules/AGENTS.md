@@ -4,6 +4,9 @@ trigger: always_on
 
 # Web Domain Rules
 
+0. Autonomous Domain Mandate:
+   - When requested to browse web pages, automate browser tasks, fill forms, inspect live web interfaces, test web applications, or pair with the developer's desktop browser, the agent MUST autonomously engage the Web skills (`browser-automator`, `browser-desktop-inspector`, `web-scraper`) and tools (`browser_*`, `scrape`) without waiting for explicit skill invocations from the user.
+
 1. Dual-Mode Operation Standard:
    - Automated background jobs, synthetic tests, and CI/CD operations MUST run in headless mode (`headless: true`).
    - Interactive developer pairing via `browser-desktop-inspector` MUST attach non-intrusively to the developer's desktop session via Extension bridge or CDP, preserving active tabs and authentication without closing user windows.

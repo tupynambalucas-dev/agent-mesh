@@ -4,6 +4,9 @@ trigger: always_on
 
 # Google Workspace Domain Rules
 
+0. Autonomous Domain Mandate:
+   - When requested to search or organize Google Drive, synthesize Google Sheets workbooks for AppSheet, or publish formatted Google Docs, the agent MUST autonomously engage the Google Workspace skills (`gwork-drive-manager`, `gwork-sheets-builder`, `gwork-docs-publisher`) and tools without waiting for explicit skill invocations from the user.
+
 1. Service Account Credential Hygiene:
    - Service account JSON keys (`GOOGLE_SERVICE_ACCOUNT_JSON` or `GOOGLE_APPLICATION_CREDENTIALS`) must be managed via Infisical and never written to disk in plain text.
 

@@ -4,6 +4,9 @@ trigger: always_on
 
 # Docusaurus Domain Rules
 
+0. Autonomous Domain Mandate:
+   - When requested to create, restructure, edit, audit, or validate documentation in a Docusaurus workspace, the agent MUST autonomously engage the Docusaurus skills (`docusaurus-architect`, `docusaurus-mdx-author`, `docusaurus-validator`) without waiting for explicit skill invocations from the user.
+
 1. Diátaxis Framework Mandate:
    - Every documentation document MUST belong to exactly one of the four Diátaxis quadrants:
      - `tutorials/`: Learning-oriented, step-by-step guidance for beginners.
