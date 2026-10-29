@@ -5,7 +5,7 @@ trigger: always_on
 # Repository Management Domain Rules
 
 0. Autonomous Domain Mandate:
-   - When requested to create, audit, align, or format repository root files (`README.md`, `LICENSE.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CHANGELOG.md`, `GOVERNANCE.md`), the agent MUST autonomously engage the `repo` skills (`readme-architect`, `community-health-architect`, `license-architect`) without waiting for explicit skill invocations from the user.
+   - When requested to create, audit, align, or format repository root files (`README.md`, `LICENSE.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CHANGELOG.md`, `GOVERNANCE.md`), monorepo configurations (`pnpm-workspace.yaml`, `turbo.json`), or TypeScript configurations (`tsconfig*.json`), the agent MUST autonomously engage the `repo` skills (`readme-architect`, `community-health-architect`, `license-architect`, `monorepo-architect`) without waiting for explicit skill invocations from the user.
 
 1. The AGENTS-README Co-existence Invariant:
    - Wherever an `AGENTS.md` bounded context router file exists in a directory, a corresponding `README.md` file MUST also exist within that same directory.
@@ -22,3 +22,7 @@ trigger: always_on
 4. Language & Formatting Standards:
    - All repository documentation must be written strictly in en-US.
    - Files must follow GitHub Flavored Markdown (GFM) standards: explicit code block language tags, standard alert syntax (`> [!NOTE]`, `> [!IMPORTANT]`), and aligned table delimiters.
+
+5. Monorepo Catalogs & TSConfig Architecture:
+   - Workspace packages MUST consume shared dependencies strictly via pnpm catalogs (`catalog:` or `catalog:<name>`). Hardcoding raw version strings in package dependencies is prohibited.
+   - Monorepos MUST implement modern TypeScript Project References (`tsconfig.base.json`, solution-style `tsconfig.json` with `files: []`, and package-level `tsconfig.json`). Legacy `tsconfig.build.json` files are strictly prohibited.

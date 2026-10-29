@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "files": [],
+  "references": [
+    { "path": "./mcp/packages/appsheet" },
+    { "path": "./mcp/packages/firecrawl" },
+    { "path": "./mcp/packages/github" },
+    { "path": "./mcp/packages/gwork" },
+    { "path": "./mcp/packages/infisical" },
+    { "path": "./mcp/packages/memory" },
+    { "path": "./mcp/packages/playwright" }
+  ]
+}

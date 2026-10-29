@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "repo",
   "version": "1.0.0",
-  "description": "Enterprise repository health, community files, licensing compliance, and recursive README navigation architecture.",
+  "description": "Enterprise repository governance, monorepo orchestration, pnpm catalogs, TypeScript project references, licensing compliance, and recursive README architecture.",
   "author": {
     "name": "Tupynamba Lucas Development Team",
     "url": "https://tupynambalucas.dev"
@@ -12,6 +12,9 @@
   "license": "Apache-2.0",
   "keywords": [
     "repo",
+    "monorepo",
+    "pnpm",
+    "tsconfig",
     "readme",
     "community-health",
     "licensing",

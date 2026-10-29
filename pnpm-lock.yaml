@@ -16,11 +16,11 @@ catalogs:
       specifier: ^4.19.2
       version: 4.23.15
     turbo:
-      specifier: ^2.4.4
+      specifier: ^2.11.10
       version: 2.11.10
     typescript:
-      specifier: ^5.7.3
-      version: 5.9.3
+      specifier: ^6.0.3
+      version: 6.0.3
   mcp-stack:
     '@modelcontextprotocol/sdk':
       specifier: ^1.6.1
@@ -49,10 +49,6 @@ catalogs:
     ws:
       specifier: ^8.18.0
       version: 8.22.0
-  plugins-stack:
-    '@types/node':
-      specifier: ^22.13.0
-      version: 22.20.5
   shared:
     dotenv:
       specifier: ^16.4.7
@@ -79,7 +75,7 @@ importers:
         version: 2.11.10
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   mcp/packages/appsheet:
     dependencies:
@@ -107,7 +103,7 @@ importers:
         version: 4.23.15
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   mcp/packages/firecrawl:
     dependencies:
@@ -138,7 +134,7 @@ importers:
         version: 4.23.15
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   mcp/packages/github:
     dependencies:
@@ -172,7 +168,7 @@ importers:
         version: 4.23.15
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   mcp/packages/gwork:
     dependencies:
@@ -203,7 +199,7 @@ importers:
         version: 4.23.15
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   mcp/packages/infisical:
     dependencies:
@@ -231,7 +227,7 @@ importers:
         version: 4.23.15
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   mcp/packages/memory:
     dependencies:
@@ -259,7 +255,7 @@ importers:
         version: 4.23.15
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   mcp/packages/playwright:
     dependencies:
@@ -296,97 +292,97 @@ importers:
         version: 4.23.15
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   plugins/packages/appsheet:
     devDependencies:
       '@types/node':
-        specifier: catalog:plugins-stack
+        specifier: 'catalog:'
         version: 22.20.5
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   plugins/packages/atelier:
     devDependencies:
       '@types/node':
-        specifier: catalog:plugins-stack
+        specifier: 'catalog:'
         version: 22.20.5
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   plugins/packages/docusaurus:
     devDependencies:
       '@types/node':
-        specifier: catalog:plugins-stack
+        specifier: 'catalog:'
         version: 22.20.5
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   plugins/packages/github-flow:
     devDependencies:
       '@types/node':
-        specifier: catalog:plugins-stack
+        specifier: 'catalog:'
         version: 22.20.5
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   plugins/packages/github-org:
     devDependencies:
       '@types/node':
-        specifier: catalog:plugins-stack
+        specifier: 'catalog:'
         version: 22.20.5
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   plugins/packages/gwork:
     devDependencies:
       '@types/node':
-        specifier: catalog:plugins-stack
+        specifier: 'catalog:'
         version: 22.20.5
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   plugins/packages/repo:
     devDependencies:
       '@types/node':
-        specifier: catalog:plugins-stack
+        specifier: 'catalog:'
         version: 22.20.5
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   plugins/packages/research:
     devDependencies:
       '@types/node':
-        specifier: catalog:plugins-stack
+        specifier: 'catalog:'
         version: 22.20.5
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   plugins/packages/secrets:
     devDependencies:
       '@types/node':
-        specifier: catalog:plugins-stack
+        specifier: 'catalog:'
         version: 22.20.5
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   plugins/packages/web:
     devDependencies:
       '@types/node':
-        specifier: catalog:plugins-stack
+        specifier: 'catalog:'
         version: 22.20.5
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
 packages:
 
@@ -1340,8 +1336,8 @@ packages:
   typescript-event-target@1.1.2:
     resolution: {integrity: sha512-TvkrTUpv7gCPlcnSoEwUVUBwsdheKm+HF5u2tPAKubkIGMfovdSizCTaZRY/NhR8+Ijy8iZZUapbVQAsNrkFrw==}
 
-  typescript@5.9.3:
-    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
+  typescript@6.0.3:
+    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -2404,7 +2400,7 @@ snapshots:
 
   typescript-event-target@1.1.2: {}
 
-  typescript@5.9.3: {}
+  typescript@6.0.3: {}
 
   undici-types@6.21.0: {}
 
