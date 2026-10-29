@@ -31,7 +31,7 @@ function probeGateway(baseUrl, timeoutMs) {
           path: "/health",
           timeout: timeoutMs,
           headers: {
-            "User-Agent": "cortex-mcp-smart-router/1.0.0",
+            "User-Agent": "mesh-mcp-smart-router/1.0.0",
           },
         },
         (res) => {
@@ -55,27 +55,31 @@ function probeGateway(baseUrl, timeoutMs) {
  */
 const FALLBACK_REGISTRY = {
   "firecrawl": {
-    pkg: "@tupynambalucas-dev/agent-mcp-firecrawl",
+    pkg: "@tupynambalucas-dev/mcp-firecrawl",
     upstream: "firecrawl-mcp"
   },
   "memory": {
-    pkg: "@tupynambalucas-dev/agent-mcp-memory",
+    pkg: "@tupynambalucas-dev/mcp-memory",
     upstream: "@modelcontextprotocol/server-memory"
   },
   "github": {
-    pkg: "@tupynambalucas-dev/agent-mcp-github",
+    pkg: "@tupynambalucas-dev/mcp-github",
     upstream: "github-mcp-server-js"
   },
+  "gwork": {
+    pkg: "@tupynambalucas-dev/mcp-gwork",
+    upstream: "@aaronsb/google-workspace-mcp"
+  },
   "google-workspace": {
-    pkg: "@tupynambalucas-dev/agent-mcp-gwork",
+    pkg: "@tupynambalucas-dev/mcp-gwork",
     upstream: "@aaronsb/google-workspace-mcp"
   },
   "appsheet": {
-    pkg: "@tupynambalucas-dev/agent-mcp-appsheet",
+    pkg: "@tupynambalucas-dev/mcp-appsheet",
     upstream: null
   },
   "infisical": {
-    pkg: "@tupynambalucas-dev/agent-mcp-infisical",
+    pkg: "@tupynambalucas-dev/mcp-infisical",
     upstream: "@infisical/mcp"
   },
   "context7": {
@@ -83,14 +87,14 @@ const FALLBACK_REGISTRY = {
     upstream: "@upstash/context7-mcp"
   },
   "playwright": {
-    pkg: "@tupynambalucas-dev/agent-mcp-playwright",
+    pkg: "@tupynambalucas-dev/mcp-playwright",
     upstream: "@playwright/mcp"
   }
 };
 
 async function main() {
   if (!TARGET_SERVICE || !FALLBACK_REGISTRY[TARGET_SERVICE]) {
-    process.stderr.write(`[cortex-router] Error: Unknown target service '${TARGET_SERVICE}'.\n`);
+    process.stderr.write(`[mesh-router] Error: Unknown target service '${TARGET_SERVICE}'.\n`);
     process.exit(1);
   }
 
@@ -98,7 +102,7 @@ async function main() {
 
   if (isGatewayHealthy) {
     // Mode A: Cloud Gateway Ingress
-    process.stderr.write(`[cortex-router] AgentGateway healthy. Routing '${TARGET_SERVICE}' via ${GATEWAY_BASE_URL}/mcp\n`);
+    process.stderr.write(`[mesh-router] AgentGateway healthy. Routing '${TARGET_SERVICE}' via ${GATEWAY_BASE_URL}/mcp\n`);
 
     const sseBridge = spawn("npx", [
       "-y",
@@ -124,7 +128,7 @@ async function main() {
   const forwardedArgs = process.argv.slice(3);
 
   if (fs.existsSync(localJsBin)) {
-    process.stderr.write(`[cortex-router] AgentGateway offline. Engaging local compiled binary: node ${localJsBin} ${forwardedArgs.join(" ")}\n`);
+    process.stderr.write(`[mesh-router] AgentGateway offline. Engaging local compiled binary: node ${localJsBin} ${forwardedArgs.join(" ")}\n`);
     const localProcess = spawn("node", [localJsBin, ...forwardedArgs], {
       stdio: "inherit",
       shell: process.platform === "win32",
@@ -134,7 +138,7 @@ async function main() {
   }
 
   if (fs.existsSync(localTsBin)) {
-    process.stderr.write(`[cortex-router] AgentGateway offline. Engaging local TypeScript execution: npx tsx ${localTsBin} ${forwardedArgs.join(" ")}\n`);
+    process.stderr.write(`[mesh-router] AgentGateway offline. Engaging local TypeScript execution: npx tsx ${localTsBin} ${forwardedArgs.join(" ")}\n`);
     const localProcess = spawn("npx", ["-y", "tsx", localTsBin, ...forwardedArgs], {
       stdio: "inherit",
       shell: process.platform === "win32",
@@ -147,7 +151,7 @@ async function main() {
   const targetConfig = FALLBACK_REGISTRY[TARGET_SERVICE];
   const executable = targetConfig.pkg;
 
-  process.stderr.write(`[cortex-router] AgentGateway offline. Engaging registry package fallback: pnpm dlx ${executable} ${forwardedArgs.join(" ")}\n`);
+  process.stderr.write(`[mesh-router] AgentGateway offline. Engaging registry package fallback: pnpm dlx ${executable} ${forwardedArgs.join(" ")}\n`);
 
   const fallbackProcess = spawn("pnpm", [
     "dlx",

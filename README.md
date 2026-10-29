@@ -2,7 +2,7 @@
 
 Universal enterprise AI agent substrate, domain plugin marketplace, modular skills, and Model Context Protocol (MCP) servers for the `tupynambalucas-dev` organization.
 
-Compatible natively with **Google Antigravity (`agy`)**, **Anthropic Claude Code**, **Cursor**, and **GitHub Copilot**.
+Compatible natively with **Google Antigravity (`agy`)**, **Anthropic Claude Code**, **Cursor**, **GitHub Copilot**, and the **Agent Plugins 1.0.0 (`agent-plugins.org`)** specification.
 
 ---
 
@@ -10,7 +10,7 @@ Compatible natively with **Google Antigravity (`agy`)**, **Anthropic Claude Code
 
 `agent-mesh` operates as an **Enterprise Agent Marketplace and Monorepo Hub**. Rather than bundling all tools and instructions into a single monolithic plugin, the substrate partitions capabilities into sovereign, independently versioned, and granularly importable packages:
 
-- **10 Domain Plugins** ([plugins/](./plugins/README.md)): Self-contained Antigravity and Claude Code plugins with dedicated manifests, scoped MCP servers, domain rules, and modular skills.
+- **10 Domain Plugins** ([plugins/](./plugins/README.md)): Self-contained plugins compliant with `agent-plugins.org` v1.0.0 and native Antigravity with dedicated manifests, dual-mode MCP servers (`mcp.json` + `mcp_config.json`), domain rules (`rules/AGENTS.md`), and modular skills.
 - **7 MCP Servers** ([mcp/](./mcp/README.md)): Dual-transport TypeScript services operating as Kubernetes microservices (HTTP on port 8080) and local Stdio binaries for smart gateway failover.
 - **1 Marketplace Registry** ([.claude-plugin/marketplace.json](./.claude-plugin/marketplace.json)): Canonical manifest enabling selective plugin discovery and installation in Claude Code.
 - **Orchestration Scripts** ([scripts/](./scripts/README.md)): Smart MCP gateway router, fallback runners, and package publisher.
@@ -28,27 +28,27 @@ agent-mesh/
 │   ├── AGENTS.md            # Plugins subsystem context router
 │   ├── README.md            # Plugins subsystem documentation
 │   └── packages/            # Domain plugin packages
-│       ├── appsheet/        # @tupynambalucas-dev/agent-plugin-appsheet
-│       ├── docusaurus/      # @tupynambalucas-dev/agent-plugin-docusaurus
-│       ├── github-assistant/# @tupynambalucas-dev/agent-plugin-github-assistant
-│       ├── github-manager/  # @tupynambalucas-dev/agent-plugin-github-manager
-│       ├── google-workspace/# @tupynambalucas-dev/agent-plugin-google-workspace
-│       ├── meta/            # @tupynambalucas-dev/agent-plugin-meta (AI Agent Engineering)
-│       ├── repo-manager/    # @tupynambalucas-dev/agent-plugin-repo-manager (Repository Standards & Health)
-│       ├── research/        # @tupynambalucas-dev/agent-plugin-research (Context7 + Firecrawl)
-│       ├── secrets/         # @tupynambalucas-dev/agent-plugin-secrets
-│       └── web/             # @tupynambalucas-dev/agent-plugin-web (Playwright + Firecrawl)
+│       ├── appsheet/        # @tupynambalucas-dev/plugin-appsheet
+│       ├── atelier/         # @tupynambalucas-dev/plugin-atelier (AI Agent Atelier)
+│       ├── docusaurus/      # @tupynambalucas-dev/plugin-docusaurus
+│       ├── github-flow/     # @tupynambalucas-dev/plugin-github-flow
+│       ├── github-org/      # @tupynambalucas-dev/plugin-github-org
+│       ├── gwork/           # @tupynambalucas-dev/plugin-gwork
+│       ├── repo/            # @tupynambalucas-dev/plugin-repo (Repository Standards & Health)
+│       ├── research/        # @tupynambalucas-dev/plugin-research (Context7 + Firecrawl)
+│       ├── secrets/         # @tupynambalucas-dev/plugin-secrets
+│       └── web/             # @tupynambalucas-dev/plugin-web (Playwright + Firecrawl)
 ├── mcp/                     # 7 In-House Dual-Transport MCP Servers
 │   ├── AGENTS.md            # MCP subsystem context router
 │   ├── README.md            # MCP subsystem documentation
 │   └── packages/            # MCP server packages
-│       ├── appsheet/        # @tupynambalucas-dev/agent-mcp-appsheet
-│       ├── firecrawl/       # @tupynambalucas-dev/agent-mcp-firecrawl
-│       ├── github/          # @tupynambalucas-dev/agent-mcp-github
-│       ├── google-workspace/# @tupynambalucas-dev/agent-mcp-gwork
-│       ├── infisical/       # @tupynambalucas-dev/agent-mcp-infisical
-│       ├── memory/          # @tupynambalucas-dev/agent-mcp-memory
-│       └── playwright/      # @tupynambalucas-dev/agent-mcp-playwright
+│       ├── appsheet/        # @tupynambalucas-dev/mcp-appsheet
+│       ├── firecrawl/       # @tupynambalucas-dev/mcp-firecrawl
+│       ├── github/          # @tupynambalucas-dev/mcp-github
+│       ├── gwork/           # @tupynambalucas-dev/mcp-gwork
+│       ├── infisical/       # @tupynambalucas-dev/mcp-infisical
+│       ├── memory/          # @tupynambalucas-dev/mcp-memory
+│       └── playwright/      # @tupynambalucas-dev/mcp-playwright
 └── scripts/
     ├── AGENTS.md            # Scripts subsystem context router
     ├── README.md            # Scripts subsystem documentation
@@ -81,7 +81,7 @@ Configure [.agents/plugins.json](../.agents/plugins.json) in your project root:
 }
 ```
 
-*Mechanism*: Antigravity scans `entries` directories **one level deep**. Pointing to `agent-mesh/plugins/packages` automatically discovers all 9 plugins (`appsheet`, `docusaurus`, `github-assistant`, `github-manager`, `google-workspace`, `meta`, `research`, `secrets`, `web`) and loads their modular skills, active rules, and scoped MCP servers.
+*Mechanism*: Antigravity scans `entries` directories **one level deep**. Pointing to `agent-mesh/plugins/packages` automatically discovers all 10 plugins (`appsheet`, `atelier`, `docusaurus`, `github-flow`, `github-org`, `gwork`, `repo`, `research`, `secrets`, `web`) and loads their modular skills, active rules, and scoped MCP servers.
 
 #### 2. Selectively Load Specific Domain Plugins
 
@@ -92,7 +92,7 @@ To minimize context window token consumption, load only the plugins required by 
   "entries": [
     {
       "path": "agent-mesh/plugins/packages",
-      "include_only": ["github-assistant", "secrets", "meta"]
+      "include_only": ["github-flow", "secrets", "atelier"]
     }
   ]
 }
@@ -104,7 +104,7 @@ Or declare direct paths to individual plugin folders:
 {
   "entries": [
     { "path": "agent-mesh/plugins/packages/docusaurus" },
-    { "path": "agent-mesh/plugins/packages/meta" }
+    { "path": "agent-mesh/plugins/packages/atelier" }
   ]
 }
 ```
@@ -121,10 +121,10 @@ Install only the domain plugins required by your project:
 
 ```bash
 # Example for a documentation portal:
-pnpm add -D @tupynambalucas-dev/agent-plugin-docusaurus @tupynambalucas-dev/agent-plugin-meta
+pnpm add -D @tupynambalucas-dev/plugin-docusaurus @tupynambalucas-dev/plugin-atelier
 
 # Example for a platform service:
-pnpm add -D @tupynambalucas-dev/agent-plugin-github-assistant @tupynambalucas-dev/agent-plugin-secrets
+pnpm add -D @tupynambalucas-dev/plugin-github-flow @tupynambalucas-dev/plugin-secrets
 ```
 
 Create `.agents/plugins.json` in the root of your standalone project:
@@ -132,8 +132,8 @@ Create `.agents/plugins.json` in the root of your standalone project:
 ```json
 {
   "entries": [
-    { "path": "node_modules/@tupynambalucas-dev/agent-plugin-docusaurus" },
-    { "path": "node_modules/@tupynambalucas-dev/agent-plugin-meta" }
+    { "path": "node_modules/@tupynambalucas-dev/plugin-docusaurus" },
+    { "path": "node_modules/@tupynambalucas-dev/plugin-atelier" }
   ]
 }
 ```
@@ -144,11 +144,11 @@ Install plugins directly into your workstation's global configuration (`~/.gemin
 
 ```bash
 # Install individual domain plugin globally
-agy plugin install @tupynambalucas-dev/agent-plugin-github-assistant
-agy plugin install @tupynambalucas-dev/agent-plugin-github-manager
+agy plugin install @tupynambalucas-dev/plugin-github-flow
+agy plugin install @tupynambalucas-dev/plugin-github-org
 
 # Or install from git URL:
-agy plugin install https://github.com/tupynambalucas-dev/agent-mesh --path plugins/packages/github-assistant
+agy plugin install https://github.com/tupynambalucas-dev/agent-mesh --path plugins/packages/github-flow
 ```
 
 #### 3. Via Claude Code Plugin Marketplace
@@ -162,40 +162,20 @@ Register the `tupynambalucas-dev` marketplace in Claude Code:
 Selectively install only the plugins you need for your active workflow:
 
 ```bash
-/plugin install agent-plugin-github-assistant@tupynambalucas-dev
-/plugin install agent-plugin-github-manager@tupynambalucas-dev
-/plugin install agent-plugin-secrets@tupynambalucas-dev
-/plugin install agent-plugin-meta@tupynambalucas-dev
+/plugin install github-flow@tupynambalucas-dev
+/plugin install github-org@tupynambalucas-dev
+/plugin install secrets@tupynambalucas-dev
+/plugin install atelier@tupynambalucas-dev
 ```
 
 ---
 
-## 3. Subsystem Overview
+## 3. Sovereign Governance Rules
 
-| Subsystem | Context Router | Documentation | Description |
-| :--- | :--- | :--- | :--- |
-| **Model Context Protocol** | [mcp/AGENTS.md](./mcp/AGENTS.md) | [mcp/README.md](./mcp/README.md) | 7 dual-transport MCP servers for browser automation, web research, Google Workspace, GitHub RBAC, secrets, and vector memory. |
-| **Domain Plugins** | [plugins/AGENTS.md](./plugins/AGENTS.md) | [plugins/README.md](./plugins/README.md) | 9 domain plugins bundling modular skills, authoritative rules, and tool configurations. |
-| **Scripts** | [scripts/AGENTS.md](./scripts/AGENTS.md) | [scripts/README.md](./scripts/README.md) | Zero-downtime gateway routing proxy, legacy tool runners, and multi-package publisher. |
+All contributions, automated agents, and developers operating within `agent-mesh` must adhere strictly to the enterprise constraints:
 
----
-
-## 4. Multi-Package Deployment Engine
-
-Package publishing is orchestrated via [.github/workflows/publish.yml](./.github/workflows/publish.yml) and [scripts/publish-packages.js](./scripts/publish-packages.js).
-
-When changes are pushed to `main`, the workflow:
-1. Validates all domain plugins using `agy plugin validate . --strict`.
-2. Compiles all TypeScript MCP packages (`pnpm mcp:build`).
-3. Evaluates workspace packages against `https://npm.pkg.github.com`.
-4. Idempotently publishes new versions to the GitHub Packages registry.
-
----
-
-## 5. Governance Standards
-
-All commits, pull requests, and agent contributions must strictly comply with:
-- **Cryptographic SSH Signatures**: `git commit -S -m "..."`.
-- **Conventional Commits**: `<type>(<scope>): <description>`.
-- **Zero-Emoji Policy**: Emojis are strictly prohibited in code, commits, PRs, documentation, and chat.
-- **Secret Hygiene**: Zero plaintext credentials committed to Git.
+1. **Cryptographic SSH Signatures**: Every commit must be signed using SSH (`git commit -S -m "..."`). Unsigned commits are rejected by branch rulesets.
+2. **Conventional Commits Standard**: All commit messages must follow `<type>(<scope>): <description>` (v1.0.0).
+3. **Zero-Emoji Policy**: Emojis are strictly forbidden across code, markdown headers, body text, commit messages, and PR descriptions.
+4. **Secret Hygiene**: Zero plaintext credentials. All tokens cascade from Infisical or local `.env` files.
+5. **Language Standards**: Technical specifications, configuration files, and git messages are authored strictly in English (en-US). Conversational developer pairing is conducted in Brazilian Portuguese (pt-BR).

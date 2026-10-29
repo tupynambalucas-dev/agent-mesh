@@ -26,6 +26,23 @@ jobs:
             "cortex-mcp-memory"
             "cortex-mcp-infisical"
             "agent-plugin-github"
+            "agent-mcp-appsheet"
+            "agent-mcp-firecrawl"
+            "agent-mcp-github"
+            "agent-mcp-gwork"
+            "agent-mcp-infisical"
+            "agent-mcp-memory"
+            "agent-mcp-playwright"
+            "agent-plugin-appsheet"
+            "agent-plugin-docusaurus"
+            "agent-plugin-github-assistant"
+            "agent-plugin-github-manager"
+            "agent-plugin-google-workspace"
+            "agent-plugin-meta"
+            "agent-plugin-repo-manager"
+            "agent-plugin-research"
+            "agent-plugin-secrets"
+            "agent-plugin-web"
           )
           
           for pkg in "${OBSOLETE_PACKAGES[@]}"; do

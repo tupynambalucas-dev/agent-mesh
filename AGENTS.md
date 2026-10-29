@@ -9,16 +9,16 @@ This document serves as the sovereign root context router (Layer 1) for AI agent
 - [mcp](./mcp/AGENTS.md): In-house Model Context Protocol (MCP) packages, dual-transport servers, and protocol definitions.
 - [plugins](./plugins/AGENTS.md): Antigravity and Claude Code domain plugins, modular skills, and rule sets.
 - [scripts](./scripts/AGENTS.md): Smart MCP gateway router, fallback runners, package publisher, and setup automation.
-- [references](./references/agent-mesh-marketplace-and-granular-consumption.md): Granular consumption runbook and architecture blueprints.
+- [references](./references/naming-convention-proposal.md): Enterprise naming convention proposal and architecture blueprints.
 
 ## Architecture
 
 The `agent-mesh` repository is structured as a pnpm monorepo managed with Turborepo (`turbo.json`) and pnpm named catalogs:
 
-- **Build Pipeline**: Turborepo coordinates build, dev, clean, and typecheck tasks with intelligent workspace caching (`turbo run build --filter="@tupynambalucas-dev/agent-mcp-*"`).
+- **Build Pipeline**: Turborepo coordinates build, dev, clean, and typecheck tasks with intelligent workspace caching (`turbo run build --filter="@tupynambalucas-dev/mcp-*"`).
 - **Dependency Catalogs**: Pnpm catalogs (`catalog:`, `catalog:shared`, `catalog:mcp-stack`, `catalog:plugins-stack`) eliminate version drift across all packages.
 - **Dual-Transport MCP Servers**: Packages in `mcp/packages/*` provide both Streamable HTTP (Fastify on `:8080`) and Stdio (`dist/bin.js`) transports for zero-friction local or cluster operation.
-- **Domain Plugins**: Packages in `plugins/packages/*` implement bounded skills, references, and domain-specific validation rules for AI agents.
+- **Domain Plugins**: Packages in `plugins/packages/*` implement bounded skills, references, and domain-specific validation rules for AI agents complying with `agent-plugins.org` v1.0.0.
 
 ## Scoped Guardrails
 
@@ -40,7 +40,9 @@ When mounted as a Git submodule inside the `tupynambalucas-dev/org-core` umbrell
 
 When authoring or modifying documents and configurations in this monorepo, agents MUST activate the relevant skill:
 
-- **`agent-router-architect`**: Active when authoring or reviewing any `AGENTS.md` context router file.
-- **`markdown-architect`**: Active when creating or modifying any `README.md` or markdown documentation.
-- **`plugin-manifest-architect`**: Active when managing `plugin.json` manifests, pnpm workspaces, and catalogs.
+- **`router-architect`**: Active when authoring or reviewing any `AGENTS.md` context router file.
+- **`readme-architect`**: Active when creating or modifying any `README.md` or markdown documentation.
+- **`plugin-architect`**: Active when managing `plugin.json` manifests, pnpm workspaces, and catalogs.
 - **`skill-architect`**: Active when authoring, auditing, or optimizing modular `SKILL.md` files.
+- **`rule-architect`**: Active when authoring or auditing domain rules and Autonomous Domain Mandates.
+- **`hook-architect`**: Active when configuring Antigravity lifecycle hooks.

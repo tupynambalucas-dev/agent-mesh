@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "context7": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["../../../scripts/mcp-gateway-router.js", "context7"],
+      "env": {
+        "CORTEX_GATEWAY_URL": "http://localhost:8080",
+        "CORTEX_PROBE_TIMEOUT_MS": "300"
+      }
+    },
+    "firecrawl": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["../../../scripts/mcp-gateway-router.js", "firecrawl"],
+      "env": {
+        "CORTEX_GATEWAY_URL": "http://localhost:8080",
+        "CORTEX_PROBE_TIMEOUT_MS": "300"
+      }
+    }
+  }
+}

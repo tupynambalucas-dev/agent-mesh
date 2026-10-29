@@ -1,14 +1,20 @@
 {
-  "name": "agent-plugin-appsheet",
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "appsheet",
   "version": "1.0.0",
-  "description": "Enterprise Antigravity plugin for Google AppSheet prompt-to-app generation, REST API v2 data operations, and UI/UX design.",
-  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "description": "Enterprise AppSheet application development: relational schema modeling, REST API v2 operations, UI architecture, and headless Playwright automation.",
+  "author": {
+    "name": "Tupynamba Lucas Development Team",
+    "url": "https://tupynambalucas.dev"
+  },
   "homepage": "https://docs.tupynambalucas.dev",
   "repository": "https://github.com/tupynambalucas-dev/agent-mesh",
+  "license": "Apache-2.0",
   "keywords": [
     "appsheet",
-    "prompt-to-app",
-    "appsheet-api",
-    "relational-modeling"
+    "google-workspace",
+    "nocode",
+    "relational-data",
+    "playwright"
   ]
 }

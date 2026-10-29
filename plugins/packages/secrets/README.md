@@ -1,8 +1,18 @@
-# Secrets Domain Plugin (`@tupynambalucas-dev/agent-plugin-secrets`)
+# Secrets Domain Plugin (`@tupynambalucas-dev/plugin-secrets`)
 
-Enterprise Antigravity plugin for Infisical secret management, vault synchronization, and zero-downtime rotation.
+Enterprise Antigravity and Claude Code plugin for secret management, Infisical Cloud vault operations, Universal Auth machine identities, and credential rotation.
 
-## Modular Skills Catalog
+---
 
-1. **`infisical-vault-manager`**: Manages secrets across Infisical Cloud projects, folders, and environments (`dev`, `staging`, `prod`), issues Machine Identity credentials, and enforces secret hygiene.
-2. **`secret-rotation-operator`**: Orchestrates zero-downtime secret rotation, regenerates GitHub App private keys, rotates database credentials, and synchronizes Kubernetes `InfisicalSecret` custom resources.
+## 1. Overview
+
+`@tupynambalucas-dev/plugin-secrets` protects organizational secrets with zero plaintext leakage, strict dev/prod isolation, and Kubernetes Custom Resource syncing.
+
+---
+
+## 2. Modular Skills Catalog
+
+| Skill | Primary Focus | Tools & Targets |
+| :--- | :--- | :--- |
+| **`infisical-vault-operator`** | Infisical project lifecycle, environment secret querying, Machine Identity enrollment. | `infisical` MCP server. |
+| **`secret-rotation-operator`** | Zero-downtime secret rotation, GitHub App PEM regeneration, database credentials. | Rotation scripts, Infisical API. |

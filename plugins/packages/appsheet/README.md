@@ -1,14 +1,19 @@
-# Google AppSheet Domain Plugin (`@tupynambalucas-dev/agent-plugin-appsheet`)
+# AppSheet Domain Plugin (`@tupynambalucas-dev/plugin-appsheet`)
 
-Enterprise Antigravity plugin for Google AppSheet hybrid lifecycle orchestration: Greenfield Prompt-to-App generation and Brownfield REST API v2 administration.
+Enterprise Antigravity and Claude Code plugin for Google AppSheet application development: relational schema modeling, REST API v2 operations, UI architecture, and headless Playwright automation.
 
-## Modular Skills Catalog
+---
 
-1. **`appsheet-prompt-architect`**: Translates natural language prompts into relational schemas, deduces `Ref` parent-child relationships, derives key columns, and constructs deterministic AppSheet ingestion URLs (`https://www.appsheet.com/start/initialize?docId=...`).
-2. **`appsheet-data-operator`**: Interacts directly with existing AppSheet applications via the AppSheet REST API v2 to execute `Find` queries, `Add`/`Edit`/`Delete` mutations, and `Invoke Action` workflow triggers.
-3. **`appsheet-ui-designer`**: Models and validates UI/UX configurations including deck views, table views, form views, card views, and conditional format rules.
+## 1. Overview
 
-## Connection Mode
+`@tupynambalucas-dev/plugin-appsheet` provides end-to-end tooling for constructing, maintaining, and automating AppSheet enterprise applications.
 
-- Mode A: Cluster Envoy AgentGateway (`http://localhost:8080/mcp`)
-- Mode B: Automatic fallback via `pnpm dlx @tupynambalucas-dev/agent-mcp-appsheet`
+---
+
+## 2. Modular Skills Catalog
+
+| Skill | Primary Focus | Tools & Targets |
+| :--- | :--- | :--- |
+| **`appsheet-prompt-architect`** | Translates natural language into relational schemas, parent-child Ref links. | Relational modeling. |
+| **`appsheet-data-operator`** | REST API v2 mutations, idempotent Find/Add/Edit/Delete queries, webhook triggers. | `appsheet` MCP server. |
+| **`appsheet-ui-architect`** | View modeling (decks, cards, tables, forms), format rules, Playwright Studio automation. | `playwright` MCP server. |

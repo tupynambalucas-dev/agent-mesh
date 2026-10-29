@@ -1,0 +1,24 @@
+---
+trigger: always_on
+---
+
+# Repository Management Domain Rules
+
+0. Autonomous Domain Mandate:
+   - When requested to create, audit, align, or format repository root files (`README.md`, `LICENSE.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CHANGELOG.md`, `GOVERNANCE.md`), the agent MUST autonomously engage the `repo` skills (`readme-architect`, `community-health-architect`, `license-architect`) without waiting for explicit skill invocations from the user.
+
+1. The AGENTS-README Co-existence Invariant:
+   - Wherever an `AGENTS.md` bounded context router file exists in a directory, a corresponding `README.md` file MUST also exist within that same directory.
+   - The reverse is NOT mandatory: a directory containing a `README.md` does NOT necessarily require an `AGENTS.md` (e.g., pure documentation folders, asset folders, or subtrees that do not declare autonomous agent boundaries).
+   - Internal plugin configuration directories (`rules/`) containing `rules/AGENTS.md` are exempt from this requirement as they are engine rule assets.
+
+2. Recursive Navigation Standard:
+   - Every `README.md` at a root or subsystem layer MUST provide structured, recursive navigation tables or lists linking to all child subsystem and package `README.md` files.
+   - Stale pointers are strictly forbidden: all relative markdown links must point to existing files on disk.
+
+3. Zero-Emoji Invariant:
+   - Emojis are strictly forbidden across all repository documentation files, headings, callouts, tables, and body text.
+
+4. Language & Formatting Standards:
+   - All repository documentation must be written strictly in en-US.
+   - Files must follow GitHub Flavored Markdown (GFM) standards: explicit code block language tags, standard alert syntax (`> [!NOTE]`, `> [!IMPORTANT]`), and aligned table delimiters.

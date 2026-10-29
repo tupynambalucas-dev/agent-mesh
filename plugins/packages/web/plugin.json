@@ -1,16 +1,21 @@
 {
-  "name": "agent-plugin-web",
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "web",
   "version": "1.0.0",
-  "description": "Enterprise Antigravity plugin for headless browser automation, UI testing, and web scraping powered by Playwright and Firecrawl.",
-  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "description": "Universal web automation, headless Playwright execution, interactive desktop pairing via CDP, and clean content extraction.",
+  "author": {
+    "name": "Tupynamba Lucas Development Team",
+    "url": "https://tupynambalucas.dev"
+  },
   "homepage": "https://docs.tupynambalucas.dev",
   "repository": "https://github.com/tupynambalucas-dev/agent-mesh",
+  "license": "Apache-2.0",
   "keywords": [
     "web",
-    "browser",
     "playwright",
-    "firecrawl",
+    "browser",
     "automation",
-    "scraping"
+    "scraping",
+    "firecrawl"
   ]
 }

@@ -1,20 +1,19 @@
-# Docusaurus Domain Plugin (`@tupynambalucas-dev/agent-plugin-docusaurus`)
+# Docusaurus Domain Plugin (`@tupynambalucas-dev/plugin-docusaurus`)
 
-Enterprise Antigravity plugin for Docusaurus v3 technical documentation design, MDX v3 authoring, and Diátaxis compliance.
-
----
-
-## Modular Skills Catalog
-
-1. **`docusaurus-architect`**: Designs and maintains documentation taxonomies, Diátaxis quadrant structuring, and navigation hierarchy (`_category_.json`).
-2. **`docusaurus-mdx-author`**: Authors and refactors Docusaurus technical documents ensuring strict MDX v3 parser compliance, React component syntax, and admonitions.
-3. **`docusaurus-validator`**: Audits Docusaurus documentation for broken internal links, syntax errors, and Crowdin localization isolation.
+Enterprise Antigravity and Claude Code plugin for technical documentation systems, Diataxis taxonomy, MDX v3 authoring, and link validation.
 
 ---
 
-## Standards Enforced
+## 1. Overview
 
-- **Diátaxis Framework**: Separation into Tutorials, How-To Guides, Reference, and Explanation.
-- **MDX v3**: Strict trailing slashes on self-closing tags and JSX comments.
-- **Localization Isolation**: Source docs authored exclusively in English (`docs/`).
-- **Zero-Emoji Policy**: Emojis are strictly forbidden across all markdown headers, admonitions, and body text.
+`@tupynambalucas-dev/plugin-docusaurus` enforces the Diataxis documentation framework and MDX v3 syntax across documentation workspaces.
+
+---
+
+## 2. Modular Skills Catalog
+
+| Skill | Primary Focus | Tools & Targets |
+| :--- | :--- | :--- |
+| **`docusaurus-architect`** | Diataxis quadrant structuring, taxonomy design, `_category_.json` manifests. | Docs taxonomy. |
+| **`docusaurus-mdx-architect`** | MDX v3 parsing compliance, React component syntax, admonitions, code formatting. | `.mdx` files. |
+| **`docusaurus-auditor`** | Broken link detection, MDX build diagnostics, Crowdin isolation audits. | `pnpm build`, docusaurus validator. |

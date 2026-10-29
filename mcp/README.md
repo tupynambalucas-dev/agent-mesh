@@ -16,13 +16,13 @@ Each MCP server is an independent, versioned TypeScript package within the pnpm 
 
 | Package Directory | NPM Package Name | Stdio Binary | Default HTTP Port | Primary Capabilities |
 | :--- | :--- | :--- | :--- | :--- |
-| [packages/appsheet/](./packages/appsheet/README.md) | `@tupynambalucas-dev/agent-mcp-appsheet` | `dist/bin.js` | `:8080` | Relational schema modeling and REST API v2 CRUD automation. |
-| [packages/firecrawl/](./packages/firecrawl/README.md) | `@tupynambalucas-dev/agent-mcp-firecrawl` | `dist/bin.js` | `:8080` | Deep web scraping, crawling, site mapping, and markdown extraction. |
-| [packages/github/](./packages/github/README.md) | `@tupynambalucas-dev/agent-mcp-github` | `dist/bin.js` | `:8080` | GitHub App authenticated organization RBAC and security auditing. |
-| [packages/google-workspace/](./packages/google-workspace/README.md) | `@tupynambalucas-dev/agent-mcp-gwork` | `dist/bin.js` | `:8080` | Drive folder taxonomy, Sheets synthesis, and Docs publishing. |
-| [packages/infisical/](./packages/infisical/README.md) | `@tupynambalucas-dev/agent-mcp-infisical` | `dist/bin.js` | `:8080` | Universal Auth machine tokens, secret CRUD, and vault management. |
-| [packages/memory/](./packages/memory/README.md) | `@tupynambalucas-dev/agent-mcp-memory` | `dist/bin.js` | `:8080` | Semantic RAG vector store, episodic memory, and chat history. |
-| [packages/playwright/](./packages/playwright/README.md) | `@tupynambalucas-dev/agent-mcp-playwright` | `dist/bin.js` | `:8080` | Headless browser automation, extension bridge, and ARIA snapshots. |
+| [packages/appsheet/](./packages/appsheet/README.md) | `@tupynambalucas-dev/mcp-appsheet` | `dist/bin.js` | `:8080` | Relational schema modeling and REST API v2 CRUD automation. |
+| [packages/firecrawl/](./packages/firecrawl/README.md) | `@tupynambalucas-dev/mcp-firecrawl` | `dist/bin.js` | `:8080` | Deep web scraping, crawling, site mapping, and markdown extraction. |
+| [packages/github/](./packages/github/README.md) | `@tupynambalucas-dev/mcp-github` | `dist/bin.js` | `:8080` | GitHub App authenticated organization RBAC and security auditing. |
+| [packages/gwork/](./packages/gwork/README.md) | `@tupynambalucas-dev/mcp-gwork` | `dist/bin.js` | `:8080` | Drive folder taxonomy, Sheets synthesis, and Docs publishing. |
+| [packages/infisical/](./packages/infisical/README.md) | `@tupynambalucas-dev/mcp-infisical` | `dist/bin.js` | `:8080` | Universal Auth machine tokens, secret CRUD, and vault management. |
+| [packages/memory/](./packages/memory/README.md) | `@tupynambalucas-dev/mcp-memory` | `dist/bin.js` | `:8080` | Semantic RAG vector store, episodic memory, and chat history. |
+| [packages/playwright/](./packages/playwright/README.md) | `@tupynambalucas-dev/mcp-playwright` | `dist/bin.js` | `:8080` | Headless browser automation, extension bridge, and ARIA snapshots. |
 
 ---
 
@@ -52,12 +52,3 @@ pnpm mcp:infisical:build
 pnpm mcp:memory:build
 pnpm mcp:playwright:build
 ```
-
----
-
-## 4. Operational Guardrails
-
-> [!IMPORTANT]
-> - Never emit logs or debug output to `stdout` in stdio mode; MCP JSON-RPC protocol requires clean stdout framing. Route all logs to `stderr`.
-> - Always validate inputs using Zod schemas.
-> - Never hardcode filesystem paths or credentials.

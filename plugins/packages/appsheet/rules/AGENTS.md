@@ -5,7 +5,7 @@ trigger: always_on
 # AppSheet Domain Rules
 
 0. Autonomous Domain Mandate:
-   - When requested to design, model, inspect, query, mutate, or automate Google AppSheet applications, schemas, or records, the agent MUST autonomously engage the AppSheet skills (`appsheet-prompt-architect`, `appsheet-data-operator`, `appsheet-ui-designer`) and tools (`find_records`, `mutate_records`, `invoke_action`, `browser_*`) without waiting for explicit tool invocations from the user.
+   - When requested to design, model, inspect, query, mutate, or automate Google AppSheet applications, schemas, or records, the agent MUST autonomously engage the AppSheet skills (`appsheet-prompt-architect`, `appsheet-data-operator`, `appsheet-ui-architect`) and tools (`find_records`, `mutate_records`, `invoke_action`, `browser_*`) without waiting for explicit tool invocations from the user.
 
 1. Primary Key Invariant:
    - Every AppSheet relational table MUST define a unique primary key column named `<Entity>Id` (or `Id`).

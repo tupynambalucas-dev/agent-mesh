@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "cortex-appsheet": {
+    "appsheet": {
       "command": "node",
       "args": ["../../../scripts/mcp-gateway-router.js", "appsheet"],
       "env": {

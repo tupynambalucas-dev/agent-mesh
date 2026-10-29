@@ -7,7 +7,7 @@ import { registerToolHandlers } from './tools/index.js';
 async function main() {
   const server = new Server(
     {
-      name: 'cortex-github-mcp',
+      name: 'github-mcp',
       version: '1.0.0',
     },
     {
@@ -21,7 +21,7 @@ async function main() {
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  process.stderr.write('Cortex GitHub MCP server running on stdio\n');
+  process.stderr.write('GitHub MCP server running on stdio\n');
 }
 
 main().catch((err: unknown) => {

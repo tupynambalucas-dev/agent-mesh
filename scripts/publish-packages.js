@@ -34,7 +34,7 @@ for (const dir of packagesDirs) {
   }
 }
 
-console.log(`[cortex-publish] Found ${packages.length} workspace packages to evaluate for registry publication.`);
+console.log(`[mesh-publish] Found ${packages.length} workspace packages to evaluate for registry publication.`);
 
 for (const pkgPath of packages) {
   const pkgJson = JSON.parse(fs.readFileSync(path.join(pkgPath, 'package.json'), 'utf8'));
@@ -42,11 +42,11 @@ for (const pkgPath of packages) {
   const version = pkgJson.version;
 
   if (!name || !version || pkgJson.private) {
-    console.log(`[cortex-publish] Skipping private/unnamed package at ${pkgPath}`);
+    console.log(`[mesh-publish] Skipping private/unnamed package at ${pkgPath}`);
     continue;
   }
 
-  console.log(`\n[cortex-publish] Evaluating package: ${name}@${version}...`);
+  console.log(`\n[mesh-publish] Evaluating package: ${name}@${version}...`);
 
   let remoteVersion = null;
   try {
@@ -59,17 +59,17 @@ for (const pkgPath of packages) {
   }
 
   if (remoteVersion === version) {
-    console.log(`[cortex-publish] Notice: Version ${version} of ${name} is already published to GitHub Packages. Skipping.`);
+    console.log(`[mesh-publish] Notice: Version ${version} of ${name} is already published to GitHub Packages. Skipping.`);
   } else {
-    console.log(`[cortex-publish] New version detected (${version}). Publishing ${name} to GitHub Packages...`);
+    console.log(`[mesh-publish] New version detected (${version}). Publishing ${name} to GitHub Packages...`);
     try {
       execSync(`npm publish --registry=https://npm.pkg.github.com --access=public`, {
         cwd: pkgPath,
         stdio: 'inherit',
       });
-      console.log(`[cortex-publish] Successfully published ${name}@${version}`);
+      console.log(`[mesh-publish] Successfully published ${name}@${version}`);
     } catch (err) {
-      console.error(`[cortex-publish] Error publishing ${name}@${version}:`, err.message);
+      console.error(`[mesh-publish] Error publishing ${name}@${version}:`, err.message);
       process.exitCode = 1;
     }
   }

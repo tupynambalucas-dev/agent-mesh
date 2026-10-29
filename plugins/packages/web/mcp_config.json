@@ -8,7 +8,7 @@
         "CORTEX_PROBE_TIMEOUT_MS": "300"
       }
     },
-    "cortex-firecrawl": {
+    "firecrawl": {
       "command": "node",
       "args": ["../../../scripts/mcp-gateway-router.js", "firecrawl"],
       "env": {

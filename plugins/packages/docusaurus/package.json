@@ -1,7 +1,10 @@
 {
-  "name": "@tupynambalucas-dev/agent-plugin-docusaurus",
+  "name": "@tupynambalucas-dev/plugin-docusaurus",
   "version": "1.0.0",
-  "description": "Enterprise Antigravity plugin for sovereign Docusaurus documentation and Diataxis governance.",
+  "description": "Enterprise Docusaurus v3 documentation architecture: Diataxis taxonomy, MDX v3 authoring, and link/schema validation.",
+  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "license": "Apache-2.0",
+  "homepage": "https://docs.tupynambalucas.dev",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tupynambalucas-dev/agent-mesh.git"
@@ -10,13 +13,17 @@
     "registry": "https://npm.pkg.github.com",
     "access": "public"
   },
-  "keywords": [
-    "antigravity-plugin",
-    "docusaurus",
-    "diataxis",
-    "mdx",
-    "documentation"
-  ],
-  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
-  "license": "MIT"
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:plugins-stack",
+    "typescript": "catalog:"
+  },
+  "files": [
+    "plugin.json",
+    "rules",
+    "skills"
+  ]
 }

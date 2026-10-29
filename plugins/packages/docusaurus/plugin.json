@@ -1,14 +1,20 @@
 {
-  "name": "agent-plugin-docusaurus",
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "docusaurus",
   "version": "1.0.0",
-  "description": "Antigravity plugin for Diataxis documentation architecture, MDX v3 authoring, and link validation.",
-  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "description": "Enterprise Docusaurus v3 documentation architecture: Diataxis taxonomy, MDX v3 authoring, and link/schema validation.",
+  "author": {
+    "name": "Tupynamba Lucas Development Team",
+    "url": "https://tupynambalucas.dev"
+  },
   "homepage": "https://docs.tupynambalucas.dev",
   "repository": "https://github.com/tupynambalucas-dev/agent-mesh",
+  "license": "Apache-2.0",
   "keywords": [
     "docusaurus",
-    "diataxis",
     "mdx",
-    "technical-documentation"
+    "diataxis",
+    "documentation",
+    "crowdin"
   ]
 }

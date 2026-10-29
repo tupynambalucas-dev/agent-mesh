@@ -1,0 +1,22 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "github-org",
+  "version": "1.0.0",
+  "description": "GitHub organization management, team RBAC, branch protection rulesets, security scanning, and GitHub App provisioning.",
+  "author": {
+    "name": "Tupynamba Lucas Development Team",
+    "url": "https://tupynambalucas.dev"
+  },
+  "homepage": "https://docs.tupynambalucas.dev",
+  "repository": "https://github.com/tupynambalucas-dev/agent-mesh",
+  "license": "Apache-2.0",
+  "keywords": [
+    "github",
+    "github-org",
+    "rbac",
+    "rulesets",
+    "security",
+    "github-apps",
+    "dependabot"
+  ]
+}

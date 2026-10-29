@@ -1,7 +1,10 @@
 {
-  "name": "@tupynambalucas-dev/agent-plugin-web",
+  "name": "@tupynambalucas-dev/plugin-web",
   "version": "1.0.0",
-  "description": "Enterprise Antigravity plugin for headless browser automation, UI testing, and web scraping powered by Playwright and Firecrawl.",
+  "description": "Universal web automation, headless Playwright execution, interactive desktop pairing via CDP, and clean content extraction.",
+  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "license": "Apache-2.0",
+  "homepage": "https://docs.tupynambalucas.dev",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tupynambalucas-dev/agent-mesh.git"
@@ -10,15 +13,19 @@
     "registry": "https://npm.pkg.github.com",
     "access": "public"
   },
-  "keywords": [
-    "antigravity-plugin",
-    "web",
-    "browser",
-    "playwright",
-    "firecrawl",
-    "automation",
-    "scraping"
-  ],
-  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
-  "license": "MIT"
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:plugins-stack",
+    "typescript": "catalog:"
+  },
+  "files": [
+    "plugin.json",
+    "mcp_config.json",
+    "mcp.json",
+    "rules",
+    "skills"
+  ]
 }

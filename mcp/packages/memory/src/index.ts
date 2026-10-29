@@ -21,7 +21,7 @@ fastify.all('/mcp', async (req, reply) => {
     reply.hijack();
     const server = new Server(
       {
-        name: 'cortex-memory-mcp',
+        name: 'memory-mcp',
         version: '1.0.0',
       },
       {
@@ -75,5 +75,5 @@ fastify.listen({ port: config.PORT, host: '0.0.0.0' }, (err) => {
     fastify.log.error(err);
     process.exit(1);
   }
-  fastify.log.info(`Cortex Memory MCP Server listening on port ${config.PORT}`);
+  fastify.log.info(`Memory MCP Server listening on port ${config.PORT}`);
 });

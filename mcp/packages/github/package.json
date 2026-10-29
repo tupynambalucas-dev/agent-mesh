@@ -1,5 +1,5 @@
 {
-  "name": "@tupynambalucas-dev/agent-mcp-github",
+  "name": "@tupynambalucas-dev/mcp-github",
   "version": "1.0.0",
   "description": "Enterprise Model Context Protocol server for GitHub operations using GitHub App authentication and fine-grained permissions.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
@@ -16,7 +16,7 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "agent-mcp-github": "./dist/bin.js"
+    "mcp-github": "./dist/bin.js"
   },
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",

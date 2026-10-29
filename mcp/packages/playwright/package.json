@@ -1,5 +1,5 @@
 {
-  "name": "@tupynambalucas-dev/agent-mcp-playwright",
+  "name": "@tupynambalucas-dev/mcp-playwright",
   "version": "1.0.0",
   "description": "Universal Model Context Protocol server for cross-platform browser automation and developer desktop inspection.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
@@ -16,7 +16,7 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "agent-mcp-playwright": "./dist/bin.js"
+    "mcp-playwright": "./dist/bin.js"
   },
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",

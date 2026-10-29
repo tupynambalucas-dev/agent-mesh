@@ -1,5 +1,5 @@
 {
-  "name": "@tupynambalucas-dev/agent-mcp-appsheet",
+  "name": "@tupynambalucas-dev/mcp-appsheet",
   "version": "1.0.0",
   "description": "Enterprise Model Context Protocol server for Google AppSheet REST API v2 lifecycle management and data operations.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
@@ -16,7 +16,7 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "agent-mcp-appsheet": "./dist/bin.js"
+    "mcp-appsheet": "./dist/bin.js"
   },
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",

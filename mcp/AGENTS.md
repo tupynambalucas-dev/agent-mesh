@@ -13,13 +13,13 @@ This document defines the bounded context router for all in-house Model Context 
 
 | Package Directory | NPM Package | AGENTS Router | Documentation | Primary Purpose |
 | :--- | :--- | :--- | :--- | :--- |
-| [packages/appsheet/](./packages/appsheet/) | `@tupynambalucas-dev/agent-mcp-appsheet` | [AGENTS.md](./packages/appsheet/AGENTS.md) | [README.md](./packages/appsheet/README.md) | Relational schema modeling and REST API v2 CRUD automation. |
-| [packages/firecrawl/](./packages/firecrawl/) | `@tupynambalucas-dev/agent-mcp-firecrawl` | [AGENTS.md](./packages/firecrawl/AGENTS.md) | [README.md](./packages/firecrawl/README.md) | Deep web scraping, crawling, site mapping, and markdown extraction. |
-| [packages/github/](./packages/github/) | `@tupynambalucas-dev/agent-mcp-github` | [AGENTS.md](./packages/github/AGENTS.md) | [README.md](./packages/github/README.md) | GitHub App authenticated organization RBAC and security auditing. |
-| [packages/google-workspace/](./packages/google-workspace/) | `@tupynambalucas-dev/agent-mcp-gwork` | [AGENTS.md](./packages/google-workspace/AGENTS.md) | [README.md](./packages/google-workspace/README.md) | Drive folder taxonomy, Sheets synthesis, and Docs publishing. |
-| [packages/infisical/](./packages/infisical/) | `@tupynambalucas-dev/agent-mcp-infisical` | [AGENTS.md](./packages/infisical/AGENTS.md) | [README.md](./packages/infisical/README.md) | Universal Auth machine tokens, secret CRUD, and vault management. |
-| [packages/memory/](./packages/memory/) | `@tupynambalucas-dev/agent-mcp-memory` | [AGENTS.md](./packages/memory/AGENTS.md) | [README.md](./packages/memory/README.md) | Semantic RAG vector store, episodic memory, and chat history. |
-| [packages/playwright/](./packages/playwright/) | `@tupynambalucas-dev/agent-mcp-playwright` | [AGENTS.md](./packages/playwright/AGENTS.md) | [README.md](./packages/playwright/README.md) | Headless browser automation, extension bridge, and ARIA snapshots. |
+| [packages/appsheet/](./packages/appsheet/) | `@tupynambalucas-dev/mcp-appsheet` | [AGENTS.md](./packages/appsheet/AGENTS.md) | [README.md](./packages/appsheet/README.md) | Relational schema modeling and REST API v2 CRUD automation. |
+| [packages/firecrawl/](./packages/firecrawl/) | `@tupynambalucas-dev/mcp-firecrawl` | [AGENTS.md](./packages/firecrawl/AGENTS.md) | [README.md](./packages/firecrawl/README.md) | Deep web scraping, crawling, site mapping, and markdown extraction. |
+| [packages/github/](./packages/github/) | `@tupynambalucas-dev/mcp-github` | [AGENTS.md](./packages/github/AGENTS.md) | [README.md](./packages/github/README.md) | GitHub App authenticated organization RBAC and security auditing. |
+| [packages/gwork/](./packages/gwork/) | `@tupynambalucas-dev/mcp-gwork` | [AGENTS.md](./packages/gwork/AGENTS.md) | [README.md](./packages/gwork/README.md) | Drive folder taxonomy, Sheets synthesis, and Docs publishing. |
+| [packages/infisical/](./packages/infisical/) | `@tupynambalucas-dev/mcp-infisical` | [AGENTS.md](./packages/infisical/AGENTS.md) | [README.md](./packages/infisical/README.md) | Universal Auth machine tokens, secret CRUD, and vault management. |
+| [packages/memory/](./packages/memory/) | `@tupynambalucas-dev/mcp-memory` | [AGENTS.md](./packages/memory/AGENTS.md) | [README.md](./packages/memory/README.md) | Semantic RAG vector store, episodic memory, and chat history. |
+| [packages/playwright/](./packages/playwright/) | `@tupynambalucas-dev/mcp-playwright` | [AGENTS.md](./packages/playwright/AGENTS.md) | [README.md](./packages/playwright/README.md) | Headless browser automation, extension bridge, and ARIA snapshots. |
 
 ## Architecture & Conventions
 

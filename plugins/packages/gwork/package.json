@@ -1,0 +1,31 @@
+{
+  "name": "@tupynambalucas-dev/plugin-gwork",
+  "version": "1.0.0",
+  "description": "Enterprise Google Workspace integration for Drive lifecycle management, 1NF normalized Sheets for AppSheet, and Docs publishing.",
+  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "license": "Apache-2.0",
+  "homepage": "https://docs.tupynambalucas.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tupynambalucas-dev/agent-mesh.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:plugins-stack",
+    "typescript": "catalog:"
+  },
+  "files": [
+    "plugin.json",
+    "mcp_config.json",
+    "mcp.json",
+    "rules",
+    "skills"
+  ]
+}

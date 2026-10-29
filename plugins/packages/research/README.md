@@ -1,26 +1,18 @@
-# Research Domain Plugin (`@tupynambalucas-dev/agent-plugin-research`)
+# Research Domain Plugin (`@tupynambalucas-dev/plugin-research`)
 
-Enterprise Antigravity and Claude Code plugin for live technical documentation retrieval, API schema validation, and deep web research powered by **Upstash Context7** and **Firecrawl**.
-
----
-
-## 1. Capabilities
-
-- **Real-Time Documentation Lookup**: Queries official documentation, types, and SDK signatures for thousands of libraries and frameworks via Upstash Context7.
-- **Deep Web Scraping & Crawling**: Converts web pages and documentation sites into clean, LLM-ready markdown using Firecrawl.
-- **Sitemap & URL Mapping**: Discovers site structure and relevant sub-paths using Firecrawl mapping.
-- **Zero-Downtime Fallback**: Operates via cluster Envoy AgentGateway or falls back locally via `mcp-gateway-router.js`.
+Enterprise Antigravity and Claude Code plugin for autonomous technical research, official SDK/API documentation retrieval via Context7, and deep web exploration via Firecrawl.
 
 ---
 
-## 2. Included Skills
+## 1. Overview
 
-- **`documentation-researcher`**: Specializes in resolving library IDs and retrieving contextual framework documentation via Context7.
-- **`web-deep-researcher`**: Specializes in scraping, crawling, and extracting web content via Firecrawl.
+`@tupynambalucas-dev/plugin-research` provides zero-speculation technical research, live library verification, and clean source attribution.
 
 ---
 
-## 3. Included MCP Servers
+## 2. Modular Skills Catalog
 
-- **`cortex-firecrawl`**: High-performance web scraping and markdown extraction (`mcp/firecrawl`).
-- **`context7`**: Real-time framework and package documentation search (`@upstash/context7-mcp`).
+| Skill | Primary Focus | Tools & Targets |
+| :--- | :--- | :--- |
+| **`documentation-researcher`** | Official library/framework documentation, types, methods, breaking changes. | `context7` MCP server. |
+| **`web-deep-researcher`** | Deep web exploration, technical blogs, public sitemaps, benchmarks. | `firecrawl` MCP server. |

@@ -10,62 +10,62 @@
   },
   "plugins": [
     {
-      "name": "agent-plugin-github-manager",
+      "name": "github-org",
       "description": "Enterprise GitHub organization governance, team RBAC, branch protection rulesets, security alert triage, and app provisioning.",
       "version": "1.0.0",
-      "source": "./plugins/packages/github-manager"
+      "source": "./plugins/packages/github-org"
     },
     {
-      "name": "agent-plugin-github-assistant",
+      "name": "github-flow",
       "description": "Developer GitHub assistant for Git workflows, Conventional Commits, Pull Requests, and Actions CI/CD triage.",
       "version": "1.0.0",
-      "source": "./plugins/packages/github-assistant"
+      "source": "./plugins/packages/github-flow"
     },
     {
-      "name": "agent-plugin-secrets",
+      "name": "secrets",
       "description": "Enterprise Infisical secret vault management, environment sync, and zero-downtime rotation.",
       "version": "1.0.0",
       "source": "./plugins/packages/secrets"
     },
     {
-      "name": "agent-plugin-meta",
-      "description": "Authoritative AI agent engineering skills: AGENTS.md routing, modular skills, rules, hooks, and plugin manifests.",
+      "name": "atelier",
+      "description": "Authoritative AI Agent Atelier for crafting context routers, modular skills, lifecycle hooks, rules, and plugin manifests.",
       "version": "1.0.0",
-      "source": "./plugins/packages/meta"
+      "source": "./plugins/packages/atelier"
     },
     {
-      "name": "agent-plugin-repo-manager",
+      "name": "repo",
       "description": "Enterprise repository governance, root file standards, README architecture, licensing, and community health files.",
       "version": "1.0.0",
-      "source": "./plugins/packages/repo-manager"
+      "source": "./plugins/packages/repo"
     },
     {
-      "name": "agent-plugin-docusaurus",
-      "description": "Sovereign Docusaurus documentation architecture, MDX v3 authoring, and Diátaxis compliance.",
+      "name": "docusaurus",
+      "description": "Sovereign Docusaurus documentation architecture, MDX v3 authoring, and Diataxis compliance.",
       "version": "1.0.0",
       "source": "./plugins/packages/docusaurus"
     },
     {
-      "name": "agent-plugin-google-workspace",
+      "name": "gwork",
       "description": "Enterprise Google Workspace automation across Drive, Sheets, and Docs.",
       "version": "1.0.0",
-      "source": "./plugins/packages/google-workspace"
+      "source": "./plugins/packages/gwork"
     },
     {
-      "name": "agent-plugin-appsheet",
+      "name": "appsheet",
       "description": "Google AppSheet prompt-to-app schema generation, REST API v2 operations, and UI/UX design.",
       "version": "1.0.0",
       "source": "./plugins/packages/appsheet"
     },
     {
-      "name": "agent-plugin-research",
-      "description": "Enterprise technical documentation retrieval and deep web research powered by Context7 and Firecrawl.",
+      "name": "research",
+      "description": "Autonomous technical research via Context7 live docs and Firecrawl deep web exploration.",
       "version": "1.0.0",
       "source": "./plugins/packages/research"
     },
     {
-      "name": "agent-plugin-web",
-      "description": "Enterprise headless browser automation, UI testing, and web scraping powered by Playwright and Firecrawl.",
+      "name": "web",
+      "description": "Universal web automation, headless Playwright testing, developer desktop browser pairing, and extraction.",
       "version": "1.0.0",
       "source": "./plugins/packages/web"
     }

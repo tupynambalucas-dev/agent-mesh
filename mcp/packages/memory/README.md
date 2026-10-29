@@ -1,4 +1,4 @@
-# cortex-memory-mcp
+# memory-mcp
 
 MCP adapter for the Cortex Memory RAG Subsystem. Bridges AgentGateway to the
 `memory-api` Fastify REST service, exposing four tools over a Streamable HTTP
@@ -93,7 +93,7 @@ pnpm lint       # eslint — lint TypeScript sources
 GET /health
 ```
 
-Returns `{ "status": "healthy", "service": "cortex-memory-mcp" }`.
+Returns `{ "status": "healthy", "service": "memory-mcp" }`.
 
 ---
 

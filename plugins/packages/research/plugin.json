@@ -1,15 +1,20 @@
 {
-  "name": "agent-plugin-research",
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "research",
   "version": "1.0.0",
-  "description": "Enterprise technical documentation retrieval and deep web research powered by Context7 and Firecrawl.",
-  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "description": "Enterprise autonomous technical research plugin utilizing Context7 for live official API/SDK documentation and Firecrawl for deep web exploration.",
+  "author": {
+    "name": "Tupynamba Lucas Development Team",
+    "url": "https://tupynambalucas.dev"
+  },
   "homepage": "https://docs.tupynambalucas.dev",
   "repository": "https://github.com/tupynambalucas-dev/agent-mesh",
+  "license": "Apache-2.0",
   "keywords": [
     "research",
     "context7",
     "firecrawl",
     "documentation",
-    "web-scraping"
+    "deep-research"
   ]
 }

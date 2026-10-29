@@ -11,7 +11,7 @@ fastify.all('/mcp', async (req, reply) => {
     reply.hijack();
     const server = new Server(
       {
-        name: 'cortex-github-mcp',
+        name: 'github-mcp',
         version: '1.0.0',
       },
       {
@@ -32,7 +32,7 @@ fastify.all('/mcp', async (req, reply) => {
 });
 
 fastify.get('/health', () => {
-  return { status: 'healthy', service: 'cortex-github-mcp' };
+  return { status: 'healthy', service: 'github-mcp' };
 });
 
 fastify.listen({ port: config.PORT, host: '0.0.0.0' }, (err) => {
@@ -40,5 +40,5 @@ fastify.listen({ port: config.PORT, host: '0.0.0.0' }, (err) => {
     fastify.log.error(err);
     process.exit(1);
   }
-  fastify.log.info(`Cortex GitHub MCP Server listening on port ${config.PORT}`);
+  fastify.log.info(`GitHub MCP Server listening on port ${config.PORT}`);
 });

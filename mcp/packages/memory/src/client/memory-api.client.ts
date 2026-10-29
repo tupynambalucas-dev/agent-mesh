@@ -39,7 +39,7 @@ export class MemoryApiClient {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         conversationId: sessionId,
-        agentId: 'cortex-agent',
+        agentId: 'mesh-agent',
         role,
         content,
       }),

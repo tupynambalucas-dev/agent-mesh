@@ -5,7 +5,7 @@ trigger: always_on
 # Secrets Domain Rules
 
 0. Autonomous Domain Mandate:
-   - When requested to query, create, update, rotate, or audit secrets, machine credentials, API tokens, or Infisical projects, the agent MUST autonomously engage the Secrets skills (`infisical-vault-manager`, `secret-rotation-operator`) and tools (`infisical_*`) without waiting for explicit skill invocations from the user.
+   - When requested to query, create, update, rotate, or audit secrets, machine credentials, API tokens, or Infisical projects, the agent MUST autonomously engage the Secrets skills (`infisical-vault-operator`, `secret-rotation-operator`) and tools (`infisical_*`) without waiting for explicit skill invocations from the user.
 
 1. Zero Plaintext Secret Leakage:
    - Secret values MUST never be echoed in terminal outputs, committed to Git repositories, or included in plain-text task descriptions.

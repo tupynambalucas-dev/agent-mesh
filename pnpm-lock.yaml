@@ -49,6 +49,10 @@ catalogs:
     ws:
       specifier: ^8.18.0
       version: 8.22.0
+  plugins-stack:
+    '@types/node':
+      specifier: ^22.13.0
+      version: 22.20.5
   shared:
     dotenv:
       specifier: ^16.4.7
@@ -170,7 +174,7 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
 
-  mcp/packages/google-workspace:
+  mcp/packages/gwork:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: catalog:mcp-stack
@@ -294,25 +298,95 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
 
-  plugins/packages/appsheet: {}
+  plugins/packages/appsheet:
+    devDependencies:
+      '@types/node':
+        specifier: catalog:plugins-stack
+        version: 22.20.5
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
 
-  plugins/packages/docusaurus: {}
+  plugins/packages/atelier:
+    devDependencies:
+      '@types/node':
+        specifier: catalog:plugins-stack
+        version: 22.20.5
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
 
-  plugins/packages/github-assistant: {}
+  plugins/packages/docusaurus:
+    devDependencies:
+      '@types/node':
+        specifier: catalog:plugins-stack
+        version: 22.20.5
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
 
-  plugins/packages/github-manager: {}
+  plugins/packages/github-flow:
+    devDependencies:
+      '@types/node':
+        specifier: catalog:plugins-stack
+        version: 22.20.5
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
 
-  plugins/packages/google-workspace: {}
+  plugins/packages/github-org:
+    devDependencies:
+      '@types/node':
+        specifier: catalog:plugins-stack
+        version: 22.20.5
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
 
-  plugins/packages/meta: {}
+  plugins/packages/gwork:
+    devDependencies:
+      '@types/node':
+        specifier: catalog:plugins-stack
+        version: 22.20.5
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
 
-  plugins/packages/repo-manager: {}
+  plugins/packages/repo:
+    devDependencies:
+      '@types/node':
+        specifier: catalog:plugins-stack
+        version: 22.20.5
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
 
-  plugins/packages/research: {}
+  plugins/packages/research:
+    devDependencies:
+      '@types/node':
+        specifier: catalog:plugins-stack
+        version: 22.20.5
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
 
-  plugins/packages/secrets: {}
+  plugins/packages/secrets:
+    devDependencies:
+      '@types/node':
+        specifier: catalog:plugins-stack
+        version: 22.20.5
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
 
-  plugins/packages/web: {}
+  plugins/packages/web:
+    devDependencies:
+      '@types/node':
+        specifier: catalog:plugins-stack
+        version: 22.20.5
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
 
 packages:
 

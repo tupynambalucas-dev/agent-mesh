@@ -1,0 +1,22 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "github-flow",
+  "version": "1.0.0",
+  "description": "Developer Git workflow automation, Conventional Commits, cryptographic SSH commit signing, and GitHub Actions orchestration.",
+  "author": {
+    "name": "Tupynamba Lucas Development Team",
+    "url": "https://tupynambalucas.dev"
+  },
+  "homepage": "https://docs.tupynambalucas.dev",
+  "repository": "https://github.com/tupynambalucas-dev/agent-mesh",
+  "license": "Apache-2.0",
+  "keywords": [
+    "github",
+    "git",
+    "github-flow",
+    "conventional-commits",
+    "ssh-signing",
+    "actions",
+    "ci-cd"
+  ]
+}

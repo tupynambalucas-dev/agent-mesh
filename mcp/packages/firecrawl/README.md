@@ -1,4 +1,4 @@
-# cortex-firecrawl-mcp
+# firecrawl-mcp
 
 Stateless Fastify MCP adapter that bridges AgentGateway to the Firecrawl
 web-intelligence API. Exposes six tools over a Streamable HTTP transport at
@@ -88,7 +88,7 @@ pnpm lint       # eslint — lint TypeScript sources
 GET /health
 ```
 
-Returns `{ "status": "healthy", "service": "cortex-firecrawl-mcp" }`.
+Returns `{ "status": "healthy", "service": "firecrawl-mcp" }`.
 
 ---
 
