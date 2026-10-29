@@ -1,0 +1,46 @@
+{
+  "name": "@tupynambalucas-dev/agent-mcp-playwright",
+  "version": "1.0.0",
+  "description": "Universal Model Context Protocol server for cross-platform browser automation and developer desktop inspection.",
+  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "license": "MIT",
+  "homepage": "https://docs.tupynambalucas.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tupynambalucas-dev/agent-mesh.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "agent-mcp-playwright": "./dist/bin.js"
+  },
+  "scripts": {
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "catalog:mcp-stack",
+    "dotenv": "catalog:shared",
+    "fastify": "catalog:mcp-stack",
+    "playwright": "catalog:mcp-stack",
+    "ws": "catalog:mcp-stack",
+    "zod": "catalog:shared"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/ws": "catalog:mcp-stack",
+    "rimraf": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
+  },
+  "files": [
+    "dist"
+  ]
+}

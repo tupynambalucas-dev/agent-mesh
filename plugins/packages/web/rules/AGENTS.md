@@ -4,8 +4,9 @@ trigger: always_on
 
 # Web Domain Rules
 
-1. Headless Automation Standard:
-   - All browser operations via Playwright MCP MUST run in headless mode without requiring active screen display.
+1. Dual-Mode Operation Standard:
+   - Automated background jobs, synthetic tests, and CI/CD operations MUST run in headless mode (`headless: true`).
+   - Interactive developer pairing via `browser-desktop-inspector` MUST attach non-intrusively to the developer's desktop session via Extension bridge or CDP, preserving active tabs and authentication without closing user windows.
 
 2. Snapshot-Driven Navigation:
    - Prefer `browser_snapshot` with accessibility tree and bounding boxes (`boxes: true`) over blind coordinate clicks.

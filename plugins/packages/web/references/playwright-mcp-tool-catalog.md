@@ -1,6 +1,6 @@
 # Playwright MCP Tool Catalog Reference
 
-The `@playwright/mcp` server provides 25 specialized browser automation and inspection tools.
+The `@tupynambalucas-dev/agent-mcp-playwright` server provides specialized universal browser automation and inspection tools, with native dual-mode desktop inspection capabilities.
 
 ---
 
@@ -11,7 +11,7 @@ The `@playwright/mcp` server provides 25 specialized browser automation and insp
 | `browser_navigate` | `url` (string, required) | Navigates the current browser tab to a specified URL. |
 | `browser_navigate_back` | *(none)* | Navigates back in browser history. |
 | `browser_close` | *(none)* | Closes the current browser session. |
-| `browser_tabs` | *(none)* | Lists open browser tabs and active target IDs. |
+| `browser_tabs` | `action`, `index`, `url` | Lists, creates, closes, or selects browser tabs. |
 | `browser_resize` | `width`, `height` | Sets the browser viewport dimensions. |
 
 ---
@@ -20,9 +20,10 @@ The `@playwright/mcp` server provides 25 specialized browser automation and insp
 
 | Tool | Parameters | Description |
 | :--- | :--- | :--- |
-| `browser_snapshot` | `target`, `depth`, `boxes` | Captures accessibility tree snapshot of the page with element refs. |
-| `browser_take_screenshot` | `fullPage`, `filename` | Captures high-resolution image of the page or target element. |
-| `browser_find` | `query`, `target` | Searches DOM tree for elements matching text or accessibility patterns. |
+| `browser_inspect_active_tab` | *(none)* | Inspects the active tab on the developer desktop browser, returning title, URL, mode, and ARIA hierarchy. |
+| `browser_snapshot` | `target`, `depth`, `boxes`, `filename` | Captures ARIA accessibility tree snapshot of the page with element refs. |
+| `browser_take_screenshot` | `fullPage`, `filename`, `target` | Captures high-resolution image of the page or target element. |
+| `browser_find` | `query` | Searches DOM tree for elements matching text or accessibility patterns. |
 | `browser_console_messages` | *(none)* | Retrieves captured browser console logs (errors, warnings). |
 | `browser_network_requests` | *(none)* | Lists captured HTTP/network requests and status codes. |
 | `browser_network_request` | `requestId` | Inspects full request headers, payload, and response body. |

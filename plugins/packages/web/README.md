@@ -14,12 +14,13 @@ Enterprise Antigravity and Claude Code plugin for headless browser automation, U
 
 ## 2. Included Skills
 
-- **`browser-automator`**: Orchestrates interactive browser workflows, screen snapshots, form interactions, and visual UI audits.
+- **`browser-desktop-inspector`**: Pairs interactively with the developer's live desktop browser session (Vivaldi, Chrome, Edge) to troubleshoot active tabs, inspect live errors, and evaluate forms.
+- **`browser-automator`**: Orchestrates autonomous headless browser workflows, screen snapshots, form interactions, and visual UI audits.
 - **`web-scraper`**: Extracts web content, converts HTML to clean markdown, and maps site structures using Firecrawl.
 
 ---
 
 ## 3. Included MCP Servers
 
-- **`playwright`**: Browser automation and interaction primitives (`@playwright/mcp`).
+- **`playwright`**: Sovereign universal browser automation and desktop pairing engine (`@tupynambalucas-dev/agent-mcp-playwright`).
 - **`cortex-firecrawl`**: Web scraping and crawl extraction (`@tupynambalucas-dev/agent-mcp-firecrawl`).

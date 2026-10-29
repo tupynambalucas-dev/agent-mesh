@@ -83,8 +83,8 @@ const FALLBACK_REGISTRY = {
     upstream: "@upstash/context7-mcp"
   },
   "playwright": {
-    pkg: "@playwright/mcp",
-    upstream: "@modelcontextprotocol/server-playwright"
+    pkg: "@tupynambalucas-dev/agent-mcp-playwright",
+    upstream: "@playwright/mcp"
   }
 };
 

@@ -31,6 +31,9 @@ catalogs:
     '@octokit/core':
       specifier: ^6.1.4
       version: 6.1.6
+    '@types/ws':
+      specifier: ^8.5.14
+      version: 8.18.2
     fastify:
       specifier: ^5.2.1
       version: 5.12.7
@@ -40,6 +43,12 @@ catalogs:
     googleapis:
       specifier: ^144.0.0
       version: 144.0.0
+    playwright:
+      specifier: ^1.51.0
+      version: 1.64.1
+    ws:
+      specifier: ^8.18.0
+      version: 8.22.0
   shared:
     dotenv:
       specifier: ^16.4.7
@@ -248,11 +257,50 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
 
+  mcp/packages/playwright:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: catalog:mcp-stack
+        version: 1.32.2(zod@3.25.76)
+      dotenv:
+        specifier: catalog:shared
+        version: 16.6.1
+      fastify:
+        specifier: catalog:mcp-stack
+        version: 5.12.7
+      playwright:
+        specifier: catalog:mcp-stack
+        version: 1.64.1
+      ws:
+        specifier: catalog:mcp-stack
+        version: 8.22.0
+      zod:
+        specifier: catalog:shared
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.20.5
+      '@types/ws':
+        specifier: catalog:mcp-stack
+        version: 8.18.2
+      rimraf:
+        specifier: 'catalog:'
+        version: 6.1.3
+      tsx:
+        specifier: 'catalog:'
+        version: 4.23.15
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
   plugins/packages/appsheet: {}
 
   plugins/packages/docusaurus: {}
 
-  plugins/packages/github: {}
+  plugins/packages/github-assistant: {}
+
+  plugins/packages/github-manager: {}
 
   plugins/packages/google-workspace: {}
 
@@ -548,6 +596,9 @@ packages:
 
   '@types/node@22.20.5':
     resolution: {integrity: sha512-U2+DNr+wSjpsTS/wZGYHq7GcwfuSmKiKvoPvK22zwTlRhU91yOniN4qRR5KhIjvif7ysw/dz/hKmfDH0Ris4aA==}
+
+  '@types/ws@8.18.2':
+    resolution: {integrity: sha512-67MQl+fpWKVTT1NYdnmo3U4sc/xPo/zQBncVnI74qmQa0z/b+1g6iYqNmGCPbxO+zz2aklb08a0oHfegiVd0/w==}
 
   abstract-logging@2.0.1:
     resolution: {integrity: sha512-2BjRTZxTPvheOvGbBslFSYOUkr+SjPtOnrLP33f+VIWLzezQpZcqVg7ja3L4dBXmzzgwT+a029jRx5PCi3JuiA==}
@@ -1048,6 +1099,16 @@ packages:
     resolution: {integrity: sha512-wQ0b/W4Fr01qtpHlqSqspcj3EhBvimsdh0KlHhH8HRZnMsEa0ea2fTULOXOS9ccQr3om+GcGRk4e+isrZWV8qQ==}
     engines: {node: '>=16.20.0'}
 
+  playwright-core@1.64.1:
+    resolution: {integrity: sha512-BC4s8y6SEVA6Q1rSxZTto8hI1KUI3xXlHGZgvGqP4IqPdI/a6FX9H29IDNz7vKo9l21b6LfYosScPL6M3xxyDQ==}
+    engines: {node: '>=20'}
+    hasBin: true
+
+  playwright@1.64.1:
+    resolution: {integrity: sha512-HCrVhHr5QQuwYoswEUGTb7gGp522yflbv/ST8nF4sFWGuLjQCt17Q/EubpGGSNKYn1tsTCPZxqHhHCfVURu7UA==}
+    engines: {node: '>=20'}
+    hasBin: true
+
   process-warning@5.1.1:
     resolution: {integrity: sha512-oCkNVj4OKnKEcocVBcDfiIugN1/cE6rgfT3nCtzeqZPA8+rIxMaQ0xXzIkGP8Gj2qUaP1UR7uhJ1VD8lUCpzCg==}
 
@@ -1246,6 +1307,18 @@ packages:
 
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
+
+  ws@8.22.0:
+    resolution: {integrity: sha512-Ydggc987+RO0AnWtZ/7Wq9FtNvcrL1b/RO0ud9mWjUPgDrsAAwQSF51sm2hm1XofbU/4jkpGEsLFsZZxU+1DOg==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
 
   zod-to-json-schema@3.25.2:
     resolution: {integrity: sha512-O/PgfnpT1xKSDeQYSCfRI5Gy3hPf91mKVDuYLUHZJMiDFptvP41MSnWofm8dnCm0256ZNfZIM7DSzuSMAFnjHA==}
@@ -1493,6 +1566,10 @@ snapshots:
   '@types/node@22.20.5':
     dependencies:
       undici-types: 6.21.0
+
+  '@types/ws@8.18.2':
+    dependencies:
+      '@types/node': 22.20.5
 
   abstract-logging@2.0.1: {}
 
@@ -2077,6 +2154,12 @@ snapshots:
 
   pkce-challenge@5.0.1: {}
 
+  playwright-core@1.64.1: {}
+
+  playwright@1.64.1:
+    dependencies:
+      playwright-core: 1.64.1
+
   process-warning@5.1.1: {}
 
   proxy-addr@2.0.8:
@@ -2273,6 +2356,8 @@ snapshots:
       isexe: 2.0.0
 
   wrappy@1.0.2: {}
+
+  ws@8.22.0: {}
 
   zod-to-json-schema@3.25.2(zod@3.25.76):
     dependencies:
