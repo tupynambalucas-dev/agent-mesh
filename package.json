@@ -35,6 +35,8 @@
     "mcp:infisical:dev": "pnpm --filter @tupynambalucas-dev/agent-mcp-infisical dev",
     "mcp:memory:build": "pnpm --filter @tupynambalucas-dev/agent-mcp-memory build",
     "mcp:memory:dev": "pnpm --filter @tupynambalucas-dev/agent-mcp-memory dev",
+    "mcp:playwright:build": "pnpm --filter @tupynambalucas-dev/agent-mcp-playwright build",
+    "mcp:playwright:dev": "pnpm --filter @tupynambalucas-dev/agent-mcp-playwright dev",
     "// Packaging & Deployment": "------------------------------------------------",
     "packages:publish": "node scripts/publish-packages.js"
   },
