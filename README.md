@@ -10,7 +10,7 @@ Compatible natively with **Google Antigravity (`agy`)**, **Anthropic Claude Code
 
 `agent-mesh` operates as an **Enterprise Agent Marketplace and Monorepo Hub**. Rather than bundling all tools and instructions into a single monolithic plugin, the substrate partitions capabilities into sovereign, independently versioned, and granularly importable packages:
 
-- **9 Domain Plugins** ([plugins/](./plugins/README.md)): Self-contained Antigravity and Claude Code plugins with dedicated manifests, scoped MCP servers, domain rules, and modular skills.
+- **10 Domain Plugins** ([plugins/](./plugins/README.md)): Self-contained Antigravity and Claude Code plugins with dedicated manifests, scoped MCP servers, domain rules, and modular skills.
 - **7 MCP Servers** ([mcp/](./mcp/README.md)): Dual-transport TypeScript services operating as Kubernetes microservices (HTTP on port 8080) and local Stdio binaries for smart gateway failover.
 - **1 Marketplace Registry** ([.claude-plugin/marketplace.json](./.claude-plugin/marketplace.json)): Canonical manifest enabling selective plugin discovery and installation in Claude Code.
 - **Orchestration Scripts** ([scripts/](./scripts/README.md)): Smart MCP gateway router, fallback runners, and package publisher.
@@ -24,7 +24,7 @@ agent-mesh/
 ├── README.md                # Primary developer documentation
 ├── .claude-plugin/
 │   └── marketplace.json     # Claude Code Plugin Marketplace registry
-├── plugins/                 # 9 Sovereign Domain Plugins
+├── plugins/                 # 10 Sovereign Domain Plugins
 │   ├── AGENTS.md            # Plugins subsystem context router
 │   ├── README.md            # Plugins subsystem documentation
 │   └── packages/            # Domain plugin packages
@@ -33,7 +33,8 @@ agent-mesh/
 │       ├── github-assistant/# @tupynambalucas-dev/agent-plugin-github-assistant
 │       ├── github-manager/  # @tupynambalucas-dev/agent-plugin-github-manager
 │       ├── google-workspace/# @tupynambalucas-dev/agent-plugin-google-workspace
-│       ├── meta/            # @tupynambalucas-dev/agent-plugin-meta
+│       ├── meta/            # @tupynambalucas-dev/agent-plugin-meta (AI Agent Engineering)
+│       ├── repo-manager/    # @tupynambalucas-dev/agent-plugin-repo-manager (Repository Standards & Health)
 │       ├── research/        # @tupynambalucas-dev/agent-plugin-research (Context7 + Firecrawl)
 │       ├── secrets/         # @tupynambalucas-dev/agent-plugin-secrets
 │       └── web/             # @tupynambalucas-dev/agent-plugin-web (Playwright + Firecrawl)

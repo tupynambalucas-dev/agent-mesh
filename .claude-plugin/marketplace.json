@@ -29,9 +29,15 @@
     },
     {
       "name": "agent-plugin-meta",
-      "description": "Authoritative AI meta-engineering skills: AGENTS.md routing, modular skills, and GFM standards.",
+      "description": "Authoritative AI agent engineering skills: AGENTS.md routing, modular skills, rules, hooks, and plugin manifests.",
       "version": "1.0.0",
       "source": "./plugins/packages/meta"
+    },
+    {
+      "name": "agent-plugin-repo-manager",
+      "description": "Enterprise repository governance, root file standards, README architecture, licensing, and community health files.",
+      "version": "1.0.0",
+      "source": "./plugins/packages/repo-manager"
     },
     {
       "name": "agent-plugin-docusaurus",

@@ -306,6 +306,8 @@ importers:
 
   plugins/packages/meta: {}
 
+  plugins/packages/repo-manager: {}
+
   plugins/packages/research: {}
 
   plugins/packages/secrets: {}

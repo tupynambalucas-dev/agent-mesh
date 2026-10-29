@@ -5,7 +5,7 @@ trigger: always_on
 # Tupynamba Lucas Enterprise Governance Constraints
 
 0. Autonomous Domain Mandate:
-   - When requested to create, audit, or update AGENTS.md context routers, markdown documentation, agent skills (SKILL.md), or plugin manifests (plugin.json), the agent MUST autonomously engage the Meta skills (`agent-router-architect`, `markdown-architect`, `skill-architect`, `plugin-manifest-architect`) without waiting for explicit skill invocations from the user.
+   - When requested to design, audit, or update AI agent context routers (AGENTS.md), agent skills (SKILL.md), rule files (rules/AGENTS.md), lifecycle hooks (hooks.json), or plugin manifests (plugin.json), the agent MUST autonomously engage the Meta AI skills (`agent-router-architect`, `skill-architect`, `rule-architect`, `hook-architect`, `plugin-manifest-architect`) without waiting for explicit skill invocations from the user.
 
 1. Cryptographic Signature Requirement:
    - All Git commits and annotated tags MUST be cryptographically signed using SSH: `git commit -S -m "..."`.
