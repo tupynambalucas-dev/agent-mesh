@@ -3,8 +3,8 @@
 This specification defines the architectural design, technical implementation, and monorepo integration plan for replacing the upstream third-party `@playwright/mcp` dependency with a sovereign in-house package: **`@tupynambalucas-dev/agent-mcp-playwright`** located in [`mcp/packages/playwright`](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/mcp/packages).
 
 It also specifies the **Dual-Mode Browser Engine**, which allows a single MCP server to operate seamlessly in two distinct paradigms:
-1. **Developer Desktop Mode (CDP)**: Attaching non-intrusively to the developer's daily-driver Google Chrome or Microsoft Edge browser to see active tabs, inspect live DOM, debug authenticated sessions, and provide real-time visual assistance.
-2. **Headless Standalone Mode**: Spawning isolated, ephemeral browser instances for background automation, synthetic testing, AppSheet Studio generation, and Kubernetes cluster operations.
+1. **Developer Desktop Mode (CDP)**: Attaching non-intrusively to the developer's daily-driver browser (Vivaldi, Google Chrome, Microsoft Edge, or Brave) to inspect active tabs, evaluate live DOM, debug authenticated sessions, and provide real-time visual assistance.
+2. **Headless Standalone Mode**: Spawning isolated, ephemeral Chromium browser instances for background automation, synthetic testing, AppSheet Studio generation, and Kubernetes cluster operations.
 
 ---
 
@@ -36,7 +36,7 @@ graph TD
   end
 
   subgraph Mode1 ["Mode 1: Developer Desktop (CDP)"]
-    SessionMgr -->|connectOverCDP: http://localhost:9222| RealBrowser["Developer Daily-Driver Browser (Chrome / Edge)"]
+    SessionMgr -->|connectOverCDP: http://localhost:9222| RealBrowser["Developer Daily-Driver (Vivaldi / Chrome / Edge)"]
     RealBrowser --> Tabs["Active Tabs & Authenticated Sessions (GitHub, Docs, Portal)"]
   end
 
@@ -55,7 +55,7 @@ graph TD
 | Architectural Dimension | Mode 1: Developer Desktop Mode (CDP) | Mode 2: Headless Standalone Mode |
 | :--- | :--- | :--- |
 | **Connection Method** | `playwright.chromium.connectOverCDP("http://localhost:9222", { noDefaults: true })` | `playwright.chromium.launch({ headless: true, args: [...] })` |
-| **Target Browser** | Developer's daily-driver Google Chrome or Microsoft Edge. | Bundled Playwright Chromium binary. |
+| **Target Browser** | Developer's daily-driver Vivaldi, Google Chrome, Microsoft Edge, or Brave. | Bundled Playwright Chromium binary. |
 | **Session & Auth State** | Shares user's real cookies, active logins, GitHub credentials, local storage. | 100% ephemeral and clean. Cookies wiped upon session close. |
 | **Viewport & Display** | Respects the user's real desktop window dimensions and theme. | Configurable virtual viewport (e.g., 1280x720, 1920x1080). |
 | **Primary Use Cases** | Live visual troubleshooting ("see my screen"), checking errors in active tabs, assisting with form filling. | AppSheet UI automation, CI/CD automated test runs, deep web scraping, headless batch jobs. |
@@ -65,45 +65,141 @@ graph TD
 
 ## 4. Developer Workstation Requirements: Does the Developer Need to Install Anything?
 
-### The Invariant: Zero New Software Required
+### 4.1 The Invariant: Zero New Software Required
 The developer **does NOT need to install any new software, browser extension, or third-party agent**.
-- Modern Chromium-based browsers (Google Chrome, Microsoft Edge, Brave) come with native **Chrome DevTools Protocol (CDP)** built-in.
+- Modern Chromium-based browsers (Vivaldi, Google Chrome, Microsoft Edge, Brave) come with native **Chrome DevTools Protocol (CDP)** built-in.
 - The only requirement is launching the browser with the native `--remote-debugging-port=9222` flag.
 
-### How to Start Chrome / Edge in Remote Debugging Mode
+### 4.2 Connecting Vivaldi to MCP Playwright
+Vivaldi is built on top of Chromium (Blink + V8), meaning its rendering pipeline, JavaScript runtime, and debugging interfaces are completely compatible with Playwright's `chromium.connectOverCDP()`.
 
-#### A. Automated PowerShell Launch Helper (`scripts/start-debug-browser.ps1`)
-We provide a simple helper script in `agent-mesh/scripts/start-debug-browser.ps1`:
+On Windows, Vivaldi is installed by default in user space:
+- **Executable Path**: `C:\Users\<User>\AppData\Local\Vivaldi\Application\vivaldi.exe` (or `C:\Program Files\Vivaldi\Application\vivaldi.exe`).
+- **User Data Directory**: `C:\Users\<User>\AppData\Local\Vivaldi\User Data`.
+
+#### Profile and Port Binding Dynamics in Chromium
+Chromium enforces a single-instance profile lock. If Vivaldi is already running normally without the remote debugging flag, launching another window without specifying a profile will simply focus the existing process (which does not expose port 9222). Developers have two deterministic execution paths:
+
+1. **Option A: Shared Session (Recommended for Agent Visual Pairing)**
+   - Close any running Vivaldi windows.
+   - Start Vivaldi with `--remote-debugging-port=9222`.
+   - Result: Playwright attaches directly to the developer's live tabs, active GitHub sessions, cookies, and pinned web panels.
+2. **Option B: Isolated Debug Profile (Parallel Session)**
+   - Run Vivaldi with a dedicated debug profile directory without closing the existing daily browser:
+     ```powershell
+     & "$env:LOCALAPPDATA\Vivaldi\Application\vivaldi.exe" --remote-debugging-port=9222 --user-data-dir="$env:LOCALAPPDATA\Vivaldi\DebugProfile"
+     ```
+   - Result: An isolated Vivaldi window opens in parallel, exposing port 9222 without disturbing the primary profile.
+
+### 4.3 Automated PowerShell Launch Helper: [`scripts/start-debug-browser.ps1`](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/scripts/start-debug-browser.ps1)
+To eliminate manual CLI invocation, `agent-mesh` provides [`scripts/start-debug-browser.ps1`](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/scripts/start-debug-browser.ps1). It:
+1. Probes if port 9222 is already open. If open, it confirms CDP is active and exits gracefully.
+2. Auto-detects the installed Chromium browser prioritizing **Vivaldi**, followed by **Google Chrome**, **Microsoft Edge**, and **Brave**.
+3. Launches the target browser with `--remote-debugging-port=9222`.
+
 ```powershell
-# Launch Google Chrome with remote debugging enabled
-$chromePath = "${env:ProgramFiles}\Google\Chrome\Application\chrome.exe"
-if (-not (Test-Path $chromePath)) {
-    $chromePath = "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe"
-}
+# Auto-detects Vivaldi and attaches to the primary user session
+.\scripts\start-debug-browser.ps1
 
-# If Chrome is not found, fallback to Microsoft Edge
-if (-not (Test-Path $chromePath)) {
-    $chromePath = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
-}
-
-Start-Process -FilePath $chromePath -ArgumentList "--remote-debugging-port=9222", "--user-data-dir=$env:LOCALAPPDATA\Google\Chrome\User Data"
+# Explicitly launch Vivaldi in an isolated debug profile (side-by-side)
+.\scripts\start-debug-browser.ps1 -Browser Vivaldi -Profile Isolated
 ```
 
-#### B. Permanent Desktop Shortcut
-Alternatively, the developer can clone their existing Chrome or Edge shortcut and append `--remote-debugging-port=9222` to the Target field.
-
-#### C. Network & Security Isolation
-- The port `9222` binds exclusively to `127.0.0.1` (localhost).
+### 4.4 Network & Security Isolation
+- The port `9222` binds strictly to `127.0.0.1` (localhost).
 - External network interfaces cannot access the debugging port.
-- No third-party proxy or browser extension is permitted.
+- No third-party proxy, relay, or cloud tunneling is permitted.
 
 ---
 
-## 5. Mode Differentiation Strategy in Code
+## 5. Developer Browser Ecosystem Evaluation: Vivaldi vs Alternatives
+
+Web development workstations benefit significantly from selecting the right browser for the right operational phase. Below is a rigorous technical evaluation of Vivaldi against developer-oriented alternatives.
+
+### 5.1 In-Depth Evaluation: Vivaldi
+**Verdict**: **Outstanding Daily-Driver & Productivity Hub for Developers.**
+
+| Strengths for Developers | Technical Rationale |
+| :--- | :--- |
+| **Chromium Core (Blink + V8)** | Identical rendering and JavaScript execution characteristics as Google Chrome. Zero compatibility divergence. |
+| **Complete Chrome DevTools** | Pressing `F12` or `Ctrl+Shift+I` launches the native, full-featured Chrome DevTools suite (Elements, Network, Console, Application, Lighthouse, Profilers). |
+| **Chrome Web Store Compatibility** | 100% support for development extensions: React DevTools, Redux DevTools, Vue.js devtools, Axe DevTools, GraphQL Network Inspector. |
+| **Tab Tiling (Split-Screen View)** | Unique native feature: tiles 2 to 4 tabs side-by-side within a single window. Enables viewing a localhost web application alongside API Swagger documentation or GitHub PRs without dual monitors. |
+| **Web Panels (Sidebar Integration)** | Allows pinning mobile viewport URLs or responsive views to a persistent collapsible sidebar (e.g. mobile view of the current app, Docusaurus references, or communication tools). |
+| **Workspaces** | Logical separation of tab clusters per domain (e.g. Workspace for `agent-mesh`, Workspace for `platform`, Workspace for infrastructure). |
+| **Command Palette (`F2`)** | Keyboard-centric navigation across tabs, commands, and settings, speeding up developer ergonomics. |
+
+**Considerations**:
+- Vivaldi's rich interface layer is built with web technologies (React/JS), which can slightly increase memory usage when maintaining hundreds of active tabs.
+- It does not natively provide multi-device simultaneous viewport mirroring (which requires specialized tools like Polypane).
+
+---
+
+### 5.2 Comparative Analysis of Alternatives
+
+#### 1. Firefox Developer Edition
+- **Engine**: Gecko / SpiderMonkey (Non-Chromium).
+- **Core Value for Developers**:
+  - **Engine Diversity**: Essential for validating web applications outside the Chromium ecosystem, preventing CSS/JS regressions that affect Firefox and Safari users.
+  - **Superior CSS Debugging**: Widely regarded as having the best CSS Grid, Flexbox, and Variable Font inspection tools in the industry.
+  - **Network & WebSocket Inspection**: Exceptional visualization of WebSocket frame streams.
+- **Role in Stack**: **Mandatory secondary browser** for cross-engine compliance testing.
+
+#### 2. Polypane / Responsively App
+- **Engine**: Chromium.
+- **Core Value for Developers**:
+  - **Simultaneous Multi-Viewport QA**: Displays a web application across mobile (iPhone, Pixel), tablet (iPad), laptop, and 4K desktop screens simultaneously in one window.
+  - **Mirrored Interactions**: Clicking, typing, or scrolling in one viewport mirrors across all viewports in real time.
+  - **Built-in A11y & Meta Auditing**: Automated WCAG contrast checkers, color-blindness simulation, and social card preview.
+- **Distinction**: Polypane is commercial/subscription; Responsively App is free and open-source.
+- **Role in Stack**: **Specialized responsive frontend QA tool**. Not suited as a daily-driver.
+
+#### 3. Microsoft Edge
+- **Engine**: Chromium.
+- **Core Value for Developers**:
+  - **Deep Windows Optimization**: Best memory efficiency on Windows with native Sleeping Tabs.
+  - **Edge DevTools Innovations**: 3D DOM visualizer (inspecting z-index layering and DOM depth), Network Console for drafting synthetic REST queries, and advanced accessibility tree visualizers.
+- **Role in Stack**: **Installed native fallback** (present by default on Windows workstations).
+
+#### 4. Google Chrome / Chrome for Developers (Canary)
+- **Engine**: Chromium.
+- **Core Value for Developers**:
+  - **Industry Market Baseline**: With ~65% global market share, it serves as the reference benchmark for customer experience.
+  - **Lighthouse Standard**: Up-to-date Core Web Vitals (LCP, INP, CLS) reference measurements.
+- **Role in Stack**: **Neutral reference browser**.
+
+---
+
+### 5.3 Workstation Architecture Recommendation Matrix
+
+```mermaid
+graph LR
+  subgraph DailyDriver ["Daily Driver & Workflow Hub"]
+    Vivaldi["Vivaldi (Primary)"]
+    Vivaldi -->|Ergonomics| Tiling["Tab Tiling + Web Panels + Workspaces"]
+    Vivaldi -->|CDP Port 9222| MCP["@tupynambalucas-dev/agent-mcp-playwright"]
+  end
+
+  subgraph TestingEngines ["Specialized QA & Compliance Suite"]
+    FirefoxDev["Firefox Developer Edition"] -->|Gecko Testing| NonChromium["Cross-Engine Standards & CSS Grid"]
+    Responsively["Responsively App / Polypane"] -->|Multi-Screen| ResponsiveQA["Simultaneous Multi-Device Testing"]
+    Edge["Microsoft Edge"] -->|Windows Native| Edge3D["3D DOM & Memory Optimization"]
+  end
+```
+
+**Strategic Conclusion**:
+The developer does **not** need to switch away from Vivaldi. Vivaldi is one of the most powerful daily-driver choices for power developers. The optimal strategy is:
+1. **Primary Browser (Daily Coding & Agent Pairing)**: **Vivaldi** with CDP on port 9222.
+2. **Cross-Browser Verification**: Keep **Firefox Developer Edition** installed to test layouts against Gecko.
+3. **Responsive UI QA**: Use **Responsively App** (or Polypane) when designing complex multi-device layouts.
+
+---
+
+## 6. Mode Differentiation Strategy in Code
 
 How does the MCP server determine whether to operate on the developer's desktop browser or in an isolated headless container?
 
-### 5.1 Three-Tier Resolution Hierarchy
+### 6.1 Three-Tier Resolution Hierarchy
 
 ```mermaid
 graph TD
@@ -117,11 +213,12 @@ graph TD
   EnvCheck -->|headless| ForceHeadless
   EnvCheck -->|auto or unset| ProbeCDP{"Probe http://localhost:9222 (150ms timeout)"}
 
-  ProbeCDP -->|Responds 200 OK| AttachCDP["Attach to Developer Chrome (CDP)"]
+  ProbeCDP -->|Responds 200 OK| AttachCDP["Attach to Developer Browser (CDP)"]
   ProbeCDP -->|Unreachable| FallbackHeadless["Transparent Fallback to Headless"]
 ```
 
-### 5.2 Implementation Pattern: `BrowserSessionManager`
+### 6.2 Implementation Pattern: `BrowserSessionManager`
+To ensure the developer's Vivaldi/Chrome browser is **never prematurely killed or closed** when the agent finishes a task, the lifecycle manager distinguishes between closing headless sandboxes and detaching from CDP:
 
 ```typescript
 import { chromium, type Browser, type BrowserContext, type Page } from 'playwright';
@@ -139,7 +236,7 @@ export class BrowserSessionManager {
   }
 
   /**
-   * Fast 150ms probe to check if developer Chrome is running with CDP enabled
+   * Fast 150ms probe to check if developer browser is running with CDP enabled
    */
   public async isCdpAvailable(): Promise<boolean> {
     return new Promise((resolve) => {
@@ -186,10 +283,13 @@ export class BrowserSessionManager {
     return { page, isDeveloper: false };
   }
 
+  /**
+   * Clean detachment: closes headless sandboxes but strictly preserves developer desktop browsers
+   */
   public async closeAll(): Promise<void> {
     if (this.cdpBrowser) {
-      // Disconnecting from CDP does NOT close the developer's browser window
-      await this.cdpBrowser.close();
+      // In CDP mode, only nullify the reference or close agent-created contexts.
+      // Never call process-terminating signals against the developer's live browser.
       this.cdpBrowser = null;
     }
     if (this.headlessBrowser) {
@@ -202,7 +302,7 @@ export class BrowserSessionManager {
 
 ---
 
-## 6. Monorepo Package Layout: `mcp/packages/playwright`
+## 7. Monorepo Package Layout: `mcp/packages/playwright`
 
 The new package `@tupynambalucas-dev/agent-mcp-playwright` follows the exact architectural structure of all enterprise MCP servers in `agent-mesh`:
 
@@ -264,7 +364,7 @@ mcp/packages/playwright/
 
 ---
 
-## 7. Domain Plugins Adaptation Strategy: New Plugin vs `web` Plugin
+## 8. Domain Plugins Adaptation Strategy: New Plugin vs `web` Plugin
 
 ### Analysis
 We evaluated whether to create a brand-new plugin (e.g. `agent-plugin-desktop`) or adapt the existing [`plugins/packages/web`](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/plugins/packages/web).
@@ -275,8 +375,8 @@ Creating a separate plugin would introduce domain redundancy, fragment browser t
 The optimal architectural solution is to expand [`plugins/packages/web`](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/plugins/packages/web) into two specialized, single-responsibility skills:
 
 1. **`browser-desktop-inspector`** (New Skill in `web`):
-   - **Role**: Interactive pairing assistant for the developer's desktop browser.
-   - **Capabilities**: Captures snapshots of what the developer is currently looking at, inspects error messages in forms, debugs live OAuth or GitHub App settings pages, and answers visual questions without requiring the user to take manual screenshots.
+   - **Role**: Interactive pairing assistant for the developer's desktop browser (Vivaldi, Chrome, Edge).
+   - **Capabilities**: Captures snapshots of what the developer is currently looking at, inspects error messages in forms, debugs live OAuth or GitHub App settings pages, and answers visual questions without requiring manual screenshots.
    - **Mode**: Automatically targets `sessionType: "developer"`.
 
 2. **`browser-automator`** (Enhanced Existing Skill in `web`):
@@ -289,7 +389,7 @@ The optimal architectural solution is to expand [`plugins/packages/web`](file://
 
 ---
 
-## 8. Smart Router & Cluster Fallback Integration
+## 9. Smart Router & Cluster Fallback Integration
 
 Updating [`scripts/mcp-gateway-router.js`](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/scripts/mcp-gateway-router.js):
 ```javascript
@@ -308,7 +408,7 @@ const FALLBACK_REGISTRY = {
 
 ---
 
-## 9. Implementation Roadmap
+## 10. Implementation Roadmap
 
 1. **Phase 1: Catalog & Workspace Preparation**:
    - Add `playwright: ^1.51.0` to `pnpm-workspace.yaml` under `catalogs.mcp-stack`.
@@ -321,8 +421,8 @@ const FALLBACK_REGISTRY = {
 3. **Phase 3: Domain Plugin Fortification**:
    - Author `plugins/packages/web/skills/browser-desktop-inspector/SKILL.md`.
    - Update `plugins/packages/web/rules/AGENTS.md` and `README.md`.
-   - Add `scripts/start-debug-browser.ps1` for one-click developer convenience.
+   - Utilize [`scripts/start-debug-browser.ps1`](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/scripts/start-debug-browser.ps1) for one-click developer convenience.
 4. **Phase 4: Monorepo Build & Validation**:
    - Run `pnpm mcp:build` (Turborepo Full Turbo verification).
    - Validate with `agy plugin validate plugins/packages/web --strict`.
-   - Test CDP attachment against a live Chrome session on port 9222.
+   - Test CDP attachment against a live Vivaldi or Chrome session on port 9222.
