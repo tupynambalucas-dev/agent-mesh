@@ -58,16 +58,26 @@ export class UniversalSessionManager {
 
     const requestedMode = options.mode || config.PLAYWRIGHT_MODE;
 
-    // 1. CDP Mode (Attach to already-open browser)
-    if (requestedMode === 'cdp' || (requestedMode === 'auto' && (await this.isCdpListening(options.cdpUrl)))) {
+    // 1. CDP / Extension Mode (Attach to already-open browser)
+    if (requestedMode === 'cdp' || requestedMode === 'extension' || (requestedMode === 'auto' && (await this.isCdpListening(options.cdpUrl)))) {
       const endpoint = options.cdpUrl || config.PLAYWRIGHT_CDP_URL;
+      const headers = config.PLAYWRIGHT_MCP_EXTENSION_TOKEN
+        ? {
+            'x-playwright-mcp-token': config.PLAYWRIGHT_MCP_EXTENSION_TOKEN,
+            Authorization: `Bearer ${config.PLAYWRIGHT_MCP_EXTENSION_TOKEN}`,
+          }
+        : undefined;
+
       if (!this.browser) {
-        this.browser = await chromium.connectOverCDP(endpoint, { noDefaults: true });
+        this.browser = await chromium.connectOverCDP(endpoint, {
+          noDefaults: true,
+          headers,
+        });
       }
       this.context = this.browser.contexts()[0] || (await this.browser.newContext());
       const pages = this.context.pages();
       this.currentPage = pages[pages.length - 1] || (await this.context.newPage());
-      this.activeMode = 'cdp';
+      this.activeMode = requestedMode === 'extension' ? 'extension' : 'cdp';
       return this.currentPage;
     }
 

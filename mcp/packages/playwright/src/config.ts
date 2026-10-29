@@ -13,6 +13,7 @@ const configSchema = z.object({
     .string()
     .transform((val) => val === 'true' || val === '1')
     .default('false'),
+  PLAYWRIGHT_MCP_EXTENSION_TOKEN: z.string().optional().default(''),
   NODE_ENV: z.string().default('development'),
 });
 

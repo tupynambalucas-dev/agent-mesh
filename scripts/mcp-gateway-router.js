@@ -121,10 +121,11 @@ async function main() {
   }
   const localJsBin = path.join(localMcpDir, "dist", "bin.js");
   const localTsBin = path.join(localMcpDir, "src", "bin.ts");
+  const forwardedArgs = process.argv.slice(3);
 
   if (fs.existsSync(localJsBin)) {
-    process.stderr.write(`[cortex-router] AgentGateway offline. Engaging local compiled binary: node ${localJsBin}\n`);
-    const localProcess = spawn("node", [localJsBin], {
+    process.stderr.write(`[cortex-router] AgentGateway offline. Engaging local compiled binary: node ${localJsBin} ${forwardedArgs.join(" ")}\n`);
+    const localProcess = spawn("node", [localJsBin, ...forwardedArgs], {
       stdio: "inherit",
       shell: process.platform === "win32",
     });
@@ -133,8 +134,8 @@ async function main() {
   }
 
   if (fs.existsSync(localTsBin)) {
-    process.stderr.write(`[cortex-router] AgentGateway offline. Engaging local TypeScript execution: npx tsx ${localTsBin}\n`);
-    const localProcess = spawn("npx", ["-y", "tsx", localTsBin], {
+    process.stderr.write(`[cortex-router] AgentGateway offline. Engaging local TypeScript execution: npx tsx ${localTsBin} ${forwardedArgs.join(" ")}\n`);
+    const localProcess = spawn("npx", ["-y", "tsx", localTsBin, ...forwardedArgs], {
       stdio: "inherit",
       shell: process.platform === "win32",
     });
@@ -146,11 +147,12 @@ async function main() {
   const targetConfig = FALLBACK_REGISTRY[TARGET_SERVICE];
   const executable = targetConfig.pkg;
 
-  process.stderr.write(`[cortex-router] AgentGateway offline. Engaging registry package fallback: pnpm dlx ${executable}\n`);
+  process.stderr.write(`[cortex-router] AgentGateway offline. Engaging registry package fallback: pnpm dlx ${executable} ${forwardedArgs.join(" ")}\n`);
 
   const fallbackProcess = spawn("pnpm", [
     "dlx",
-    executable
+    executable,
+    ...forwardedArgs
   ], {
     stdio: "inherit",
     shell: process.platform === "win32",

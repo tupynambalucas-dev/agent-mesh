@@ -31,3 +31,10 @@ pnpm --filter @tupynambalucas-dev/agent-mcp-playwright typecheck
 ```bash
 node dist/bin.js
 ```
+
+## References
+
+- [Playwright MCP Official Architecture and Overview](./references/playwright-mcp-official-overview.md)
+- [Extension Bridge and Token Architecture Specification](./references/playwright-mcp-extension-bridge-and-token-spec.md)
+- [CLI Flags and Capability Groups Reference](./references/playwright-mcp-cli-flags-and-capabilities.md)
+
