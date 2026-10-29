@@ -32,4 +32,4 @@ This bounded context encapsulates the in-house Model Context Protocol server pro
 ## Required Skills
 
 - **`web-deep-researcher`**: Active when performing deep web crawling, site mapping, and research.
-- **`web-scraper`**: Active when scraping individual URLs into markdown format.
+- **`web-extractor`**: Active when scraping individual URLs into markdown format.

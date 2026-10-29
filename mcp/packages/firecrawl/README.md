@@ -1,4 +1,4 @@
-# firecrawl-mcp
+# Firecrawl MCP Server (`@tupynambalucas-dev/mcp-firecrawl`)
 
 Stateless Fastify MCP adapter that bridges AgentGateway to the Firecrawl
 web-intelligence API. Exposes six tools over a Streamable HTTP transport at

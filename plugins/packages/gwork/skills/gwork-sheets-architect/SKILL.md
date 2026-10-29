@@ -51,7 +51,7 @@ Activate this skill when:
 
 - Always ensure row 1 contains exact column headers with no merged cells.
 - Primary key column (`AssetId`, `LocationId`) must always be column 1 (`A`).
-- Refer to [AppSheet Type Mappings](../../appsheet/references/type-mapping-and-expressions.md) for field naming conventions.
+- Refer to [AppSheet Type Mappings](../../../appsheet/references/type-mapping-and-expressions.md) for field naming conventions.
 
 ---
 

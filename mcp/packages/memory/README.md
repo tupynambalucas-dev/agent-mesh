@@ -1,4 +1,4 @@
-# memory-mcp
+# Memory MCP Server (`@tupynambalucas-dev/mcp-memory`)
 
 MCP adapter for the Cortex Memory RAG Subsystem. Bridges AgentGateway to the
 `memory-api` Fastify REST service, exposing four tools over a Streamable HTTP
