@@ -14,7 +14,7 @@ This bounded context encapsulates the in-house Model Context Protocol server pro
 
 - [src/bin.ts](./src/bin.ts): Stdio transport entrypoint executing the MCP server over standard input/output.
 - [src/index.ts](./src/index.ts): Fastify Streamable HTTP transport entrypoint listening on `:8080`.
-- [src/config.ts](./src/config.ts): Configuration schema via Zod (`INFISICAL_SITE_URL`, `INFISICAL_CLIENT_ID`, `INFISICAL_CLIENT_SECRET`).
+- [src/config.ts](./src/config.ts): Configuration schema via Zod (`INFISICAL_HOST_URL`, `INFISICAL_CLIENT_ID`, `INFISICAL_CLIENT_SECRET`).
 - [src/auth/infisical-auth.ts](./src/auth/infisical-auth.ts): Machine Identity Universal Auth client and token caching provider.
 - [src/tools/secrets.tool.ts](./src/tools/secrets.tool.ts): Complete project and secret lifecycle tools (`infisical_list_secrets`, `infisical_get_secret`, `infisical_create_secret`, etc.).
 - [README.md](./README.md): Developer architecture, credentials, and tool reference.

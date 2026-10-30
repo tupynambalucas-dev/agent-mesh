@@ -30,7 +30,7 @@ Model Context Protocol server for Infisical Vault Universal Auth machine identit
 
 | Environment Variable | Description |
 | :--- | :--- |
-| `INFISICAL_SITE_URL` | Base URL of the Infisical instance (defaults to `https://app.infisical.com`). |
+| `INFISICAL_HOST_URL` | Base URL of the Infisical instance (defaults to `https://app.infisical.com`). |
 | `INFISICAL_CLIENT_ID` | Universal Auth Client ID. |
 | `INFISICAL_CLIENT_SECRET` | Universal Auth Client Secret. |
 | `PORT` | HTTP port for Streamable HTTP transport (defaults to `8080`). |

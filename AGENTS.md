@@ -16,7 +16,7 @@ This document serves as the sovereign root context router (Layer 1) for AI agent
 The `agent-mesh` repository is structured as a pnpm monorepo managed with Turborepo (`turbo.json`) and pnpm named catalogs:
 
 - **Build Pipeline**: Turborepo coordinates build, dev, clean, and typecheck tasks with intelligent workspace caching (`turbo run build --filter="@tupynambalucas-dev/mcp-*"`).
-- **Dependency Catalogs**: Pnpm catalogs (`catalog:`, `catalog:shared`, `catalog:mcp-stack`, `catalog:plugins-stack`) eliminate version drift across all packages.
+- **Dependency Catalogs**: Pnpm catalogs (`catalog:`, `catalog:shared`, `catalog:mcp-stack`, `catalog:`) eliminate version drift across all packages.
 - **Dual-Transport MCP Servers**: Packages in `mcp/packages/*` provide both Streamable HTTP (Fastify on `:8080`) and Stdio (`dist/bin.js`) transports for zero-friction local or cluster operation.
 - **Domain Plugins**: Packages in `plugins/packages/*` implement bounded skills, references, and domain-specific validation rules for AI agents complying with `agent-plugins.org` v1.0.0.
 
@@ -41,7 +41,7 @@ When mounted as a Git submodule inside the `tupynambalucas-dev/org-core` umbrell
 When authoring or modifying documents and configurations in this monorepo, agents MUST activate the relevant skill:
 
 - **`router-architect`**: Active when authoring or reviewing any `AGENTS.md` context router file.
-- **`readme-architect`**: Active when creating or modifying any `README.md` or markdown documentation.
+- **`readme-architect`, `monorepo-architect`**: Active when creating or modifying any `README.md` or markdown documentation.
 - **`plugin-architect`**: Active when managing `plugin.json` manifests, pnpm workspaces, and catalogs.
 - **`skill-architect`**: Active when authoring, auditing, or optimizing modular `SKILL.md` files.
 - **`rule-architect`**: Active when authoring or auditing domain rules and Autonomous Domain Mandates.

@@ -1,22 +1,29 @@
-# Repository Ruleset Schemas
+# GitHub Repository Ruleset Schemas
 
-This document defines the JSON payloads used to enforce repository branch protection rulesets via
-the GitHub REST API (`POST /repos/{owner}/{repo}/rulesets`).
+Authoritative ruleset configurations enforced across `tupynambalucas-dev` repositories.
 
----
-
-## 1. Production Ruleset (`main`)
-
-Targeted to `refs/heads/main` to guarantee zero unverified commits and linear history:
+## 1. Production Ruleset: `enterprise-production-main`
 
 ```json
 {
   "name": "enterprise-production-main",
   "target": "branch",
   "enforcement": "active",
+  "bypass_actors": [
+    {
+      "actor_id": 1,
+      "actor_type": "OrganizationAdmin",
+      "bypass_mode": "pull_request"
+    },
+    {
+      "actor_id": 5,
+      "actor_type": "RepositoryRole",
+      "bypass_mode": "pull_request"
+    }
+  ],
   "conditions": {
     "ref_name": {
-      "include": ["refs/heads/main"],
+      "include": ["~DEFAULT_BRANCH"],
       "exclude": []
     }
   },
@@ -39,23 +46,24 @@ Targeted to `refs/heads/main` to guarantee zero unverified commits and linear hi
 }
 ```
 
----
-
-## 2. Integration Ruleset (`develop`)
-
-Targeted to `refs/heads/develop` to maintain integration integrity without slowing automated workflows:
+## 2. Release Tags Ruleset: `enterprise-release-tags`
 
 ```json
 {
-  "name": "enterprise-integration-develop",
-  "target": "branch",
+  "name": "enterprise-release-tags",
+  "target": "tag",
   "enforcement": "active",
+  "bypass_actors": [],
   "conditions": {
     "ref_name": {
-      "include": ["refs/heads/develop"],
+      "include": ["refs/tags/v*"],
       "exclude": []
     }
   },
-  "rules": [{ "type": "deletion" }, { "type": "non_fast_forward" }]
+  "rules": [
+    { "type": "deletion" },
+    { "type": "non_fast_forward" },
+    { "type": "update" }
+  ]
 }
 ```

@@ -24,6 +24,7 @@
   "files": [
     "plugin.json",
     "rules",
-    "skills"
+    "skills",
+    "references"
   ]
 }

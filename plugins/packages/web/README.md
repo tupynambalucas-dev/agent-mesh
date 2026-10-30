@@ -39,7 +39,7 @@ The underlying MCP servers consumed by this plugin require the following environ
 
 | Variable | Required | Description |
 | :--- | :--- | :--- |
-| `PLAYWRIGHT_MCP_TOKEN` | Optional | Ephemeral bearer token for local browser pairing extension bridge. |
+| `PLAYWRIGHT_MCP_EXTENSION_TOKEN` | Optional | Ephemeral bearer token for local browser pairing extension bridge. |
 | `FIRECRAWL_API_KEY` | Optional | Cloud API key if upstream Firecrawl service is required. |
 | `CORTEX_GATEWAY_URL` | Optional | Envoy AgentGateway cluster URL (defaults to `http://localhost:8080`). |
 | `CORTEX_PROBE_TIMEOUT_MS` | Optional | Smart gateway probe timeout in milliseconds (defaults to `300`). |

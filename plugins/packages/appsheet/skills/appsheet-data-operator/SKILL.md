@@ -28,7 +28,7 @@ Activate this skill when:
   "arguments": {
     "appId": "YOUR_APPSHEET_APP_ID",
     "tableName": "Orders",
-    "selector": "Filter(Orders, [Status] = 'Pending')",
+    "selector": "FILTER(Orders, [Status] = 'Pending')",
     "properties": {
       "Locale": "en-US",
       "Timezone": "UTC"

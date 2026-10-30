@@ -3,7 +3,7 @@ name: github-ruleset-operator
 description: Defines, audits, and enforces branch protection rulesets and tag rules across repositories in the organization.
 ---
 
-# GitHub Ruleset Enforcer Skill
+# GitHub Ruleset Operator
 
 Use this skill to configure, inspect, and enforce repository branch rulesets, cryptographic SSH commit signing requirements, and branch protection rules.
 

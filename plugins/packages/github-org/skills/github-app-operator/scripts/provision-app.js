@@ -2,7 +2,7 @@
 
 /**
  * Automated GitHub App Provisioning via Manifest Flow
- * Encapsulated within @tupynambalucas-dev/agent-plugin-github-manager
+ * Encapsulated within @tupynambalucas-dev/agent-plugin-plugin-github-org
  *
  * Usage:
  *   node provision-app.js --profile=manager
@@ -27,7 +27,7 @@ const profile = profileArg ? profileArg.split('=')[1] : 'manager';
 
 const PROFILES = {
   manager: {
-    appName: 'tupynambalucas-github-manager',
+    appName: 'tupynambalucas-plugin-github-org',
     description: 'High-privilege organizational governance operator for tupynambalucas-dev.',
     permissions: {
       organization_administration: 'write',

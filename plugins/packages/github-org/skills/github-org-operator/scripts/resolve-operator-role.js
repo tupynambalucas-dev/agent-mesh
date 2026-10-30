@@ -7,7 +7,7 @@
  * for tupynambalucas-dev operator workflows.
  */
 
-const { execSync } = require("child_process");
+import { execSync } from 'node:child_process';
 
 const targetOrg = process.argv[2] && !process.argv[2].startsWith("--") 
   ? process.argv[2] 
