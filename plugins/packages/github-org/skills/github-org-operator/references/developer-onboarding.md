@@ -90,7 +90,7 @@ Caller Identity Verification:
   Infisical Target:    tupynambalucas-dev-agent-mesh [dev]
 
 Permitted Operations:
-  [x] Domain 1: Developer Operations (PRs, signed commits, submodule bumps)
+  [x] Domain 1: Developer Operations (PRs, signed commits, branch management)
   [ ] Domain 2: Security & Auditing (Blocked: Requires security-managers or lead-architects)
   [ ] Domain 3: Organization Admin (Blocked: Restricted strictly to lead-architects)
 ```
