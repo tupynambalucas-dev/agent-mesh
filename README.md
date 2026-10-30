@@ -61,11 +61,11 @@ agent-mesh/
 
 ## 2. Granular Consumption Guide
 
-`agent-mesh` supports multiple integration topologies depending on whether the consumer repository has the `agent-mesh` folder mounted locally (as a Git submodule) or operates in total isolation.
+`agent-mesh` supports multiple integration topologies depending on whether the consumer repository has the `agent-mesh` folder located locally (via the Mani workspace) or operates in total isolation.
 
 ### Scenario A: Local Monorepo Integration (Inside `org-core`)
 
-When operating inside the `org-core` meta-repository where `agent-mesh` is mounted as a Git submodule, plugins are discovered directly from local disk with zero network overhead.
+When operating inside the `org-core` meta-repository where `agent-mesh` is orchestrated via Mani, plugins are discovered directly from local disk with zero network overhead.
 
 #### 1. Load All Domain Plugins Simultaneously
 
