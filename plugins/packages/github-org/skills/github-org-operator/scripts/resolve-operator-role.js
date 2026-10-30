@@ -123,7 +123,7 @@ if (isJsonOutput) {
   process.stdout.write(`  Infisical Target:    ${infisicalProject} [${infisicalEnv}]\n\n`);
 
   process.stdout.write("Permitted Operations:\n");
-  process.stdout.write("  [x] Domain 1: Developer Operations (PRs, signed commits, submodule bumps)\n");
+  process.stdout.write("  [x] Domain 1: Developer Operations (PRs, signed commits, branch management)\n");
 
   if (capabilities.securityAuditing) {
     process.stdout.write("  [x] Domain 2: Security & Auditing (Secret scanning, Dependabot triage, signature verification)\n");

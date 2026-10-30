@@ -14,7 +14,7 @@ Assists engineering, writing, and creative teams with standard Git branching, Co
 Activate this skill when:
 - Authoring or validating commit messages against the Conventional Commits v1.0.0 specification.
 - Preparing, creating, and reviewing Pull Requests via GitHub CLI (`gh`).
-- Resolving Git branch divergences, managing submodule pointer bumps in `org-core`, or staging changes.
+- Resolving Git branch divergences, orchestrating multi-repository operations via `mani`, or staging changes.
 - Verifying SSH cryptographic signature configurations.
 
 ---
@@ -39,7 +39,7 @@ Activate this skill when:
    ```bash
    git push -u origin <branch-name>
    ```
-2. Create PR targeting `main` (or target branch):
+2. Create PR targeting `main`:
    ```bash
    gh pr create --base main --title "<type>(<scope>): <description>"
    ```
@@ -49,16 +49,18 @@ Activate this skill when:
    gh pr checks
    ```
 
-### Workflow C: Submodule Pointer Updates in `org-core`
-When updating submodule pointers:
-1. Verify clean status in submodules.
-2. Stage modified submodule pointers:
+### Workflow C: Multi-Repository Orchestration with Mani (`org-core`)
+When operating across repositories in the `org-core` workspace:
+1. Verify status across all sovereign repositories:
    ```bash
-   git add agent-mesh platform docs .github
-   git commit -S -m "chore(submodules): bump pointers to latest development heads"
-   git push -u origin chore/bump-submodules
-   gh pr create --base main
+   mani run status
    ```
+2. Fetch or pull latest updates without submodule lockups:
+   ```bash
+   mani run fetch
+   mani run pull
+   ```
+3. Work directly on sovereign feature branches (`feat/<slug>`, `fix/<slug>`) within each repository without needing parent gitlink bump PRs.
 
 ---
 
