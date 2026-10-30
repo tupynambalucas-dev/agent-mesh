@@ -2,7 +2,7 @@
 .SYNOPSIS
     Pre-flight workstation readiness gate for tupynambalucas-dev developers and AI agents.
 .DESCRIPTION
-    Validates Git version, cryptographic commit signing, submodule safety settings,
+    Validates Git version, cryptographic commit signing, Mani multi-repo orchestrator,
     GitHub CLI authentication, and repository tree health across 7 compliance gates.
 #>
 
@@ -19,16 +19,16 @@ Write-Host "tupynambalucas-dev Workstation Readiness Gate Verification" -Foregro
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host ""
 
-# Gate 1: Git Version Check (>= 2.38.0 required for safe submodules)
+# Gate 1: Git Version Check (>= 2.36.0 required for SSH signing and conditional includes)
 Write-Host "[Gate 1/7] Inspecionando versao do Git..." -NoNewline
 try {
     $gitVerStr = (git --version) -replace "git version ", "" -replace "\.windows.*", ""
     $gitVer = [version]($gitVerStr.Split(" ")[0])
-    $minVer = [version]"2.38.0"
+    $minVer = [version]"2.36.0"
     if ($gitVer -ge $minVer) {
-        Write-Host " PASS (Git $gitVer >= 2.38.0)" -ForegroundColor Green
+        Write-Host " PASS (Git $gitVer >= 2.36.0)" -ForegroundColor Green
     } else {
-        Write-Host " FAIL (Git $gitVer detectado. Minimo exigido: 2.38.0)" -ForegroundColor Red
+        Write-Host " FAIL (Git $gitVer detectado. Minimo exigido: 2.36.0)" -ForegroundColor Red
         Write-Host "  Remediacao: Atualize o Git via 'winget upgrade Git.Git' ou 'brew upgrade git'" -ForegroundColor Yellow
         $failedGates++
     }
@@ -72,56 +72,58 @@ if ($gpgFormat -eq "ssh" -and $commitGpgSign -eq "true") {
     }
 }
 
-# Gate 4: Submodule Recursion (`submodule.recurse = true`)
-Write-Host "[Gate 4/7] Inspecionando recursao automatica de submodulos..." -NoNewline
-$subRecurse = (git config --get submodule.recurse 2>$null)
+# Gate 4: Mani Multi-Repository CLI Orchestrator
+Write-Host "[Gate 4/7] Inspecionando orquestrador multi-repositorio Mani..." -NoNewline
+$maniCmd = (Get-Command mani -ErrorAction SilentlyContinue)
 
-if ($subRecurse -eq "true") {
-    Write-Host " PASS (submodule.recurse=true)" -ForegroundColor Green
+if ($maniCmd) {
+    $maniVer = (mani --version 2>$null | Select-Object -First 1)
+    Write-Host " PASS ($maniVer)" -ForegroundColor Green
 } else {
-    Write-Host " FAIL (submodule.recurse=$subRecurse)" -ForegroundColor Red
+    Write-Host " FAIL (Mani nao encontrado no PATH)" -ForegroundColor Red
     if ($Fix) {
-        git config --global submodule.recurse true
-        Write-Host "  [Auto-Fix] Aplicado: submodule.recurse=true" -ForegroundColor Cyan
+        if (Get-Command scoop -ErrorAction SilentlyContinue) {
+            scoop bucket add poldi https://github.com/aliesbelik/poldi
+            scoop install mani
+            Write-Host "  [Auto-Fix] Mani instalado via Scoop" -ForegroundColor Cyan
+        } else {
+            Write-Host "  Remediacao: Instale via Scoop ('scoop install mani') ou baixe o binario do GitHub Releases" -ForegroundColor Yellow
+            $failedGates++
+        }
     } else {
-        Write-Host "  Remediacao: Execute 'git config --global submodule.recurse true'" -ForegroundColor Yellow
+        Write-Host "  Remediacao: Instale o Mani via Scoop ('scoop install mani') ou adicione o binario ao PATH" -ForegroundColor Yellow
         $failedGates++
     }
 }
 
-# Gate 5: Submodule Push Safety (`push.recurseSubmodules = check` or `on-demand`)
-Write-Host "[Gate 5/7] Inspecionando protecao contra push fora de ordem..." -NoNewline
-$pushRecurse = (git config --get push.recurseSubmodules 2>$null)
+# Gate 5: Node.js & pnpm Environment
+Write-Host "[Gate 5/7] Inspecionando Node.js e gerenciador pnpm..." -NoNewline
+$nodeCmd = (Get-Command node -ErrorAction SilentlyContinue)
+$pnpmCmd = (Get-Command pnpm -ErrorAction SilentlyContinue)
 
-if ($pushRecurse -in @("check", "on-demand")) {
-    Write-Host " PASS (push.recurseSubmodules=$pushRecurse)" -ForegroundColor Green
+if ($nodeCmd -and $pnpmCmd) {
+    $nodeVer = (node --version)
+    $pnpmVer = (pnpm --version)
+    Write-Host " PASS (Node $nodeVer, pnpm $pnpmVer)" -ForegroundColor Green
 } else {
-    Write-Host " FAIL (push.recurseSubmodules=$pushRecurse)" -ForegroundColor Red
-    if ($Fix) {
-        git config --global push.recurseSubmodules check
-        Write-Host "  [Auto-Fix] Aplicado: push.recurseSubmodules=check" -ForegroundColor Cyan
-    } else {
-        Write-Host "  Remediacao: Execute 'git config --global push.recurseSubmodules check'" -ForegroundColor Yellow
-        $failedGates++
-    }
+    Write-Host " FAIL (Node.js ou pnpm ausente)" -ForegroundColor Red
+    Write-Host "  Remediacao: Instale Node.js >= 22 e execute 'corepack enable'" -ForegroundColor Yellow
+    $failedGates++
 }
 
-# Gate 6: Submodule Visibility (status.submoduleSummary & diff.submodule)
-Write-Host "[Gate 6/7] Inspecionando visibilidade de logs de submodulos..." -NoNewline
-$statusSum = (git config --get status.submoduleSummary 2>$null)
-$diffSub = (git config --get diff.submodule 2>$null)
+# Gate 6: Git Protocol Defaults
+Write-Host "[Gate 6/7] Inspecionando protocolo padrao Git SSH..." -NoNewline
+$urlInsteadOf = (git config --get url.git@github.com:.insteadOf 2>$null)
 
-if ($statusSum -eq "true" -and $diffSub -eq "log") {
-    Write-Host " PASS (status.submoduleSummary=true, diff.submodule=log)" -ForegroundColor Green
+if ($urlInsteadOf -eq "https://github.com/") {
+    Write-Host " PASS (SSH em vez de HTTPS configurado)" -ForegroundColor Green
 } else {
-    Write-Host " WARN (status.submoduleSummary=$statusSum, diff.submodule=$diffSub)" -ForegroundColor Yellow
+    Write-Host " WARN (url.git@github.com:.insteadOf nao configurado)" -ForegroundColor Yellow
     if ($Fix) {
-        git config --global status.submoduleSummary true
-        git config --global diff.submodule log
-        git config --global fetch.recurseSubmodules on-demand
-        Write-Host "  [Auto-Fix] Aplicado: status.submoduleSummary=true, diff.submodule=log" -ForegroundColor Cyan
+        git config --global url."git@github.com:".insteadOf https://github.com/
+        Write-Host "  [Auto-Fix] Aplicado: url.git@github.com:.insteadOf = https://github.com/" -ForegroundColor Cyan
     } else {
-        Write-Host "  Remediacao recomendada: git config --global status.submoduleSummary true; git config --global diff.submodule log" -ForegroundColor Gray
+        Write-Host "  Remediacao recomendada: git config --global url.`"git@github.com:`".insteadOf https://github.com/" -ForegroundColor Gray
     }
 }
 
@@ -147,7 +149,7 @@ Write-Host "----------------------------------------------------------" -Foregro
 
 if ($failedGates -eq 0) {
     Write-Host "SUCESSO: Todos os gates de conformidade foram aprovados." -ForegroundColor Green
-    Write-Host "A estacao de trabalho esta pronta para desenvolvimento no org-core." -ForegroundColor Green
+    Write-Host "A estacao de trabalho esta pronta para desenvolvimento no org-core e repositorios soberanos." -ForegroundColor Green
     exit 0
 } else {
     Write-Host "FALHA: $failedGates gate(s) de conformidade falharam." -ForegroundColor Red

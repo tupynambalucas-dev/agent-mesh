@@ -2,7 +2,7 @@
 .SYNOPSIS
     Automated Workstation Provisioning Script for tupynambalucas-dev.
 .DESCRIPTION
-    Configures Git global defaults, Git Submodule hardening directives, cryptographic
+    Configures Git global defaults, Mani multi-repo orchestrator, cryptographic
     SSH signing, includeIf conditional identity delegation, and GitHub CLI settings.
 .PARAMETER DeveloperName
     Full name or GitHub handle for Git commits.
@@ -35,21 +35,13 @@ if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
 $gitVer = git --version
 Write-Host "  $gitVer detectado." -ForegroundColor Green
 
-# 2. Configure 5-Pillar Global Git Submodule Hardening
-Write-Host "[2/6] Aplicando diretrizes de seguranca de Git Submodules..." -ForegroundColor Yellow
+# 2. Configure Git Global Defaults & Mani Protocol
+Write-Host "[2/6] Aplicando diretrizes de seguranca e protocolo Git..." -ForegroundColor Yellow
 git config --global init.defaultBranch main
 git config --global core.autocrlf true
-git config --global submodule.recurse true
-git config --global push.recurseSubmodules check
-git config --global status.submoduleSummary true
-git config --global diff.submodule log
-git config --global fetch.recurseSubmodules on-demand
 git config --global url."git@github.com:".insteadOf https://github.com/
-Write-Host "  submodule.recurse = true" -ForegroundColor Green
-Write-Host "  push.recurseSubmodules = check" -ForegroundColor Green
-Write-Host "  status.submoduleSummary = true" -ForegroundColor Green
-Write-Host "  diff.submodule = log" -ForegroundColor Green
-Write-Host "  fetch.recurseSubmodules = on-demand" -ForegroundColor Green
+Write-Host "  init.defaultBranch = main" -ForegroundColor Green
+Write-Host "  core.autocrlf = true" -ForegroundColor Green
 Write-Host "  url.git@github.com:.insteadOf = https://github.com/" -ForegroundColor Green
 
 # 3. Provision Ed25519 SSH Signing Keypair
