@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Enterprise Model Context Protocol server for semantic search, knowledge graph querying, and episodic store.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "homepage": "https://docs.tupynambalucas.dev",
   "repository": {
     "type": "git",

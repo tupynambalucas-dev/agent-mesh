@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Universal Model Context Protocol server for cross-platform browser automation and developer desktop inspection.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "homepage": "https://docs.tupynambalucas.dev",
   "repository": {
     "type": "git",

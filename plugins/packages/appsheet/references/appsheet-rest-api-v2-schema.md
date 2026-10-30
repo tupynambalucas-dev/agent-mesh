@@ -25,7 +25,7 @@ Used to retrieve existing records filtered by conditions.
   "Properties": {
     "Locale": "en-US",
     "Timezone": "UTC",
-    "Selector": "Filter(Orders, [Status] = 'Pending')"
+    "Selector": "FILTER(Orders, [Status] = 'Pending')"
   },
   "Rows": []
 }

@@ -25,7 +25,7 @@ This bounded context encapsulates the in-house Model Context Protocol server pro
 
 1. **Dual Transport**: Supports Fastify HTTP for Kubernetes pods and Stdio CLI for local agent sessions.
 2. **Deterministic Keys**: All mutations require unique key identifiers to guarantee REST API v2 idempotency during retries.
-3. **Selector Filtering**: Find operations accept AppSheet expression selectors (e.g. `Filter(TableName, [Status] = "Active")`).
+3. **Selector Filtering**: Find operations accept AppSheet expression selectors (e.g. `FILTER(TableName, [Status] = "Active")`).
 
 ## Operational Guardrails
 

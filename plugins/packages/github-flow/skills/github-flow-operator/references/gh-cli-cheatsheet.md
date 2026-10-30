@@ -20,7 +20,7 @@ gh auth refresh -s read:org,repo
 
 ```bash
 # Create a pull request targeting develop
-gh pr create --base develop --title "feat(scope): concise description" --body-file .github/PULL_REQUEST_TEMPLATE.md
+gh pr create --base main --title "feat(scope): concise description" --body-file .github/PULL_REQUEST_TEMPLATE.md
 
 # View status of PRs relevant to current branch
 gh pr status

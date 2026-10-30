@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Enterprise Model Context Protocol server for GitHub operations using GitHub App authentication and fine-grained permissions.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "homepage": "https://docs.tupynambalucas.dev",
   "repository": {
     "type": "git",

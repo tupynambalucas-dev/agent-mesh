@@ -12,12 +12,13 @@ trigger: always_on
    - Never push unsigned commits to any organizational repository.
 
 2. Conventional Commits Standard:
-   - All commit messages must strictly adhere to Conventional Commits v1.0.0: `<type>(<scope>): <description>`.
+   - All commit messages must strictly adhere to Conventional Commits v1.0.0: `<type>[optional (<scope>)][!]: <description>`.
    - Permitted types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
+   - Commit headers must target `<= 72` characters and must never exceed `100` characters.
 
-3. Branching Strategy & Pull Requests:
-   - Feature and bugfix branches must branch off `develop` (or repository base branch) using deterministic naming: `feat/<slug>`, `fix/<slug>`, `chore/<slug>`.
-   - Direct pushes to protected branches (`main`, `master`, `develop`) are strictly blocked; changes must pass pull request reviews and status checks.
+3. Single-Branch GitHub Flow:
+   - Feature and bugfix branches must branch off `main` using deterministic prefixes: `feat/<slug>`, `fix/<slug>`, `docs/<slug>`, `chore/<slug>`, `refactor/<slug>`, `ci/<slug>`, `perf/<slug>`, `test/<slug>`, `build/<slug>`, `style/<slug>`, `revert/<slug>`, `hotfix/<slug>`.
+   - Direct pushes to protected branches (`main`, `master`) are strictly blocked; changes must pass pull request reviews and status checks.
 
 4. Secret Hygiene:
    - Never commit or log plaintext API keys, Personal Access Tokens (PAT), or private keys.

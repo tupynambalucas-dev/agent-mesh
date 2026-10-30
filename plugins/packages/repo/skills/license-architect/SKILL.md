@@ -23,7 +23,7 @@ This skill defines the authoritative standards for authoring, auditing, and enfo
 
 ### Canonical Repository Root Notice
 ```text
-Copyright (c) [YYYY] tupynambalucas-dev
+Copyright (c) 2026 tupynambalucas.dev
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

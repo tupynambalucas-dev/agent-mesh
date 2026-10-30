@@ -38,21 +38,23 @@
     "mcp:playwright:build": "pnpm --filter @tupynambalucas-dev/mcp-playwright build",
     "mcp:playwright:dev": "pnpm --filter @tupynambalucas-dev/mcp-playwright dev",
     "// Packaging & Deployment": "------------------------------------------------",
-    "packages:publish": "node scripts/publish-packages.js"
+    "packages:publish": "node scripts/publish-packages.js",
+    "changeset": "changeset",
+    "version:packages": "changeset version"
   },
   "devDependencies": {
     "@types/node": "catalog:",
     "rimraf": "catalog:",
     "tsx": "catalog:",
     "turbo": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "@changesets/cli": "^2.29.7"
   },
   "files": [
     ".claude-plugin/",
     "scripts/",
     "plugins/",
-    "mcp/",
-    "references/"
+    "mcp/"
   ],
   "keywords": [
     "antigravity",
@@ -63,5 +65,5 @@
     "skills"
   ],
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
-  "license": "UNLICENSED"
+  "license": "Apache-2.0"
 }

@@ -3,7 +3,7 @@ name: github-flow-operator
 description: Guides and assists developers with Git workflows, branch conventions, Conventional Commits, Pull Request creation, and GitHub CLI operations.
 ---
 
-# GitHub Flow Coach
+# GitHub Flow Operator
 
 Assists engineering, writing, and creative teams with standard Git branching, Conventional Commits formatting, SSH commit signing, Pull Request workflows, and GitHub CLI operations.
 
@@ -39,9 +39,9 @@ Activate this skill when:
    ```bash
    git push -u origin <branch-name>
    ```
-2. Create PR targeting `develop` (or target branch):
+2. Create PR targeting `main` (or target branch):
    ```bash
-   gh pr create --base develop --title "<type>(<scope>): <description>"
+   gh pr create --base main --title "<type>(<scope>): <description>"
    ```
 3. Monitor PR status:
    ```bash
@@ -56,7 +56,8 @@ When updating submodule pointers:
    ```bash
    git add agent-mesh platform docs .github
    git commit -S -m "chore(submodules): bump pointers to latest development heads"
-   git push origin main
+   git push -u origin chore/bump-submodules
+   gh pr create --base main
    ```
 
 ---

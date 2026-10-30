@@ -40,7 +40,7 @@ The underlying MCP servers consumed by this plugin require the following environ
 | `INFISICAL_CLIENT_ID` | Yes (for Universal Auth) | Infisical Machine Identity Client ID. |
 | `INFISICAL_CLIENT_SECRET` | Yes (for Universal Auth) | Infisical Machine Identity Client Secret. |
 | `INFISICAL_PROJECT_ID` | Yes | Target Infisical Project ID. |
-| `INFISICAL_SITE_URL` | Optional | Infisical instance URL (defaults to `https://app.infisical.com`). |
+| `INFISICAL_HOST_URL` | Optional | Infisical instance URL (defaults to `https://app.infisical.com`). |
 | `CORTEX_GATEWAY_URL` | Optional | Envoy AgentGateway cluster URL (defaults to `http://localhost:8080`). |
 | `CORTEX_PROBE_TIMEOUT_MS` | Optional | Smart gateway probe timeout in milliseconds (defaults to `300`). |
 
