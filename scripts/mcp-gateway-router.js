@@ -1,3 +1,15 @@
+#!/usr/bin/env node
+
+/**
+ * Authoritative Smart MCP Gateway Router & Failover Engine
+ * Enterprise Standard for tupynambalucas.dev
+ */
+
+const http = require("http");
+const https = require("https");
+const { spawn } = require("child_process");
+const path = require("path");
+const fs = require("fs");
 
 function loadEnvCascade() {
   const candidates = [
@@ -25,18 +37,6 @@ function loadEnvCascade() {
   }
 }
 loadEnvCascade();
-#!/usr/bin/env node
-
-/**
- * Authoritative Smart MCP Gateway Router & Failover Engine
- * Enterprise Standard for tupynambalucas.dev
- */
-
-const http = require("http");
-const https = require("https");
-const { spawn } = require("child_process");
-const path = require("path");
-const fs = require("fs");
 
 const TARGET_SERVICE = process.argv[2]; // e.g., "firecrawl", "github", "google-workspace", "memory", "appsheet", "context7", "playwright"
 const GATEWAY_BASE_URL = process.env.CORTEX_GATEWAY_URL || "http://localhost:8080";
