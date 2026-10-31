@@ -12,8 +12,6 @@ This document defines the bounded context router for all orchestration and autom
 ## Scripts Layout
 
 - [mcp-gateway-router.js](./mcp-gateway-router.js): Zero-downtime Envoy AgentGateway health check probe (300ms) and local compiled binary fallback router.
-- [bootstrap-workstation.ps1](./bootstrap-workstation.ps1): Automated workstation bootstrapper with Ed25519 signing and Git protocol configuration.
-- [verify-workstation.ps1](./verify-workstation.ps1): Workstation readiness gate validating Git, SSH signing, Mani orchestrator, and GitHub CLI.
 - [publish-packages.js](./publish-packages.js): Idempotent multi-package publisher for GitHub Packages (`npm.pkg.github.com`).
 - [README.md](./README.md): Developer documentation and operational runbooks for automation scripts.
 
@@ -22,3 +20,4 @@ This document defines the bounded context router for all orchestration and autom
 - MUST NOT leak secrets or private keys into terminal output or log files.
 - MUST maintain zero-downtime fallback capability: if the cluster gateway is unreachable, developer sessions must transparently fall back to local execution.
 - MUST preserve the Zero-Emoji Invariant across all scripts and log messages.
+- Developer workstation provisioning and verification scripts belong strictly to `.github/scripts/`.
