@@ -2,6 +2,9 @@
 
 This directory contains developer tooling, zero-downtime gateway routing proxies, and multi-package release automation for `agent-mesh`.
 
+> [!NOTE]
+> Workstation onboarding and readiness gate verification scripts (`bootstrap-workstation.ps1`, `verify-workstation.ps1`) have been migrated to the organization governance repository at [`.github/scripts/`](../../.github/scripts/README.md).
+
 ---
 
 ## 1. Scripts Catalog
@@ -9,8 +12,6 @@ This directory contains developer tooling, zero-downtime gateway routing proxies
 | Script | Purpose | Execution Mode |
 | :--- | :--- | :--- |
 | `mcp-gateway-router.js` | Probes the cluster Envoy AgentGateway (`:8080`) with a 300ms non-blocking health check. If offline, engages local compiled binaries (`dist/bin.js`) or fallback runners. | Node.js stdio spawned by `mcp_config.json`. |
-| `bootstrap-workstation.ps1` | Automated developer workstation bootstrapper applying Ed25519 commit signing and Git protocol defaults. | Standalone PowerShell setup. |
-| `verify-workstation.ps1` | Pre-flight compliance validator verifying 7 compliance gates (Git, SSH, Mani, Node, pnpm, gh). | Invoked via `pnpm run verify:workstation`. |
 | `publish-packages.js` | Idempotently checks package versions against GitHub Packages (`npm.pkg.github.com`) and publishes changed packages. | Invoked during CI release pipeline. |
 
 ---
