@@ -3,25 +3,25 @@ packages:
   - 'plugins/packages/*'
 
 catalog:
-  '@types/node': ^22.13.0
-  typescript: ^6.0.3
+  '@types/node': ^26.6.5
+  typescript: ^7.0.2
   tsx: ^4.19.2
   rimraf: ^6.0.1
   turbo: ^2.11.10
-  dotenv: ^16.4.7
+  dotenv: ^18.0.9
 
 catalogs:
   shared:
-    zod: ^3.24.2
-    dotenv: ^16.4.7
+    zod: ^4.6.7
+    dotenv: ^18.0.9
 
   mcp-stack:
     '@modelcontextprotocol/sdk': ^1.6.1
     fastify: ^5.2.1
-    firecrawl: ^1.13.4
-    '@octokit/auth-app': ^7.1.5
-    '@octokit/core': ^6.1.4
-    googleapis: ^144.0.0
+    firecrawl: ^4.51.0
+    '@octokit/auth-app': ^8.3.1
+    '@octokit/core': ^7.0.8
+    googleapis: ^188.0.0
     playwright: ^1.51.0
     ws: ^8.18.0
     '@types/ws': ^8.5.14
