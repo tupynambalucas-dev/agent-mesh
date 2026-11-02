@@ -24,7 +24,7 @@ Authoritative technical reference detailing all 10 sovereign domain plugins auth
 ## Dual Manifest Standards
 
 Every plugin in `plugins/packages/*` declares dual configurations for cross-ecosystem compatibility:
-1. **`mcp_config.json`**: Consumed by native Google Antigravity sessions. Points command execution to `../../../scripts/mcp-gateway-router.js`.
+1. **`mcp_config.json`**: Consumed by native Google Antigravity sessions. Points command execution to `sovereign plugin launchers (./scripts/launcher.cjs)`.
 2. **`mcp.json`**: Consumed by cross-vendor runners adhering to the `agent-plugins.org` v1.0.0 specification with `"type": "stdio"`.
 
 ---

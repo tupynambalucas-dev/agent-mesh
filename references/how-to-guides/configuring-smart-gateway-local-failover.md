@@ -1,12 +1,12 @@
 # How to Configure Smart Gateway Local Failover
 
-This guide explains how `scripts/mcp-gateway-router.js` provides automatic, non-blocking failover between cloud-native Kubernetes AgentGateway microservices and local standalone MCP binaries.
+This guide explains how `plugins/packages/<plugin>/scripts/launcher.cjs` provides automatic, non-blocking failover between cloud-native Kubernetes AgentGateway microservices and local standalone MCP binaries.
 
 ---
 
 ## Failover Overview
 
-When an agent invokes an MCP tool, `mcp-gateway-router.js` acts as an intelligent proxy:
+When an agent invokes an MCP tool, `launcher.cjs` acts as an intelligent proxy:
 1. **Health Probe**: Issues a 300ms HTTP healthcheck probe to `CORTEX_GATEWAY_URL/health` (port `8080`).
 2. **Mode A (Online)**: If Envoy AgentGateway responds with HTTP `200`, the router proxies the JSON-RPC request to the cluster over Streamable HTTP/SSE.
 3. **Mode B (Offline)**: If the cluster gateway is unreachable, timed out, or returning errors, the router automatically spawns the local compiled binary (`mcp/packages/<target>/dist/bin.js`) or executes registry fallbacks via `pnpm dlx`.
@@ -43,7 +43,7 @@ Variables already defined in the active process environment are never overwritte
 Ensure nothing is running on port 8080, then execute:
 
 ```bash
-node scripts/mcp-gateway-router.js firecrawl
+node plugins/packages/<plugin>/scripts/launcher.cjs firecrawl
 ```
 
 Expected output on `stderr`:
@@ -64,7 +64,7 @@ kubectl port-forward -n cortex svc/agentgateway 8080:8080
 Re-run the router:
 
 ```bash
-node scripts/mcp-gateway-router.js firecrawl
+node plugins/packages/<plugin>/scripts/launcher.cjs firecrawl
 ```
 
 Expected output on `stderr`:

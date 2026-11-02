@@ -7,17 +7,19 @@
 
 # Scripts Subsystem Agent Context
 
-This document defines the bounded context router for all orchestration and automation scripts in `scripts/`.
+This document defines the bounded context router for orchestration and automation scripts in `scripts/`.
 
 ## Scripts Layout
 
-- [mcp-gateway-router.js](./mcp-gateway-router.js): Zero-downtime Envoy AgentGateway health check probe (300ms) and local compiled binary fallback router.
 - [publish-packages.js](./publish-packages.js): Idempotent multi-package publisher for GitHub Packages (`npm.pkg.github.com`).
 - [README.md](./README.md): Developer documentation and operational runbooks for automation scripts.
+
+## Sovereign Plugin Launchers Notice
+
+The legacy root router `mcp-gateway-router.js` has been retired. MCP server launching is now governed autonomously by self-contained launchers located within each plugin package at `plugins/packages/<plugin>/scripts/launcher.cjs`.
 
 ## Operational Guardrails
 
 - MUST NOT leak secrets or private keys into terminal output or log files.
-- MUST maintain zero-downtime fallback capability: if the cluster gateway is unreachable, developer sessions must transparently fall back to local execution.
 - MUST preserve the Zero-Emoji Invariant across all scripts and log messages.
 - Developer workstation provisioning and verification scripts belong strictly to `.github/scripts/`.

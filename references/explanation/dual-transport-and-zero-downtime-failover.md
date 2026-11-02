@@ -45,13 +45,13 @@ To achieve the best of both worlds, every in-house MCP server in `mcp/packages/*
 
 ## 3. Smart Gateway Failover Flow
 
-The smart router script [`scripts/mcp-gateway-router.js`](../../scripts/mcp-gateway-router.js) binds both modes into a single, highly available interface:
+The smart router script [`plugins/packages/<plugin>/scripts/launcher.cjs`](../../plugins/packages/<plugin>/scripts/launcher.cjs) binds both modes into a single, highly available interface:
 
 ```
 [Agent Invokes MCP Tool]
           │
           ▼
-[mcp-gateway-router.js]
+[launcher.cjs]
           │
           ├── [300ms Non-Blocking Probe: http://localhost:8080/health]
           │         │

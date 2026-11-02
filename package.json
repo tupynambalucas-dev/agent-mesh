@@ -1,8 +1,8 @@
 {
   "name": "@tupynambalucas-dev/agent-mesh",
   "version": "1.0.0",
-  "description": "Universal enterprise AI agent mesh: governance, MCP gateway router, domain plugins, and modular skills.",
-  "main": "scripts/mcp-gateway-router.js",
+  "private": true,
+  "description": "Universal enterprise AI agent mesh: governance, MCP servers, domain plugins, and modular skills.",
   "packageManager": "pnpm@10.33.2",
   "repository": {
     "type": "git",
