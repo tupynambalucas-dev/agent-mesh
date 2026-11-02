@@ -1,0 +1,21 @@
+{
+  "enforce-research-mandate": {
+    "SessionStart": [
+      {
+        "command": "node ./scripts/hooks/session-start.cjs",
+        "timeout": 5
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "search_web|read_url_content|scrape|research_firecrawl_scrape",
+        "hooks": [
+          {
+            "command": "node ./scripts/hooks/pre-tool-use.cjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
