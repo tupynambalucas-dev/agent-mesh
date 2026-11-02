@@ -5,7 +5,7 @@ trigger: always_on
 # Repository Management Domain Rules
 
 0. Autonomous Domain Mandate:
-   - When requested to create, audit, align, or format repository root files (`README.md`, `LICENSE.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CHANGELOG.md`, `GOVERNANCE.md`), monorepo configurations (`pnpm-workspace.yaml`, `turbo.json`), package manifests (`package.json`), or TypeScript configurations (`tsconfig*.json`), the agent MUST autonomously engage the `repo` skills (`readme-architect`, `community-health-architect`, `license-architect`, `monorepo-architect`) without waiting for explicit skill invocations from the user.
+   - When requested to create, audit, align, or format repository root files (`README.md`, `LICENSE.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CHANGELOG.md`, `GOVERNANCE.md`), monorepo configurations (`pnpm-workspace.yaml`, `turbo.json`), package manifests (`package.json`), TypeScript configurations (`tsconfig*.json`), or repository `.github` directory structures (`CODEOWNERS`, `dependabot.yml`, composite actions), the agent MUST autonomously engage the `repo` skills (`readme-architect`, `community-health-architect`, `license-architect`, `monorepo-architect`, `github-standards-architect`) without waiting for explicit skill invocations from the user.
 
 1. The AGENTS-README Co-existence & Layer Invariant:
    - Wherever an `AGENTS.md` bounded context router file exists in a directory, a corresponding `README.md` file MUST also exist within that same directory.
@@ -36,3 +36,8 @@ trigger: always_on
      - `agent-mesh` MCP servers: `@tupynambalucas-dev/mcp-<slug>`
      - `platform` packages/services: `@tupynambalucas-dev/<domain>-<subsystem>` (e.g., `corporate-api`, `corporate-web`, `corporate-core`, `cortex-memory-api`, `studio-assets`, `tools-github`, `shared-config`, `k8s`, `renderer`).
      - Standalone repositories: `@tupynambalucas-dev/<repo>-<service>` and `@tupynambalucas-dev/plugin-<slug>`.
+
+7. Organization-Wide .github Directory Taxonomy Invariant:
+   - All repositories across the organization MUST declare local `.github/CODEOWNERS` mapping `*` to `@tupynambalucas-dev/core-maintainers`.
+   - Child repositories MUST NOT define local `.github/ISSUE_TEMPLATE/` directories unless strictly required, preserving native organizational inheritance from `tupynambalucas-dev/.github` without shadowing.
+   - Monorepos must standardize `.github/actions/setup-pnpm-env/action.yml` for unified dependency caching and use native `pnpm -r publish` for idempotent releases.

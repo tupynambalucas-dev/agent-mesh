@@ -13,7 +13,7 @@ Compatible natively with **Google Antigravity (`agy`)**, **Anthropic Claude Code
 - **10 Domain Plugins** ([plugins/](./plugins/README.md)): Self-contained plugins compliant with `agent-plugins.org` v1.0.0 and native Antigravity with dedicated manifests, dual-mode MCP servers (`mcp.json` + `mcp_config.json`), domain rules (`rules/AGENTS.md`), and modular skills.
 - **7 MCP Servers** ([mcp/](./mcp/README.md)): Dual-transport TypeScript services operating as Kubernetes microservices (HTTP on port 8080) and local Stdio binaries for smart gateway failover.
 - **1 Marketplace Registry** ([.claude-plugin/marketplace.json](./.claude-plugin/marketplace.json)): Canonical manifest enabling selective plugin discovery and installation in Claude Code.
-- **Orchestration Scripts** ([scripts/](./scripts/README.md)): Smart MCP gateway router, fallback runners, and package publisher.
+- **Orchestration Scripts** ([scripts/](./scripts/README.md)): Developer runbooks and zero-script monorepo release architecture.
 - **Documentation Hub** ([references/](./references/README.md)): Authoritative technical documentation organized according to the Diátaxis framework (tutorials, how-to guides, reference, explanation).
 - **AI Planning & Verification Hub** ([.agents/](./.agents/README.md)): Architectural master plans, migration blueprints, and verification reports.
 
