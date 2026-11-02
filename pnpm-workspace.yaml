@@ -3,8 +3,8 @@ packages:
   - 'plugins/packages/*'
 
 registries:
-  https://npm.pkg.github.com/:
-    scopes: ["@tupynambalucas-dev"]
+  default: 'https://registry.npmjs.org/'
+  '@tupynambalucas-dev': 'https://npm.pkg.github.com/'
 
 catalog:
   '@types/node': ^22.13.0
