@@ -14,6 +14,8 @@ Compatible natively with **Google Antigravity (`agy`)**, **Anthropic Claude Code
 - **7 MCP Servers** ([mcp/](./mcp/README.md)): Dual-transport TypeScript services operating as Kubernetes microservices (HTTP on port 8080) and local Stdio binaries for smart gateway failover.
 - **1 Marketplace Registry** ([.claude-plugin/marketplace.json](./.claude-plugin/marketplace.json)): Canonical manifest enabling selective plugin discovery and installation in Claude Code.
 - **Orchestration Scripts** ([scripts/](./scripts/README.md)): Smart MCP gateway router, fallback runners, and package publisher.
+- **Documentation Hub** ([references/](./references/README.md)): Authoritative technical documentation organized according to the Diátaxis framework (tutorials, how-to guides, reference, explanation).
+- **AI Planning & Verification Hub** ([.agents/](./.agents/README.md)): Architectural master plans, migration blueprints, and verification reports.
 
 ```text
 agent-mesh/
@@ -49,12 +51,23 @@ agent-mesh/
 │       ├── infisical/       # @tupynambalucas-dev/mcp-infisical
 │       ├── memory/          # @tupynambalucas-dev/mcp-memory
 │       └── playwright/      # @tupynambalucas-dev/mcp-playwright
-└── scripts/
+├── scripts/
     ├── AGENTS.md            # Scripts subsystem context router
     ├── README.md            # Scripts subsystem documentation
-    ├── mcp-runner.js        # 3-tier fallback environment loader for legacy tools
     ├── mcp-gateway-router.js# Zero-downtime healthcheck proxy and fallback router
     └── publish-packages.js  # Idempotent GitHub Packages multi-package publisher
+├── references/              # Diátaxis technical documentation hub
+│   ├── AGENTS.md            # References subsystem context router
+│   ├── README.md            # Master quadrant index
+│   ├── tutorials/           # Learning-oriented step-by-step guides
+│   ├── how-to-guides/       # Problem-oriented operational recipes
+│   ├── reference/           # Information-oriented technical schemas & catalogs
+│   └── explanation/         # Understanding-oriented architecture & rationale
+└── .agents/                 # AI agent planning, blueprints, and reports hub
+    ├── AGENTS.md            # Agent planning context router
+    ├── README.md            # Planning hub overview
+    ├── plans/               # Architectural master plans and migration runbooks
+    └── reports/             # Verification analyses, refactoring audits, and benchmarks
 ```
 
 ---

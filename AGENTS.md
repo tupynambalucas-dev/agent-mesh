@@ -9,7 +9,8 @@ This document serves as the sovereign root context router (Layer 1) for AI agent
 - [mcp](./mcp/AGENTS.md): In-house Model Context Protocol (MCP) packages, dual-transport servers, and protocol definitions.
 - [plugins](./plugins/AGENTS.md): Antigravity and Claude Code domain plugins, modular skills, and rule sets.
 - [scripts](./scripts/AGENTS.md): Smart MCP gateway router, fallback runners, package publisher, and setup automation.
-- [references](./references/naming-convention-proposal.md): Enterprise naming convention proposal and architecture blueprints.
+- [references](./references/AGENTS.md): Sovereign documentation hub organized according to the Diátaxis framework (tutorials, how-to guides, reference, explanation).
+- [.agents](./.agents/AGENTS.md): AI agent planning hub, architectural master plans, and verification reports.
 
 ## Architecture
 
