@@ -451,7 +451,7 @@ requests there. Actor legend as in section 5.
 5. Acceptance: an unauthenticated `tools/list` returns 401; a `firecrawl` credential lists only Firecrawl
    tools; a forged `Origin` is rejected.
 
-### Phase 8: Cluster workload hardening (AI in `platform`)
+### Phase 8: Cluster workload hardening (AI in `platform`) - [COMPLETED in PR #36]
 
 1. Resolve C1 first: confirm which package names exist in the registry (V7) and fix manifests or names.
 2. Apply DEC-04: build one immutable image per MCP server in CI and reference it by digest, or pin exact
@@ -525,8 +525,8 @@ Phases 1 to 3 and 7 to 10. Decisions marked Defaulted proceed with the recommend
 | DEC-06 | How callers authenticate to the gateway | (a) JWT through `mcpAuthentication` with an identity provider you choose (name the provider). (b) Interim static bearer token from Infisical, then migrate to (a). (c) Network-only protection through a private network or an access proxy. | (b) now, (a) as the target. Tell me which identity provider you operate or prefer. | C4, Phase 7 |
 | DEC-07 | Whether the gateway hostnames stay publicly reachable | (a) Public with authentication. (b) Private behind a VPN or access proxy; developers connect through it. | Your call. If (a), DEC-06 must be done first. If (b), tell me the mechanism. | C4, L1 |
 | DEC-09 | How a plugin picks local or cluster mode | (a) Explicit `profile` variable, `local` by default. (b) Keep the automatic 300 ms probe. | (a). Auto-detection makes behavior depend on network timing and is hard to debug. | L1, Phase 3, Phase 10 |
-| DEC-01 | Fate of the in-house `@tupynambalucas-dev/mcp-playwright` | (a) Keep only for the cloud HTTP deployment after removing its CDP and extension modes. (b) Retire it and use the official image in the cluster. (c) Fix it to match the extension handshake. | (b) if the official `mcr.microsoft.com/playwright/mcp` image meets your needs, otherwise (a). | P4, Phase 2 |
-| DEC-13 | Canonical package names | (a) Keep `mcp-<slug>` and `plugin-<slug>` as the code and the repository rules use, and fix the cluster manifests and plan documents. (b) Rename packages to `cortex-mcp-*` and `agent-plugin-*`. | (a). It matches repo rule 6 and needs no republishing. | C1, Q3 |
+| DEC-01 | Fate of the in-house `@tupynambalucas-dev/mcp-playwright` and cluster Playwright | (a) Keep only for cloud. (b) Retire. (c) Hybrid model. | [RESOLVED: (c) Hybrid model active. Cluster runs official Playwright container with port 8080 tcpSocket probes; workstations run isolated per-plugin daemons with dedicated profiles]. | P4, Phase 2, Phase 8 |
+| DEC-13 | Canonical package names | (a) Standardize `@tupynambalucas-dev/mcp-*`. (b) Rename to `cortex-mcp-*`. | [RESOLVED: (a). Standardized to `@tupynambalucas-dev/mcp-*` across all cluster manifests in PR #36]. | C1, Q3, Phase 8 |
 
 ### 9.2 Needed before the cluster phases
 
