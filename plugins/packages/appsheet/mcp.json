@@ -11,12 +11,14 @@
     },
     "playwright": {
       "type": "stdio",
-      "command": "node",
-      "args": ["../../../scripts/mcp-gateway-router.js", "playwright"],
-      "env": {
-        "CORTEX_GATEWAY_URL": "http://localhost:8080",
-        "CORTEX_PROBE_TIMEOUT_MS": "300"
-      }
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@0.0.84",
+        "--user-data-dir",
+        "${PLUGIN_DATA}/appsheet-profile",
+        "--headless"
+      ]
     }
   }
 }

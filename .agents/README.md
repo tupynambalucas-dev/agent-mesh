@@ -26,6 +26,7 @@ This directory houses cross-repository architectural plans, AI-generated reports
 - [Autonomous Agent Mesh Master Implementation Plan](./plans/master-implementation-plan-github-app-and-cortex-mcp.md): Comprehensive actionable plan detailing GitHub App configuration, Infisical secrets, K8s manifests, and package publishing.
 - [Cortex Gateway & Agent Mesh Master Plan](./plans/cortex-gateway-and-self-contained-agent-mesh-architecture.md): 7-phase execution master plan establishing zero-Dockerfile Kubernetes manifests and capability workspace.
 - [Monorepo & GitHub App Architecture](./plans/agent-monorepo-and-github-app-architecture.md): Blueprint for decomposing the monolithic repository into an enterprise capability monorepo.
+- [Plugin Independence & Enforcement Hooks Plan](./plans/plugin-independence-playwright-isolation-and-enforcement-hooks.md): Self-contained plugins, isolated per-plugin Playwright, per-plugin launchers, and lifecycle hooks enforcing plugin mandates.
 
 ### 2.3 Verification & Analytical Reports (`reports/`)
 - [Refactoring Audit Report](./reports/agent-mesh-refactoring-and-governance-report.md): Exhaustive audit and refactoring of legacy nomenclature, paths, and standards.

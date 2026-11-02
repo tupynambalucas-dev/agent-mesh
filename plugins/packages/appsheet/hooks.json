@@ -1,0 +1,15 @@
+{
+  "enforce-appsheet-invariants": {
+    "PreToolUse": [
+      {
+        "matcher": "mutate_records|appsheet_mutate_records",
+        "hooks": [
+          {
+            "command": "node ./scripts/hooks/enforce-appsheet-mutation.cjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
