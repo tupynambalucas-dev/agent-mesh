@@ -11,8 +11,8 @@ const configSchema = z.object({
   PLAYWRIGHT_CHANNEL: z.enum(['chrome', 'msedge', 'chrome-beta', 'chrome-canary', 'chromium']).default('chrome'),
   PLAYWRIGHT_HEADLESS: z
     .string()
-    .transform((val) => val === 'true' || val === '1')
-    .default('false'),
+    .default('false')
+    .transform((val) => val === 'true' || val === '1'),
   PLAYWRIGHT_MCP_EXTENSION_TOKEN: z.string().optional().default(''),
   NODE_ENV: z.string().default('development'),
 });
