@@ -5,6 +5,11 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { registerToolHandlers } from './tools/index.js';
 
 async function main() {
+  if (process.argv.includes('--http') || process.env.MCP_TRANSPORT === 'http') {
+    await import('./index.js');
+    return;
+  }
+
   const server = new Server(
     {
       name: 'infisical-mcp',

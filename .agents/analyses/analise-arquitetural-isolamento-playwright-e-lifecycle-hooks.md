@@ -118,6 +118,25 @@ Para evitar que ele polua a tabela de ferramentas do modelo, foi aplicada uma **
 - **Perfil Dedicado**: Aponta para `${PLUGIN_DATA}/appsheet-profile`. Se o desenvolvedor efetuar login corporativo Google no AppSheet Studio, as sessoes e cookies permanecem preservados nesse diretorio sem interferir na navegacao web comum.
 - **Reducao Drastica de Overhead**: Apenas 6 ferramentas sao injetadas no schema JSON-RPC do `appsheet_playwright`, eliminando 11 ferramentas redundantes que geravam confusao cognitiva no modelo.
 
+### 2.3 O Modelo Hibrido: Playwright no Cluster Kubernetes vs Workstation Local
+A arquitetura corporativa adota formalmente o **modelo hibrido de coexistencia**:
+
+1. **No Cluster Kubernetes (`platform/k8s`)**:
+   - O servico `mcp-playwright` opera como um workload permanente no namespace `cortex`, consumindo a imagem oficial `mcr.microsoft.com/playwright/mcp:latest`.
+   - Executa em modo headless com Chromium (`--headless --browser chromium --no-sandbox --port 8080 --host 0.0.0.0`), alocando recursos dedicados (requests: `512Mi / 250m`, limits: `2Gi / 1000m`) e em conformidade estrita com o Pod Security Standard `restricted` (`allowPrivilegeEscalation: false`, `runAsNonRoot: true`, `capabilities: drop: ["ALL"]`, `seccompProfile: RuntimeDefault`).
+   - Monitorado via sondas de saude `livenessProbe` e `readinessProbe` baseadas em `tcpSocket: port: 8080`.
+   - Integrado e roteado pelo **AgentGateway** (`http://mcp-playwright:8080/mcp`), permitindo que agentes autonomos de nuvem, workflows do GitHub Actions e rotinas cron executem navegacao e extracao sem depender de computadores locais.
+
+2. **Na Workstation do Desenvolvedor (`agent-mesh`)**:
+   - Os plugins `web` e `appsheet` instanciam daemons locais via Node/npx apontando para perfis isolados em disco fora da raiz do codigo (`${PLUGIN_DATA}/browser-profile` e `${PLUGIN_DATA}/appsheet-profile`).
+   - Esse isolamento previne que a execucao em IDE ou terminal dispute sockets com os pods do cluster ou trave o navegador pessoal do desenvolvedor.
+   - Suporte a emparelhamento interativo com o navegador desktop (`playwright-desktop` via `--extension`) disponivel sob demanda.
+
+3. **Padronizacao de Servidores MCP In-House (Dual-Mode)**:
+   - Os pacotes MCP corporativos (`@tupynambalucas-dev/mcp-*`) implementam binarios de modo duplo (`src/bin.ts`).
+   - Quando acionados localmente em CLI ou harness padrao, operam via `StdioServerTransport`.
+   - Quando acionados em conteinerizacao Kubernetes com a flag `--http` ou variavel `MCP_TRANSPORT=http`, ativam dinamicamente o servidor Fastify HTTP escutando na porta 8080 com endpoints `/mcp` e `/health`.
+
 ---
 
 ## 3. Imposicao Deterministica via Lifecycle Hooks
@@ -227,7 +246,9 @@ O plano mestre estabelecido em [`.agents/plans/plugin-independence-playwright-is
 | **Fase 4** | Lifecycle Hooks de Imposicao | **Concluida (Core)** | Hooks implementados e ativos em `research`, `github-flow`, `atelier` e `appsheet`. |
 | **Fase 9** | Endurecimento de CI/CD | **Concluida** | Workflows `ci.yml`, `publish.yml` endurecidos e Dependabot configurado. Mergeado no PR #11. |
 | **Fase 3 & 10** | Launchers Vendored e CLI Doctor | *Planejada (Workstation)* | Migracao dos outros servicos (Firecrawl/GitHub) para launchers com suporte a perfil explicito (`local` vs `cluster`) e script `mesh:doctor`. |
-| **Fase 7 & 8** | Hardening de Gateway e Pods K8s | *Planejada (Platform)* | Atualizacoes no repositorio `platform` (manifestos em `platform/k8s/manifests/hub/cortex/mcp/`, correcao de nomes `mcp-*`, probes, SecurityContext e JWT). |
+| **Fase 8** | Endurecimento de Pods K8s e MCP | **Concluida (Platform)** | Manifestos de MCP corrigidos para `@tupynambalucas-dev/mcp-*`, probes de saude HTTP/TCP configurados, SecurityContext restrito implementado, `optional: true` removido de segredos mandatorios, Playwright MCP restaurado no cluster (`mcr.microsoft.com/playwright/mcp:latest`) e roteado via AgentGateway. Mergeado no PR #36 de `platform`. |
+| **Fase 3 & 10** | Launchers Vendored e CLI Doctor | *Planejada (Workstation)* | Migracao dos outros servicos (Firecrawl/GitHub) para launchers com suporte a perfil explicito (`local` vs `cluster`) e script `mesh:doctor`. |
+| **Fase 7** | Hardening de Gateway K8s | *Planejada (Platform)* | Politicas de autenticacao JWT/Bearer e regras de autorizacao CEL no AgentGateway. |
 | **Fase 11** | Testes Contratuais Automatizados | *Planejada (Qualidade)* | Suíte de testes com Vitest garantindo imutabilidade de schemas JSON-RPC e protecao contra tool-poisoning. |
 | **Fase 12** | Observabilidade e Tracing | *Planejada (Infra)* | Integracao com OpenTelemetry para correlacao de chamadas entre Gateway e servidores MCP. |
 
