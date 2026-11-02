@@ -427,7 +427,71 @@ Para ilustrar o funcionamento real, vejamos o que aconteceu no teste realizado d
 
 ---
 
-## 5. Matriz Comparativa: Modo A (Gateway) vs. Modo B (Fallback)
+## 5. Diagnóstico e Anatomia do Conflito do Playwright
+
+Durante a execução da ferramenta `browser_inspect_active_tab` e das rotinas de pareamento com o navegador do desenvolvedor, identificou-se um conflito multifacetado composto por 5 anomalias técnicas simultâneas:
+
+### 5.1 O Conflito de Processos Duplicados (`web_playwright` vs. `appsheet_playwright`)
+O primeiro nível de conflito ocorre no carregamento de plugins pelo runtime do Antigravity:
+1. **Origem da Duplicação**:
+   - O plugin `web` declarava em seu `mcp_config.json`:
+     `"playwright": { "command": "node", "args": ["../../../scripts/mcp-gateway-router.js", "playwright"] }`
+   - O plugin `appsheet` declarava exatamente a mesma entrada em seu próprio `mcp_config.json`:
+     `"playwright": { "command": "node", "args": ["../../../scripts/mcp-gateway-router.js", "playwright"] }`
+2. **Impacto no Sistema Operacional e no Agente**:
+   - O runtime do Antigravity cria namespaces determinísticos no formato `<plugin>_<servidor>`, resultando no spawn de dois daemons paralelos: `web_playwright` e `appsheet_playwright`.
+   - **Disputa de Recursos**: Ambos os processos tentam abrir ou escutar as mesmas portas de depuração remota e disputam conexões no mesmo navegador do usuário.
+   - **Sobrecarga de Contexto**: O modelo de linguagem recebia 34 ferramentas em vez de 17 (duplicação integral de `browser_navigate`, `browser_snapshot`, `browser_click`, etc.), consumindo desnecessariamente tokens do context budget e gerando ambiguidade sobre qual ferramenta o agente deveria acionar.
+
+### 5.2 O Descompasso de Protocolos: CDP Direto (`:9222`) vs. WebSocket Relay da Extensão
+O segundo nível de conflito ocorreu na camada de transporte entre o servidor MCP e o navegador:
+1. **A Hipótese do Código Customizado (`session-manager.ts`)**:
+   - A classe `UniversalSessionManager` em `agent-mesh/mcp/packages/playwright/src/browser/session-manager.ts` tratava o modo extensão como se fosse uma conexão CDP tradicional:
+     `this.browser = await chromium.connectOverCDP(endpoint, { noDefaults: true, headers })`
+   - Onde `endpoint` assumia por padrão `http://localhost:9222`.
+2. **O Protocolo Real da Extensão Oficial (`mmlmfjhmonkocbjadbfplnigmagldckm`)**:
+   - A extensão do Playwright instalada no navegador **não** escuta na porta 9222 e não abre portas HTTP estáticas.
+   - O funcionamento real da extensão depende de um **servidor de relay WebSocket dinâmico**: o processo do Playwright (`@playwright/mcp --extension`) inicia um servidor temporário em uma porta efêmera aleatória (ex: `ws://[::1]:58863/extension/...`) e dispara uma chamada para o navegador abrir a página interna `chrome-extension://mmlmfjhmonkocbjadbfplnigmagldckm/connect.html?mcpRelayUrl=ws://...&token=...`.
+   - Como o navegador Vivaldi do usuário não foi iniciado com a flag `--remote-debugging-port=9222`, a chamada `connectOverCDP` falhava imediatamente com erro de conexão recusada (`ECONNREFUSED`).
+
+### 5.3 O Desvio para o Fallback Headless Ausente (`ms-playwright` Vazio)
+Ao falhar a conexão CDP na porta 9222, o código entrava em uma contingência indesejada:
+1. Sem o sinal explícito de extensão, o `session-manager.ts` concluía que o navegador desktop estava indisponível e caía no bloco de contingência `headless`:
+   `this.browser = await chromium.launch({ headless: true })`
+2. **O Erro Fatal**: O Playwright requer que os binários compilados do Chromium de teste estejam baixados em `C:\Users\tupyn\AppData\Local\ms-playwright`.
+3. Como esses binários pesados (centenas de megabytes) não são commitados no repositório e a máquina de desenvolvimento não havia executado `npx playwright install`, o processo terminava abruptamente com:
+   `browserType.launch: Executable doesn't exist at C:\Users\tupyn\AppData\Local\ms-playwright\chromium_headless_shell-1248\chrome-headless-shell-win64\chrome-headless-shell.exe`
+
+### 5.4 A Discrepância de Perfil de Navegador (Vivaldi vs. Google Chrome Padrão)
+Mesmo quando acionado o `@playwright/mcp --extension` oficial:
+1. O CLI do Playwright assume por padrão que o usuário está utilizando o Google Chrome em seu caminho canônico:
+   `C:\Users\tupyn\AppData\Local\Google\Chrome\User Data`
+2. No ambiente do desenvolvedor, o navegador diário em execução era o **Vivaldi** (`vivaldi.exe`), cujos perfis e extensões residem em:
+   `C:\Users\tupyn\AppData\Local\Vivaldi\User Data`
+3. Como resultado, o Playwright buscava o ID da extensão na pasta do Google Chrome (onde não estava instalada) e reportava:
+   `Error: Playwright Extension not found in "C:\Users\tupyn\AppData\Local\Google\Chrome\User Data"`
+
+### 5.5 O Estado Persistente dos Daemons MCP (Injeção em Tempo de Execução)
+Por fim, ocorreu o descompasso de ciclo de vida de processos:
+1. Os daemons MCP são inicializados no momento em que a sessão do assistente abre.
+2. Adicionar variáveis (`PLAYWRIGHT_MODE=extension` e `PLAYWRIGHT_MCP_EXTENSION_TOKEN=...`) ao arquivo `.env` no disco após o processo já estar em memória não altera as variáveis de ambiente (`process.env`) do processo filho que já estava rodando.
+3. Para que as variáveis do `.env` tenham efeito sobre um daemon em execução contínua, é obrigatório recarregar a sessão ou reiniciar o processo MCP.
+
+### 5.6 A Solução de Arquitetura e Higiene dos Bounded Contexts
+Para eliminar de forma definitiva todos os pontos de conflito identificados:
+1. **Unificação de Domínio no Plugin `web`**:
+   - Remover a declaração redundante de `playwright` de `plugins/packages/appsheet/mcp_config.json`, delegando toda a automação de navegadores exclusivamente para o plugin soberano `web`.
+2. **Configuração Explícita do Caminho do Executável e Token**:
+   - Declarar no `.env` do monorepo:
+     - `PLAYWRIGHT_MODE=extension`
+     - `PLAYWRIGHT_MCP_EXTENSION_TOKEN=IFfNwHXwLCURaEPRlwZbPkvgd8bzXT4dUNFbdeNuC-Q`
+     - `PLAYWRIGHT_MCP_EXECUTABLE_PATH=C:\Users\tupyn\AppData\Local\Vivaldi\Application\vivaldi.exe`
+3. **Alternativa Sem Extensão (Porta Nativa CDP)**:
+   - Alternativamente, iniciar o Vivaldi com `vivaldi.exe --remote-debugging-port=9222` contorna completamente a complexidade de tokens e relays da extensão, permitindo acesso nativo por qualquer cliente CDP.
+
+---
+
+## 6. Matriz Comparativa: Modo A (Gateway) vs. Modo B (Fallback)
 
 | Aspecto Operacional | Modo A: Envoy AgentGateway (Nuvem / K8s) | Modo B: Fallback Local (Stdio / Monorepo) |
 | :--- | :--- | :--- |
@@ -440,7 +504,7 @@ Para ilustrar o funcionamento real, vejamos o que aconteceu no teste realizado d
 
 ---
 
-## 6. Conclusão e Diretrizes de Manutenção
+## 7. Conclusão e Diretrizes de Manutenção
 
 O [`mcp-gateway-router.js`](../../scripts/mcp-gateway-router.js) é uma peça fundamental de infraestrutura que desacopla o
 desenvolvimento ágil de software da necessidade de manter um cluster de contêineres ativo 24/7.
