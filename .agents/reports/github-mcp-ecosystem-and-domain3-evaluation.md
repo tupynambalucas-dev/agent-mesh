@@ -10,7 +10,7 @@ relies on the GitHub CLI (`gh`) and REST API scripts.
 
 ## 1. Executive Summary
 
-AI coding agents and operators in `agent-toolkit` interface with GitHub through a multi-tier
+AI coding agents and operators in `agent-mesh` interface with GitHub through a multi-tier
 governance architecture:
 
 - **Domain 1 (Developer Operations)**: Pull request creation, conventional commit validation,
@@ -89,7 +89,7 @@ every prompt turn. Restricting MCP tools to developer workflows (Domain 1) and s
 
 ## 4. Current Setup vs. Official `github/github-mcp-server`
 
-### Current Setup: `@modelcontextprotocol/server-github` via `mcp-runner.js`
+### Current Setup: `@tupynambalucas-dev/mcp-github` via `mcp-gateway-router.js`
 - **Strengths**:
   - Pure JavaScript/Node.js: Boots in milliseconds via `pnpm dlx` without container virtualization.
   - Multi-tier fallback: Seamlessly inherits tokens from Infisical Layer 1, local `.env` Layer 2,
@@ -113,14 +113,14 @@ every prompt turn. Restricting MCP tools to developer workflows (Domain 1) and s
 
 ## 5. Architectural Recommendation
 
-1. **Retain Current Node.js MCP for Domains 1 & 2**: Continue using `@modelcontextprotocol/server-github`
-   orchestrated by `agent-toolkit/scripts/mcp-runner.js`. It provides lightweight, zero-container
+1. **Retain Current Node.js MCP for Domains 1 & 2**: Continue using in-house `@tupynambalucas-dev/mcp-github`
+   orchestrated by `agent-mesh/scripts/mcp-gateway-router.js`. It provides lightweight, zero-container
    developer tool execution for all teams.
 2. **Standardize Domain 3 on the GitHub CLI & Deterministic Scripts**: Continue executing team
    bootstrapping, RBAC syncing, ruleset configuration, and Actions secrets via:
-   - [`agent-toolkit/skills/github-org-manager/scripts/bootstrap-teams.sh`](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-toolkit/skills/github-org-manager/scripts/bootstrap-teams.sh)
-   - [`agent-toolkit/skills/github-org-manager/scripts/sync-team-permissions.sh`](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-toolkit/skills/github-org-manager/scripts/sync-team-permissions.sh)
-   - [`agent-toolkit/skills/github-org-manager/scripts/configure-rulesets.sh`](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-toolkit/skills/github-org-manager/scripts/configure-rulesets.sh)
+   - [`plugins/packages/github-org/skills/github-org-operator/scripts/bootstrap-teams.sh`](../../plugins/packages/github-org/skills/github-org-operator/scripts/bootstrap-teams.sh)
+   - [`plugins/packages/github-org/skills/github-org-operator/scripts/sync-team-permissions.sh`](../../plugins/packages/github-org/skills/github-org-operator/scripts/sync-team-permissions.sh)
+   - [`plugins/packages/github-org/skills/github-ruleset-operator/scripts/configure-rulesets.sh`](../../plugins/packages/github-org/skills/github-ruleset-operator/scripts/configure-rulesets.sh)
 3. **Gate All Mutations via Pre-flight Role Check**: Ensure all operator calls invoke
-   [`resolve-operator-role.js`](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-toolkit/skills/github-org-manager/scripts/resolve-operator-role.js)
+   [`plugins/packages/github-org/skills/github-org-operator/scripts/resolve-operator-role.js`](../../plugins/packages/github-org/skills/github-org-operator/scripts/resolve-operator-role.js)
    to enforce domain boundaries before executing administrative commands.

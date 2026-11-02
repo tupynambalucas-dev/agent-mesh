@@ -45,7 +45,7 @@ organization-wide intelligence substrate, three naming strategies have been eval
 
 ## 2. Bounded-Context Monorepo Topology (`pnpm workspace`)
 
-Following the architectural patterns established in [platform](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/platform),
+Following the architectural patterns established in [platform](../../../platform),
 the agent monorepo adopts a 6-tier bounded-context topology:
 
 ```mermaid
@@ -55,11 +55,11 @@ flowchart TD
     end
 
     subgraph PluginsContext ["plugins/ (Deployable Antigravity & Claude Plugins)"]
-        PluginGH["plugins/github (GitHub Org Operator & Rulesets)"]
-        PluginGWork["plugins/google-workspace (Docs, Sheets, Drive Automation)"]
-        PluginAppSheet["plugins/appsheet (Prompt-to-App Generator & MCP)"]
-        PluginInfisical["plugins/secrets (Infisical Vault & Key Management)"]
-        PluginMeta["plugins/meta (Router, Markdown, Skill Expert)"]
+        PluginGH["plugins/packages/github-org (GitHub Org Operator & Rulesets)"]
+        PluginGWork["plugins/packages/gwork (Docs, Sheets, Drive Automation)"]
+        PluginAppSheet["plugins/packages/appsheet (Prompt-to-App Generator & MCP)"]
+        PluginInfisical["plugins/packages/secrets (Infisical Vault & Key Management)"]
+        PluginMeta["plugins/packages/atelier (Router, Markdown, Skill Expert)"]
     end
 
     subgraph MCPContext ["mcps/ (Custom Organization MCP Servers)"]
@@ -214,7 +214,7 @@ Rather than relying solely on generic community MCP packages (e.g., `github-mcp-
 tailored, high-security MCP servers built with `@modelcontextprotocol/sdk`:
 - **`mcps/github-app`**: Bridges directly with GitHub using `@octokit/auth-app`. Resolves the `Resource not accessible by personal access token` error by granting full organization-level privileges without human PAT maintenance.
 - **`mcps/appsheet`**: Implements the dual-mode AppSheet architecture defined in
-  [appsheet-antigravity-integration-architecture.md](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/.github/.agents/plans/appsheet-antigravity-integration-architecture.md),
+  [appsheet-antigravity-integration-architecture.md](../../../.github/.agents/plans/appsheet-antigravity-integration-architecture.md),
   enabling row mutations (`Add`, `Edit`, `Delete`, `Find`) and webhook triggers.
 - **`mcps/google-workspace`**: Enables deterministic Google Sheets provisioning with frozen header rows, validation dropdowns, and canonical primary keys (`UUID`).
 
@@ -360,8 +360,8 @@ underlying MCP tools to execute with full administrative authorization while mai
 | Milestone | Action Item | Target Scope | Output Deliverable |
 | :--- | :--- | :--- | :--- |
 | **Stage 1** | Monorepo Scaffolding | Root Workspace | `pnpm-workspace.yaml`, root `package.json`, `turbo.json`. |
-| **Stage 2** | Isolate GitHub Operator Plugin | `plugins/github/` | Relocate `github-org-manager` skill, rules, and scoped manifest. |
-| **Stage 3** | Isolate Meta Skills Plugin | `plugins/meta/` | Package `agent-router-expert`, `skill-expert`, `markdown-expert`. |
+| **Stage 2** | Isolate GitHub Operator Plugin | `plugins/packages/github-org/` | Relocate `github-org-manager` skill, rules, and scoped manifest. |
+| **Stage 3** | Isolate Meta Skills Plugin | `plugins/packages/atelier/` | Package `agent-router-expert`, `skill-expert`, `markdown-expert`. |
 | **Stage 4** | Build Native GitHub App MCP Server | `mcps/github-app/` | Octokit App auth with full Security & Org Ruleset tool endpoints. |
-| **Stage 5** | Author AppSheet & Google Workspace Plugins | `plugins/appsheet/` | Ingest specifications from [appsheet-antigravity plan](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/.github/.agents/plans/appsheet-antigravity-integration-architecture.md). |
+| **Stage 5** | Author AppSheet & Google Workspace Plugins | `plugins/packages/appsheet/` | Ingest specifications from [appsheet-antigravity plan](../../../.github/.agents/plans/appsheet-antigravity-integration-architecture.md). |
 | **Stage 6** | Implement Evaluation Harness | `evals/` | Automated test suite verifying tool call correctness before release. |

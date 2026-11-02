@@ -30,8 +30,8 @@ plugins/<plugin_name>/
 Rules govern model behavior and enforce organizational invariants across bounded contexts.
 
 ### Discovery & Inheritance
-- **Directory Walking**: The runtime traverses up from the current working directory to the repository root, loading all `AGENTS.md` (or `GEMINI.md`) files.
-- **Plugin Rules**: Rules declared under `<plugin>/rules/AGENTS.md` are automatically merged when the plugin is active.
+- **Directory Walking**: The runtime traverses up from the current working directory to the repository root, loading all `AGENTS.md` context router files.
+- **Plugin Rules**: Rules declared under `plugins/packages/<plugin>/rules/AGENTS.md` (or `.agents/plugins/<plugin>/rules/AGENTS.md`) are automatically merged when the plugin is active.
 - **Deduplication**: Rules discovered through multiple paths are applied exactly once per conversation turn.
 
 ### Context Budget & Size Constraints

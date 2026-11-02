@@ -13,10 +13,10 @@ This skill defines the authoritative specifications for authoring, auditing, and
 
 Antigravity discovers and ingests rules from two primary locations:
 
-1. **Plugin Rules (`plugins/<name>/rules/AGENTS.md`)**:
+1. **Plugin Rules (`plugins/packages/<name>/rules/AGENTS.md`)**:
    - Merged automatically into the active agent context whenever the plugin is discovered or enabled.
    - Recommended format: a consolidated `rules/AGENTS.md` file per plugin.
-2. **Directory-Based Rules (`AGENTS.md` / `GEMINI.md`)**:
+2. **Directory-Based Context Routers and Rules (`AGENTS.md`)**:
    - Reside directly in workspace folders. Loaded as the agent navigates or opens files within that directory.
 
 ---

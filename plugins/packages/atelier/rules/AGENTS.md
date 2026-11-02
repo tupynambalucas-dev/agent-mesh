@@ -25,3 +25,8 @@ trigger: always_on
 5. Technical Language Policy:
    - Technical documentation, code, configuration files, and Git commit messages must be written strictly in en-US.
    - Conversational responses to the user must follow the user's prompt language (defaulting to pt-BR when prompted in Portuguese).
+
+6. Bounded Context 3-Layer Ceiling & Anti-Proliferation:
+   - `AGENTS.md` context routers are strictly limited to 3 architectural layers: Layer 1 (Root), Layer 2 (Subsystem), and Layer 3 (Package/Domain).
+   - Layer 4+ context routers are strictly prohibited.
+   - Content folders under documentation hubs (e.g. Diátaxis quadrants `tutorials/`, `how-to-guides/`, `reference/`, `explanation/`) and planning containers (`.agents/plans/`, `.agents/reports/`) MUST NOT declare `AGENTS.md` or boilerplate `README.md` files. The parent bounded context router governs the entire subsystem.

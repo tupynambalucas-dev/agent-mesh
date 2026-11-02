@@ -28,5 +28,5 @@ This directory contains developer tooling, zero-downtime gateway routing proxies
         │         │
         │         ├── (Healthy) ────► Streamable HTTP to Envoy Gateway
         │         │
-        │         └── (Offline) ────► Spawns node mcp/<target>/dist/bin.js or pnpm dlx
+        │         └── (Offline) ────► Spawns node mcp/packages/<target>/dist/bin.js or pnpm dlx
 ```

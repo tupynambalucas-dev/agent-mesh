@@ -34,7 +34,7 @@ All 5 in-house MCP servers are now packaged as clean TypeScript modules equipped
 
 ## 3. Kubernetes Zero-Dockerfile Declarative Infrastructure
 
-All custom Dockerfiles have been eliminated from `platform/hub/cortex/mcp/services/`. Kubernetes deployments in [platform/k8s/manifests/hub/cortex/mcp/](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/platform/k8s/manifests/hub/cortex/mcp) now pull official upstream images or execute packages declaratively on `node:22-alpine`:
+All custom Dockerfiles have been eliminated from `platform/hub/cortex/mcp/services/`. Kubernetes deployments in [platform/k8s/manifests/hub/cortex/mcp/](../../../platform/k8s/manifests/hub/cortex/mcp) now pull official upstream images or execute packages declaratively on `node:22-alpine`:
 
 ```plaintext
 platform/k8s/manifests/hub/cortex/mcp/
@@ -54,7 +54,7 @@ platform/k8s/manifests/hub/cortex/mcp/
 
 ### Skaffold Optimization
 
-Removed 6 build artifacts from [platform/k8s/skaffold.hub.yaml](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/platform/k8s/skaffold.hub.yaml):
+Removed 6 build artifacts from [platform/k8s/skaffold.hub.yaml](../../../platform/k8s/skaffold.hub.yaml):
 - `cortex-mcp-memory` (deleted)
 - `cortex-mcp-github` (deleted)
 - `cortex-mcp-context7` (deleted)
@@ -68,7 +68,7 @@ This eliminates redundant image building during development and cuts cluster syn
 
 ## 4. Live Gateway Probe & Fallback Test Results
 
-The Smart Router ([agent-mesh/scripts/mcp-gateway-router.js](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/scripts/mcp-gateway-router.js)) was verified against all 5 in-house MCP servers with Envoy offline. Each server received an official JSON-RPC 2.0 `initialize` request over standard input:
+The Smart Router ([agent-mesh/scripts/mcp-gateway-router.js](../../scripts/mcp-gateway-router.js)) was verified against all 5 in-house MCP servers with Envoy offline. Each server received an official JSON-RPC 2.0 `initialize` request over standard input:
 
 ```json
 {
@@ -126,7 +126,7 @@ STDOUT: {"result":{"protocolVersion":"2024-11-05","capabilities":{"tools":{}},"s
 
 ## 5. Domain Plugins & Modular Skills Inventory
 
-Six independent domain plugins have been established in [agent-mesh/plugins/](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/plugins), comprising 19 specialized skills:
+Six independent domain plugins have been established in [agent-mesh/plugins/](../../plugins), comprising 19 specialized skills:
 
 ### 5.1 `@tupynambalucas-dev/agent-plugin-github` (`plugins/github`)
 1. **`github-org-operator`**: Automates organization RBAC, team creation, membership assignments, repository provisioning, and repository transfer runbooks.
@@ -163,17 +163,17 @@ Six independent domain plugins have been established in [agent-mesh/plugins/](fi
 
 ## 6. GitHub Packages Multi-Package Deployment Engine
 
-The publish engine ([agent-mesh/scripts/publish-packages.js](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/scripts/publish-packages.js)) was deployed via GitHub Actions workflow `publish.yml` (Run ID: `40403270774`). All 12 packages across root, domain plugins, and MCP packages were evaluated and published idempotently to GitHub Packages (`https://npm.pkg.github.com/tupynambalucas-dev`):
+The publish engine ([agent-mesh/scripts/publish-packages.js](../../scripts/publish-packages.js)) was deployed via GitHub Actions workflow `publish.yml` (Run ID: `40403270774`). All 12 packages across root, domain plugins, and MCP packages were evaluated and published idempotently to GitHub Packages (`https://npm.pkg.github.com/tupynambalucas-dev`):
 
 | Package Identifier | Target Directory | Registry Destination | Status |
 | :--- | :--- | :--- | :--- |
 | `@tupynambalucas-dev/agent-mesh@1.0.0` | `agent-mesh` (Root) | `npm.pkg.github.com` | Published |
-| `@tupynambalucas-dev/agent-plugin-appsheet@1.0.0` | `agent-mesh/plugins/appsheet` | `npm.pkg.github.com` | Published |
-| `@tupynambalucas-dev/agent-plugin-docusaurus@1.0.0` | `agent-mesh/plugins/docusaurus` | `npm.pkg.github.com` | Published |
-| `@tupynambalucas-dev/agent-plugin-github@1.0.0` | `agent-mesh/plugins/github` | `npm.pkg.github.com` | Published |
-| `@tupynambalucas-dev/agent-plugin-google-workspace@1.0.0` | `agent-mesh/plugins/google-workspace` | `npm.pkg.github.com` | Published |
-| `@tupynambalucas-dev/agent-plugin-meta@1.0.0` | `agent-mesh/plugins/meta` | `npm.pkg.github.com` | Published |
-| `@tupynambalucas-dev/agent-plugin-secrets@1.0.0` | `agent-mesh/plugins/secrets` | `npm.pkg.github.com` | Published |
+| `@tupynambalucas-dev/agent-plugin-appsheet@1.0.0` | `agent-mesh/plugins/packages/appsheet` | `npm.pkg.github.com` | Published |
+| `@tupynambalucas-dev/agent-plugin-docusaurus@1.0.0` | `agent-mesh/plugins/packages/docusaurus` | `npm.pkg.github.com` | Published |
+| `@tupynambalucas-dev/agent-plugin-github@1.0.0` | `agent-mesh/plugins/packages/github-org` | `npm.pkg.github.com` | Published |
+| `@tupynambalucas-dev/agent-plugin-google-workspace@1.0.0` | `agent-mesh/plugins/packages/gwork` | `npm.pkg.github.com` | Published |
+| `@tupynambalucas-dev/agent-plugin-meta@1.0.0` | `agent-mesh/plugins/packages/atelier` | `npm.pkg.github.com` | Published |
+| `@tupynambalucas-dev/agent-plugin-secrets@1.0.0` | `agent-mesh/plugins/packages/secrets` | `npm.pkg.github.com` | Published |
 | `@tupynambalucas-dev/cortex-mcp-appsheet@1.0.0` | `agent-mesh/mcp/appsheet` | `npm.pkg.github.com` | Published |
 | `@tupynambalucas-dev/cortex-mcp-firecrawl@1.0.0` | `agent-mesh/mcp/firecrawl` | `npm.pkg.github.com` | Published |
 | `@tupynambalucas-dev/cortex-mcp-github@1.0.0` | `agent-mesh/mcp/github` | `npm.pkg.github.com` | Published |

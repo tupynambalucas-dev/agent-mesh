@@ -60,5 +60,6 @@ This reference defines the verification steps required when creating, updating, 
 - Count the total lines of the modified `AGENTS.md` file.
 - Layer 1 (root): MUST NOT exceed 80 lines.
 - Layer 2 (bounded context): MUST NOT exceed 120 lines.
+- Layer 4+ Prohibition: MUST NOT create AGENTS.md in content or leaf folders (tutorials/, how-to-guides/, reference/, explanation/, plans/, reports/).
 - Layer 3 (sub-domain): MUST NOT exceed 100 lines.
 - If the budget is exceeded, extract code snippets to an `.agents/` hidden subdirectory (e.g., `.agents/architecture.md`) and replace the inline block with a relative markdown link.

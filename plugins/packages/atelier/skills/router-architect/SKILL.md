@@ -35,11 +35,17 @@ Every local `AGENTS.md` file within a nested bounded context MUST declare its co
 
 ---
 
-## 3. Strict Prohibitions
+## 3. Strict Prohibitions & Layer Limits
 
+- **Strict 3-Layer Ceiling**: `AGENTS.md` context routers are strictly limited to 3 architectural layers:
+  - Layer 1: Monorepo Root (`/AGENTS.md`).
+  - Layer 2: Subsystem Bounded Context (`/<subsystem>/AGENTS.md` - e.g., `mcp/`, `plugins/`, `references/`, `.agents/`).
+  - Layer 3: Sovereign Package / Domain Package (`/<subsystem>/packages/<pkg>/AGENTS.md`).
+- **Layer 4+ Context Proliferation Prohibited**: NEVER create `AGENTS.md` files below Layer 3. Specifically, leaf content folders, documentation quadrants (`tutorials/`, `how-to-guides/`, `reference/`, `explanation/`), AI artifact containers (`.agents/plans/`, `.agents/reports/`), `src/`, `skills/`, `tests/`, and `docs/` must NEVER contain an `AGENTS.md`.
+- **Anti-Context Flooding**: Spawning redundant routers in subdirectories forces Antigravity to recursively load empty or duplicative instructions into the prompt, diluting context budgets and degrading model reasoning.
 - **No Duplication**: Never copy global governance rules into local `AGENTS.md` files; inherit them via `<parent>` references.
 - **No Stale Pointers**: All relative links must point to existing files on disk.
-- **Zero Emojis**: Maintain a strict, professional tone.
+- **Zero Emojis**: Maintain a strict, professional tone across all routers.
 
 ---
 

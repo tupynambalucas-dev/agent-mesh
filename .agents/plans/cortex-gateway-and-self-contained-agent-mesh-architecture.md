@@ -1,7 +1,7 @@
 # Cortex MCP Engine & Self-Contained Agent Mesh Master Architecture
 
 This specification establishes the authoritative, enterprise-grade architecture linking the **Cortex MCP Control Plane**
-in [platform/hub/cortex/mcp](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/platform/hub/cortex/mcp)
+in [platform/hub/cortex/mcp](../../../platform/hub/cortex/mcp)
 with the **Agent Mesh Capability Workspace** in `agent-mesh` (formerly `agent-toolkit`).
 
 It codifies eight foundational architectural decisions:
@@ -106,7 +106,7 @@ A major optimization in this architecture is the **complete elimination of custo
 ### 3.2 Purging of `platform/hub/cortex/mcp/services/`
 - The entire `platform/hub/cortex/mcp/services/` directory is permanently purged.
 - All Dockerfiles (`context7/Dockerfile`, `github/Dockerfile`, `firecrawl/Dockerfile`, `grafana/Dockerfile`, `memory/Dockerfile`, `playwright/Dockerfile`) are permanently removed.
-- [platform/k8s/skaffold.hub.yaml](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/platform/k8s/skaffold.hub.yaml) eliminates lines 21-41 (no more Docker image builds for MCPs during local cluster bootstrap).
+- [platform/k8s/skaffold.hub.yaml](../../../platform/k8s/skaffold.hub.yaml) eliminates lines 21-41 (no more Docker image builds for MCPs during local cluster bootstrap).
 
 ---
 
@@ -841,11 +841,11 @@ sequenceDiagram
 
 ### 9.1 Mandatory Context7 & Firecrawl Research Rule
 During the execution of any migration step, if external documentation, API parameter references, or upstream library changes are required, the agent **MUST ALWAYS** utilize:
-- **`agent-toolkit_context7-mcp`**: For authoritative framework, library, and TypeScript SDK documentation (`resolve-library-id` followed by `query-docs`).
-- **`agent-toolkit_firecrawl-mcp`**: For web documentation, GitHub repository inspection, and live upstream release research (`firecrawl_search`, `firecrawl_scrape`, `firecrawl_map`).
+- **`agent-mesh_context7-mcp`**: For authoritative framework, library, and TypeScript SDK documentation (`resolve-library-id` followed by `query-docs`).
+- **`agent-mesh_firecrawl-mcp`**: For web documentation, GitHub repository inspection, and live upstream release research (`firecrawl_search`, `firecrawl_scrape`, `firecrawl_map`).
 
 ### 9.2 Mandatory Post-Execution Verification Artifact
-Immediately upon completing the execution of this architectural plan, the agent **MUST** author and commit a comprehensive verification artifact in [agent-toolkit/references/](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-toolkit/references):
+Immediately upon completing the execution of this architectural plan, the agent **MUST** author and commit a comprehensive verification artifact in [`agent-mesh/references/`](./):
 - **Title**: `cortex-mcp-execution-state-and-fallback-verification.md`
 - **Mandatory Contents**:
   1. Complete inventory and live verification of all MCP packages relocated to `agent-mesh/mcp/*`.
@@ -861,14 +861,14 @@ Immediately upon completing the execution of this architectural plan, the agent 
 
 The execution of this master plan proceeds across seven sequential, deterministic phases:
 
-### Phase 1: Relocate In-House MCP Implementations to `agent-toolkit/mcp/`
-1. Move `platform/hub/cortex/mcp/services/firecrawl` to `agent-toolkit/mcp/firecrawl`.
-2. Move `platform/hub/cortex/mcp/services/memory` to `agent-toolkit/mcp/memory`.
-3. Scaffold `agent-toolkit/mcp/github` (`@tupynambalucas-dev/cortex-mcp-github`) with GitHub App authentication.
-4. Scaffold `agent-toolkit/mcp/google-workspace` (`@tupynambalucas-dev/cortex-mcp-gwork`).
-5. Scaffold `agent-toolkit/mcp/appsheet` (`@tupynambalucas-dev/cortex-mcp-appsheet`).
-6. Update `agent-toolkit/pnpm-workspace.yaml` to include `'mcp/*'`.
-7. Purge `Dockerfile` from each relocated MCP package in `agent-toolkit/mcp/*`.
+### Phase 1: Relocate In-House MCP Implementations to `agent-mesh/mcp/packages/`
+1. Move `platform/hub/cortex/mcp/services/firecrawl` to `agent-mesh/mcp/packages/firecrawl`.
+2. Move `platform/hub/cortex/mcp/services/memory` to `agent-mesh/mcp/packages/memory`.
+3. Scaffold `agent-mesh/mcp/packages/github` (`@tupynambalucas-dev/cortex-mcp-github`) with GitHub App authentication.
+4. Scaffold `agent-mesh/mcp/packages/google-workspace` (`@tupynambalucas-dev/cortex-mcp-gwork`).
+5. Scaffold `agent-mesh/mcp/packages/appsheet` (`@tupynambalucas-dev/cortex-mcp-appsheet`).
+6. Update `agent-mesh/pnpm-workspace.yaml` to include `'mcp/*'`.
+7. Purge `Dockerfile` from each relocated MCP package in `agent-mesh/mcp/packages/*`.
 
 ### Phase 2: Purge `platform/hub/cortex/mcp/services/`
 1. Remove all remaining subdirectories in `platform/hub/cortex/mcp/services/` (`context7`, `github`, `grafana`, `playwright`, `kubectl`).
@@ -890,14 +890,14 @@ The execution of this master plan proceeds across seven sequential, deterministi
 2. Retain only infrastructure images (`cortex-mcp-guardrails`, `cortex-mcp-inspector`, `cortex-memory-api`, `studio-*`).
 
 ### Phase 5: Test Smart Gateway Fallback Execution
-1. Verify syntax and live execution of `node agent-toolkit/scripts/mcp-gateway-router.js firecrawl`.
+1. Verify syntax and live execution of `node agent-mesh/scripts/mcp-gateway-router.js firecrawl`.
 2. Verify probe timeout and stderr logging when Gateway is offline.
 
 ### Phase 6: Author Post-Execution Verification Artifact
-1. Write `agent-toolkit/references/cortex-mcp-execution-state-and-fallback-verification.md`.
+1. Write `agent-mesh/references/cortex-mcp-execution-state-and-fallback-verification.md`.
 2. Copy to conversation artifact directory.
 
 ### Phase 7: Meta-Repository Commit & Submodule Synchronization
 1. Commit all changes in `platform` with SSH signature (`git commit -S -m "..."`).
-2. Commit all changes in `agent-toolkit` with SSH signature (`git commit -S -m "..."`).
+2. Commit all changes in `agent-mesh` with SSH signature (`git commit -S -m "..."`).
 3. Bump submodule pointers in `org-core`, commit with SSH signature, and push to origin `main`.
