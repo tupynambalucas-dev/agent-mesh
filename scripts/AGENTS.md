@@ -9,10 +9,10 @@
 
 This document defines the bounded context router for orchestration and automation scripts in `scripts/`.
 
-## Scripts Layout
+## Architecture Overview
 
-- [publish-packages.js](./publish-packages.js): Idempotent multi-package publisher for GitHub Packages (`npm.pkg.github.com`).
 - [README.md](./README.md): Developer documentation and operational runbooks for automation scripts.
+- **Zero-Script Publishing**: Package publishing is executed natively via `pnpm -r publish` with Turborepo, eliminating custom publishing scripts.
 
 ## Sovereign Plugin Launchers Notice
 

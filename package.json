@@ -38,7 +38,7 @@
     "mcp:playwright:build": "pnpm --filter @tupynambalucas-dev/mcp-playwright build",
     "mcp:playwright:dev": "pnpm --filter @tupynambalucas-dev/mcp-playwright dev",
     "// Packaging & Deployment": "------------------------------------------------",
-    "packages:publish": "node scripts/publish-packages.js",
+    "packages:publish": "pnpm -r publish --access public --no-git-checks --report-summary",
     "changeset": "changeset",
     "version:packages": "changeset version"
   },

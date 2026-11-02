@@ -2,6 +2,10 @@ packages:
   - 'mcp/packages/*'
   - 'plugins/packages/*'
 
+registries:
+  https://npm.pkg.github.com/:
+    scopes: ["@tupynambalucas-dev"]
+
 catalog:
   '@types/node': ^22.13.0
   typescript: ^6.0.3
