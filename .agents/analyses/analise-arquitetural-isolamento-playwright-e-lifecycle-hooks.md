@@ -234,7 +234,39 @@ Para entender a ordem real de execucao e prioridade a partir de agora:
 
 ---
 
-## 6. Estado Atual das Fases do Plano Master
+## 6. Auditoria de Variaveis de Ambiente e Descontinuacao do Router Monolitico
+
+### 6.1 Higiene de Variaveis de Ambiente (.env e .env.example)
+A auditoria comparativa entre `org-core/.env`, `agent-mesh/.env` e `platform/k8s/.env.example` estabeleceu a segregacao definitiva das variaveis de execucao do Playwright:
+
+1. **`PLAYWRIGHT_MODE` (Depreciada e Removida)**:
+   - Era uma variavel proprietaria utilizada unicamente pelo schema Zod do pacote experimental `mcp/packages/playwright`.
+   - O pacote oficial `@playwright/mcp` da Microsoft nao reconhece essa variavel, utilizando flags de linha de comando ou o padrao `PLAYWRIGHT_MCP_*`.
+   - Foi completamente expurgada dos arquivos `.env` e `.env.example` locais.
+
+2. **`PLAYWRIGHT_MCP_EXTENSION_TOKEN` (Ativa - Opcional para Desktop Pairing)**:
+   - Consumida legitimamente pelo `@playwright/mcp --extension` para permitir a conexao direta da extensao de navegador (Chrome/Edge/Brave) sem exigir que o desenvolvedor clique manualmente em 'Aprovar' a cada conexao.
+   - Mantida documentada em `.env.example` como variavel opcional para desenvolvedores em modo de pareamento.
+
+3. **`PLAYWRIGHT_MCP_EXECUTABLE_PATH` (Ativa - Opcional para Navegador Customizado)**:
+   - Utilizada pelo `@playwright/mcp --executable-path` quando o desenvolvedor opta por rodar automacoes contra uma instalacao existente de navegadores nao padrao (ex: Vivaldi, Brave, Chromium customizado).
+   - Mantida documentada em `.env.example` como variavel opcional.
+
+4. **Variaveis de Cluster (`PLAYWRIGHT_MCP_PORT`, `PLAYWRIGHT_MCP_BROWSER`, `PLAYWRIGHT_MCP_HEADLESS`, etc.)**:
+   - Pertencem estritamente ao runtime de conteineres Kubernetes em `platform/k8s/.env.example` e nos manifests em `platform/k8s/manifests/hub/cortex/mcp/playwright.yaml`.
+   - Nao devem ser declaradas nos templates locais de `agent-mesh` ou `org-core`, garantindo a estrita separacao entre configuracoes de workstation e configuracoes de infraestrutura.
+
+### 6.2 O Futuro do `mcp-gateway-router.js` e Launchers por Plugin
+A existencia de um script centralizador na raiz do monorepo (`agent-mesh/scripts/mcp-gateway-router.js`) foi diagnosticada como um anti-padrao de monolito que quebra o principio de empacotamento:
+- Plugins quando instalados residem em diretorios isolados e nao possuem acesso a caminhos relativos externos (`../../../scripts/mcp-gateway-router.js`).
+- O script mantinha um catalogo acoplado de 8 servicos heterogeneos, violando os Bounded Contexts.
+- **Diretriz Adotada**: O script da raiz sera totalmente descontinuado. Os plugins adotam dois caminhos limpos:
+  1. *Execucao Direta*: Para ferramentas puramente locais (como o Playwright), o manifesto `mcp_config.json` executa o binario upstream com flags fixadas e perfil persistente em `${PLUGIN_DATA}`.
+  2. *Launchers Autocontidos*: Para servicos com dualidade de rede (conectar ao AgentGateway corporativo ou executar pacote local offline, como Firecrawl e GitHub), cada plugin contera seu proprio `scripts/launcher.cjs` interno, orientado por perfil explicito (`local` vs `cluster`).
+
+---
+
+## 7. Estado Atual das Fases do Plano Master
 
 O plano mestre estabelecido em [`.agents/plans/plugin-independence-playwright-isolation-and-enforcement-hooks.md`](file:///C:/Users/tupyn/projects/organizations/tupynambalucas-dev/org-core/agent-mesh/.agents/plans/plugin-independence-playwright-isolation-and-enforcement-hooks.md) foi estruturado em 12 fases. E fundamental registrar com exatidao o status de cada uma:
 
@@ -244,17 +276,16 @@ O plano mestre estabelecido em [`.agents/plans/plugin-independence-playwright-is
 | **Fase 1** | Higiene de Manifestos | **Concluida** | Todos os 10 plugins agora passam com nota maxima em validacao estrita do Antigravity CLI. |
 | **Fase 2** | Isolamento do Playwright | **Concluida** | `web` e `appsheet` rodam em perfis independentes com versoes fixadas e allowlist estrita. Mergeado no PR #11. |
 | **Fase 4** | Lifecycle Hooks de Imposicao | **Concluida (Core)** | Hooks implementados e ativos em `research`, `github-flow`, `atelier` e `appsheet`. |
-| **Fase 9** | Endurecimento de CI/CD | **Concluida** | Workflows `ci.yml`, `publish.yml` endurecidos e Dependabot configurado. Mergeado no PR #11. |
-| **Fase 3 & 10** | Launchers Vendored e CLI Doctor | *Planejada (Workstation)* | Migracao dos outros servicos (Firecrawl/GitHub) para launchers com suporte a perfil explicito (`local` vs `cluster`) e script `mesh:doctor`. |
 | **Fase 8** | Endurecimento de Pods K8s e MCP | **Concluida (Platform)** | Manifestos de MCP corrigidos para `@tupynambalucas-dev/mcp-*`, probes de saude HTTP/TCP configurados, SecurityContext restrito implementado, `optional: true` removido de segredos mandatorios, Playwright MCP restaurado no cluster (`mcr.microsoft.com/playwright/mcp:latest`) e roteado via AgentGateway. Mergeado no PR #36 de `platform`. |
-| **Fase 3 & 10** | Launchers Vendored e CLI Doctor | *Planejada (Workstation)* | Migracao dos outros servicos (Firecrawl/GitHub) para launchers com suporte a perfil explicito (`local` vs `cluster`) e script `mesh:doctor`. |
+| **Fase 9** | Endurecimento de CI/CD | **Concluida** | Workflows `ci.yml`, `publish.yml` endurecidos e Dependabot configurado. Mergeado no PR #11. |
+| **Fase 3 & 10** | Launchers Vendored e CLI Doctor | *Planejada (Workstation)* | Migracao dos outros servicos (Firecrawl/GitHub) para launchers autocontidos por plugin com suporte a perfil explicito (`local` vs `cluster`), eliminando o `mcp-gateway-router.js` da raiz, e script `mesh:doctor`. |
 | **Fase 7** | Hardening de Gateway K8s | *Planejada (Platform)* | Politicas de autenticacao JWT/Bearer e regras de autorizacao CEL no AgentGateway. |
 | **Fase 11** | Testes Contratuais Automatizados | *Planejada (Qualidade)* | Suíte de testes com Vitest garantindo imutabilidade de schemas JSON-RPC e protecao contra tool-poisoning. |
 | **Fase 12** | Observabilidade e Tracing | *Planejada (Infra)* | Integracao com OpenTelemetry para correlacao de chamadas entre Gateway e servidores MCP. |
 
 ---
 
-## 7. Conclusao
+## 8. Conclusao
 
 O ecossistema `agent-mesh` deu um salto de maturidade operacional:
 - A causa tecnica dos conflitos de navegador foi definitivamente extirpada com a dissociacao de perfis e a adocao de allowlists por domínio.

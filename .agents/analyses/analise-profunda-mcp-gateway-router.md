@@ -504,12 +504,62 @@ Para eliminar de forma definitiva todos os pontos de conflito identificados:
 
 ---
 
-## 7. Conclusão e Diretrizes de Manutenção
+## 7. Limitacoes Criticas e Por que o Script Monolitico e um Anti-Padrao Empresarial
 
-O [`mcp-gateway-router.js`](../../scripts/mcp-gateway-router.js) é uma peça fundamental de infraestrutura que desacopla o
-desenvolvimento ágil de software da necessidade de manter um cluster de contêineres ativo 24/7.
+Embora o [`mcp-gateway-router.js`](../../scripts/mcp-gateway-router.js) tenha servido como mecanismo inicial de transicao durante o desenvolvimento inicial do monorepo, auditorias profundas de arquitetura de software empresarial e a especificacao de empacotamento de plugins (`agent-plugins.org` v1.0.0 e Google Antigravity) revelaram quatro patologias estruturais intransponiveis:
 
-Para manter a integridade do router no futuro:
-1. **Novos Serviços MCP**: Ao criar um novo pacote em `mcp/packages/<novo-servico>`, adicione-o imediatamente ao dicionário `FALLBACK_REGISTRY` com seu nome de pacote `@tupynambalucas-dev/mcp-<novo-servico>`.
-2. **Preservação de Logs em `stderr`**: Nunca envie logs ou mensagens de debug no `stdout` dentro do router; o `stdout` é reservado exclusivamente para o protocolo JSON-RPC. Todo log de diagnóstico deve usar `process.stderr.write()`.
-3. **Respeito ao Timeout de 300ms**: Nunca aumente o `PROBE_TIMEOUT_MS` além de 500ms, para evitar atrasos na percepção de resposta dos agentes.
+### 7.1 Quebra de Instalacao e Distribuicao de Plugins
+- Quando um plugin (como `research`, `gwork` ou `appsheet`) e empacotado e distribuido para outros desenvolvedores ou instalado pelo Antigravity CLI, ele e extraido em um diretorio isolado de leitura (`~/.gemini/config/plugins/<plugin-name>`).
+- Nesse diretorio, a raiz do monorepo **nao existe** e o caminho relativo `../../../scripts/mcp-gateway-router.js` falha imediatamente com erro fatal de `MODULE_NOT_FOUND`.
+- Um plugin corporativo soberano **nao pode depender de caminhos relativos para fora de sua pasta**. Ele deve conter tudo o que precisa para executar (`self-contained`), referenciando apenas `${PLUGIN_ROOT}` e `${PLUGIN_DATA}`.
+
+### 7.2 Violacao do Principio de Bounded Context e Responsabilidade Unica
+- O `mcp-gateway-router.js` na raiz do repositorio atua como um multiplexador monolitico que mantem um dicionario (`FALLBACK_REGISTRY`) com conhecimento intimo de 8 servicos distintos (`firecrawl`, `github`, `gwork`, `appsheet`, `infisical`, `context7`, `playwright`, `memory`).
+- Isso quebra a soberania dos plugins: o plugin `research` precisa de conhecimento zero sobre `appsheet` ou `gwork`, e vice-versa. Centralizar todos os fallbacks em um unico arquivo cria um ponto unico de falha e acoplamento desnecessario.
+
+### 7.3 Instabilidade da Sonda de Rede (300ms Probe) vs Perfil Explicito
+- O script tenta fazer um probe HTTP de 300ms contra `http://localhost:8080/health`. Em redes corporativas com VPN, proxy, jitter de latencia ou maquinas sob alta carga de CPU, um atraso de 350ms fazia o script alternar silenciosamente para o modo local, provocando comportamentos nao deterministicos e dificeis de depurar.
+- O padrao senior da industria substitui a deteccao automatica fragil por uma **declaracao explicita de perfil** (`profile: "local" | "cluster"`), garantindo que o agente saiba com precisao se deve utilizar recursos locais ou a infraestrutura da nuvem.
+
+### 7.4 A Incompatibilidade Inerente do Playwright Local com Roteamento por Gateway
+- Automacao de navegadores acoplada a maquina do desenvolvedor (inspecao de abas, extensoes e testes interativos) e uma operacao estritamente local.
+- Tentar tunelar o Playwright local atraves de um gateway na nuvem via `mcp-remote` e um contra-senso operacional. Conforme estabelecido na refatoracao dos plugins `web` e `appsheet`, o Playwright foi o primeiro servico a ser **completamente desacoplado do router monolitico**, passando a rodar via invocacao direta de ferramenta com perfis isolados em `${PLUGIN_DATA}/browser-profile` e `${PLUGIN_DATA}/appsheet-profile`.
+
+---
+
+## 8. Arquitetura Alvo: Eliminacao do Monolito e Launchers por Plugin
+
+Para atingir a independencia total dos plugins e conformidade corporativa:
+
+```mermaid
+flowchart TD
+    subgraph ArquiteturaLegada ["Arquitetura Legada (Acoplada e Quebrada na Distribuicao)"]
+        PluginLegado["Plugin Manifest
+(args: ../../../scripts/mcp-gateway-router.js)"]
+        Monolito["agent-mesh/scripts/mcp-gateway-router.js
+(Monolito com 8 servicos acoplados)"]
+        PluginLegado -->|Dependencia de caminho relativo externo| Monolito
+    end
+
+    subgraph ArquiteturaAlvo ["Arquitetura Corporativa Alvo (Autocontida)"]
+        subgraph PluginWeb ["Plugin: web"]
+            PWDirect["server: playwright
+(Execucao direta com @playwright/mcp e ${PLUGIN_DATA})"]
+            FCLauncher["server: firecrawl
+scripts/launcher.cjs (Autocontido)"]
+        end
+        subgraph PluginAppSheet ["Plugin: appsheet"]
+            ASPWDirect["server: playwright
+(Execucao direta com allowlist e perfil dedicado)"]
+            ASLauncher["server: appsheet
+scripts/launcher.cjs (Autocontido)"]
+        end
+    end
+```
+
+### O que Fazer:
+1. **Eliminar o script monolitico**: O arquivo `agent-mesh/scripts/mcp-gateway-router.js` sera formalmente descontinuado e removido na conclusao da Fase 3 do plano mestre.
+2. **Execucao Direta onde nao ha Roteamento**: Ferramentas puramente locais (como o Playwright) chamam os binarios oficiais diretamente em seu `mcp_config.json`, sem scripts intermediarios.
+3. **Launchers Locais nos Plugins (Vendored Launchers)**:
+   - Para servicos que possuem dualidade (conectar ao cluster via AgentGateway ou executar pacote local quando offline, como Firecrawl e GitHub), cada plugin mantera seu proprio script leve `scripts/launcher.cjs` localizado internamente dentro de sua propria pasta.
+   - O launcher interno conhece estritamente as ferramentas daquele plugin e le o perfil de execucao (`local` ou `cluster`) declarado deterministicamente pelo desenvolvedor.
