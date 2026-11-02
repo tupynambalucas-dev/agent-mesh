@@ -22,7 +22,7 @@ Authoritative technical reference specifying permission scopes, Infisical vault 
 ## Token Lifecycle Specifications
 
 - **Installation Access Token (IAT)**: Valid for exactly **1 hour** (3600 seconds) from time of minting.
-- **Refresh Mechanism**: Automated via `mcp-gateway-router.js` or `resolve-operator-role.js` before expiration.
+- **Refresh Mechanism**: Automated via `scripts/launcher.cjs` or `resolve-operator-role.js` before expiration.
 - **Cryptographic Signing**: Commits authored by the App display GitHub's **Verified** badge automatically, requiring zero developer SSH keys on headless CI/CD nodes.
 
 ---

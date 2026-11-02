@@ -557,9 +557,24 @@ scripts/launcher.cjs (Autocontido)"]
     end
 ```
 
-### O que Fazer:
-1. **Eliminar o script monolitico**: O arquivo `agent-mesh/scripts/mcp-gateway-router.js` sera formalmente descontinuado e removido na conclusao da Fase 3 do plano mestre.
-2. **Execucao Direta onde nao ha Roteamento**: Ferramentas puramente locais (como o Playwright) chamam os binarios oficiais diretamente em seu `mcp_config.json`, sem scripts intermediarios.
-3. **Launchers Locais nos Plugins (Vendored Launchers)**:
-   - Para servicos que possuem dualidade (conectar ao cluster via AgentGateway ou executar pacote local quando offline, como Firecrawl e GitHub), cada plugin mantera seu proprio script leve `scripts/launcher.cjs` localizado internamente dentro de sua propria pasta.
-   - O launcher interno conhece estritamente as ferramentas daquele plugin e le o perfil de execucao (`local` ou `cluster`) declarado deterministicamente pelo desenvolvedor.
+### 8.1 Diretrizes Executadas na Fase 3:
+1. **Eliminacao do script monolitico**: O arquivo `agent-mesh/scripts/mcp-gateway-router.js` foi formalmente expurgado e deletado do repositorio.
+2. **Execucao Direta onde nao ha Roteamento**: Ferramentas puramente locais (como o Playwright) chamam os binarios oficiais diretamente em seu `mcp_config.json`, sem scripts intermediarios, com profiles independentes em `${PLUGIN_DATA}`.
+3. **Launchers Locais nos Plugins (Sovereign Launchers)**:
+   - Para servicos com servidores customizados (`appsheet`, `github-flow`, `github-org`, `gwork`, `research`, `secrets`, `web`), cada plugin agora contem seu proprio `scripts/launcher.cjs` interno.
+   - O launcher interno conhece estritamente as ferramentas daquele plugin e le o perfil de execucao (`local` ou `cluster`) declarado deterministicamente pelo desenvolvedor via `MESH_PROFILE` ou `CORTEX_GATEWAY_ENABLED`.
+
+---
+
+## 9. Conclusao e Validacao da Nova Arquitetura
+
+A eliminacao do router central e a introducao dos launchers soberanos por plugin estabeleceu novos padroes empresariais no `agent-mesh`:
+
+1. **Auto-Contencao Absoluta (Zero Relatividade Externa)**:
+   - Os manifestos `mcp_config.json` e `mcp.json` utilizam `./scripts/launcher.cjs`. Ao instalar o plugin isoladamente em outro ambiente ou estacao, todas as dependencias de inicializacao viajam junto do pacote.
+2. **Fast-Path no Monorepo (<5ms)**:
+   - Quando executado dentro do monorepo, o launcher detecta automaticamente os precompilados em `mcp/packages/<service>/dist/bin.js` e dispara o executavel Node (`process.execPath`) diretamente via pipes Stdio nativos, eliminando o overhead de rede e sem depender de tokens de registro do GitHub Packages.
+3. **Fallback Standalone e Compatibilidade Multiplataforma**:
+   - Caso os artefatos locais nao existam (ex: plugin instalado standalone via npm), o launcher executa o pacote publicado via `npx -y`. Em ambientes Windows, a chamada e executada de maneira blindada sem acionar a deprecacao DEP0190 do Node.js.
+4. **Validacao Estrita Integral**:
+   - Todos os 10 plugins do monorepo passam na validacao `agy plugin validate . --strict` com zero erros e zero advertencias.

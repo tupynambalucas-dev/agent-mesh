@@ -32,7 +32,7 @@ This document defines the bounded context router for all Antigravity and Claude 
    - `rules/AGENTS.md`: Mandatory domain rules and Autonomous Domain Mandates loaded unconditionally when the plugin is active.
    - `references/`: Supporting documentation, schemas, and specifications.
 2. **Dual-Mode MCP Integration**:
-   - Native Antigravity: `mcp_config.json` targeting `../../../scripts/mcp-gateway-router.js`.
+   - Native Antigravity: `mcp_config.json` targeting `./scripts/launcher.cjs (sovereign per-plugin launcher)`.
    - Cross-vendor Agent Plugins 1.0.0: `mcp.json` with explicit `"type": "stdio"`.
 3. **Strict Validation**:
    - Every domain plugin MUST pass `agy plugin validate <dir> --strict` with zero errors and zero warnings.

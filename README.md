@@ -54,7 +54,6 @@ agent-mesh/
 ├── scripts/
     ├── AGENTS.md            # Scripts subsystem context router
     ├── README.md            # Scripts subsystem documentation
-    ├── mcp-gateway-router.js# Zero-downtime healthcheck proxy and fallback router
     └── publish-packages.js  # Idempotent GitHub Packages multi-package publisher
 ├── references/              # Diátaxis technical documentation hub
 │   ├── AGENTS.md            # References subsystem context router
