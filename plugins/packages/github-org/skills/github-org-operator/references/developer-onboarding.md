@@ -132,4 +132,4 @@ graph TD
 
 ### 3.3 Local Agent Sessions and MCP
 - Developers running agent sessions locally consume MCP tools using their personal session or fallback tokens injected dynamically via `infisical run --env=dev -- ...`.
-- If an agent requires high-rate-limit operations (e.g. bulk repo scanning), the local runner script (`mcp-runner.js`) can mint an ephemeral App token via Infisical without exposing the underlying private key to the developer.
+- If an agent requires high-rate-limit operations (e.g. bulk repo scanning), the local gateway router script (`mcp-gateway-router.js`) can mint an ephemeral App token via Infisical without exposing the underlying private key to the developer.

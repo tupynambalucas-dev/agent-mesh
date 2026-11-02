@@ -17,7 +17,12 @@ This skill defines the authoritative architectural standard for authoring and au
 >
 > The reverse is **NOT** mandatory: a directory containing a `README.md` does **NOT** necessarily require an `AGENTS.md` (e.g., pure documentation directories, package sub-modules, or asset repositories without agent boundaries).
 >
-> Internal plugin configuration directories (`rules/`) containing `rules/AGENTS.md` are exempt from this requirement.
+> **Strict 3-Layer Ceiling & Anti-Proliferation:**
+> - The co-existence invariant applies strictly across Layer 1 (Root), Layer 2 (Subsystem), and Layer 3 (Package/Domain).
+> - **Prohibition of Leaf Boilerplate**: Subdirectories within a documentation hub (such as Diátaxis quadrants `tutorials/`, `how-to-guides/`, `reference/`, `explanation/`) or AI artifact containers (`.agents/plans/`, `.agents/reports/`) MUST NOT declare child `AGENTS.md` or boilerplate `README.md` files.
+> - The parent subsystem `README.md` and `AGENTS.md` provide all requisite navigation, index mapping, and governance. Creating boilerplate `README.md` and `AGENTS.md` files in content subdirectories floods the agent context window and creates maintenance overhead.
+>
+> Internal plugin configuration directories (`rules/`) containing `rules/AGENTS.md` are exempt from the `README.md` requirement as they are engine rule assets.
 
 ---
 
@@ -45,7 +50,7 @@ Every `README.md` must follow a clear, professional hierarchy:
 
 ## 3. Recursive Directory Navigation Rules
 
-- **Strict Relative Linking**: All links must use relative paths (e.g., `[packages/appsheet/](./packages/appsheet/README.md)`). Absolute paths (`C:/...`, `/Users/...`) and external URLs for internal code navigation are strictly forbidden.
+- **Strict Relative Linking**: All links must use relative paths (e.g. `path: ./packages/appsheet/README.md`). Absolute paths (`C:/...`, `/Users/...`) and external URLs for internal code navigation are strictly forbidden.
 - **Bi-Directional Context**: Every child `README.md` should link to its parent or sibling subsystems where helpful.
 - **Zero Broken Links**: Verify every linked target exists on disk before concluding any task.
 

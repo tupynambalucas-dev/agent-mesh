@@ -17,7 +17,7 @@ This bounded context encapsulates the in-house Model Context Protocol server pro
 - [src/config.ts](./src/config.ts): Configuration schema via Zod (`MEMORY_API_URL`, `CORTEX_GATEWAY_URL`).
 - [src/client/memory-api.client.ts](./src/client/memory-api.client.ts): HTTP client delegating requests to the downstream `memory-api` service.
 - [src/tools/search.tool.ts](./src/tools/search.tool.ts): `search_knowledge` - RAG vector similarity search over indexed documentation.
-- [src/tools/episodic.tool.ts](./src/tools/episodic.tool.ts): `store_episodic` - Conversation turn persistence.
+- [src/tools/chat.tool.ts](./src/tools/chat.tool.ts): `store_episodic` - Conversation turn persistence.
 - [src/tools/graph.tool.ts](./src/tools/graph.tool.ts): `query_graph` - Knowledge graph entity traversal.
 - [src/tools/ingest.tool.ts](./src/tools/ingest.tool.ts): `ingest_document` - Document ingestion and re-indexing pipeline trigger.
 - [README.md](./README.md): Architecture, tools, and transport documentation.

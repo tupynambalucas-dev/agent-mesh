@@ -7,10 +7,12 @@ trigger: always_on
 0. Autonomous Domain Mandate:
    - When requested to create, audit, align, or format repository root files (`README.md`, `LICENSE.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CHANGELOG.md`, `GOVERNANCE.md`), monorepo configurations (`pnpm-workspace.yaml`, `turbo.json`), package manifests (`package.json`), or TypeScript configurations (`tsconfig*.json`), the agent MUST autonomously engage the `repo` skills (`readme-architect`, `community-health-architect`, `license-architect`, `monorepo-architect`) without waiting for explicit skill invocations from the user.
 
-1. The AGENTS-README Co-existence Invariant:
+1. The AGENTS-README Co-existence & Layer Invariant:
    - Wherever an `AGENTS.md` bounded context router file exists in a directory, a corresponding `README.md` file MUST also exist within that same directory.
-   - The reverse is NOT mandatory: a directory containing a `README.md` does NOT necessarily require an `AGENTS.md` (e.g., pure documentation folders, asset folders, or subtrees that do not declare autonomous agent boundaries).
-   - Internal plugin configuration directories (`rules/`) containing `rules/AGENTS.md` are exempt from this requirement as they are engine rule assets.
+   - The co-existence invariant applies strictly to Layer 1 (Root), Layer 2 (Subsystem), and Layer 3 (Package) bounded contexts.
+   - **Layer 4+ Proliferation Prohibition**: Creating `AGENTS.md` or boilerplate `README.md` files below Layer 3 (e.g., inside content subdirectories, Diátaxis quadrant folders `tutorials/`, `how-to-guides/`, `reference/`, `explanation/`, or artifact containers `.agents/plans/`, `.agents/reports/`) is STRICTLY PROHIBITED.
+   - Pure documentation directories and subtrees that do not declare autonomous agent boundaries MUST NOT spawn child `AGENTS.md` files. The parent subsystem `README.md` and `AGENTS.md` provide all requisite navigation and context.
+   - Internal plugin configuration directories (`rules/`) containing `rules/AGENTS.md` are exempt from the `README.md` requirement as they are engine rule assets.
 
 2. Recursive Navigation Standard:
    - Every `README.md` at a root or subsystem layer MUST provide structured, recursive navigation tables or lists linking to all child subsystem and package `README.md` files.

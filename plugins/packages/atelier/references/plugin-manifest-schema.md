@@ -68,7 +68,7 @@ Located at `<repo_root>/.claude-plugin/marketplace.json`:
       "name": "plugin-name",
       "description": "Domain plugin description.",
       "version": "1.0.0",
-      "source": "./plugins/plugin-name"
+      "source": "./plugins/packages/plugin-name"
     }
   ]
 }
