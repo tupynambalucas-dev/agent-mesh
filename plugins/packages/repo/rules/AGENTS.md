@@ -37,7 +37,10 @@ trigger: always_on
      - `platform` packages/services: `@tupynambalucas-dev/<domain>-<subsystem>` (e.g., `corporate-api`, `corporate-web`, `corporate-core`, `cortex-memory-api`, `studio-assets`, `tools-github`, `shared-config`, `k8s`, `renderer`).
      - Standalone repositories: `@tupynambalucas-dev/<repo>-<service>` and `@tupynambalucas-dev/plugin-<slug>`.
 
-7. Organization-Wide .github Directory Taxonomy Invariant:
+7. Organization-Wide .github Directory & Workflow Taxonomy Invariant:
    - All repositories across the organization MUST declare local `.github/CODEOWNERS` mapping `*` to `@tupynambalucas-dev/core-maintainers`.
    - Child repositories MUST NOT define local `.github/ISSUE_TEMPLATE/` directories unless strictly required, preserving native organizational inheritance from `tupynambalucas-dev/.github` without shadowing.
-   - Monorepos must standardize `.github/actions/setup-pnpm-env/action.yml` for unified dependency caching and use native `pnpm -r publish` for idempotent releases.
+   - Monorepos must standardize `.github/actions/` composite action primitives (`setup-pnpm-env`, domain validations) for unified runtime setup and step modularity.
+   - Workflows must declare least-privilege token permissions, strict concurrency cancellation groups (`concurrency.cancel-in-progress: true` for CI), and third-party action SHA pinning with semver comments.
+   - Monorepo publishing must execute natively via `pnpm -r publish --access public --no-git-checks --report-summary` with Zero-Script overhead.
+   - Monorepo `.npmrc` files committed to Git must declare registry and scope routing without embedding secrets or environment variables (`${NODE_AUTH_TOKEN}`).

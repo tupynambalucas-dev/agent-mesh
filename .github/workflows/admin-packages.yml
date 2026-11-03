@@ -14,7 +14,7 @@ on:
           - "purge-obsolete"
           - "purge-all"
       package_name:
-        description: "Target package name (required for delete-one)"
+        description: "Target package name (required for delete-one, e.g. @tupynambalucas-dev/mcp-playwright)"
         required: false
         type: string
         default: ""
@@ -23,6 +23,15 @@ on:
         required: true
         type: boolean
         default: true
+      admin_token:
+        description: "Personal Access Token with delete:packages and read:packages scopes (optional, defaults to secrets.ADMIN_PACKAGES_TOKEN)"
+        required: false
+        type: string
+        default: ""
+
+concurrency:
+  group: admin-packages
+  cancel-in-progress: false
 
 permissions:
   packages: write
@@ -41,7 +50,7 @@ jobs:
 
       - name: Execute Package Administration Script
         env:
-          ADMIN_TOKEN: ${{ secrets.ADMIN_PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+          ADMIN_TOKEN: ${{ inputs.admin_token || secrets.ADMIN_PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
           ADMIN_ACTION: ${{ inputs.action }}
           TARGET_PACKAGE: ${{ inputs.package_name }}
           DRY_RUN: ${{ inputs.dry_run }}
