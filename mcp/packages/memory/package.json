@@ -38,6 +38,7 @@
     "typescript": "catalog:"
   },
   "files": [
-    "dist"
+    "dist",
+    "CHANGELOG.md"
   ]
 }

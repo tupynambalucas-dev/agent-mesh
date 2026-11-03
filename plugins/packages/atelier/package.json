@@ -25,6 +25,9 @@
     "plugin.json",
     "rules",
     "skills",
+    "CHANGELOG.md",
+    "hooks.json",
+    "scripts",
     "references"
   ]
 }
