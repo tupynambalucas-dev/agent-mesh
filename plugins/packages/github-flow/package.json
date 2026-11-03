@@ -23,9 +23,12 @@
   },
   "files": [
     "plugin.json",
-    "mcp_config.json",
-    "mcp.json",
     "rules",
-    "skills"
+    "skills",
+    "CHANGELOG.md",
+    "mcp.json",
+    "mcp_config.json",
+    "hooks.json",
+    "scripts"
   ]
 }
