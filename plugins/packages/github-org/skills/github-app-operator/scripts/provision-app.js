@@ -27,7 +27,7 @@ const profile = profileArg ? profileArg.split('=')[1] : 'manager';
 
 const PROFILES = {
   manager: {
-    appName: 'tupynambalucas-plugin-github-org',
+    appName: 'tupynambalucas-org-manager',
     description: 'High-privilege organizational governance operator for tupynambalucas-dev.',
     permissions: {
       organization_administration: 'write',
@@ -37,6 +37,7 @@ const PROFILES = {
       pull_requests: 'write',
       issues: 'write',
       actions: 'write',
+      packages: 'write',
       secret_scanning_alerts: 'write',
       dependabot_alerts: 'write',
     },
@@ -49,6 +50,7 @@ const PROFILES = {
       pull_requests: 'write',
       issues: 'write',
       actions: 'read',
+      packages: 'read',
     },
   },
 };

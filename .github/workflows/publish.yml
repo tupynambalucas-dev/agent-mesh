@@ -27,10 +27,19 @@ jobs:
       - name: Setup Node.js & pnpm
         uses: ./.github/actions/setup-pnpm-env
 
+      - name: Generate GitHub App Token
+        id: app-token
+        if: ${{ (secrets.ORGANIZATION_APP_ID || secrets.APP_ID) != '' && (secrets.ORGANIZATION_APP_PRIVATE_KEY || secrets.APP_PRIVATE_KEY) != '' }}
+        uses: actions/create-github-app-token@c1a285145b9d317df6ced56c09f525b5c2b6f755 # v1.11.1
+        with:
+          app-id: ${{ secrets.ORGANIZATION_APP_ID || secrets.APP_ID }}
+          private-key: ${{ secrets.ORGANIZATION_APP_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
 
       - name: Build MCP Packages
         uses: ./.github/actions/build-mcp
@@ -40,5 +49,5 @@ jobs:
 
       - name: Publish Workspace Packages Idempotently (Native pnpm)
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
         run: pnpm run packages:publish
