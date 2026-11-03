@@ -6,6 +6,10 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -29,27 +33,7 @@ jobs:
         run: pnpm typecheck
 
       - name: Build MCP Packages
-        run: pnpm mcp:build
+        uses: ./.github/actions/build-mcp
 
       - name: Validate Antigravity Domain Plugins
-        run: |
-          curl -fsSL https://antigravity.google/install.sh | bash || true
-          node -e "
-            const { execSync } = require('child_process');
-            const fs = require('fs');
-            const path = require('path');
-            const plugins = fs.readdirSync('plugins/packages');
-            let hasAgy = false;
-            try { execSync('agy --version', { stdio: 'ignore' }); hasAgy = true; } catch {}
-            for (const p of plugins) {
-              const full = path.join('plugins', 'packages', p);
-              if (!fs.statSync(full).isDirectory()) continue;
-              console.log('Validating domain plugin:', p);
-              if (hasAgy) {
-                execSync('agy plugin validate . --strict', { cwd: full, stdio: 'inherit' });
-              } else {
-                const manifest = JSON.parse(fs.readFileSync(path.join(full, 'plugin.json'), 'utf8'));
-                console.log('Manifest OK:', manifest.name, 'v' + manifest.version);
-              }
-            }
-          "
+        uses: ./.github/actions/validate-plugins

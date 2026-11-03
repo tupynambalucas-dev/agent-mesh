@@ -5,7 +5,6 @@
  * tupynambalucas-dev Organization
  */
 
-const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -45,23 +44,40 @@ function getActivePackages() {
   return active;
 }
 
+// Fetch all packages with multi-page pagination
 async function fetchPackages() {
-  const url = `https://api.github.com/orgs/${ORG}/packages?package_type=npm`;
-  const res = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-      Accept: 'application/vnd.github+json',
-      'X-GitHub-Api-Version': '2022-11-28',
-      'User-Agent': 'tupynambalucas-dev-package-admin',
-    },
-  });
+  const allPackages = [];
+  let page = 1;
 
-  if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(`Failed to list packages (HTTP ${res.status}): ${errText}`);
+  while (true) {
+    const url = `https://api.github.com/orgs/${ORG}/packages?package_type=npm&per_page=100&page=${page}`;
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        'User-Agent': 'tupynambalucas-dev-package-admin',
+      },
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Failed to list packages on page ${page} (HTTP ${res.status}): ${errText}`);
+    }
+
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) {
+      break;
+    }
+
+    allPackages.push(...data);
+    if (data.length < 100) {
+      break;
+    }
+    page++;
   }
 
-  return await res.json();
+  return allPackages;
 }
 
 async function deletePackage(packageName) {
