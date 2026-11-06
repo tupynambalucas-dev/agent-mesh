@@ -1,12 +1,15 @@
 # Web Automation & Browsing Plugin (`@tupynambalucas-dev/plugin-web`)
 
-Enterprise Antigravity and Claude Code domain plugin for headless web automation, developer desktop browser pairing, and structured extraction.
+Enterprise Antigravity and Claude Code domain plugin for dynamic multi-mode Playwright automation, developer desktop browser pairing, and structured web extraction.
 
 ---
 
 ## 1. Overview
 
-`@tupynambalucas-dev/plugin-web` provides a comprehensive web interaction layer: headless end-to-end automation with Playwright, non-intrusive desktop pairing with the developer's active browser via Chrome Extension bridge or CDP loopback, and token-optimized scraping via Firecrawl.
+`@tupynambalucas-dev/plugin-web` provides a comprehensive web interaction layer for AI agents operating within the Tupynamba Lucas agent mesh ecosystem:
+- **Dynamic Multi-Mode Playwright Automation**: Managed through a sovereign launcher (`scripts/launcher.cjs`) supporting automatic browser extension pairing, headless sandboxes, native browser channels, and CDP endpoints.
+- **Desktop Browser Pairing**: Connects non-intrusively to the developer's everyday browser session (Vivaldi, Google Chrome, Microsoft Edge, Brave) via the official Playwright Browser Extension bridge, preserving active logins, session cookies, and open workspaces.
+- **Token-Optimized Extraction**: Semantic web scraping and markdown conversion via Firecrawl MCP, minimizing LLM context token consumption.
 
 ---
 
@@ -14,7 +17,7 @@ Enterprise Antigravity and Claude Code domain plugin for headless web automation
 
 | Skill | Primary Focus | Tools & Targets |
 | :--- | :--- | :--- |
-| [**`browser-operator`**](./skills/browser-operator/SKILL.md) | Automates headless browser sessions, page navigation, form interactions, UI clicking, dialog handling, and screenshot capture using Playwright MCP. | `playwright` MCP server (`browser_*`). |
+| [**`browser-operator`**](./skills/browser-operator/SKILL.md) | Automates browser sessions, page navigation, form interactions, UI clicking, dialog handling, and screenshot capture using Playwright MCP. | `playwright` MCP server (`browser_*`). |
 | [**`browser-auditor`**](./skills/browser-auditor/SKILL.md) | Inspects and pairs with the developer's active desktop browser session (via Extension bridge or CDP loopback) to troubleshoot live errors without restarting processes. | `playwright` MCP server (`browser_*`). |
 | [**`web-extractor`**](./skills/web-extractor/SKILL.md) | Scrapes web pages, maps domain hierarchies, and extracts clean markdown using Firecrawl MCP. | `firecrawl` MCP server (`scrape`, `crawl`, `map`). |
 
@@ -23,26 +26,31 @@ Enterprise Antigravity and Claude Code domain plugin for headless web automation
 ## 3. Directory Layout
 
 - [plugin.json](./plugin.json): Agent Plugins 1.0.0 manifest declaring identity, version, author, and keywords.
-- [rules/AGENTS.md](./rules/AGENTS.md): Active domain rules, dual-mode standards (headless vs desktop pairing), snapshot navigation, settle timeouts, and Autonomous Domain Mandate.
-- [skills/browser-operator/SKILL.md](./skills/browser-operator/SKILL.md): Headless Playwright browser automation procedures.
+- [rules/AGENTS.md](./rules/AGENTS.md): Active domain rules, multi-mode standards (extension pairing vs headless), snapshot navigation, settle timeouts, and Autonomous Domain Mandate.
+- [scripts/launcher.cjs](./scripts/launcher.cjs): Sovereign plugin MCP launcher managing dynamic Playwright modes and Firecrawl execution.
+- [skills/browser-operator/SKILL.md](./skills/browser-operator/SKILL.md): Playwright browser automation procedures.
 - [skills/browser-auditor/SKILL.md](./skills/browser-auditor/SKILL.md): Non-intrusive desktop pairing procedures.
 - [skills/web-extractor/SKILL.md](./skills/web-extractor/SKILL.md): Web scraping and markdown extraction runbook.
 - [references/playwright-mcp-tool-catalog.md](./references/playwright-mcp-tool-catalog.md): Complete Playwright MCP tool parameter and return type catalog.
-- [mcp.json](./mcp.json): Agent Plugins 1.0.0 stdio bindings for `@tupynambalucas-dev/mcp-playwright` and `@tupynambalucas-dev/mcp-firecrawl`.
-- [mcp_config.json](./mcp_config.json): Native Antigravity MCP router bindings targeting smart gateway fallback.
+- [mcp.json](./mcp.json): Agent Plugins 1.0.0 stdio bindings routing `playwright` and `firecrawl` through `launcher.cjs`.
+- [mcp_config.json](./mcp_config.json): Native Antigravity MCP router bindings targeting `launcher.cjs` with cluster gateway failover.
 
 ---
 
-## 4. Configuration
+## 4. Configuration & Playwright Modes
 
-The underlying MCP servers consumed by this plugin require the following environment variables:
+The plugin dynamically configures Playwright based on environment variables loaded in cascade from `.env`:
 
-| Variable | Required | Description |
-| :--- | :--- | :--- |
-| `PLAYWRIGHT_MCP_EXTENSION_TOKEN` | Optional | Ephemeral bearer token for local browser pairing extension bridge. |
-| `FIRECRAWL_API_KEY` | Optional | Cloud API key if upstream Firecrawl service is required. |
-| `CORTEX_GATEWAY_URL` | Optional | Envoy AgentGateway cluster URL (defaults to `http://localhost:8080`). |
-| `CORTEX_PROBE_TIMEOUT_MS` | Optional | Smart gateway probe timeout in milliseconds (defaults to `300`). |
+| Variable | Default | Allowed Values | Description |
+| :--- | :--- | :--- | :--- |
+| `PLAYWRIGHT_MODE` | `auto` | `auto`, `extension`, `headless`, `channel`, `cdp` | Execution mode selector. `auto` engages `extension` when a token exists, otherwise falling back to `headless`. |
+| `PLAYWRIGHT_MCP_EXTENSION_TOKEN` | *(none)* | String (43 chars) | Security token displayed in the Playwright Browser Extension to bypass manual connection prompts. |
+| `PLAYWRIGHT_MCP_EXECUTABLE_PATH` | *(auto)* | Filesystem path | Explicit browser executable path (e.g. `C:\Users\...\Vivaldi\Application\vivaldi.exe`). |
+| `PLAYWRIGHT_CHANNEL` | `chrome` | `chrome`, `msedge`, `vivaldi`, `chromium` | Target browser engine channel for channel mode. |
+| `PLAYWRIGHT_HEADLESS` | `false` | `true`, `false` | Headless flag for channel and standalone runs. |
+| `PLAYWRIGHT_CDP_URL` | `http://localhost:9222` | URL | Remote debugging endpoint for CDP mode. |
+| `FIRECRAWL_API_KEY` | *(none)* | String | API key for Firecrawl web scraping. |
+| `MESH_PROFILE` | `local` | `local`, `cluster` | `local` spawns stdio processes; `cluster` routes through Cortex Gateway. |
 
 ---
 
@@ -58,12 +66,6 @@ Add to `.agents/plugins.json` in your project root:
     { "path": "agent-mesh/plugins/packages/web" }
   ]
 }
-```
-
-Or install globally via Antigravity CLI:
-
-```bash
-agy plugin install @tupynambalucas-dev/plugin-web
 ```
 
 ### Claude Code

@@ -22,6 +22,7 @@ trigger: always_on
    - When executing `mutate_records`, always specify deterministic keys to prevent duplicate record insertion during network retries.
    - Use `Find` with specific `Selector` filters before executing batch operations to verify initial state.
 
-5. Headless Browser Automation (Playwright):
-   - When automating AppSheet Studio UI via Playwright MCP (`browser_*` tools), always wait for network idle before asserting view updates.
+5. Browser Automation (Playwright Studio Operations):
+   - When automating AppSheet Studio UI via Playwright MCP (`browser_*` tools), operations default to an isolated profile (`${PLUGIN_DATA}/appsheet-profile`) in headless mode to protect developer workspaces.
+   - Always wait for network settle via `browser_wait_for` before asserting schema regeneration or view updates.
    - Handle and dismiss modal dialogs (consent banners, feature onboarding tours) before interacting with schema regeneration buttons.
