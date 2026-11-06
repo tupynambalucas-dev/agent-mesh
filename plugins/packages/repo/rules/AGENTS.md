@@ -44,3 +44,8 @@ trigger: always_on
    - Workflows must declare least-privilege token permissions, strict concurrency cancellation groups (`concurrency.cancel-in-progress: true` for CI), and third-party action SHA pinning with semver comments.
    - Monorepo publishing must execute natively via `pnpm -r publish --access public --no-git-checks --report-summary` with Zero-Script overhead.
    - Monorepo `.npmrc` files committed to Git must declare registry and scope routing without embedding secrets or environment variables (`${NODE_AUTH_TOKEN}`).
+
+8. Environment Configuration Template Invariant (.env.example):
+   - Every repository, package, or service that defines a local `.env` configuration MUST maintain an authoritative `.env.example` file that is a faithful, complete structural replica of `.env`.
+   - The `.env.example` file MUST adhere strictly to the enterprise format exemplified by `platform/k8s/.env.example`: boxed ASCII headers, numbered domain sections, inline operational comments (`# --`), and standardized `<YOUR_VARIABLE_NAME>` placeholders.
+   - Committing real secrets, tokens, passwords, or private keys into `.env.example` is strictly prohibited.

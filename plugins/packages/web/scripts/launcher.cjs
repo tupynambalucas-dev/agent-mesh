@@ -57,22 +57,8 @@ function spawnCommand(bin, args, options = {}) {
   });
 }
 
-const SERVICE_CONFIGS = {
-  firecrawl: {
-    pkg: '@tupynambalucas-dev/mcp-firecrawl',
-    upstream: 'firecrawl-mcp',
-    monorepoDir: 'firecrawl'
-  }
-};
-
 const targetService = process.argv[2];
 const forwardedArgs = process.argv.slice(3);
-const serviceConfig = SERVICE_CONFIGS[targetService];
-
-if (!serviceConfig) {
-  process.stderr.write(`[launcher:${PLUGIN_NAME}] Error: Unknown service '${targetService}'. Available: ${Object.keys(SERVICE_CONFIGS).join(', ')}\n`);
-  process.exit(1);
-}
 
 const profile = process.env.MESH_PROFILE || 'local';
 const isClusterMode = profile === 'cluster' || process.env.CORTEX_GATEWAY_ENABLED === 'true';
@@ -82,13 +68,48 @@ if (isClusterMode) {
   process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging cluster gateway for '${targetService}' via ${gatewayBaseUrl}/mcp\n`);
   const child = spawnCommand('npx', ['-y', 'mcp-remote', `${gatewayBaseUrl}/mcp`]);
   child.on('exit', (code) => process.exit(code || 0));
-} else if (serviceConfig.monorepoDir) {
-  const localPkgDir = path.resolve(__dirname, '..', '..', '..', '..', 'mcp', 'packages', serviceConfig.monorepoDir);
+} else if (targetService === 'playwright') {
+  const mode = process.env.PLAYWRIGHT_MODE || 'auto';
+  const hasExtensionToken = Boolean(
+    process.env.PLAYWRIGHT_MCP_EXTENSION_TOKEN &&
+    process.env.PLAYWRIGHT_MCP_EXTENSION_TOKEN.trim()
+  );
+  const effectiveMode = (mode === 'auto')
+    ? (hasExtensionToken ? 'extension' : 'headless')
+    : mode;
+
+  const resolvedArgs = [];
+  if (effectiveMode === 'extension') {
+    resolvedArgs.push('--extension');
+  } else if (effectiveMode === 'cdp') {
+    resolvedArgs.push('--cdp-endpoint', process.env.PLAYWRIGHT_CDP_URL || 'http://localhost:9222');
+  } else if (effectiveMode === 'channel') {
+    resolvedArgs.push('--browser', process.env.PLAYWRIGHT_CHANNEL || 'chrome');
+    if (process.env.PLAYWRIGHT_HEADLESS === 'true') {
+      resolvedArgs.push('--headless');
+    }
+  } else {
+    // headless standalone
+    const pluginDataDir = process.env.PLUGIN_DATA || path.resolve(process.cwd(), '.agent-data');
+    resolvedArgs.push('--user-data-dir', path.join(pluginDataDir, 'browser-profile'), '--headless');
+  }
+
+  if (process.env.PLAYWRIGHT_MCP_EXECUTABLE_PATH) {
+    resolvedArgs.push('--executable-path', process.env.PLAYWRIGHT_MCP_EXECUTABLE_PATH);
+  }
+
+  resolvedArgs.push(...forwardedArgs);
+
+  process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging Playwright MCP in '${effectiveMode}' mode\n`);
+  const child = spawnCommand('npx', ['-y', '@playwright/mcp@0.0.84', ...resolvedArgs]);
+  child.on('exit', (code) => process.exit(code || 0));
+} else if (targetService === 'firecrawl') {
+  const localPkgDir = path.resolve(__dirname, '..', '..', '..', '..', 'mcp', 'packages', 'firecrawl');
   const localJsBin = path.join(localPkgDir, 'dist', 'bin.js');
   const localTsBin = path.join(localPkgDir, 'src', 'bin.ts');
 
   if (fs.existsSync(localJsBin)) {
-    process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging monorepo precompiled binary for '${targetService}': node ${localJsBin}\n`);
+    process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging monorepo precompiled binary for 'firecrawl': node ${localJsBin}\n`);
     const child = spawn(process.execPath, [localJsBin, ...forwardedArgs], {
       stdio: 'inherit',
       shell: false,
@@ -96,16 +117,15 @@ if (isClusterMode) {
     });
     child.on('exit', (code) => process.exit(code || 0));
   } else if (fs.existsSync(localTsBin)) {
-    process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging monorepo TypeScript binary for '${targetService}': tsx ${localTsBin}\n`);
+    process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging monorepo TypeScript binary for 'firecrawl': tsx ${localTsBin}\n`);
     const child = spawnCommand('npx', ['-y', 'tsx', localTsBin, ...forwardedArgs]);
     child.on('exit', (code) => process.exit(code || 0));
   } else {
-    process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging standalone package for '${targetService}': npx -y ${serviceConfig.pkg}\n`);
-    const child = spawnCommand('npx', ['-y', serviceConfig.pkg, ...forwardedArgs]);
+    process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging standalone package for 'firecrawl': npx -y @tupynambalucas-dev/mcp-firecrawl\n`);
+    const child = spawnCommand('npx', ['-y', '@tupynambalucas-dev/mcp-firecrawl', ...forwardedArgs]);
     child.on('exit', (code) => process.exit(code || 0));
   }
 } else {
-  process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging standalone package for '${targetService}': npx -y ${serviceConfig.pkg}\n`);
-  const child = spawnCommand('npx', ['-y', serviceConfig.pkg, ...forwardedArgs]);
-  child.on('exit', (code) => process.exit(code || 0));
+  process.stderr.write(`[launcher:${PLUGIN_NAME}] Error: Unknown service '${targetService}'. Available: firecrawl, playwright\n`);
+  process.exit(1);
 }

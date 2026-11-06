@@ -30,3 +30,8 @@ trigger: always_on
    - `AGENTS.md` context routers are strictly limited to 3 architectural layers: Layer 1 (Root), Layer 2 (Subsystem), and Layer 3 (Package/Domain).
    - Layer 4+ context routers are strictly prohibited.
    - Content folders under documentation hubs (e.g. Diátaxis quadrants `tutorials/`, `how-to-guides/`, `reference/`, `explanation/`) and planning containers (`.agents/plans/`, `.agents/reports/`) MUST NOT declare `AGENTS.md` or boilerplate `README.md` files. The parent bounded context router governs the entire subsystem.
+
+7. Environment Configuration Template Invariant (.env.example):
+   - Every subsystem, package, or repository declaring a `.env` file MUST maintain an authoritative `.env.example` template.
+   - The `.env.example` file MUST adhere strictly to the enterprise format exemplified by `platform/k8s/.env.example`: boxed ASCII headers, numbered domain sections, inline descriptive comments (`# --`), and standardized `<YOUR_VARIABLE_NAME>` placeholders.
+   - Never commit or emit plaintext secrets, passwords, API tokens, or private keys in `.env.example`.

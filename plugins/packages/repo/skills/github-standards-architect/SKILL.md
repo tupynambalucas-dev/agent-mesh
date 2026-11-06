@@ -235,3 +235,4 @@ When auditing a repository:
 5. Check that `.npmrc` contains zero plaintext tokens or `${NODE_AUTH_TOKEN}` strings.
 6. Confirm workflows declare explicit least-privilege `permissions:` and appropriate `concurrency:` groups.
 7. Confirm zero emojis exist anywhere in workflows, PR templates, or configuration files.
+8. Verify that `.env.example` exists wherever `.env` is declared, adhering strictly to the enterprise `platform/k8s/.env.example` format (boxed ASCII headers, numbered domain sections, inline operational comments, standardized `<YOUR_VARIABLE_NAME>` placeholders, and zero secret leakage).
