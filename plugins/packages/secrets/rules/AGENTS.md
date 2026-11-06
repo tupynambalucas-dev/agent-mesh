@@ -10,6 +10,7 @@ trigger: always_on
 1. Zero Plaintext Secret Leakage:
    - Secret values MUST never be echoed in terminal outputs, committed to Git repositories, or included in plain-text task descriptions.
    - All secret references must use environment variable interpolation (`${VAR_NAME}`) or Infisical CLI expansion (`infisical run -- ...`).
+   - Configuration template files (`.env.example`) MUST use `<YOUR_VARIABLE_NAME>` placeholders and adhere strictly to the structured format exemplified in `platform/k8s/.env.example` with zero plain-text secret leakage.
 
 2. Machine Identity Authentication Standard:
    - Automated agents and Kubernetes pods must authenticate using Infisical **Universal Auth** (Client ID + Client Secret) rather than user tokens.

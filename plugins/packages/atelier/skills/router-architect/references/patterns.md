@@ -224,5 +224,5 @@ Read [../AGENTS.md](../AGENTS.md) for parent bounded context rules before operat
 
 - Kustomize `secretGenerator` MUST include `options.disableNameSuffixHash: true`.
 - Compose services MUST declare `restart: unless-stopped` for always-on services.
-- MUST mirror all new environment variables in `.env.example`.
+- MUST mirror all new environment variables in `.env.example` adhering strictly to the `platform/k8s/.env.example` standard (boxed ASCII headers, numbered domain sections, operational comments, and standardized `<YOUR_VARIABLE_NAME>` placeholders without secret leakage).
 ```
