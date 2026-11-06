@@ -10,6 +10,9 @@
 
 This bounded context encapsulates the in-house Model Context Protocol server providing sovereign browser automation, multi-platform desktop pairing via Extension Bridge, and headless containerized execution.
 
+> [!NOTE]
+> **Package Status**: Staged Sovereign Reference Implementation. Currently maintained and compiled for future Kubernetes Cortex cluster deployment. Active daily plugin workflows invoke upstream `@playwright/mcp` via `plugins/packages/web/scripts/launcher.cjs`.
+
 ## Directory Layout
 
 - [src/bin.ts](./src/bin.ts): Stdio transport entrypoint executing the MCP server over standard input/output.
@@ -25,7 +28,7 @@ This bounded context encapsulates the in-house Model Context Protocol server pro
   - [playwright-mcp-official-overview.md](./references/playwright-mcp-official-overview.md)
   - [playwright-mcp-extension-bridge-and-token-spec.md](./references/playwright-mcp-extension-bridge-and-token-spec.md)
   - [playwright-mcp-cli-flags-and-capabilities.md](./references/playwright-mcp-cli-flags-and-capabilities.md)
-- [README.md](./README.md): Architecture, features, and setup documentation.
+- [README.md](./README.md): Architecture, features, operational status, and setup documentation.
 
 ## Architecture & Conventions
 
@@ -45,5 +48,5 @@ This bounded context encapsulates the in-house Model Context Protocol server pro
 
 ## Required Skills
 
-- **`browser-automator`**: Active when executing automated browser sessions, form fills, and navigation.
-- **`browser-desktop-inspector`**: Active when pairing with the developer's open browser session.
+- **`browser-operator`**: Active when executing automated browser sessions, form fills, and navigation.
+- **`browser-auditor`**: Active when pairing with the developer's open browser session.

@@ -31,9 +31,10 @@ This document defines the bounded context router for all Antigravity and Claude 
    - `skills/`: Modular agent skills with `SKILL.md` frontmatter and progressive disclosure matching directory names.
    - `rules/AGENTS.md`: Mandatory domain rules and Autonomous Domain Mandates loaded unconditionally when the plugin is active.
    - `references/`: Supporting documentation, schemas, and specifications.
-2. **Dual-Mode MCP Integration**:
-   - Native Antigravity: `mcp_config.json` targeting `./scripts/launcher.cjs (sovereign per-plugin launcher)`.
+2. **Dynamic Launcher MCP Integration**:
+   - Native Antigravity: `mcp_config.json` targeting `./scripts/launcher.cjs` (sovereign per-plugin launcher managing environment cascade and mode resolution).
    - Cross-vendor Agent Plugins 1.0.0: `mcp.json` with explicit `"type": "stdio"`.
+   - Dynamic Browser Execution: `web` and `appsheet` leverage multi-mode Playwright launchers supporting `auto`, `extension`, `headless`, `channel`, and `cdp` modes via `.env`.
 3. **Strict Validation**:
    - Every domain plugin MUST pass `agy plugin validate <dir> --strict` with zero errors and zero warnings.
 

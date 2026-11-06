@@ -14,15 +14,15 @@ Each MCP server is an independent, versioned TypeScript package within the pnpm 
 
 ## 2. Server Matrix
 
-| Package Directory | NPM Package Name | Stdio Binary | Default HTTP Port | Primary Capabilities |
-| :--- | :--- | :--- | :--- | :--- |
-| [packages/appsheet/](./packages/appsheet/README.md) | `@tupynambalucas-dev/mcp-appsheet` | `dist/bin.js` | `:8080` | Relational schema modeling and REST API v2 CRUD automation. |
-| [packages/firecrawl/](./packages/firecrawl/README.md) | `@tupynambalucas-dev/mcp-firecrawl` | `dist/bin.js` | `:8080` | Deep web scraping, crawling, site mapping, and markdown extraction. |
-| [packages/github/](./packages/github/README.md) | `@tupynambalucas-dev/mcp-github` | `dist/bin.js` | `:8080` | GitHub App authenticated organization RBAC and security auditing. |
-| [packages/gwork/](./packages/gwork/README.md) | `@tupynambalucas-dev/mcp-gwork` | `dist/bin.js` | `:8080` | Drive folder taxonomy, Sheets synthesis, and Docs publishing. |
-| [packages/infisical/](./packages/infisical/README.md) | `@tupynambalucas-dev/mcp-infisical` | `dist/bin.js` | `:8080` | Universal Auth machine tokens, secret CRUD, and vault management. |
-| [packages/memory/](./packages/memory/README.md) | `@tupynambalucas-dev/mcp-memory` | `dist/bin.js` | `:8080` | Semantic RAG vector store, episodic memory, and chat history. |
-| [packages/playwright/](./packages/playwright/README.md) | `@tupynambalucas-dev/mcp-playwright` | `dist/bin.js` | `:8080` | Headless browser automation, extension bridge, and ARIA snapshots. |
+| Package Directory | NPM Package Name | Stdio Binary | Default HTTP Port | Status & Role | Primary Capabilities |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| [packages/appsheet/](./packages/appsheet/README.md) | `@tupynambalucas-dev/mcp-appsheet` | `dist/bin.js` | `:8080` | Production Active | Relational schema modeling and REST API v2 CRUD automation. |
+| [packages/firecrawl/](./packages/firecrawl/README.md) | `@tupynambalucas-dev/mcp-firecrawl` | `dist/bin.js` | `:8080` | Production Active | Deep web scraping, crawling, site mapping, and markdown extraction. |
+| [packages/github/](./packages/github/README.md) | `@tupynambalucas-dev/mcp-github` | `dist/bin.js` | `:8080` | Production Active | GitHub App authenticated organization RBAC and security auditing. |
+| [packages/gwork/](./packages/gwork/README.md) | `@tupynambalucas-dev/mcp-gwork` | `dist/bin.js` | `:8080` | Production Active | Drive folder taxonomy, Sheets synthesis, and Docs publishing. |
+| [packages/infisical/](./packages/infisical/README.md) | `@tupynambalucas-dev/mcp-infisical` | `dist/bin.js` | `:8080` | Production Active | Universal Auth machine tokens, secret CRUD, and vault management. |
+| [packages/memory/](./packages/memory/README.md) | `@tupynambalucas-dev/mcp-memory` | `dist/bin.js` | `:8080` | Production Active | Semantic RAG vector store, episodic memory, and chat history. |
+| [packages/playwright/](./packages/playwright/README.md) | `@tupynambalucas-dev/mcp-playwright` | `dist/bin.js` | `:8080` | Staged Reference Package | Sovereign engine staged for future Kubernetes Cortex hosting. Current local plugin workflows delegate via `launcher.cjs` to upstream `@playwright/mcp@0.0.84`. |
 
 ---
 

@@ -39,7 +39,7 @@ agent-mesh/
 │       ├── repo/            # @tupynambalucas-dev/plugin-repo (Repository Standards & Health)
 │       ├── research/        # @tupynambalucas-dev/plugin-research (Context7 + Firecrawl)
 │       ├── secrets/         # @tupynambalucas-dev/plugin-secrets
-│       └── web/             # @tupynambalucas-dev/plugin-web (Playwright + Firecrawl)
+│       └── web/             # @tupynambalucas-dev/plugin-web (Multi-mode Playwright + Firecrawl)
 ├── mcp/                     # 7 In-House Dual-Transport MCP Servers
 │   ├── AGENTS.md            # MCP subsystem context router
 │   ├── README.md            # MCP subsystem documentation
@@ -50,7 +50,7 @@ agent-mesh/
 │       ├── gwork/           # @tupynambalucas-dev/mcp-gwork
 │       ├── infisical/       # @tupynambalucas-dev/mcp-infisical
 │       ├── memory/          # @tupynambalucas-dev/mcp-memory
-│       └── playwright/      # @tupynambalucas-dev/mcp-playwright
+│       └── playwright/      # @tupynambalucas-dev/mcp-playwright (Sovereign reference engine staged for Cortex)
 ├── scripts/
     ├── AGENTS.md            # Scripts subsystem context router
     ├── README.md            # Scripts subsystem documentation

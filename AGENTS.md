@@ -19,7 +19,8 @@ The `agent-mesh` repository is structured as a pnpm monorepo managed with Turbor
 - **Build Pipeline**: Turborepo coordinates build, dev, clean, and typecheck tasks with intelligent workspace caching (`turbo run build --filter="@tupynambalucas-dev/mcp-*"`).
 - **Dependency Catalogs**: Pnpm catalogs (`catalog:`, `catalog:shared`, `catalog:mcp-stack`, `catalog:`) eliminate version drift across all packages.
 - **Dual-Transport MCP Servers**: Packages in `mcp/packages/*` provide both Streamable HTTP (Fastify on `:8080`) and Stdio (`dist/bin.js`) transports for zero-friction local or cluster operation.
-- **Domain Plugins**: Packages in `plugins/packages/*` implement bounded skills, references, and domain-specific validation rules for AI agents complying with `agent-plugins.org` v1.0.0.
+- **Domain Plugins**: Packages in `plugins/packages/*` implement bounded skills, references, and domain-specific validation rules for AI agents complying with `agent-plugins.org` v1.0.0. Plugins like `web` and `appsheet` leverage sovereign `launcher.cjs` scripts for dynamic multi-mode browser execution (`extension`, `headless`, `channel`, `cdp`).
+- **Sovereign MCP Engine**: `mcp/packages/playwright` provides an in-house reference engine staged for future Kubernetes Cortex cluster hosting, while active developer sessions delegate via `launcher.cjs` to upstream `@playwright/mcp`.
 
 ## Scoped Guardrails
 
