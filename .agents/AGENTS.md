@@ -12,7 +12,7 @@ This document serves as the bounded context router for architectural planning, A
 ## Navigation
 
 - [README.md](./README.md): Primary overview and document index of the agent planning subsystem.
-- **Deep Analyses (`analyses/`)**: Deep lifecycle and architectural analyses ([MCP Gateway Router Deep Analysis](./analyses/analise-profunda-mcp-gateway-router.md), [Playwright Isolation and Lifecycle Hooks Analysis](./analyses/analise-arquitetural-isolamento-playwright-e-lifecycle-hooks.md)).
+- **Deep Analyses (`analyses/`)**: Deep lifecycle and architectural analyses ([MCP Gateway Router Deep Analysis](./analyses/analise-profunda-mcp-gateway-router.md), [Playwright Isolation and Lifecycle Hooks Analysis](./analyses/analise-arquitetural-isolamento-playwright-e-lifecycle-hooks.md), [Monolithic vs. Domain-Scoped MCP Servers Analysis](./analyses/mcp-architecture-single-vs-modular-github-apps.md)).
 - **Architectural Plans (`plans/`)**: Master blueprints and execution runbooks ([Autonomous Agent Mesh Master Implementation Plan](./plans/master-implementation-plan-github-app-and-cortex-mcp.md), [Cortex Gateway Master Plan](./plans/cortex-gateway-and-self-contained-agent-mesh-architecture.md), [Monorepo Restructuring Blueprint](./plans/agent-monorepo-and-github-app-architecture.md), [Plugin Independence and Enforcement Hooks Plan](./plans/plugin-independence-playwright-isolation-and-enforcement-hooks.md)).
 - **Verification Reports (`reports/`)**: AI-generated audits and benchmarks ([Refactoring Audit Report](./reports/agent-mesh-refactoring-and-governance-report.md), [Execution State Verification](./reports/cortex-mcp-execution-state-and-fallback-verification.md), [GitHub MCP Evaluation](./reports/github-mcp-ecosystem-and-domain3-evaluation.md)).
 
