@@ -42,7 +42,10 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
         env:
-          NODE_AUTH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Typecheck Workspace
+        run: pnpm typecheck
 
       - name: Build MCP Packages
         uses: ./.github/actions/build-mcp
@@ -52,5 +55,7 @@ jobs:
 
       - name: Publish Workspace Packages Idempotently (Native pnpm)
         env:
-          NODE_AUTH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          # GitHub Packages npm registry (npm.pkg.github.com) requires GITHUB_TOKEN
+          # (with packages: write) rather than a GitHub App installation token (ghs_*).
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm run packages:publish
