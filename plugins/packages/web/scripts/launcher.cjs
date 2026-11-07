@@ -104,7 +104,7 @@ if (isClusterMode) {
   const child = spawnCommand('npx', ['-y', '@playwright/mcp@0.0.84', ...resolvedArgs]);
   child.on('exit', (code) => process.exit(code || 0));
 } else if (targetService === 'firecrawl') {
-  const localPkgDir = path.resolve(__dirname, '..', '..', '..', '..', 'mcp', 'packages', 'firecrawl');
+  const localPkgDir = path.resolve(__dirname, '..', '..', '..', '..', 'mcp', 'servers', 'firecrawl');
   const localJsBin = path.join(localPkgDir, 'dist', 'bin.js');
   const localTsBin = path.join(localPkgDir, 'src', 'bin.ts');
 

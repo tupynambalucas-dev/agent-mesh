@@ -1,6 +1,8 @@
 packages:
-  - 'mcp/packages/*'
+  - 'mcp/servers/*'
+  - 'mcp/core/*'
   - 'plugins/packages/*'
+  - 'plugins/core/*'
 
 registries:
   default: 'https://registry.npmjs.org/'

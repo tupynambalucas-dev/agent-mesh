@@ -3,6 +3,8 @@ import { Octokit } from '@octokit/core';
 import { createAppAuth } from '@octokit/auth-app';
 import { config } from '../config.js';
 
+export type GitHubIdentityTier = 'org-manager' | 'developer-tools' | 'auto';
+
 export function resolvePrivateKey(options: {
   keyPath?: string;
   keyBase64?: string;
@@ -27,7 +29,6 @@ export function resolvePrivateKey(options: {
   if (options.rawKey && options.rawKey.trim() !== '') {
     const trimmed = options.rawKey.trim().replace(/^["']|["']$/g, '');
     if (!trimmed.startsWith('-----BEGIN')) {
-      // Auto-detect base64 even if passed in rawKey
       return Buffer.from(trimmed, 'base64').toString('utf8').trim();
     }
     return trimmed.replace(/\\n/g, '\n');
@@ -36,7 +37,7 @@ export function resolvePrivateKey(options: {
   return '';
 }
 
-export async function getOctokitClient(): Promise<Octokit> {
+async function createOrgManagerOctokit(): Promise<Octokit | null> {
   const appId =
     config.ORG_MANAGER_APP_ID ||
     config.GITHUB_ORG_MANAGER_APP_ID ||
@@ -62,22 +63,49 @@ export async function getOctokitClient(): Promise<Octokit> {
     config.GITHUB_ORG_MANAGER_APP_INSTALLATION_ID ||
     config.GITHUB_APP_INSTALLATION_ID;
 
-  const hasAppCreds = appId && privateKey && installationIdStr;
-
-  if (hasAppCreds) {
-    const auth = createAppAuth({
-      appId,
-      privateKey,
-      installationId: parseInt(installationIdStr, 10),
-    });
-
-    const installationAuth = await auth({ type: 'installation' });
-    return new Octokit({ auth: installationAuth.token });
+  if (!appId || !privateKey || !installationIdStr) {
+    return null;
   }
 
+  const auth = createAppAuth({
+    appId,
+    privateKey,
+    installationId: parseInt(installationIdStr, 10),
+  });
+
+  const installationAuth = await auth({ type: 'installation' });
+  return new Octokit({ auth: installationAuth.token });
+}
+
+function createTokenOctokit(): Octokit | null {
   const token = config.GITHUB_PERSONAL_ACCESS_TOKEN || config.GITHUB_TOKEN;
-  if (token) {
-    return new Octokit({ auth: token });
+  if (!token) {
+    return null;
+  }
+  return new Octokit({ auth: token });
+}
+
+export async function getOctokitClient(tier: GitHubIdentityTier = 'auto'): Promise<Octokit> {
+  if (tier === 'developer-tools') {
+    const tokenClient = createTokenOctokit();
+    if (tokenClient) {
+      return tokenClient;
+    }
+    const appClient = await createOrgManagerOctokit();
+    if (appClient) {
+      return appClient;
+    }
+    return new Octokit();
+  }
+
+  const appClient = await createOrgManagerOctokit();
+  if (appClient) {
+    return appClient;
+  }
+
+  const tokenClient = createTokenOctokit();
+  if (tokenClient) {
+    return tokenClient;
   }
 
   return new Octokit();

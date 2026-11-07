@@ -7,33 +7,40 @@
 
 # MCP Subsystem Agent Context
 
-This document defines the bounded context router for all in-house Model Context Protocol servers in `mcp/packages/*`.
+This document defines the bounded context router for all in-house Model Context Protocol servers in `mcp/servers/*` and shared core libraries in `mcp/core/*`.
 
-## Packages Directory Layout
+## 1. Deployable MCP Servers (`servers/*`)
 
-| Package Directory | NPM Package | AGENTS Router | Documentation | Lifecycle Role & Status |
+| Server Directory | NPM Package | AGENTS Router | Documentation | Lifecycle Role & Status |
 | :--- | :--- | :--- | :--- | :--- |
-| [packages/appsheet/](./packages/appsheet/) | `@tupynambalucas-dev/mcp-appsheet` | [AGENTS.md](./packages/appsheet/AGENTS.md) | [README.md](./packages/appsheet/README.md) | Active: Relational schema modeling and REST API v2 CRUD automation. |
-| [packages/firecrawl/](./packages/firecrawl/) | `@tupynambalucas-dev/mcp-firecrawl` | [AGENTS.md](./packages/firecrawl/AGENTS.md) | [README.md](./packages/firecrawl/README.md) | Active: Deep web scraping, crawling, site mapping, and markdown extraction. |
-| [packages/github/](./packages/github/) | `@tupynambalucas-dev/mcp-github` | [AGENTS.md](./packages/github/AGENTS.md) | [README.md](./packages/github/README.md) | Active: GitHub App authenticated organization RBAC and security auditing. |
-| [packages/gwork/](./packages/gwork/) | `@tupynambalucas-dev/mcp-gwork` | [AGENTS.md](./packages/gwork/AGENTS.md) | [README.md](./packages/gwork/README.md) | Active: Drive folder taxonomy, Sheets synthesis, and Docs publishing. |
-| [packages/infisical/](./packages/infisical/) | `@tupynambalucas-dev/mcp-infisical` | [AGENTS.md](./packages/infisical/AGENTS.md) | [README.md](./packages/infisical/README.md) | Active: Universal Auth machine tokens, secret CRUD, and vault management. |
-| [packages/memory/](./packages/memory/) | `@tupynambalucas-dev/mcp-memory` | [AGENTS.md](./packages/memory/AGENTS.md) | [README.md](./packages/memory/README.md) | Active: Semantic RAG vector store, episodic memory, and chat history. |
-| [packages/playwright/](./packages/playwright/) | `@tupynambalucas-dev/mcp-playwright` | [AGENTS.md](./packages/playwright/AGENTS.md) | [README.md](./packages/playwright/README.md) | Staged Reference: Sovereign engine built for future Cortex cluster hosting. Local plugins invoke upstream `@playwright/mcp` via `launcher.cjs`. |
+| [servers/appsheet/](./servers/appsheet/) | `@tupynambalucas-dev/mcp-appsheet` | [AGENTS.md](./servers/appsheet/AGENTS.md) | [README.md](./servers/appsheet/README.md) | Active: Relational schema modeling and REST API v2 CRUD automation. |
+| [servers/firecrawl/](./servers/firecrawl/) | `@tupynambalucas-dev/mcp-firecrawl` | [AGENTS.md](./servers/firecrawl/AGENTS.md) | [README.md](./servers/firecrawl/README.md) | Active: Deep web scraping, crawling, site mapping, and markdown extraction. |
+| [servers/github-flow/](./servers/github-flow/) | `@tupynambalucas-dev/mcp-github-flow` | [AGENTS.md](./servers/github-flow/AGENTS.md) | [README.md](./servers/github-flow/README.md) | Active: Tier 3 developer Git workflows, branches, PRs, and Actions diagnostics. |
+| [servers/github-org/](./servers/github-org/) | `@tupynambalucas-dev/mcp-github-org` | [AGENTS.md](./servers/github-org/AGENTS.md) | [README.md](./servers/github-org/README.md) | Active: Tier 1 GitHub App authenticated organization RBAC, teams, rulesets, and security auditing. |
+| [servers/gwork/](./servers/gwork/) | `@tupynambalucas-dev/mcp-gwork` | [AGENTS.md](./servers/gwork/AGENTS.md) | [README.md](./servers/gwork/README.md) | Active: Drive folder taxonomy, Sheets synthesis, and Docs publishing. |
+| [servers/infisical/](./servers/infisical/) | `@tupynambalucas-dev/mcp-infisical` | [AGENTS.md](./servers/infisical/AGENTS.md) | [README.md](./servers/infisical/README.md) | Active: Universal Auth machine tokens, secret CRUD, and vault management. |
+| [servers/memory/](./servers/memory/) | `@tupynambalucas-dev/mcp-memory` | [AGENTS.md](./servers/memory/AGENTS.md) | [README.md](./servers/memory/README.md) | Active: Semantic RAG vector store, episodic memory, and chat history. |
+| [servers/playwright/](./servers/playwright/) | `@tupynambalucas-dev/mcp-playwright` | [AGENTS.md](./servers/playwright/AGENTS.md) | [README.md](./servers/playwright/README.md) | Staged Reference: Sovereign engine built for future Cortex cluster hosting. Local plugins invoke upstream `@playwright/mcp` via `launcher.cjs`. |
+
+## 2. Shared Core Libraries (`core/*`)
+
+| Core Directory | NPM Package | AGENTS Router | Documentation | Lifecycle Role & Status |
+| :--- | :--- | :--- | :--- | :--- |
+| [core/github/](./core/github/) | `@tupynambalucas-dev/mcp-core-github` | [AGENTS.md](./core/github/AGENTS.md) | [README.md](./core/github/README.md) | Active Library: Shared Three-Tier GitHub App authentication, Octokit client factory, and Zod schemas. |
 
 ## Architecture & Conventions
 
-1. **Dual Transport Pattern**:
-   - Each package compiles to `dist/bin.js` for stdio communication and `dist/index.js` for HTTP Streamable transport.
-   - `src/bin.ts`: `StdioServerTransport` entrypoint with `stderr` diagnostic logging.
-   - `src/index.ts`: Fastify server listening on `:8080` (or `PORT` env) with `StreamableHTTPServerTransport`.
+1. **Subsystem-Internal Partitioning**:
+   - `mcp/servers/*`: Executable server daemons compiling `dist/bin.js` (Stdio) and `dist/index.js` (Fastify Streamable HTTP on `:8080`).
+   - `mcp/core/*`: Non-executable shared libraries consumed via `workspace:*` and TypeScript Project References (`tsc -b`).
+   - Intermediate grouping directories (`servers/`, `core/`) MUST NOT contain `AGENTS.md` or `README.md` files to preserve the 3-Layer Bounded Context Ceiling.
 2. **Catalog Consumption**:
-   - Packages MUST use `catalog:mcp-stack` for `@modelcontextprotocol/sdk` and `fastify`.
+   - Packages MUST use `catalog:mcp-stack` for `@modelcontextprotocol/sdk`, `fastify`, and `@octokit/*`.
    - Packages MUST use `catalog:shared` for `zod` and `dotenv`.
    - Packages MUST use `catalog:` for dev tooling (`@types/node`, `typescript`, `tsx`, `rimraf`).
 3. **Build Pipeline**:
-   - Build all MCPs via Turborepo: `pnpm mcp:build`.
-   - Build individual MCP: `pnpm mcp:<target>:build` (e.g. `pnpm mcp:playwright:build`).
+   - Build all MCP servers and core libraries via Turborepo: `pnpm mcp:build`.
+   - Build individual MCP target: `pnpm mcp:<target>:build` (e.g. `pnpm mcp:github-org:build`, `pnpm mcp:github-flow:build`, `pnpm mcp:core-github:build`).
 
 ## Operational Guardrails
 

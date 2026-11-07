@@ -20,7 +20,9 @@ Authoritative reference and design manual for repositories, npm packages, plugin
 | :--- | :--- | :--- |
 | **Monorepo Root** | `<capability-noun>` | `agent-mesh` |
 | **Plugin Package** | `@tupynambalucas-dev/plugin-<slug>` | `@tupynambalucas-dev/plugin-atelier` |
-| **MCP Package** | `@tupynambalucas-dev/mcp-<slug>` | `@tupynambalucas-dev/mcp-github` |
+| **Plugin Core Library** | `@tupynambalucas-dev/plugin-core-<slug>` | `@tupynambalucas-dev/plugin-core-governance` |
+| **MCP Server Package** | `@tupynambalucas-dev/mcp-<slug>` | `@tupynambalucas-dev/mcp-github-org`, `@tupynambalucas-dev/mcp-github-flow` |
+| **MCP Core Library** | `@tupynambalucas-dev/mcp-core-<slug>` | `@tupynambalucas-dev/mcp-core-github` |
 | **Plugin Manifest** | `<slug>` (bare kebab-case) | `atelier`, `repo`, `github-flow` |
 | **Skill Name** | `<subject>-<role>` (closed vocabulary) | `router-architect`, `github-flow-operator` |
 
@@ -44,8 +46,8 @@ Authoritative reference and design manual for repositories, npm packages, plugin
 | :--- | :--- | :--- | :--- |
 | **`atelier`** | `@tupynambalucas-dev/plugin-atelier` | `router-architect`<br>`skill-architect`<br>`rule-architect`<br>`hook-architect`<br>`plugin-architect` | *(none)* |
 | **`repo`** | `@tupynambalucas-dev/plugin-repo` | `readme-architect`<br>`community-health-architect`<br>`license-architect` | *(none)* |
-| **`github-flow`** | `@tupynambalucas-dev/plugin-github-flow` | `github-flow-operator`<br>`github-actions-operator` | `github` |
-| **`github-org`** | `@tupynambalucas-dev/plugin-github-org` | `github-org-operator`<br>`github-ruleset-operator`<br>`github-security-auditor`<br>`github-app-operator` | `github` |
+| **`github-flow`** | `@tupynambalucas-dev/plugin-github-flow` | `github-flow-operator`<br>`github-actions-operator` | `github-flow` |
+| **`github-org`** | `@tupynambalucas-dev/plugin-github-org` | `github-org-operator`<br>`github-ruleset-operator`<br>`github-security-auditor`<br>`github-app-operator` | `github-org` |
 | **`gwork`** | `@tupynambalucas-dev/plugin-gwork` | `gwork-drive-operator`<br>`gwork-sheets-architect`<br>`gwork-docs-architect` | `gwork` |
 | **`appsheet`** | `@tupynambalucas-dev/plugin-appsheet` | `appsheet-prompt-architect`<br>`appsheet-data-operator`<br>`appsheet-ui-architect` | `appsheet`<br>`playwright` |
 | **`docusaurus`** | `@tupynambalucas-dev/plugin-docusaurus` | `docusaurus-architect`<br>`docusaurus-mdx-architect`<br>`docusaurus-auditor` | *(none)* |

@@ -1,5 +1,6 @@
 import type { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import { formatMcpError } from '@tupynambalucas-dev/mcp-core-github';
 import {
   getRepoInfoToolDefinition,
   handleGetRepoInfo,
@@ -18,10 +19,15 @@ import {
   listSecretScanningAlertsToolDefinition,
   handleListSecretScanningAlerts,
 } from './security.tool.js';
+import {
+  listOrgTeamsToolDefinition,
+  handleListOrgTeams,
+} from './teams.tool.js';
 
 export const allTools = [
   getRepoInfoToolDefinition,
   listOrgReposToolDefinition,
+  listOrgTeamsToolDefinition,
   listRulesetsToolDefinition,
   getRulesetToolDefinition,
   listDependabotAlertsToolDefinition,
@@ -42,6 +48,8 @@ export function registerToolHandlers(server: Server) {
           return await handleGetRepoInfo(args);
         case 'list_org_repos':
           return await handleListOrgRepos(args);
+        case 'list_org_teams':
+          return await handleListOrgTeams(args);
         case 'list_rulesets':
           return await handleListRulesets(args);
         case 'get_ruleset':
@@ -54,11 +62,7 @@ export function registerToolHandlers(server: Server) {
           throw new Error(`Unknown tool requested: ${name}`);
       }
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      return {
-        isError: true,
-        content: [{ type: 'text', text: `Error executing GitHub tool '${name}': ${errorMessage}` }],
-      };
+      return formatMcpError(name, err);
     }
   });
 }

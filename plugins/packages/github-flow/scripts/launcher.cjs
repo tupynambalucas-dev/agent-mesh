@@ -58,10 +58,15 @@ function spawnCommand(bin, args, options = {}) {
 }
 
 const SERVICE_CONFIGS = {
-  github: {
-    pkg: '@tupynambalucas-dev/mcp-github',
+  'github-flow': {
+    pkg: '@tupynambalucas-dev/mcp-github-flow',
     upstream: '@modelcontextprotocol/server-github',
-    monorepoDir: 'github'
+    monorepoDir: 'github-flow'
+  },
+  github: {
+    pkg: '@tupynambalucas-dev/mcp-github-flow',
+    upstream: '@modelcontextprotocol/server-github',
+    monorepoDir: 'github-flow'
   }
 };
 
@@ -83,7 +88,7 @@ if (isClusterMode) {
   const child = spawnCommand('npx', ['-y', 'mcp-remote', `${gatewayBaseUrl}/mcp`]);
   child.on('exit', (code) => process.exit(code || 0));
 } else if (serviceConfig.monorepoDir) {
-  const localPkgDir = path.resolve(__dirname, '..', '..', '..', '..', 'mcp', 'packages', serviceConfig.monorepoDir);
+  const localPkgDir = path.resolve(__dirname, '..', '..', '..', '..', 'mcp', 'servers', serviceConfig.monorepoDir);
   const localJsBin = path.join(localPkgDir, 'dist', 'bin.js');
   const localTsBin = path.join(localPkgDir, 'src', 'bin.ts');
 

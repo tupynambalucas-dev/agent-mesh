@@ -30,7 +30,7 @@ Enterprise Antigravity and Claude Code domain plugin for GitHub organization adm
 - [skills/github-security-auditor/SKILL.md](./skills/github-security-auditor/SKILL.md): Security scanning, Dependabot alerts, and Secret Scanning interrogation.
 - [skills/github-app-operator/SKILL.md](./skills/github-app-operator/SKILL.md): GitHub App Manifest flow and credential bootstrapping.
 - [references/github-app-mcp-spec.md](./references/github-app-mcp-spec.md): Technical specification for GitHub App authentication within MCP servers.
-- [mcp.json](./mcp.json): Agent Plugins 1.0.0 stdio bindings for `@tupynambalucas-dev/mcp-github`.
+- [mcp.json](./mcp.json): Agent Plugins 1.0.0 stdio bindings for `@tupynambalucas-dev/mcp-github-org`.
 - [mcp_config.json](./mcp_config.json): Native Antigravity MCP router bindings targeting smart gateway fallback.
 
 ---
@@ -41,9 +41,9 @@ The underlying MCP servers consumed by this plugin require the following environ
 
 | Variable | Required | Description |
 | :--- | :--- | :--- |
-| `GITHUB_APP_ID` | Yes (or `GITHUB_TOKEN`) | GitHub App identifier for organizational authentication. |
-| `GITHUB_APP_PRIVATE_KEY` | Yes (or `GITHUB_TOKEN`) | RSA private key in PEM format. |
-| `GITHUB_APP_INSTALLATION_ID` | Yes (or `GITHUB_TOKEN`) | Target organization installation ID. |
+| `ORG_MANAGER_APP_ID` | Yes (or `GITHUB_TOKEN`) | Tier 1 GitHub App identifier for organizational authentication (`5648756`). |
+| `ORG_MANAGER_APP_PRIVATE_KEY_BASE64` | Yes (or `_PRIVATE_KEY`) | Base64-encoded RSA private key for `tupynambalucas-org-manager`. |
+| `ORG_MANAGER_APP_INSTALLATION_ID` | Yes (or `GITHUB_TOKEN`) | Target organization installation ID (`124653780`). |
 | `CORTEX_GATEWAY_URL` | Optional | Envoy AgentGateway cluster URL (defaults to `http://localhost:8080`). |
 | `CORTEX_PROBE_TIMEOUT_MS` | Optional | Smart gateway probe timeout in milliseconds (defaults to `300`). |
 

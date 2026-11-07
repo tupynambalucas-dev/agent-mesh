@@ -1,7 +1,7 @@
 {
-  "name": "@tupynambalucas-dev/mcp-github",
+  "name": "@tupynambalucas-dev/mcp-github-flow",
   "version": "1.0.0",
-  "description": "Enterprise Model Context Protocol server for GitHub operations using GitHub App authentication and fine-grained permissions.",
+  "description": "Domain-scoped Model Context Protocol server for developer Git workflows, branches, pull requests, and GitHub Actions diagnostics.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "Apache-2.0",
   "homepage": "https://docs.tupynambalucas.dev",
@@ -16,7 +16,7 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "mcp-github": "./dist/bin.js"
+    "mcp-github-flow": "./dist/bin.js"
   },
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",
@@ -27,9 +27,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "catalog:mcp-stack",
-    "@octokit/auth-app": "catalog:mcp-stack",
-    "@octokit/core": "catalog:mcp-stack",
-    "dotenv": "catalog:shared",
+    "@tupynambalucas-dev/mcp-core-github": "workspace:*",
     "fastify": "catalog:mcp-stack",
     "zod": "catalog:shared"
   },
@@ -41,6 +39,8 @@
   },
   "files": [
     "dist",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE"
   ]
 }

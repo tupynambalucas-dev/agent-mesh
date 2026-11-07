@@ -1,6 +1,6 @@
-# GitHub App MCP Server Specification (`cortex-github`)
+# GitHub App MCP Server Specification (`mcp-github-org`)
 
-The in-house `@tupynambalucas-dev/mcp-github` server operates via an organizational **GitHub App installation** using `@octokit/auth-app`.
+The in-house `@tupynambalucas-dev/mcp-github-org` server operates via an organizational **Tier 1 GitHub App installation** (`tupynambalucas-org-manager`) using `@octokit/auth-app` via `@tupynambalucas-dev/mcp-core-github`.
 
 ---
 
