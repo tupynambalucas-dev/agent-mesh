@@ -37,13 +37,30 @@ export function resolvePrivateKey(options: {
 }
 
 export async function getOctokitClient(): Promise<Octokit> {
-  const appId = config.GITHUB_ORG_MANAGER_APP_ID || config.GITHUB_APP_ID;
+  const appId =
+    config.ORG_MANAGER_APP_ID ||
+    config.GITHUB_ORG_MANAGER_APP_ID ||
+    config.GITHUB_APP_ID;
+
   const privateKey = resolvePrivateKey({
-    keyPath: config.GITHUB_ORG_MANAGER_APP_PRIVATE_KEY_PATH || config.GITHUB_APP_PRIVATE_KEY_PATH,
-    keyBase64: config.GITHUB_ORG_MANAGER_APP_PRIVATE_KEY_BASE64 || config.GITHUB_APP_PRIVATE_KEY_BASE64,
-    rawKey: config.GITHUB_ORG_MANAGER_APP_PRIVATE_KEY || config.GITHUB_APP_PRIVATE_KEY,
+    keyPath:
+      config.ORG_MANAGER_APP_PRIVATE_KEY_PATH ||
+      config.GITHUB_ORG_MANAGER_APP_PRIVATE_KEY_PATH ||
+      config.GITHUB_APP_PRIVATE_KEY_PATH,
+    keyBase64:
+      config.ORG_MANAGER_APP_PRIVATE_KEY_BASE64 ||
+      config.GITHUB_ORG_MANAGER_APP_PRIVATE_KEY_BASE64 ||
+      config.GITHUB_APP_PRIVATE_KEY_BASE64,
+    rawKey:
+      config.ORG_MANAGER_APP_PRIVATE_KEY ||
+      config.GITHUB_ORG_MANAGER_APP_PRIVATE_KEY ||
+      config.GITHUB_APP_PRIVATE_KEY,
   });
-  const installationIdStr = config.GITHUB_ORG_MANAGER_APP_INSTALLATION_ID || config.GITHUB_APP_INSTALLATION_ID;
+
+  const installationIdStr =
+    config.ORG_MANAGER_APP_INSTALLATION_ID ||
+    config.GITHUB_ORG_MANAGER_APP_INSTALLATION_ID ||
+    config.GITHUB_APP_INSTALLATION_ID;
 
   const hasAppCreds = appId && privateKey && installationIdStr;
 
