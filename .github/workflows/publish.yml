@@ -7,6 +7,12 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      force_republish:
+        description: "Purge existing packages before publishing to overwrite current version tarballs"
+        required: false
+        type: boolean
+        default: false
 
 concurrency:
   group: publish-packages
@@ -27,18 +33,6 @@ jobs:
       - name: Setup Node.js & pnpm
         uses: ./.github/actions/setup-pnpm-env
 
-      - name: Generate GitHub App Token
-        id: app-token
-        env:
-          APP_ID: ${{ secrets.CI_BOT_APP_ID || secrets.CI_APP_ID || secrets.ORG_MANAGER_APP_ID || secrets.ORGANIZATION_APP_ID || secrets.APP_ID }}
-          APP_PRIVATE_KEY: ${{ secrets.CI_BOT_APP_PRIVATE_KEY || secrets.CI_APP_PRIVATE_KEY || secrets.ORG_MANAGER_APP_PRIVATE_KEY || secrets.ORGANIZATION_APP_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
-        if: ${{ env.APP_ID != '' && env.APP_PRIVATE_KEY != '' }}
-        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1.12.0
-        with:
-          app-id: ${{ env.APP_ID }}
-          private-key: ${{ env.APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
         env:
@@ -52,6 +46,13 @@ jobs:
 
       - name: Validate Antigravity Domain Plugins
         uses: ./.github/actions/validate-plugins
+
+      - name: Reconcile Registry & Purge Obsolete Packages
+        env:
+          ADMIN_TOKEN: ${{ secrets.ADMIN_PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+          ADMIN_ACTION: ${{ inputs.force_republish && 'purge-all' || 'purge-obsolete' }}
+          DRY_RUN: "false"
+        run: node .github/scripts/manage-packages.js
 
       - name: Publish Workspace Packages Idempotently (Native pnpm)
         env:
