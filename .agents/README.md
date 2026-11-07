@@ -22,6 +22,7 @@ This directory houses cross-repository architectural plans, AI-generated reports
 ### 2.1 Deep Architectural Analyses (`analyses/`)
 - [MCP Gateway Router Deep Analysis](./analyses/analise-profunda-mcp-gateway-router.md): Exhaustive analysis of the dual-mode failover logic, 300ms probe, and Stdio fallback architecture.
 - [Playwright Isolation & Lifecycle Hooks Analysis](./analyses/analise-arquitetural-isolamento-playwright-e-lifecycle-hooks.md): Architectural analysis of isolated Playwright runtimes, deterministic lifecycle hooks, and supply chain CI hardening.
+- [Monolithic vs. Domain-Scoped MCP Servers Analysis](./analyses/mcp-architecture-single-vs-modular-github-apps.md): Enterprise analysis of domain-scoped GitHub MCP servers (`mcp-github-org` and `mcp-github-flow`), subsystem-internal core package partitioning (`mcp/servers/*`, `mcp/core/*`), and recursive `AGENTS.md` and `README.md` governance.
 
 ### 2.2 Architectural Plans (`plans/`)
 - [Autonomous Agent Mesh Master Implementation Plan](./plans/master-implementation-plan-github-app-and-cortex-mcp.md): Comprehensive actionable plan detailing GitHub App configuration, Infisical secrets, K8s manifests, and package publishing.
