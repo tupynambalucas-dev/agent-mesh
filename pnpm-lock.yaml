@@ -47,8 +47,8 @@ catalogs:
       specifier: ^1.51.0
       version: 1.64.1
     ws:
-      specifier: ^8.18.0
-      version: 8.22.0
+      specifier: ^8.22.1
+      version: 8.22.1
   shared:
     dotenv:
       specifier: ^16.4.7
@@ -276,7 +276,7 @@ importers:
         version: 1.64.1
       ws:
         specifier: catalog:mcp-stack
-        version: 8.22.0
+        version: 8.22.1
       zod:
         specifier: catalog:shared
         version: 3.25.76
@@ -1711,8 +1711,8 @@ packages:
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
-  ws@8.22.0:
-    resolution: {integrity: sha512-Ydggc987+RO0AnWtZ/7Wq9FtNvcrL1b/RO0ud9mWjUPgDrsAAwQSF51sm2hm1XofbU/4jkpGEsLFsZZxU+1DOg==}
+  ws@8.22.1:
+    resolution: {integrity: sha512-oyL6OPYme/CmiFvNuGzeoxCJ4nOrZE2O1FwM9MWM1AsGri6nLXB2pg+lNA8aLeXMSav0J6eIVS1j6vUPzUtK9g==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -3145,7 +3145,7 @@ snapshots:
 
   wrappy@1.0.2: {}
 
-  ws@8.22.0: {}
+  ws@8.22.1: {}
 
   zod-to-json-schema@3.25.2(zod@3.25.76):
     dependencies:
