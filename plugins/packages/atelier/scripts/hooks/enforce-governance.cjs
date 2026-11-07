@@ -34,7 +34,7 @@ function main() {
       // 1. Check for 3-layer ceiling violation
       const normalizedPath = filePath.replace(/\\/g, '/');
       const isRouterOrReadme = /(^|\/)(AGENTS\.md|README\.md)$/i.test(normalizedPath);
-      const isForbiddenDir = /\/(\.agents\/(plans|reports)|docs\/(tutorials|how-to-guides|reference|explanation)|references)\//i.test(normalizedPath);
+      const isForbiddenDir = /\/(\.agents\/(plans|reports)|(docs|references)\/(tutorials|how-to-guides|reference|explanation))\//i.test(normalizedPath);
 
       if (isRouterOrReadme && isForbiddenDir) {
         process.stdout.write(JSON.stringify({
