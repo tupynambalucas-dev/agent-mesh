@@ -5,193 +5,134 @@
 
 ---
 
-## 1. Executive Summary & Problem Formulation
+## 1. Executive Summary & Architectural Boundary
 
-In managing autonomous agent workflows, monorepo package distribution (`@tupynambalucas-dev/*`), and repository security within `tupynambalucas-dev`, the selection of authentication tokens is a critical architectural decision.
+In managing autonomous agent workflows, monorepo package distribution (`@tupynambalucas-dev/*`), and repository security within `tupynambalucas-dev`, authentication credentials must be aligned with GitHub's upstream subsystem boundaries:
 
-When administering GitHub Packages (`npm.pkg.github.com`)—such as listing organization packages or executing an administrative purge of obsolete packages—the default workflow credential (`GITHUB_TOKEN`) is blocked by GitHub's security boundary:
-- `GITHUB_TOKEN` is repository-scoped and is explicitly prohibited from deleting packages at the organization level (`DELETE /orgs/{org}/packages/...`).
-- Fine-grained Personal Access Tokens (user PATs) currently do not support organization-level package management endpoints.
-- Personal Access Tokens (Classic) present significant security, auditability, and lifecycle risks.
+1. **Git, REST/GraphQL Governance, Pull Requests, Releases & Workflow Cascades (3-Tier GitHub Apps)**:
+   - Fine-grained and Classic Personal Access Tokens (PATs) tie organizational automation to an individual user's identity and require manual rotation.
+   - Default `GITHUB_TOKEN` cannot trigger downstream workflows (anti-recursion) or manage organization-wide settings, teams, rulesets, or cross-repository operations.
+   - Therefore, our 3-Tier GitHub App architecture (`tupynambalucas-org-manager`, `tupynambalucas-ci-bot`, `tupynambalucas-developer-tools`) serves as the sovereign machine identity across MCP servers and Git/Release/PR automation workflows.
 
-The **GitHub App** machine identity model represents GitHub's official enterprise standard for automated systems and CI/CD pipelines. This document details the architectural evaluation, REST API verification, and concrete provisioning runbook for establishing `tupynambalucas-org-manager` as the sovereign identity of the organization.
+2. **GitHub Packages Registry (`npm.pkg.github.com`) & Granular Package Administration (`publish.yml` / `admin-packages.yml`)**:
+   - Per official GitHub Packages documentation ([Working with the npm registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry) and [Deleting and restoring a package](https://docs.github.com/en/packages/learn-github-packages/deleting-and-restoring-a-package#packages-api-support)), `npm.pkg.github.com` and granular-permission packages (`npm`, `container`, `nuget`, `rubygems`) **do not support GitHub App installation access tokens (`ghs_*`) or fine-grained PATs**.
+   - Instead, when a GitHub Actions workflow in `agent-mesh` publishes a package using `secrets.GITHUB_TOKEN` (`permissions: packages: write`), GitHub automatically grants the `agent-mesh` repository the **`admin` role** on that package.
+   - Consequently, inside `agent-mesh` workflows (`publish.yml` and `admin-packages.yml`), `secrets.GITHUB_TOKEN` has native authority to publish (`pnpm -r publish`), inspect (`GET /orgs/{org}/packages/npm/{name}`), and delete (`DELETE /orgs/{org}/packages/npm/{name}`) every package owned by `agent-mesh`.
 
 ---
 
-## 2. Comparative Matrix: Token Architectures
+## 2. Comparative Matrix: Token Architectures by Subsystem
 
-| Dimension | Default `GITHUB_TOKEN` | Fine-Grained User PAT | Classic User PAT | GitHub App (`tupynambalucas-org-manager`) |
+| Dimension | Default `GITHUB_TOKEN` (in `agent-mesh` Actions) | Fine-Grained User PAT | Classic User PAT | 3-Tier GitHub Apps (`org-manager`, `ci-bot`, `developer-tools`) |
 | :--- | :--- | :--- | :--- | :--- |
-| **Identity Principal** | Ephemeral GitHub Actions runner | Individual human user account | Individual human user account | **Sovereign Organization Bot** (`[bot]`) |
-| **Audit Log Attribution** | `github-actions[bot]` | Personal username | Personal username | **`tupynambalucas-org-manager[bot]`** |
-| **Credential Lifecycle** | Job-scoped (destroyed on job completion) | Fixed expiration (maximum 1 year, recommended 30-90 days) | Manual / Optional expiration | **Dynamic ephemeral JWT -> 1-hour Installation Tokens** |
-| **Private Key Cryptography** | N/A (platform generated) | N/A (shared secret string) | N/A (shared secret string) | **2048-bit RSA Private Key (`.pem`)** |
-| **Package Management Support** | Read & Write (current repo only; **Delete blocked**) | **Blocked on Org-level endpoints** (`/orgs/{org}/packages`) | Full support via `read:packages` + `delete:packages` | **Full support for list, publish, and delete** via `packages: write` |
-| **Workflow Triggering** | Cannot trigger downstream workflows (anti-recursion) | Can trigger downstream workflows | Can trigger downstream workflows | **Can trigger downstream workflows cleanly** |
-| **Rate Limits** | 1,000 req/hour | 5,000 req/hour (shared with personal usage) | 5,000 req/hour (shared with personal usage) | **5,000 to 15,000 req/hour dedicated exclusively to org** |
-| **Enterprise Governance** | Standard | Weak (breaks when developer rotates credentials) | Prohibited in zero-trust architectures | **Gold Standard (Zero-Trust Compliant)** |
+| **Identity Principal** | Ephemeral GitHub Actions repository runner | Individual human user account | Individual human user account | **Sovereign Organization Bot** (`[bot]`) |
+| **Audit Log Attribution** | `github-actions[bot]` | Personal username | Personal username | **`tupynambalucas-*[bot]`** |
+| **Credential Lifecycle** | Job-scoped (destroyed on job completion) | Fixed expiration (max 1 year) | Manual / Optional expiration | **Dynamic RS256 JWT -> 1-hour Installation Tokens** |
+| **`npm.pkg.github.com` Publish & Install** | **Supported (Recommended in Actions)** | Not supported | Supported (`write:packages`) | **Not supported by GitHub Packages npm registry** |
+| **Granular Package Delete (`DELETE /orgs/{org}/packages/npm/{name}`)** | **Supported for packages owned by the publishing repo (`admin` role)** | Not supported | Supported (`delete:packages` + `read:packages`) | **Not supported for granular-permission packages** |
+| **Org Governance, Rulesets, Teams, Security Alerts, PRs, Releases** | Limited to single repo; no workflow cascade | Tied to personal account | Prohibited in zero-trust architectures | **Gold Standard (Dedicated 5,000-15,000 req/hr & full cascade)** |
 
 ---
 
-## 3. Official GitHub REST API Evidence
+## 3. Official GitHub Documentation & Empirical Verification
 
-According to official GitHub REST API documentation for GitHub Packages (`https://docs.github.com/en/rest/packages/packages`):
+### 3.1 Why `GITHUB_TOKEN` Works for Direct Package Endpoints (`GET` / `DELETE /orgs/{org}/packages/npm/{name}`)
+- In organizations, npm packages published to `npm.pkg.github.com` are created with **`private` visibility by default** under GitHub's granular permissions model.
+- Calling the organization-wide listing endpoint (`GET /orgs/tupynambalucas-dev/packages?package_type=npm`) with a repository-scoped `GITHUB_TOKEN` returns `[]` because `GITHUB_TOKEN` is not an org-wide Classic PAT.
+- **However**, because the `agent-mesh` repository is automatically granted the **`admin` role** on every package it publishes, calling `GET /orgs/tupynambalucas-dev/packages/npm/{short_name}` and `DELETE /orgs/tupynambalucas-dev/packages/npm/{short_name}` directly by unscoped package name with `secrets.GITHUB_TOKEN` succeeds with **`200 OK`** and **`204 No Content`**.
+- Therefore, `.github/scripts/manage-packages.js` combines organization listing with direct candidate probing across all active workspace packages (`mcp/core/*`, `mcp/servers/*`, `plugins/packages/*`) and known historical/obsolete package names (`mcp-github`, `mcp-router`, etc.).
 
-### 3.1 Organization Package Deletion (`DELETE /orgs/{org}/packages/{package_type}/{package_name}`)
-- **Requirements**:
-  - Personal Access Token (classic) with `read:packages` and `delete:packages` scopes.
-  - **OR GitHub App installation access token** (`IAT`) issued to an installation on the organization.
-- **Limitation**: Fine-grained user PATs are **not supported** by this endpoint.
-
-### 3.2 Organization Package Listing (`GET /orgs/{org}/packages`)
-- **Requirements**:
-  - Personal Access Token (classic) with `read:packages` scope.
-  - **OR GitHub App installation access token** (`IAT`).
-- **Limitation**: The repository-scoped `GITHUB_TOKEN` returns an empty array `[]` when querying the organization namespace, whereas the GitHub App installation token receives full multi-page results.
+### 3.2 Where the 3-Tier GitHub Apps Operate
+- **Tier 1 (`tupynambalucas-org-manager` — `ORG_MANAGER_APP_ID` / `ORG_MANAGER_APP_PRIVATE_KEY`)**:
+  - Used by `@tupynambalucas-dev/mcp-github-org` and `@tupynambalucas-dev/plugin-github-org` for organization administration, team management, repository provisioning, ruleset enforcement, Dependabot alerts, and Secret Scanning alerts.
+- **Tier 2 (`tupynambalucas-ci-bot` — `CI_BOT_APP_ID` / `CI_BOT_APP_PRIVATE_KEY`)**:
+  - Used in GitHub Actions workflows that push commits, tags, releases, or automated PRs (`platform/.github/workflows/renovate.yml`, `platform/.github/workflows/renderer-generate.yml`, `docs/.github/workflows/deploy-docs.yaml`, `gh-tl/.github/workflows/release.yml`).
+- **Tier 3 (`tupynambalucas-developer-tools` — `DEVELOPER_TOOLS_APP_ID` / `DEVELOPER_TOOLS_APP_PRIVATE_KEY`)**:
+  - Used by `@tupynambalucas-dev/mcp-github-flow` and `@tupynambalucas-dev/plugin-github-flow` for day-to-day developer branch, pull request, and GitHub Actions workflow diagnostics.
 
 ---
 
-## 4. End-to-End Architectural Flow
+## 4. End-to-End Architectural Flows
 
-The following sequence details how the GitHub App machine identity mints credentials on demand without human intervention during CI/CD:
+### 4.1 Package Registry Reconciliation & Publication (`agent-mesh`)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Runner as GitHub Actions Runner (agent-mesh)
+    participant Script as .github/scripts/manage-packages.js
+    participant GitHubAPI as GitHub Packages REST API
+    participant Registry as npm.pkg.github.com
+
+    Note over Runner,Registry: Authenticated via secrets.GITHUB_TOKEN (permissions: packages: write)
+    Runner->>Script: Execute manage-packages.js (purge-obsolete or purge-all)
+    Script->>GitHubAPI: Probe GET /orgs/tupynambalucas-dev/packages/npm/{shortName}
+    GitHubAPI-->>Script: 200 OK (Package metadata for repo-administered packages)
+    Script->>GitHubAPI: DELETE /orgs/tupynambalucas-dev/packages/npm/{obsoleteName}
+    GitHubAPI-->>Script: 204 No Content (Obsolete package purged)
+    Runner->>Registry: pnpm -r publish --access public --no-git-checks --report-summary
+    Registry-->>Runner: 200 OK (19 Workspace Packages Synchronized)
+```
+
+### 4.2 CI/CD Git, PR, and Release Automation (`platform`, `docs`, `gh-tl`)
 
 ```mermaid
 sequenceDiagram
     autonumber
     participant Runner as GitHub Actions Runner
     participant Action as actions/create-github-app-token
-    participant GitHubAPI as GitHub REST API
-    participant Registry as npm.pkg.github.com
+    participant GitHubAPI as GitHub REST / GraphQL / Git API
 
-    Runner->>Action: Provide APP_ID & APP_PRIVATE_KEY
+    Runner->>Action: Provide CI_BOT_APP_ID & CI_BOT_APP_PRIVATE_KEY
     Action->>Action: Sign RS256 JWT using RSA Private Key
     Action->>GitHubAPI: POST /app/installations/{id}/access_tokens
-    GitHubAPI-->>Action: Ephemeral Installation Token (Valid for 60m)
-    Action-->>Runner: Expose token via outputs.token
-    
-    rect rgb(25, 30, 40)
-        Note over Runner,Registry: Package Administration or Publication Phase
-        Runner->>GitHubAPI: DELETE /orgs/tupynambalucas-dev/packages/npm/...
-        GitHubAPI-->>Runner: 204 No Content (Deleted)
-        Runner->>Registry: pnpm -r publish (NODE_AUTH_TOKEN: app_token)
-        Registry-->>Runner: 200 OK (Clean Inaugural Release Published)
-    end
+    GitHubAPI-->>Action: Ephemeral Installation Token (ghs_*, valid 60m)
+    Action-->>Runner: Expose token via steps.app-token.outputs.token
+    Runner->>GitHubAPI: Push commits/tags, open Renovate PRs, publish releases
 ```
 
 ---
 
-## 5. Automated Provisioning Runbook (Manifest Flow)
+## 5. Secret Governance & Naming Standard
 
-Rather than requiring manual form completion in the GitHub UI, the organization maintains an automated provisioning script leveraging the **GitHub App Manifest Flow**:
+### 5.1 GitHub Actions Organization Secrets (`tupynambalucas-dev`)
+Configured at the Organization level (`https://github.com/organizations/tupynambalucas-dev/settings/secrets/actions`):
+- `ORG_MANAGER_APP_ID`: Numeric App ID (`5648756`) for `tupynambalucas-org-manager`.
+- `ORG_MANAGER_APP_PRIVATE_KEY`: RSA private key (`.pem`) for `tupynambalucas-org-manager`.
+- `CI_BOT_APP_ID`: Numeric App ID (`5650100`) for `tupynambalucas-ci-bot`.
+- `CI_BOT_APP_PRIVATE_KEY`: RSA private key (`.pem`) for `tupynambalucas-ci-bot`.
 
-### 5.1 Script Location
-- Script: `plugins/packages/github-org/skills/github-app-operator/scripts/provision-app.js`
-
-### 5.2 Configured Manifest Profile (`manager`)
-```javascript
-{
-  name: "tupynambalucas-org-manager",
-  url: "https://docs.tupynambalucas.dev",
-  description: "High-privilege organizational governance operator for tupynambalucas-dev.",
-  default_permissions: {
-    organization_administration: "write",
-    members: "write",
-    administration: "write",
-    contents: "write",
-    pull_requests: "write",
-    issues: "write",
-    actions: "write",
-    packages: "write",
-    secret_scanning_alerts: "write",
-    dependabot_alerts: "write"
-  }
-}
-```
-
-### 5.3 Execution Steps
-1. Run the local provisioning helper:
-   ```bash
-   node plugins/packages/github-org/skills/github-app-operator/scripts/provision-app.js --profile=manager
-   ```
-2. The helper launches an ephemeral HTTP server on `http://localhost:3333` and opens your default browser directly to GitHub's pre-filled manifest confirmation page.
-3. Click **Create GitHub App**.
-4. GitHub automatically redirects to the local callback endpoint, which:
-   - Exchanges the conversion code for `app_id`, `client_id`, and `pem` (RSA private key).
-   - Saves the private key locally as `tupynambalucas-org-manager.private-key.pem` (ignored by `.gitignore`).
-   - Opens the GitHub installation page: `https://github.com/organizations/tupynambalucas-dev/settings/apps/tupynambalucas-org-manager/installations`.
-5. In the browser, install the app on `tupynambalucas-dev` selecting **All repositories**.
+### 5.2 Local & Infisical Environment Variables (`agent-mesh/.env.example`)
+- Tier 1 (`@tupynambalucas-dev/mcp-github-org`): `ORG_MANAGER_APP_ID`, `ORG_MANAGER_APP_CLIENT_ID`, `ORG_MANAGER_APP_INSTALLATION_ID`, `ORG_MANAGER_APP_PRIVATE_KEY_BASE64`.
+- Tier 2 (`tupynambalucas-ci-bot`): `CI_BOT_APP_ID`, `CI_BOT_APP_CLIENT_ID`, `CI_BOT_APP_INSTALLATION_ID`, `CI_BOT_APP_PRIVATE_KEY_BASE64`.
+- Tier 3 (`@tupynambalucas-dev/mcp-github-flow`): `DEVELOPER_TOOLS_APP_ID`, `DEVELOPER_TOOLS_APP_CLIENT_ID`, `DEVELOPER_TOOLS_APP_INSTALLATION_ID`, `DEVELOPER_TOOLS_APP_PRIVATE_KEY_BASE64`.
 
 ---
 
-## 6. Secret Governance & Vault Integration
+## 6. Standardized Package Workflows in `agent-mesh`
 
-In adherence to organizational rule 4 (Secret Hygiene):
-
-### 6.1 Infisical Cloud Vault (`tupynambalucas-dev-platform` / dev & prod)
-Store the generated credentials via the Infisical MCP tools or Infisical Web Vault:
-- `GITHUB_APP_ID`: Numeric App ID (e.g., `1234567`).
-- `GITHUB_APP_CLIENT_ID`: OAuth Client ID (e.g., `Iv23...`).
-- `GITHUB_APP_PRIVATE_KEY`: Complete content of the `.pem` file with escaped newlines (`\n`).
-- `GITHUB_APP_INSTALLATION_ID`: Installation ID found in the installation URL.
-
-### 6.2 GitHub Actions Secrets
-Configure at the Organization level (`https://github.com/organizations/tupynambalucas-dev/settings/secrets/actions`) or in `agent-mesh`:
-- `ORGANIZATION_APP_ID`: Set to the numeric App ID.
-- `ORGANIZATION_APP_PRIVATE_KEY`: Content of `tupynambalucas-org-manager.private-key.pem`.
-
----
-
-## 7. Workflow Standardization
-
-Once the secrets are configured, our workflows integrate the official `actions/create-github-app-token` composite step:
-
-### 7.1 Package Administration (`admin-packages.yml`)
+### 6.1 Package Administration (`admin-packages.yml`)
 ```yaml
-      - name: Generate GitHub App Token
-        if: env.APP_ID != '' && env.APP_PRIVATE_KEY != ''
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.ORGANIZATION_APP_ID }}
-          private-key: ${{ secrets.ORGANIZATION_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-
       - name: Execute Package Administration Script
         env:
+          ADMIN_TOKEN: ${{ inputs.admin_token || secrets.ADMIN_PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
           ADMIN_ACTION: ${{ inputs.action }}
           TARGET_PACKAGE: ${{ inputs.package_name }}
           DRY_RUN: ${{ inputs.dry_run }}
-          ADMIN_TOKEN: ${{ steps.app-token.outputs.token || secrets.ADMIN_PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
         run: node .github/scripts/manage-packages.js
 ```
 
-### 7.2 Native Publication (`publish.yml`)
+### 6.2 Automated Obsolete Purge & Native Publication (`publish.yml`)
 ```yaml
-      - name: Generate GitHub App Token
-        if: env.APP_ID != '' && env.APP_PRIVATE_KEY != ''
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.ORGANIZATION_APP_ID }}
-          private-key: ${{ secrets.ORGANIZATION_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
+      - name: Reconcile Registry & Purge Obsolete Packages
+        env:
+          ADMIN_TOKEN: ${{ secrets.ADMIN_PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+          ADMIN_ACTION: ${{ inputs.force_republish && 'purge-all' || 'purge-obsolete' }}
+          DRY_RUN: "false"
+        run: node .github/scripts/manage-packages.js
 
       - name: Publish Workspace Packages Idempotently (Native pnpm)
         env:
-          NODE_AUTH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm run packages:publish
 ```
-
----
-
-## 8. Summary of Findings & Next Steps
-
-1. **Why Personal Tokens Are Inadequate**:
-   - Fine-grained user PATs cannot delete or list organization-level packages via GitHub REST API.
-   - Classic PATs bind organizational automations to an individual person's identity and cannot be renewed without manual overhead.
-2. **Why GitHub App is Definitive**:
-   - Native support for `DELETE /orgs/{org}/packages` and `GET /orgs/{org}/packages`.
-   - Automated token renewal via RSA cryptographic keys (Zero human rotation required).
-   - Organization-wide scope: one single app installation governs all repositories (`agent-mesh`, `platform`, `docs`, `gh-tl`).
-3. **Immediate Action Item**:
-   - Execute `node plugins/packages/github-org/skills/github-app-operator/scripts/provision-app.js --profile=manager` to instantiate `tupynambalucas-org-manager` on GitHub in under 30 seconds.

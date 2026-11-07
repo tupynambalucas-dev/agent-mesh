@@ -24,7 +24,7 @@ on:
         type: boolean
         default: true
       admin_token:
-        description: "Personal Access Token with delete:packages and read:packages scopes (optional, defaults to secrets.ADMIN_PACKAGES_TOKEN)"
+        description: "Personal Access Token (classic) with delete:packages and read:packages scopes (optional, defaults to secrets.GITHUB_TOKEN)"
         required: false
         type: string
         default: ""
@@ -48,21 +48,12 @@ jobs:
       - name: Setup Node.js & pnpm
         uses: ./.github/actions/setup-pnpm-env
 
-      - name: Generate GitHub App Token
-        id: app-token
-        env:
-          APP_ID: ${{ secrets.ORG_MANAGER_APP_ID || secrets.ORGANIZATION_APP_ID || secrets.APP_ID }}
-          APP_PRIVATE_KEY: ${{ secrets.ORG_MANAGER_APP_PRIVATE_KEY || secrets.ORGANIZATION_APP_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
-        if: ${{ env.APP_ID != '' && env.APP_PRIVATE_KEY != '' }}
-        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1.12.0
-        with:
-          app-id: ${{ env.APP_ID }}
-          private-key: ${{ env.APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-
       - name: Execute Package Administration Script
         env:
-          ADMIN_TOKEN: ${{ inputs.admin_token || steps.app-token.outputs.token || secrets.ADMIN_PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+          # GitHub Packages granular permissions grant the publishing repository's GITHUB_TOKEN
+          # the "admin" role on its packages, whereas GitHub App installation tokens are not
+          # supported by GitHub Packages npm endpoints.
+          ADMIN_TOKEN: ${{ inputs.admin_token || secrets.ADMIN_PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
           ADMIN_ACTION: ${{ inputs.action }}
           TARGET_PACKAGE: ${{ inputs.package_name }}
           DRY_RUN: ${{ inputs.dry_run }}
