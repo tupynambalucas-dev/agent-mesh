@@ -3,16 +3,17 @@ import { createAppAuth } from '@octokit/auth-app';
 import { config } from '../config.js';
 
 export async function getOctokitClient(): Promise<Octokit> {
-  const hasAppCreds =
-    config.GITHUB_APP_ID &&
-    config.GITHUB_APP_PRIVATE_KEY &&
-    config.GITHUB_APP_INSTALLATION_ID;
+  const appId = config.GITHUB_ORG_MANAGER_APP_ID || config.GITHUB_APP_ID;
+  const privateKey = (config.GITHUB_ORG_MANAGER_APP_PRIVATE_KEY || config.GITHUB_APP_PRIVATE_KEY).replace(/\\n/g, '\n');
+  const installationIdStr = config.GITHUB_ORG_MANAGER_APP_INSTALLATION_ID || config.GITHUB_APP_INSTALLATION_ID;
+
+  const hasAppCreds = appId && privateKey && installationIdStr;
 
   if (hasAppCreds) {
     const auth = createAppAuth({
-      appId: config.GITHUB_APP_ID,
-      privateKey: config.GITHUB_APP_PRIVATE_KEY.replace(/\\n/g, '\n'),
-      installationId: parseInt(config.GITHUB_APP_INSTALLATION_ID, 10),
+      appId,
+      privateKey,
+      installationId: parseInt(installationIdStr, 10),
     });
 
     const installationAuth = await auth({ type: 'installation' });
