@@ -7,7 +7,7 @@
 
 # Domain Plugins Subsystem Agent Context
 
-This document defines the bounded context router for all Antigravity and Claude Code domain plugins in `plugins/packages/*`.
+This document defines the bounded context router for all Antigravity and Claude Code domain plugins in `plugins/packages/*` and shared plugin libraries in `plugins/core/*`.
 
 ## Packages Directory Layout
 

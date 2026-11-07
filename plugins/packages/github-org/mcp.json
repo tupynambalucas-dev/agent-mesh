@@ -1,9 +1,9 @@
 {
   "mcpServers": {
-    "github": {
+    "github-org": {
       "type": "stdio",
       "command": "node",
-      "args": ["./scripts/launcher.cjs", "github"]
+      "args": ["./scripts/launcher.cjs", "github-org"]
     }
   }
 }

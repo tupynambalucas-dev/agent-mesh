@@ -16,7 +16,7 @@ Attempting to force local workstations to run heavy Docker containers for every 
 
 ## 2. The Dual-Transport Solution
 
-To achieve the best of both worlds, every in-house MCP server in `mcp/packages/*` compiles two distinct transport entrypoints:
+To achieve the best of both worlds, every in-house MCP server in `mcp/servers/*` compiles two distinct transport entrypoints:
 
 ```
                       ┌────────────────────────────────────────┐
@@ -57,7 +57,7 @@ The smart router script [`plugins/packages/<plugin>/scripts/launcher.cjs`](../..
           │         │
           │         ├── (Healthy: 200 OK) ────► Proxies over HTTP to Envoy Gateway
           │         │
-          │         └── (Offline / Timeout) ──► Spawns node mcp/packages/<target>/dist/bin.js
+          │         └── (Offline / Timeout) ──► Spawns node mcp/servers/<target>/dist/bin.js
 ```
 
 ### Why a 300ms Healthcheck Probe?

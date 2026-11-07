@@ -23,5 +23,5 @@ The legacy central script `mcp-gateway-router.js` has been retired in favor of s
 Each launcher operates independently:
 1. Cascades `.env` file discovery deterministically.
 2. If `MESH_PROFILE=cluster` or `CORTEX_GATEWAY_ENABLED=true`, routes to the cluster gateway via `mcp-remote`.
-3. If running inside the monorepo, executes local precompiled binary `mcp/packages/<service>/dist/bin.js`.
+3. If running inside the monorepo, executes local precompiled binary `mcp/servers/<service>/dist/bin.js`.
 4. If installed standalone outside the monorepo, executes via `npx -y @tupynambalucas-dev/mcp-<service>`.

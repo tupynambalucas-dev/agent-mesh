@@ -22,7 +22,7 @@ if (!TOKEN) {
 // Discover current active packages in workspace
 function getActivePackages() {
   const active = new Set();
-  const dirs = ['mcp/packages', 'plugins/packages'];
+  const dirs = ['mcp/servers', 'mcp/core', 'plugins/packages', 'plugins/core'];
   const root = path.resolve(__dirname, '../..');
 
   for (const d of dirs) {
@@ -34,7 +34,7 @@ function getActivePackages() {
         const pkgPath = path.join(full, entry.name, 'package.json');
         if (fs.existsSync(pkgPath)) {
           const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-          if (pkg.name) {
+          if (pkg.name && pkg.private !== true) {
             active.add(pkg.name);
           }
         }

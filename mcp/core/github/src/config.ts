@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 dotenv.config();
 
-const configSchema = z.object({
+export const githubConfigSchema = z.object({
   PORT: z.coerce.number().default(8080),
   // Tier 1: tupynambalucas-org-manager
   ORG_MANAGER_APP_ID: z.string().optional().default(''),
@@ -38,6 +38,7 @@ const configSchema = z.object({
   DEVELOPER_TOOLS_APP_CLIENT_ID: z.string().optional().default(''),
   GITHUB_DEVELOPER_TOOLS_APP_CLIENT_ID: z.string().optional().default(''),
   GITHUB_DEVELOPER_TOOLS_APP_ID: z.string().optional().default(''),
+
   // Legacy Aliases & Fallbacks
   GITHUB_APP_ID: z.string().optional().default(''),
   GITHUB_APP_CLIENT_ID: z.string().optional().default(''),
@@ -58,4 +59,5 @@ const configSchema = z.object({
   NODE_ENV: z.string().default('development'),
 });
 
-export const config = configSchema.parse(process.env);
+export type GitHubConfig = z.infer<typeof githubConfigSchema>;
+export const config: GitHubConfig = githubConfigSchema.parse(process.env);

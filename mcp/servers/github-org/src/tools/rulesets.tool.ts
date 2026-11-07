@@ -1,6 +1,9 @@
 import { z } from 'zod';
-import { getOctokitClient } from '../auth/github-app.auth.js';
-import { config } from '../config.js';
+import {
+  config,
+  formatMcpResponse,
+  getOctokitClient,
+} from '@tupynambalucas-dev/mcp-core-github';
 
 export const listRulesetsToolDefinition = {
   name: 'list_rulesets',
@@ -37,7 +40,7 @@ export async function handleListRulesets(args: unknown) {
     includes_parents: z.boolean().optional().default(true),
   });
   const parsed = schema.parse(args);
-  const octokit = await getOctokitClient();
+  const octokit = await getOctokitClient('org-manager');
 
   const res = await octokit.request('GET /repos/{owner}/{repo}/rulesets', {
     owner: parsed.owner,
@@ -45,9 +48,7 @@ export async function handleListRulesets(args: unknown) {
     includes_parents: parsed.includes_parents,
   });
 
-  return {
-    content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }],
-  };
+  return formatMcpResponse(res.data);
 }
 
 export async function handleGetRuleset(args: unknown) {
@@ -57,7 +58,7 @@ export async function handleGetRuleset(args: unknown) {
     ruleset_id: z.number(),
   });
   const parsed = schema.parse(args);
-  const octokit = await getOctokitClient();
+  const octokit = await getOctokitClient('org-manager');
 
   const res = await octokit.request('GET /repos/{owner}/{repo}/rulesets/{ruleset_id}', {
     owner: parsed.owner,
@@ -65,7 +66,5 @@ export async function handleGetRuleset(args: unknown) {
     ruleset_id: parsed.ruleset_id,
   });
 
-  return {
-    content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }],
-  };
+  return formatMcpResponse(res.data);
 }

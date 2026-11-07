@@ -1,7 +1,7 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import { config } from '@tupynambalucas-dev/mcp-core-github';
 import Fastify from 'fastify';
-import { config } from './config.js';
 import { registerToolHandlers } from './tools/index.js';
 
 const fastify = Fastify({ logger: true });
@@ -11,7 +11,7 @@ fastify.all('/mcp', async (req, reply) => {
     reply.hijack();
     const server = new Server(
       {
-        name: 'github-mcp',
+        name: 'github-org-mcp',
         version: '1.0.0',
       },
       {
@@ -32,7 +32,7 @@ fastify.all('/mcp', async (req, reply) => {
 });
 
 fastify.get('/health', () => {
-  return { status: 'healthy', service: 'github-mcp' };
+  return { status: 'healthy', service: 'github-org-mcp' };
 });
 
 fastify.listen({ port: config.PORT, host: '0.0.0.0' }, (err) => {
@@ -40,5 +40,5 @@ fastify.listen({ port: config.PORT, host: '0.0.0.0' }, (err) => {
     fastify.log.error(err);
     process.exit(1);
   }
-  fastify.log.info(`GitHub MCP Server listening on port ${config.PORT}`);
+  fastify.log.info(`GitHub Org MCP Server listening on port ${config.PORT}`);
 });

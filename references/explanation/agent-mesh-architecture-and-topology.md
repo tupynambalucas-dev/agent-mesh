@@ -23,7 +23,9 @@ The decentralized **Agent Mesh** architecture solves these bottlenecks by decomp
 ```text
 agent-mesh/
 ├── plugins/packages/     # 10 Sovereign Domain Plugins (Skills, Rules, Manifests)
-├── mcp/packages/         # 7 In-House Dual-Transport MCP Servers
+├── plugins/core/         # Shared Plugin Governance & Hook Libraries
+├── mcp/servers/          # 8 In-House Dual-Transport MCP Servers
+├── mcp/core/             # Shared MCP Core Libraries (@tupynambalucas-dev/mcp-core-github)
 ├── scripts/              # Smart Gateway Router & Publishing Pipelines
 ├── references/           # Diataxis Technical Documentation Hub
 └── .claude-plugin/       # Claude Code Marketplace Registry

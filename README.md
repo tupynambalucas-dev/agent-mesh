@@ -11,7 +11,7 @@ Compatible natively with **Google Antigravity (`agy`)**, **Anthropic Claude Code
 `agent-mesh` operates as an **Enterprise Agent Marketplace and Monorepo Hub**. Rather than bundling all tools and instructions into a single monolithic plugin, the substrate partitions capabilities into sovereign, independently versioned, and granularly importable packages:
 
 - **10 Domain Plugins** ([plugins/](./plugins/README.md)): Self-contained plugins compliant with `agent-plugins.org` v1.0.0 and native Antigravity with dedicated manifests, dual-mode MCP servers (`mcp.json` + `mcp_config.json`), domain rules (`rules/AGENTS.md`), and modular skills.
-- **7 MCP Servers** ([mcp/](./mcp/README.md)): Dual-transport TypeScript services operating as Kubernetes microservices (HTTP on port 8080) and local Stdio binaries for smart gateway failover.
+- **8 MCP Servers & 1 Core Library** ([mcp/](./mcp/README.md)): Domain-scoped dual-transport TypeScript services (`mcp/servers/*`) operating as Kubernetes microservices (HTTP on port 8080) and local Stdio binaries, backed by shared internal libraries (`mcp/core/*`).
 - **1 Marketplace Registry** ([.claude-plugin/marketplace.json](./.claude-plugin/marketplace.json)): Canonical manifest enabling selective plugin discovery and installation in Claude Code.
 - **Orchestration Scripts** ([scripts/](./scripts/README.md)): Developer runbooks and zero-script monorepo release architecture.
 - **Documentation Hub** ([references/](./references/README.md)): Authoritative technical documentation organized according to the Diátaxis framework (tutorials, how-to guides, reference, explanation).
@@ -26,10 +26,11 @@ agent-mesh/
 ├── README.md                # Primary developer documentation
 ├── .claude-plugin/
 │   └── marketplace.json     # Claude Code Plugin Marketplace registry
-├── plugins/                 # 10 Sovereign Domain Plugins
+├── plugins/                 # 10 Sovereign Domain Plugins & Shared Utilities
 │   ├── AGENTS.md            # Plugins subsystem context router
 │   ├── README.md            # Plugins subsystem documentation
-│   └── packages/            # Domain plugin packages
+│   ├── core/                # Shared internal plugin libraries (@tupynambalucas-dev/plugin-core-*)
+│   └── packages/            # Deployable domain plugin packages
 │       ├── appsheet/        # @tupynambalucas-dev/plugin-appsheet
 │       ├── atelier/         # @tupynambalucas-dev/plugin-atelier (AI Agent Atelier)
 │       ├── docusaurus/      # @tupynambalucas-dev/plugin-docusaurus
@@ -40,13 +41,16 @@ agent-mesh/
 │       ├── research/        # @tupynambalucas-dev/plugin-research (Context7 + Firecrawl)
 │       ├── secrets/         # @tupynambalucas-dev/plugin-secrets
 │       └── web/             # @tupynambalucas-dev/plugin-web (Multi-mode Playwright + Firecrawl)
-├── mcp/                     # 7 In-House Dual-Transport MCP Servers
+├── mcp/                     # 8 In-House Dual-Transport MCP Servers & 1 Core Library
 │   ├── AGENTS.md            # MCP subsystem context router
 │   ├── README.md            # MCP subsystem documentation
-│   └── packages/            # MCP server packages
+│   ├── core/                # Shared MCP libraries
+│   │   └── github/          # @tupynambalucas-dev/mcp-core-github (Three-Tier App Auth & Schemas)
+│   └── servers/             # Deployable MCP server packages
 │       ├── appsheet/        # @tupynambalucas-dev/mcp-appsheet
 │       ├── firecrawl/       # @tupynambalucas-dev/mcp-firecrawl
-│       ├── github/          # @tupynambalucas-dev/mcp-github
+│       ├── github-flow/     # @tupynambalucas-dev/mcp-github-flow (Tier 3 Developer Workflows)
+│       ├── github-org/      # @tupynambalucas-dev/mcp-github-org (Tier 1 Org Governance & Security)
 │       ├── gwork/           # @tupynambalucas-dev/mcp-gwork
 │       ├── infisical/       # @tupynambalucas-dev/mcp-infisical
 │       ├── memory/          # @tupynambalucas-dev/mcp-memory

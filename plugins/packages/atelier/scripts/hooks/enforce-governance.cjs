@@ -34,12 +34,13 @@ function main() {
       // 1. Check for 3-layer ceiling violation
       const normalizedPath = filePath.replace(/\\/g, '/');
       const isRouterOrReadme = /(^|\/)(AGENTS\.md|README\.md)$/i.test(normalizedPath);
-      const isForbiddenDir = /\/(\.agents\/(plans|reports)|(docs|references)\/(tutorials|how-to-guides|reference|explanation))\//i.test(normalizedPath);
+      const isForbiddenDir = /\/(\.agents\/(analyses|plans|reports)|(docs|references)\/(tutorials|how-to-guides|reference|explanation))\//i.test(normalizedPath);
+      const isIntermediateGroupingRoot = /\/(mcp\/(servers|core)|plugins\/(packages|core))\/(AGENTS|README)\.md$/i.test(normalizedPath);
 
-      if (isRouterOrReadme && isForbiddenDir) {
+      if ((isRouterOrReadme && isForbiddenDir) || isIntermediateGroupingRoot) {
         process.stdout.write(JSON.stringify({
           decision: 'deny',
-          reason: 'Bounded Context 3-Layer Ceiling: Creating AGENTS.md or boilerplate README.md files inside planning/reporting hubs or Diataxis documentation quadrants is strictly prohibited.'
+          reason: 'Bounded Context 3-Layer Ceiling: Creating AGENTS.md or boilerplate README.md files inside planning/reporting hubs, Diataxis documentation quadrants, or intermediate grouping containers (mcp/servers, mcp/core, plugins/packages, plugins/core) is strictly prohibited.'
         }));
         return;
       }

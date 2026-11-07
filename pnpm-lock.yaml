@@ -80,7 +80,32 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
-  mcp/packages/appsheet:
+  mcp/core/github:
+    dependencies:
+      '@octokit/auth-app':
+        specifier: catalog:mcp-stack
+        version: 7.2.2
+      '@octokit/core':
+        specifier: catalog:mcp-stack
+        version: 6.1.6
+      dotenv:
+        specifier: catalog:shared
+        version: 16.6.1
+      zod:
+        specifier: catalog:shared
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.20.5
+      rimraf:
+        specifier: 'catalog:'
+        version: 6.1.3
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  mcp/servers/appsheet:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: catalog:mcp-stack
@@ -108,7 +133,7 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
-  mcp/packages/firecrawl:
+  mcp/servers/firecrawl:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: catalog:mcp-stack
@@ -139,20 +164,14 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
-  mcp/packages/github:
+  mcp/servers/github-flow:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: catalog:mcp-stack
         version: 1.32.2(zod@3.25.76)
-      '@octokit/auth-app':
-        specifier: catalog:mcp-stack
-        version: 7.2.2
-      '@octokit/core':
-        specifier: catalog:mcp-stack
-        version: 6.1.6
-      dotenv:
-        specifier: catalog:shared
-        version: 16.6.1
+      '@tupynambalucas-dev/mcp-core-github':
+        specifier: workspace:*
+        version: link:../../core/github
       fastify:
         specifier: catalog:mcp-stack
         version: 5.12.7
@@ -173,7 +192,35 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
-  mcp/packages/gwork:
+  mcp/servers/github-org:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: catalog:mcp-stack
+        version: 1.32.2(zod@3.25.76)
+      '@tupynambalucas-dev/mcp-core-github':
+        specifier: workspace:*
+        version: link:../../core/github
+      fastify:
+        specifier: catalog:mcp-stack
+        version: 5.12.7
+      zod:
+        specifier: catalog:shared
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.20.5
+      rimraf:
+        specifier: 'catalog:'
+        version: 6.1.3
+      tsx:
+        specifier: 'catalog:'
+        version: 4.23.15
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  mcp/servers/gwork:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: catalog:mcp-stack
@@ -204,7 +251,7 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
-  mcp/packages/infisical:
+  mcp/servers/infisical:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: catalog:mcp-stack
@@ -232,7 +279,7 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
-  mcp/packages/memory:
+  mcp/servers/memory:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: catalog:mcp-stack
@@ -260,7 +307,7 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
-  mcp/packages/playwright:
+  mcp/servers/playwright:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: catalog:mcp-stack

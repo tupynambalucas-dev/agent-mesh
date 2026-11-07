@@ -14,18 +14,23 @@ All packages published from or developed within `agent-mesh` MUST use the organi
 | :--- | :--- | :--- | :--- |
 | **Root Monorepo** | `./` | `@tupynambalucas-dev/agent-mesh` | `@tupynambalucas-dev/agent-mesh` |
 | **Domain Plugins** | `plugins/packages/<slug>` | `@tupynambalucas-dev/plugin-<slug>` | `@tupynambalucas-dev/plugin-github-flow` |
-| **In-House MCPs** | `mcp/packages/<slug>` | `@tupynambalucas-dev/mcp-<slug>` | `@tupynambalucas-dev/mcp-playwright` |
+| **Plugin Core Libraries** | `plugins/core/<slug>` | `@tupynambalucas-dev/plugin-core-<slug>` | `@tupynambalucas-dev/plugin-core-governance` |
+| **In-House MCP Servers** | `mcp/servers/<slug>` | `@tupynambalucas-dev/mcp-<slug>` | `@tupynambalucas-dev/mcp-github-org` |
+| **MCP Core Libraries** | `mcp/core/<slug>` | `@tupynambalucas-dev/mcp-core-<slug>` | `@tupynambalucas-dev/mcp-core-github` |
 
 ---
 
 ## 2. Directory Alignment Invariants
 
 1. **Plugin Directory Hierarchy**:
-   - Plugins MUST be located within `plugins/packages/<slug>/`.
+   - Deployable domain plugins MUST be located within `plugins/packages/<slug>/`.
+   - Shared plugin libraries MUST be located within `plugins/core/<slug>/`.
    - Never place plugin packages directly in the root of `plugins/`.
 2. **MCP Directory Hierarchy**:
-   - In-house MCP servers MUST be located within `mcp/packages/<slug>/`.
+   - Deployable in-house MCP servers MUST be located within `mcp/servers/<slug>/`.
+   - Shared non-executable MCP libraries MUST be located within `mcp/core/<slug>/`.
    - Never place MCP packages directly in the root of `mcp/`.
+   - Intermediate grouping directories (`mcp/servers/`, `mcp/core/`, `plugins/packages/`, `plugins/core/`) MUST NOT contain `AGENTS.md` or `README.md` files to preserve the 3-Layer Bounded Context Ceiling.
 3. **Internal Structure of a Domain Plugin**:
    ```text
    plugins/packages/<slug>/

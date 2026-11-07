@@ -1,6 +1,9 @@
 import { z } from 'zod';
-import { getOctokitClient } from '../auth/github-app.auth.js';
-import { config } from '../config.js';
+import {
+  config,
+  formatMcpResponse,
+  getOctokitClient,
+} from '@tupynambalucas-dev/mcp-core-github';
 
 export const getRepoInfoToolDefinition = {
   name: 'get_repo_info',
@@ -34,16 +37,14 @@ export async function handleGetRepoInfo(args: unknown) {
     repo: z.string(),
   });
   const parsed = schema.parse(args);
-  const octokit = await getOctokitClient();
+  const octokit = await getOctokitClient('org-manager');
 
   const res = await octokit.request('GET /repos/{owner}/{repo}', {
     owner: parsed.owner,
     repo: parsed.repo,
   });
 
-  return {
-    content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }],
-  };
+  return formatMcpResponse(res.data);
 }
 
 export async function handleListOrgRepos(args: unknown) {
@@ -53,7 +54,7 @@ export async function handleListOrgRepos(args: unknown) {
     per_page: z.number().optional().default(30),
   });
   const parsed = schema.parse(args);
-  const octokit = await getOctokitClient();
+  const octokit = await getOctokitClient('org-manager');
 
   const res = await octokit.request('GET /orgs/{org}/repos', {
     org: parsed.org,
@@ -61,7 +62,5 @@ export async function handleListOrgRepos(args: unknown) {
     per_page: parsed.per_page,
   });
 
-  return {
-    content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }],
-  };
+  return formatMcpResponse(res.data);
 }

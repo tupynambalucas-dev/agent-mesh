@@ -9,7 +9,7 @@ This guide explains how `plugins/packages/<plugin>/scripts/launcher.cjs` provide
 When an agent invokes an MCP tool, `launcher.cjs` acts as an intelligent proxy:
 1. **Health Probe**: Issues a 300ms HTTP healthcheck probe to `CORTEX_GATEWAY_URL/health` (port `8080`).
 2. **Mode A (Online)**: If Envoy AgentGateway responds with HTTP `200`, the router proxies the JSON-RPC request to the cluster over Streamable HTTP/SSE.
-3. **Mode B (Offline)**: If the cluster gateway is unreachable, timed out, or returning errors, the router automatically spawns the local compiled binary (`mcp/packages/<target>/dist/bin.js`) or executes registry fallbacks via `pnpm dlx`.
+3. **Mode B (Offline)**: If the cluster gateway is unreachable, timed out, or returning errors, the router automatically spawns the local compiled binary (`mcp/servers/<target>/dist/bin.js`) or executes registry fallbacks via `pnpm dlx`.
 
 ---
 
@@ -48,7 +48,7 @@ node plugins/packages/<plugin>/scripts/launcher.cjs firecrawl
 
 Expected output on `stderr`:
 ```
-[mesh-router] AgentGateway offline. Engaging local compiled binary: node .../mcp/packages/firecrawl/dist/bin.js
+[mesh-router] AgentGateway offline. Engaging local compiled binary: node .../mcp/servers/firecrawl/dist/bin.js
 ```
 
 The process transitions into a standard Stdio JSON-RPC server listening on standard input.

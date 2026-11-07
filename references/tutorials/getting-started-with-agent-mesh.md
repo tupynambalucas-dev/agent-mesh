@@ -30,22 +30,24 @@ Pnpm resolves dependencies strictly using the shared catalogs defined in `pnpm-w
 
 ---
 
-## Step 2: Build All MCP Servers
+## Step 2: Build All MCP Servers & Core Libraries
 
-Compile all 7 in-house MCP packages using Turborepo:
+Compile all 8 in-house MCP servers and the shared core library using Turborepo:
 
 ```bash
 pnpm mcp:build
 ```
 
-Turborepo coordinates concurrent builds across:
-- `mcp/packages/appsheet`
-- `mcp/packages/firecrawl`
-- `mcp/packages/github`
-- `mcp/packages/gwork`
-- `mcp/packages/infisical`
-- `mcp/packages/memory`
-- `mcp/packages/playwright`
+Turborepo coordinates topological builds across:
+- `mcp/core/github`
+- `mcp/servers/appsheet`
+- `mcp/servers/firecrawl`
+- `mcp/servers/github-flow`
+- `mcp/servers/github-org`
+- `mcp/servers/gwork`
+- `mcp/servers/infisical`
+- `mcp/servers/memory`
+- `mcp/servers/playwright`
 
 Each package compiles two entrypoints:
 - `dist/bin.js`: Stdio transport executable for local developer workflows.

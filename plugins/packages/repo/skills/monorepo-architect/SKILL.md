@@ -34,7 +34,9 @@ Package names must be derived deterministically according to the monorepo bounda
 | :--- | :--- | :--- | :--- |
 | **Root Monorepo** | `/` | `@tupynambalucas-dev/agent-mesh` | `@tupynambalucas-dev/agent-mesh` |
 | **Agent Plugins** | `plugins/packages/<domain>` | `@tupynambalucas-dev/plugin-<domain>` | `@tupynambalucas-dev/plugin-appsheet`<br />`@tupynambalucas-dev/plugin-atelier`<br />`@tupynambalucas-dev/plugin-docusaurus`<br />`@tupynambalucas-dev/plugin-github-flow`<br />`@tupynambalucas-dev/plugin-github-org`<br />`@tupynambalucas-dev/plugin-gwork`<br />`@tupynambalucas-dev/plugin-repo`<br />`@tupynambalucas-dev/plugin-research`<br />`@tupynambalucas-dev/plugin-secrets`<br />`@tupynambalucas-dev/plugin-web` |
-| **MCP Servers** | `mcp/packages/<service>` | `@tupynambalucas-dev/mcp-<service>` | `@tupynambalucas-dev/mcp-appsheet`<br />`@tupynambalucas-dev/mcp-firecrawl`<br />`@tupynambalucas-dev/mcp-github`<br />`@tupynambalucas-dev/mcp-gwork`<br />`@tupynambalucas-dev/mcp-infisical`<br />`@tupynambalucas-dev/mcp-memory`<br />`@tupynambalucas-dev/mcp-playwright` |
+| **Plugin Core Libraries** | `plugins/core/<domain>` | `@tupynambalucas-dev/plugin-core-<domain>` | `@tupynambalucas-dev/plugin-core-governance` |
+| **MCP Servers** | `mcp/servers/<service>` | `@tupynambalucas-dev/mcp-<service>` | `@tupynambalucas-dev/mcp-appsheet`<br />`@tupynambalucas-dev/mcp-firecrawl`<br />`@tupynambalucas-dev/mcp-github-flow`<br />`@tupynambalucas-dev/mcp-github-org`<br />`@tupynambalucas-dev/mcp-gwork`<br />`@tupynambalucas-dev/mcp-infisical`<br />`@tupynambalucas-dev/mcp-memory`<br />`@tupynambalucas-dev/mcp-playwright` |
+| **MCP Core Libraries** | `mcp/core/<domain>` | `@tupynambalucas-dev/mcp-core-<domain>` | `@tupynambalucas-dev/mcp-core-github` |
 
 > [!IMPORTANT]
 > In `agent-mesh`, the discriminator prefixes are strictly `plugin-` and `mcp-`. Never prepend `agent-` or `agent-plugin-` or `agent-mcp-`. The `@tupynambalucas-dev/` scope and the repository boundary already establish that these are AI agent artifacts.
@@ -104,13 +106,15 @@ The legacy pattern of using separate `tsconfig.build.json` files is strictly pro
   "$schema": "https://json.schemastore.org/tsconfig",
   "files": [],
   "references": [
-    { "path": "./mcp/packages/appsheet" },
-    { "path": "./mcp/packages/firecrawl" },
-    { "path": "./mcp/packages/github" },
-    { "path": "./mcp/packages/gwork" },
-    { "path": "./mcp/packages/infisical" },
-    { "path": "./mcp/packages/memory" },
-    { "path": "./mcp/packages/playwright" }
+    { "path": "./mcp/core/github" },
+    { "path": "./mcp/servers/appsheet" },
+    { "path": "./mcp/servers/firecrawl" },
+    { "path": "./mcp/servers/github-flow" },
+    { "path": "./mcp/servers/github-org" },
+    { "path": "./mcp/servers/gwork" },
+    { "path": "./mcp/servers/infisical" },
+    { "path": "./mcp/servers/memory" },
+    { "path": "./mcp/servers/playwright" }
   ]
 }
 ```

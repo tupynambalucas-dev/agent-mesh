@@ -1,6 +1,9 @@
 import { z } from 'zod';
-import { getOctokitClient } from '../auth/github-app.auth.js';
-import { config } from '../config.js';
+import {
+  config,
+  formatMcpResponse,
+  getOctokitClient,
+} from '@tupynambalucas-dev/mcp-core-github';
 
 export const listDependabotAlertsToolDefinition = {
   name: 'list_dependabot_alerts',
@@ -39,7 +42,7 @@ export async function handleListDependabotAlerts(args: unknown) {
     severity: z.string().optional(),
   });
   const parsed = schema.parse(args);
-  const octokit = await getOctokitClient();
+  const octokit = await getOctokitClient('org-manager');
 
   const res = await octokit.request('GET /repos/{owner}/{repo}/dependabot/alerts', {
     owner: parsed.owner,
@@ -48,9 +51,7 @@ export async function handleListDependabotAlerts(args: unknown) {
     ...(parsed.severity ? { severity: parsed.severity } : {}),
   });
 
-  return {
-    content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }],
-  };
+  return formatMcpResponse(res.data);
 }
 
 export async function handleListSecretScanningAlerts(args: unknown) {
@@ -60,7 +61,7 @@ export async function handleListSecretScanningAlerts(args: unknown) {
     state: z.string().optional().default('open'),
   });
   const parsed = schema.parse(args);
-  const octokit = await getOctokitClient();
+  const octokit = await getOctokitClient('org-manager');
 
   const res = await octokit.request('GET /repos/{owner}/{repo}/secret-scanning/alerts', {
     owner: parsed.owner,
@@ -68,7 +69,5 @@ export async function handleListSecretScanningAlerts(args: unknown) {
     state: parsed.state as 'open' | 'resolved',
   });
 
-  return {
-    content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }],
-  };
+  return formatMcpResponse(res.data);
 }
