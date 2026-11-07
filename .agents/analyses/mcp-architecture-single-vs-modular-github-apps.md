@@ -1,8 +1,8 @@
-# Enterprise Architectural Analysis: Monolithic vs. Domain-Scoped MCP Servers for GitHub App Personas in Agent Mesh
+# Enterprise Architectural Analysis: Monolithic vs. Domain-Scoped MCP Servers and Bounded Context Directory Taxonomy in Agent Mesh
 
 **Document Reference**: `agent-mesh/.agents/analyses/mcp-architecture-single-vs-modular-github-apps.md`  
-**Classification**: Senior Enterprise Architectural Analysis & Decision Record  
-**Target Architecture**: Tupynambalucas Agent Mesh & GitHub Sovereign Machine Identity  
+**Classification**: Senior Enterprise Architectural Analysis & Structural Decision Record  
+**Target Architecture**: Tupynambalucas Agent Mesh, MCP Subsystem & Antigravity Plugins  
 **Standard**: en-US Technical Specification (Strict Zero-Emoji Policy)  
 **Author**: Antigravity Core AI Architecture Team  
 **Date**: November 2026  
@@ -20,17 +20,14 @@ Within `agent-mesh`, two distinct Antigravity domain plugins govern GitHub opera
 - [`@tupynambalucas-dev/plugin-github-org`](../../plugins/packages/github-org): Governs organizational policy, branch protection rulesets, security triaging, and team provisioning.
 - [`@tupynambalucas-dev/plugin-github-flow`](../../plugins/packages/github-flow): Orchestrates developer Git workflows, Conventional Commits, Pull Request authoring, and CI/CD diagnosis.
 
-### The Fundamental Architectural Dilemma
+### The Two Intertwined Architectural Dilemmas
 
-Currently, both plugins bind to a single Model Context Protocol (MCP) server package: [`@tupynambalucas-dev/mcp-github`](../../mcp/packages/github). This raises a critical design question for enterprise AI engineering:
-
-> **Should `agent-mesh` maintain a single monolithic `@tupynambalucas-dev/mcp-github` server for both `org-manager` and `developer-tools`, or should it partition them into dedicated, domain-scoped MCP servers (`@tupynambalucas-dev/mcp-github-org` and `@tupynambalucas-dev/mcp-github-flow`)?**
-
-This analysis evaluates this question against modern MCP specifications, empirical context-rot benchmarks, the Principle of Least Privilege (PoLP), and monorepo maintainability to formulate an authoritative enterprise recommendation.
+1. **Protocol Server Partitioning**: Should `agent-mesh` maintain a single monolithic `@tupynambalucas-dev/mcp-github` server for both `org-manager` and `developer-tools`, or should it partition them into dedicated, domain-scoped MCP servers (`@tupynambalucas-dev/mcp-github-org` and `@tupynambalucas-dev/mcp-github-flow`)?
+2. **Monorepo Directory Taxonomy & Core Package Isolation**: If domain-scoped MCP servers are created, placing an internal shared core library (e.g. `github-core`) inside `agent-mesh/mcp/packages/` violates the Bounded Context and single-responsibility principles. The folder `packages/` is conventionally understood as deployable/publishable targets. How should `agent-mesh/mcp/` and `agent-mesh/plugins/` be structured to cleanly segregate **deployable servers/plugins** from **internal shared core packages**, and how does this impact `pnpm-workspace.yaml`, `turbo.json`, `tsconfig.json`, and CI/CD actions?
 
 ---
 
-## 2. Theoretical Framework & State-of-the-Art Evidence
+## 2. Theoretical Framework & State-of-the-Art Evidence (Firecrawl Research)
 
 To ground our architectural decision in validated industry standards, we draw upon research retrieved from the official **Model Context Protocol Specification**, peer-reviewed context engineering literature (arXiv:2505.03275), and distributed MCP gateway engineering.
 
@@ -67,70 +64,79 @@ As concluded by enterprise MCP architects:
 
 ---
 
-## 3. Current State Audit: `agent-mesh/mcp/packages/github`
+## 3. Monorepo Directory Taxonomy: Clean Architecture for `mcp/` and `plugins/`
 
-Inspection of the existing custom MCP server reveals that its tool catalog is currently focused exclusively on governance and inspection:
+In enterprise monorepo engineering (Turborepo, pnpm workspaces, Nx), bundling internal shared libraries in the same directory as deployable applications causes operational ambiguity:
+- Build tools struggle to distinguish between packages meant for public distribution and packages meant purely for internal composition.
+- CI/CD publish scripts (`pnpm -r publish`) require fragile manual exclusion filters.
+- Developers navigating the codebase cannot easily identify entrypoints versus shared utilities.
 
-```typescript
-// agent-mesh/mcp/packages/github/src/tools/index.ts
-export const allTools = [
-  getRepoInfoToolDefinition,           // Repository inspection
-  listOrgReposToolDefinition,          // Organization repository enumeration
-  listRulesetsToolDefinition,         // Branch protection inspection
-  getRulesetToolDefinition,           // Ruleset configuration inspection
-  listDependabotAlertsToolDefinition,  // Security vulnerability triage
-  listSecretScanningAlertsToolDefinition // Push protection leak detection
-];
+### 3.1 Taxonomy Models Comparison
+
+```
++---------------------------------------------------------------------------------------------------+
+| Model A: Flat Packages (Current State)                                                            |
+| agent-mesh/mcp/packages/github-core  <-- Anti-pattern: Internal library mixed with servers        |
+| agent-mesh/mcp/packages/github       <-- Deployable server                                        |
++---------------------------------------------------------------------------------------------------+
+| Model B: Subsystem-Internal Partitioning (Recommended Enterprise Pattern)                         |
+| agent-mesh/mcp/servers/*             <-- Deployable MCP servers (@tupynambalucas-dev/mcp-*)       |
+| agent-mesh/mcp/core/*                <-- Internal shared MCP libraries (@tupynambalucas-dev/core-*)|
+| agent-mesh/plugins/packages/*        <-- Deployable domain plugins (@tupynambalucas-dev/plugin-*) |
+| agent-mesh/plugins/core/*            <-- Internal shared plugin utilities                         |
++---------------------------------------------------------------------------------------------------+
+| Model C: Monorepo Root Core Partitioning                                                          |
+| agent-mesh/mcp/packages/*            <-- Deployable MCP servers                                   |
+| agent-mesh/plugins/packages/*        <-- Deployable domain plugins                                |
+| agent-mesh/core/*                    <-- Generic shared libraries at the root                     |
++---------------------------------------------------------------------------------------------------+
 ```
 
-### The Emerging Collision
+### 3.2 Why Model B (Subsystem-Internal Partitioning) is Superior
 
-As `agent-mesh` matures:
-- `plugin-github-org` requires expanding this catalog with **mutating governance tools**: `create_team`, `assign_team_membership`, `assign_org_role_to_team`, `create_org_ruleset`, `update_org_ruleset`, `triage_pat_request`, `revoke_pat`.
-- `plugin-github-flow` requires adding **developer workflow tools**: `create_branch`, `create_commit`, `open_pull_request`, `review_pull_request`, `merge_pull_request`, `create_issue`, `list_workflow_runs`.
-
-If both domains are merged into the same `@tupynambalucas-dev/mcp-github` package:
-1. Every standard developer running `plugin-github-flow` in their IDE will have 10+ administrative governance tools injected into their prompt, despite lacking the Tier 1 RSA key.
-2. The agent will attempt to call administrative tools, receive `401 Unauthorized` or `403 Forbidden` from GitHub, and enter wasteful hallucination/retry loops.
-3. The context window is bloated with unused administrative schemas.
+Model B aligns with **Domain-Driven Design (DDD)** and the **3-Layer Bounded Context Ceiling** enforced by our enterprise rules:
+1. **High Subsystem Cohesion**:
+   - The MCP protocol stack (`Fastify`, `@modelcontextprotocol/sdk`, `@octokit/auth-app`, `Octokit`) is unique to the MCP subsystem. Placing `github-core` under `agent-mesh/mcp/core/github` keeps MCP dependencies isolated from the root monorepo.
+   - Domain plugins (`plugin-*`) operate under the Antigravity manifest schema (`plugin.json`, `mcp_config.json`, `rules/`, `skills/`). If plugins require shared governance utilities (e.g. shared AST linters, hook helpers), they belong in `agent-mesh/plugins/core/`.
+2. **Clear Intent and Role Naming**:
+   - `mcp/servers/<name>`: Contains executable server daemons exporting JSON-RPC tools.
+   - `mcp/core/<name>`: Contains non-executable, reusable library modules exporting typed functions, client factories, and schemas.
+   - `plugins/packages/<name>`: Contains deployable Antigravity domain plugins loaded by agents.
+   - `plugins/core/<name>`: Contains reusable rule engines, hook validators, or shared skill assets.
+3. **Publication Hygiene via `private: true`**:
+   - Packages in `mcp/core/*` and `plugins/core/*` declare `"private": true` in their `package.json`.
+   - Native `pnpm -r publish` automatically ignores private packages, guaranteeing that internal libraries are never accidentally published to npm or GitHub Packages.
 
 ---
 
-## 4. Architectural Approaches: Comparative Evaluation
+## 4. Package Naming and Domain Taxonomy Matrix
 
-We evaluate three potential architectural topologies:
+In compliance with Organization Rule 6 (*Enterprise Package Name & Scope Invariant*), all packages across the organization use the `@tupynambalucas-dev/` npm scope:
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                                 Topology Comparison Overview                                      |
-+---------------------------------------------------------------------------------------------------+
-| Approach 1: Monolithic MCP Server        | Single package exposes all 25+ tools to all plugins.  |
-| Approach 2: Fragmented Custom MCPs       | Completely separate codebases with duplicate Octokit.  |
-| Approach 3: Enterprise Modular Standard  | Shared Core Engine + Domain-Scoped MCP Entrypoints.    |
-+---------------------------------------------------------------------------------------------------+
-```
-
-### Detailed Evaluation Matrix
-
-| Architectural Criterion | Approach 1: Monolithic MCP (`mcp-github`) | Approach 2: Fragmented Custom MCPs | Approach 3: Enterprise Modular Standard (Recommended) |
-| :--- | :--- | :--- | :--- |
-| **Principle of Least Privilege (PoLP)** | **POOR**: Admin tools exposed to standard developers. | **EXCELLENT**: Strict physical boundary between admin & dev. | **EXCELLENT**: Scoped surface ensures zero privilege leakage. |
-| **Context Window Hygiene (Context Rot)** | **CRITICAL RISK**: 25+ tools cause prompt bloat and selection errors. | **EXCELLENT**: Each agent sees only 6-8 relevant tools. | **EXCELLENT**: Scoped tools consume < 2,000 prompt tokens. |
-| **Authentication Model Integrity** | **COMPLEX**: Runtime must juggle JWT IAT, OAuth UAT, and PATs in one daemon. | **HIGH REDUNDANCY**: Duplicate auth logic across packages. | **OPTIMAL**: Single auth resolver in shared core, consumed cleanly by scoped binaries. |
-| **Host Tool Budget Compliance** | **RISKY**: Consumes 25/40 slots in Cursor (62% of budget). | **EXCELLENT**: Consumes 6-8 slots per active workspace. | **EXCELLENT**: Consumes 6-8 slots per active workspace. |
-| **Code Reusability & DRY Standard** | **HIGH**: Single codebase. | **POOR**: Duplicate Octokit handlers, schemas, and tests. | **MAXIMUM**: Core package (`github-core`) houses 100% of API logic. |
-| **Attribution in GitHub Audit Logs** | **AMBIGUOUS**: Mixed persona emissions. | **CLEAN**: Tier 1 vs Tier 3 strictly partitioned. | **DETERMINISTIC**: Tier 1 emits as Bot; Tier 3 emits as User. |
-| **Maintenance & Monorepo Overhead** | Low (1 package). | High (3 independent packages). | Low-Medium (1 core library + 2 lightweight thin-wrapper servers). |
+| Physical Directory Path | Package Name (`package.json`) | Package Type | Visibility | Consumed Identity / Purpose |
+| :--- | :--- | :--- | :--- | :--- |
+| `mcp/core/github` | `@tupynambalucas-dev/core-github` (or `@tupynambalucas-dev/mcp-core-github`) | Internal Library | `private: true` | Shared Octokit factory, RSA/Base64/Device Flow auth engine, Zod schemas |
+| `mcp/servers/github-org` | `@tupynambalucas-dev/mcp-github-org` | Deployable Server | Public (`publishConfig`) | Tier 1 (`org-manager`): Org rulesets, teams, custom roles, secret scanning |
+| `mcp/servers/github-flow` | `@tupynambalucas-dev/mcp-github-flow` | Deployable Server | Public (`publishConfig`) | Tier 3 (`developer-tools`): PRs, issues, commits, branches, workflow checks |
+| `mcp/servers/playwright` | `@tupynambalucas-dev/mcp-playwright` | Deployable Server | Public (`publishConfig`) | Headless browser automation daemon |
+| `mcp/servers/appsheet` | `@tupynambalucas-dev/mcp-appsheet` | Deployable Server | Public (`publishConfig`) | AppSheet REST API v2 operator |
+| `mcp/servers/gwork` | `@tupynambalucas-dev/mcp-gwork` | Deployable Server | Public (`publishConfig`) | Google Workspace Drive & Sheets synthesizer |
+| `mcp/servers/infisical` | `@tupynambalucas-dev/mcp-infisical` | Deployable Server | Public (`publishConfig`) | Infisical Vault secret management |
+| `mcp/servers/memory` | `@tupynambalucas-dev/mcp-memory` | Deployable Server | Public (`publishConfig`) | Cortex agent memory backend |
+| `plugins/packages/github-org` | `@tupynambalucas-dev/plugin-github-org` | Antigravity Plugin | Public (`publishConfig`) | Binds to `mcp-github-org` |
+| `plugins/packages/github-flow` | `@tupynambalucas-dev/plugin-github-flow` | Antigravity Plugin | Public (`publishConfig`) | Binds to `mcp-github-flow` |
+| `plugins/packages/*` | `@tupynambalucas-dev/plugin-<slug>` | Antigravity Plugin | Public (`publishConfig`) | Domain-specific agent plugins |
+| `plugins/core/*` | `@tupynambalucas-dev/plugin-core-<slug>` | Internal Library | `private: true` | Shared plugin hooks, linters, preflight scripts |
 
 ---
 
-## 5. Enterprise Standard Recommendation: The Scoped Surface Pattern
+## 5. Architectural Topology: Scoped Surface with Shared Core
 
-Rather than a simplistic "all-in-one" or a fragmented "copy-paste" model, modern enterprise software engineering prescribes the **Shared Core + Scoped Surface Pattern**:
+The complete architecture decouples protocol execution, shared logic, and machine identities:
 
 ```mermaid
 flowchart TD
-    subgraph CoreLayer ["Internal Engine: @tupynambalucas-dev/github-core (Private Workspace Package)"]
+    subgraph CoreLayer ["Internal Core: agent-mesh/mcp/core/github (@tupynambalucas-dev/core-github)"]
         AuthModule["src/auth/* (RSA Resolver, JWT Minter, Device Flow, PAT)"]
         OctokitFactory["src/client/octokit.factory.ts (Retry, Rate-Limits, User-Agent)"]
         Schemas["src/schemas/* (Zod definitions for Repos, Teams, Rulesets, PRs)"]
@@ -138,7 +144,7 @@ flowchart TD
         OctokitFactory --> Schemas
     end
 
-    subgraph ServerOrg ["Scoped Server: @tupynambalucas-dev/mcp-github-org (Port 8081)"]
+    subgraph ServerOrg ["Scoped Server: agent-mesh/mcp/servers/github-org (@tupynambalucas-dev/mcp-github-org)"]
         ToolsOrg["Tools (Governance Only):
         - list_org_repos
         - list_rulesets / get_ruleset
@@ -149,7 +155,7 @@ flowchart TD
         IdentityOrg["Consumed Identity: Tier 1 (tupynambalucas-org-manager)"]
     end
 
-    subgraph ServerFlow ["Scoped Server: @tupynambalucas-dev/mcp-github-flow (Port 8082)"]
+    subgraph ServerFlow ["Scoped Server: agent-mesh/mcp/servers/github-flow (@tupynambalucas-dev/mcp-github-flow)"]
         ToolsFlow["Tools (Developer Operations Only):
         - get_repo_info
         - create_branch / list_branches
@@ -164,85 +170,163 @@ flowchart TD
         IdentityCI["Consumed Identity: Tier 2 (tupynambalucas-ci-bot)"]
     end
 
-    CoreLayer --> ServerOrg
-    CoreLayer --> ServerFlow
+    CoreLayer -- "Imported via workspace:*" --> ServerOrg
+    CoreLayer -- "Imported via workspace:*" --> ServerFlow
 
     PluginOrg["@tupynambalucas-dev/plugin-github-org"] --> ServerOrg
     PluginFlow["@tupynambalucas-dev/plugin-github-flow"] --> ServerFlow
 ```
 
-### Key Principles of the Recommended Architecture:
+---
 
-1. **Zero Code Duplication (`@tupynambalucas-dev/github-core`)**:
-   All Octokit client instantiation, error normalization, retry handlers, and cryptographic private key decoding (`_BASE64`, `_PATH`, raw PEM) reside in a shared internal library package: `agent-mesh/mcp/packages/github-core`.
-2. **Strict Domain Scoping at the MCP Boundary**:
-   - [`@tupynambalucas-dev/mcp-github-org`](../../mcp/packages/github-org) exports **only** organization governance tools. It is packaged with `plugin-github-org`.
-   - [`@tupynambalucas-dev/mcp-github-flow`](../../mcp/packages/github-flow) exports **only** developer workflow tools. It is packaged with `plugin-github-flow`.
-3. **Context Window Protection**:
-   An agent running in a developer context loads only `mcp-github-flow` (6-8 tools, < 1,500 tokens). An agent running in a governance context loads only `mcp-github-org`. Neither agent suffers from context rot or tool-calling confusion.
-4. **CI/CD Independence (Tier 2 Zero-MCP Invariant)**:
-   Tier 2 (`tupynambalucas-ci-bot`) is **never** wrapped in an MCP server. GitHub Actions runners execute deterministic bash and pnpm scripts via native actions (`actions/create-github-app-token`). Wrapping CI in an MCP server would add latency, fragile stdio child processes, and failure points with zero benefit.
+## 6. Monorepo Configuration Impact Analysis
+
+Restructuring `mcp/` and `plugins/` into `servers/` and `core/` touches the following configuration boundaries across `agent-mesh`:
+
+### 6.1 `pnpm-workspace.yaml`
+The workspace manifest must register both the deployable packages and the core libraries:
+
+```yaml
+packages:
+  - 'mcp/servers/*'
+  - 'mcp/core/*'
+  - 'plugins/packages/*'
+  - 'plugins/core/*'
+
+registries:
+  default: 'https://registry.npmjs.org/'
+  '@tupynambalucas-dev': 'https://npm.pkg.github.com/'
+
+catalogs:
+  shared:
+    zod: ^3.24.2
+    dotenv: ^16.4.7
+
+  mcp-stack:
+    '@modelcontextprotocol/sdk': ^1.6.1
+    fastify: ^5.2.1
+    '@octokit/auth-app': ^7.1.5
+    '@octokit/core': ^6.1.4
+```
+
+### 6.2 Turborepo Task Graph (`turbo.json`)
+Turborepo handles internal package dependencies automatically using topological sorting:
+
+```json
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": ["NODE_ENV"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["dist/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
+    }
+  }
+}
+```
+Because `mcp-github-org` declares `"@tupynambalucas-dev/core-github": "workspace:*"` in its dependencies, `"dependsOn": ["^build"]` guarantees that Turborepo **always compiles `core-github` first**, before initiating compilation of `mcp-github-org`.
+
+### 6.3 TypeScript Solution Architecture (`tsconfig.json` & `tsconfig.base.json`)
+The solution-style root `tsconfig.json` must reference both core libraries and server implementations:
+
+```json
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "files": [],
+  "references": [
+    { "path": "./mcp/core/github" },
+    { "path": "./mcp/servers/github-org" },
+    { "path": "./mcp/servers/github-flow" },
+    { "path": "./mcp/servers/playwright" },
+    { "path": "./mcp/servers/appsheet" },
+    { "path": "./mcp/servers/firecrawl" },
+    { "path": "./mcp/servers/gwork" },
+    { "path": "./mcp/servers/infisical" },
+    { "path": "./mcp/servers/memory" }
+  ]
+}
+```
+In `mcp/servers/github-org/tsconfig.json`:
+```json
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "references": [
+    { "path": "../../core/github" }
+  ]
+}
+```
+
+### 6.4 Root `package.json` Scripts
+Root scripts are updated to account for the new taxonomy:
+
+```json
+{
+  "scripts": {
+    "build": "turbo run build",
+    "mcp:build": "turbo run build --filter=\"@tupynambalucas-dev/mcp-*\" --filter=\"@tupynambalucas-dev/core-*\"",
+    "packages:publish": "pnpm -r publish --access public --no-git-checks --report-summary"
+  }
+}
+```
+When `packages:publish` runs, `pnpm` inspects all packages in the workspace. Any package with `"private": true` (such as `@tupynambalucas-dev/core-github`) is automatically skipped, ensuring zero accidental publication.
+
+### 6.5 GitHub Actions Workflows & Composite Actions
+1. **`.github/actions/build-mcp/action.yml`**:
+   No changes required; it executes `pnpm mcp:build`, which Turborepo orchestrates via dependency graph.
+2. **`.github/actions/validate-plugins/action.yml`**:
+   Scans `plugins/packages/` for `plugin.json` manifests, ignoring `plugins/core/` internal libraries.
+3. **`.github/workflows/publish.yml`**:
+   Continues to publish workspace packages using `pnpm run packages:publish` without modification.
+4. **Plugin Launchers (`launcher.cjs`)**:
+   Updated to resolve local binaries at `../../mcp/servers/<name>/dist/bin.js` instead of `../../mcp/packages/<name>/dist/bin.js`.
 
 ---
 
-## 6. Comprehensive Plugin-to-App Mapping Taxonomy
+## 7. Migration Roadmap
 
-The table below establishes the authoritative matrix mapping every plugin in `agent-mesh/plugins/packages/` to its corresponding machine identity, transport, and credentials:
+To transition `agent-mesh` into this enterprise standard without disruption:
 
-| Plugin Name | Primary Operational Domain | Consumed GitHub Identity | Transport & Conduits | Secret Resolution Path |
-| :--- | :--- | :--- | :--- | :--- |
-| **`plugin-github-org`** | Organization RBAC, Rulesets, Teams, Security Audits | **Tier 1: `tupynambalucas-org-manager`** | Stdio/HTTP -> `mcp-github-org` | `ORG_MANAGER_APP_ID`, `ORG_MANAGER_APP_PRIVATE_KEY_BASE64` (Infisical: `/governance/`) |
-| **`plugin-github-flow`** | Developer Git Flow, PRs, Commits, Issues | **Tier 3: `tupynambalucas-developer-tools`** (or Personal PAT) | Stdio/HTTP -> `mcp-github-flow` | `DEVELOPER_TOOLS_APP_ID`, OAuth Device Flow User Access Token (OS Keychain) |
-| **`plugin-repo`** | Monorepo Governance, Licensing, Community Standards | None (Local filesystem) / Tier 3 fallback | Local fs operations; Git CLI via SSH signing | Local workstation SSH agent (`git commit -S`) |
-| **`plugin-secrets`** | Vault Management, Credential Rotation, K8s Sync | **Tier 1: `tupynambalucas-org-manager`** (for GitHub Secret sync) | Stdio -> `mcp-infisical` & `mcp-github-org` | Infisical Universal Auth (`CLIENT_ID` + `CLIENT_SECRET`) |
-| **`plugin-atelier`** | AI Context Routers, Rules, Skills, Plugin Architecture | None (Local filesystem) | Pure static analysis & AST validation | None (Static file authoring) |
-| **`plugin-research`** | Upstream Docs (Context7) & Web Scraping (Firecrawl) | None (External APIs) | Stdio -> `mcp-context7` & `mcp-firecrawl` | `CONTEXT7_API_KEY`, `FIRECRAWL_API_KEY` |
-| **`plugin-web`** | Desktop Browser Pairing & Playwright Automation | None (Browser CDP) | Stdio -> `playwright` (isolated profile) | `PLAYWRIGHT_MCP_EXTENSION_TOKEN` |
-| **`plugin-appsheet`** | AppSheet REST API v2 & Studio UI Automation | None (Google AppSheet) | Stdio -> `appsheet` & `appsheet-playwright` | `APPSHEET_APP_ID`, `APPSHEET_APP_KEY` |
-| **`plugin-gwork`** | Google Drive & Sheets Relational Synthesizer | None (Google Cloud Service Account) | Stdio -> `mcp-gwork` | `GOOGLE_SERVICE_ACCOUNT_JSON` |
-| **`plugin-docusaurus`** | Technical Documentation Architecture & Diataxis Audits | None (Local filesystem) | Pure markdown / MDX AST validation | None (Static file authoring) |
+```mermaid
+flowchart LR
+    P1["Phase 1: Workspace Taxonomy\n(pnpm-workspace.yaml & folders)"] --> P2["Phase 2: Core Extraction\n(mcp/core/github)"]
+    P2 --> P3["Phase 3: Scoped Servers\n(mcp/servers/github-org & flow)"]
+    P3 --> P4["Phase 4: Plugin Binding\n(launcher.cjs & mcp.json)"]
+```
 
----
-
-## 7. Migration Roadmap to the Enterprise Standard
-
-To transition `agent-mesh` seamlessly from the current interim state to the recommended modular architecture without disrupting active developer workflows, we execute a four-phase migration:
-
-### Phase 1: Shared Core Extraction (`github-core`)
-1. Create `agent-mesh/mcp/packages/github-core`:
-   - Move `src/config.ts` and `src/auth/github-app.auth.ts` into `github-core`.
-   - Export strongly-typed Octokit client factories supporting both Installation Access Tokens and OAuth Device Flow.
-2. Publish `github-core` as an internal workspace catalog package (`catalog:`).
-
-### Phase 2: Scoping `mcp-github-org` (Tier 1)
-1. Rename or specialize `mcp/packages/github` to `@tupynambalucas-dev/mcp-github-org`.
-2. Prune generic repository mutation tools; focus exclusively on:
-   - `list_org_repos`, `list_rulesets`, `get_ruleset`
-   - `create_org_ruleset`, `update_org_ruleset`
-   - `create_team`, `assign_team_membership`, `assign_org_role_to_team`
-   - `list_dependabot_alerts`, `list_secret_scanning_alerts`
-3. Update `plugin-github-org/scripts/launcher.cjs` to target `mcp-github-org`.
-
-### Phase 3: Scaffolding `mcp-github-flow` (Tier 3)
-1. Scaffold `agent-mesh/mcp/packages/github-flow`:
-   - Consume `github-core` for authentication.
-   - Implement developer-centric tools:
-     - `create_branch`, `get_branch_status`
-     - `open_pull_request`, `review_pull_request`, `merge_pull_request`
-     - `list_issues`, `create_issue_comment`
-2. Update `plugin-github-flow/scripts/launcher.cjs` to target `mcp-github-flow`.
-
-### Phase 4: Backward Compatibility Verification
-1. Retain legacy environment variable fallbacks (`GITHUB_ORG_MANAGER_APP_*`, `GITHUB_CI_BOT_APP_*`, `GITHUB_TOKEN`).
-2. Run automated contract tests ensuring `pnpm --filter @tupynambalucas-dev/* test` passes across all plugins.
-3. Validate Cursor and Antigravity host tool budgets: confirm neither plugin exceeds 10 active MCP tools.
+1. **Phase 1: Directory Restructuring**:
+   - Rename `agent-mesh/mcp/packages/` to `agent-mesh/mcp/servers/`.
+   - Create `agent-mesh/mcp/core/` and `agent-mesh/plugins/core/`.
+   - Update `pnpm-workspace.yaml` and `tsconfig.json`.
+2. **Phase 2: Shared Core Extraction (`@tupynambalucas-dev/core-github`)**:
+   - Extract `config.ts`, `auth/`, and Octokit client creation into `mcp/core/github`.
+   - Mark as `"private": true` and expose TypeScript project reference.
+3. **Phase 3: Scoped Servers Implementation**:
+   - Rename existing server to `@tupynambalucas-dev/mcp-github-org` (Tier 1 governance tools).
+   - Scaffold `@tupynambalucas-dev/mcp-github-flow` (Tier 3 developer tools).
+   - Depend on `@tupynambalucas-dev/core-github: "workspace:*"`.
+4. **Phase 4: Plugin Binding & Validation**:
+   - Update `plugins/packages/github-org/mcp.json` to launch `github-org`.
+   - Update `plugins/packages/github-flow/mcp.json` to launch `github-flow`.
+   - Run `pnpm build`, `pnpm typecheck`, and contract tests.
 
 ---
 
 ## 8. Conclusion
 
-Maintaining a single monolithic `@tupynambalucas-dev/mcp-github` was an effective minimal viable implementation for initial inspection capabilities. However, for an **enterprise-grade, production multi-agent system**, separating MCP servers along bounded domain contexts (`mcp-github-org` for Tier 1 and `mcp-github-flow` for Tier 3) while sharing a centralized engine (`github-core`):
-- Guarantees **Principle of Least Privilege (PoLP)** and eliminates Confused Deputy vulnerabilities.
-- Eradicates **Context Rot**, saving thousands of tokens per prompt and tripling tool-selection accuracy.
-- Enforces unambiguous **Audit Attribution** between bot actions and human commits.
-- Preserves **Developer Velocity** by isolating CI/CD to native GitHub Actions with zero MCP overhead.
+The user's insight is architecturally sound: mixing internal libraries inside a generic `packages/` directory creates confusion, complicates publishing, and breaks Bounded Context separation.
+
+By adopting **Subsystem-Internal Partitioning**:
+- `agent-mesh/mcp/servers/` houses deployable Model Context Protocol daemons.
+- `agent-mesh/mcp/core/` houses private, shared internal libraries.
+- `agent-mesh/plugins/packages/` houses sovereign Antigravity domain plugins.
+- `agent-mesh/plugins/core/` houses shared plugin governance and AST linters.
+
+This establishes a modular, audit-compliant, and token-efficient AI agent mesh aligned with Google Antigravity, Turborepo, and modern MCP security specifications.
