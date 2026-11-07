@@ -19,6 +19,7 @@ build/
 # Keys & Certificates
 *.pem
 *.key
+keys/
 
 # Logs
 *.log
