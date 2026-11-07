@@ -31,7 +31,7 @@ function main() {
       const cmd = payload.toolCall?.args?.CommandLine || '';
 
       // 1. Direct pushes to main or master
-      if (/git\s+push.*(origin\s+)?(main|master)\b/.test(cmd)) {
+      if (/git\s+push\s+(?:--\S+\s+)*(?:origin\s+)?\b(main|master)\b/.test(cmd)) {
         process.stdout.write(JSON.stringify({
           decision: 'deny',
           reason: 'GitHub Flow Invariant: Direct pushes to main/master are strictly blocked. Push to a feature branch and open a PR.'
