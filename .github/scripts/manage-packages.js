@@ -5,9 +5,8 @@
  * tupynambalucas-dev Organization
  *
  * Dynamically discovers active packages from the current workspace tree and
- * historical/renamed/removed packages directly from Git commit history
- * (`git log --all -p -- "**/package.json"`), eliminating any need to maintain
- * static obsolete package lists in the repository.
+ * historical/renamed/removed packages directly from Git commit history,
+ * eliminating any need to maintain static obsolete package lists.
  */
 
 const fs = require('fs');
