@@ -34,6 +34,7 @@ Task-focused runbooks and recipes to accomplish specific operational goals:
 
 ### 2.3 Technical Reference (Information-Oriented)
 Declarative specifications, catalogs, schemas, and matrices:
+- [Umbrella Package & Presets Specification](./reference/umbrella-package-and-presets.md): Specification for the `@tupynambalucas-dev/agent-mesh` umbrella distribution package and domain presets.
 - [Enterprise Naming Conventions & Scoping Standard](./reference/naming-conventions-and-scoping-standard.md): Package names (`@tupynambalucas-dev/*`), closed role vocabulary, and directory invariants.
 - [Domain Plugin Catalog](./reference/domain-plugin-catalog.md): Comprehensive matrix of all 10 domain plugins, included skills, rules, and dual-mode MCP configs.
 - [MCP Server Catalog](./reference/mcp-server-catalog.md): Technical breakdown of all 8 in-house MCP servers and 1 shared core library, ports, Stdio binaries, tools, and schemas.

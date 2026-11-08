@@ -51,6 +51,15 @@ function getActivePackages() {
   const dirs = ['mcp/servers', 'mcp/core', 'plugins/packages', 'plugins/core'];
   const root = path.resolve(__dirname, '../..');
 
+  // Discover root package if public
+  const rootPkgPath = path.join(root, 'package.json');
+  if (fs.existsSync(rootPkgPath)) {
+    const rootPkg = JSON.parse(fs.readFileSync(rootPkgPath, 'utf8'));
+    if (rootPkg.name && rootPkg.private !== true) {
+      active.add(toShortName(rootPkg.name));
+    }
+  }
+
   for (const d of dirs) {
     const full = path.join(root, d);
     if (!fs.existsSync(full)) continue;
@@ -86,7 +95,7 @@ function getHistoricalPackagesFromGit() {
     let match;
     while ((match = regex.exec(output)) !== null) {
       const shortName = match[1];
-      if (shortName && shortName !== ROOT_PRIVATE_NAME) {
+      if (shortName) {
         historical.add(shortName);
       }
     }

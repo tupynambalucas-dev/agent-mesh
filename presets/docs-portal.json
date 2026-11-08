@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "path": "../plugins/packages",
+      "include_only": [
+        "repo",
+        "github-flow",
+        "docusaurus",
+        "research"
+      ]
+    }
+  ]
+}

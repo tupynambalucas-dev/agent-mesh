@@ -1,7 +1,7 @@
 {
   "name": "@tupynambalucas-dev/agent-mesh",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
   "description": "Universal enterprise AI agent mesh: governance, MCP servers, domain plugins, and modular skills.",
   "packageManager": "pnpm@10.33.2",
   "repository": {
@@ -9,7 +9,8 @@
     "url": "git+https://github.com/tupynambalucas-dev/agent-mesh.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
   },
   "scripts": {
     "// Pipeline Tasks (Turborepo)": "-------------------------------------------",
@@ -41,7 +42,7 @@
     "mcp:playwright:build": "pnpm --filter @tupynambalucas-dev/mcp-playwright build",
     "mcp:playwright:dev": "pnpm --filter @tupynambalucas-dev/mcp-playwright dev",
     "// Packaging & Deployment": "------------------------------------------------",
-    "packages:publish": "pnpm -r publish --access public --no-git-checks --report-summary",
+    "packages:publish": "pnpm -r publish --access public --no-git-checks --report-summary && pnpm publish --access public --no-git-checks --report-summary",
     "changeset": "changeset",
     "version:packages": "changeset version"
   },
@@ -56,8 +57,11 @@
   "files": [
     ".claude-plugin/",
     "scripts/",
-    "plugins/",
-    "mcp/"
+    "plugins/packages/",
+    "presets/",
+    "mcp/",
+    "README.md",
+    "LICENSE"
   ],
   "keywords": [
     "antigravity",
