@@ -42,8 +42,10 @@ jobs:
     name: Execute Package Administration
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repository (Full History for Dynamic Package Discovery)
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js & pnpm
         uses: ./.github/actions/setup-pnpm-env

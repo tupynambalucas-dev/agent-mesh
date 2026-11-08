@@ -1,49 +1,25 @@
 #!/usr/bin/env node
 
 /**
- * Enterprise GitHub Packages Administration & Purge Tool
+ * Enterprise GitHub Packages Administration & Dynamic Reconciliation Tool
  * tupynambalucas-dev Organization
+ *
+ * Dynamically discovers active packages from the current workspace tree and
+ * historical/renamed/removed packages directly from Git commit history
+ * (`git log --all -p -- "**/package.json"`), eliminating any need to maintain
+ * static obsolete package lists in the repository.
  */
 
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
 
 const ORG = 'tupynambalucas-dev';
+const ROOT_PRIVATE_NAME = 'agent-mesh';
 const TOKEN = process.env.ADMIN_TOKEN || process.env.NODE_AUTH_TOKEN || process.env.GITHUB_TOKEN;
 const ACTION = process.env.ADMIN_ACTION || process.argv[2] || 'list';
 const TARGET_PACKAGE = process.env.TARGET_PACKAGE || process.argv[3] || '';
 const DRY_RUN = process.env.DRY_RUN !== 'false';
-
-// Known historical or deprecated package short names to probe when using repository-scoped GITHUB_TOKEN
-const KNOWN_OBSOLETE_PACKAGES = [
-  'mcp-github',
-  'mcp-router',
-  'plugin-github',
-  'cortex-mcp-appsheet',
-  'cortex-mcp-firecrawl',
-  'cortex-mcp-github',
-  'cortex-mcp-gwork',
-  'cortex-mcp-memory',
-  'cortex-mcp-infisical',
-  'agent-mcp-appsheet',
-  'agent-mcp-firecrawl',
-  'agent-mcp-github',
-  'agent-mcp-gwork',
-  'agent-mcp-infisical',
-  'agent-mcp-memory',
-  'agent-mcp-playwright',
-  'agent-plugin-appsheet',
-  'agent-plugin-docusaurus',
-  'agent-plugin-github',
-  'agent-plugin-github-assistant',
-  'agent-plugin-github-manager',
-  'agent-plugin-google-workspace',
-  'agent-plugin-meta',
-  'agent-plugin-repo-manager',
-  'agent-plugin-research',
-  'agent-plugin-secrets',
-  'agent-plugin-web',
-];
 
 if (!TOKEN) {
   console.error('[admin-packages] Error: No authentication token found. Provide ADMIN_TOKEN or GITHUB_TOKEN.');
@@ -95,10 +71,35 @@ function getActivePackages() {
   return active;
 }
 
-// Fetch packages via organization listing and supplement with direct candidate probing.
-// Direct probing is required when authenticated with repository GITHUB_TOKEN, which holds
-// the "admin" role on individual private packages owned by agent-mesh but does not list
-// private organization-wide packages via GET /orgs/{org}/packages.
+// Dynamically discover every @tupynambalucas-dev/<name> package ever declared
+// across the repository's Git commit history (zero hardcoded lists required).
+function getHistoricalPackagesFromGit() {
+  const historical = new Set();
+  const root = path.resolve(__dirname, '../..');
+
+  try {
+    const output = execFileSync(
+      'git',
+      ['log', '--all', '-p', '--', '**/package.json', 'package.json'],
+      { cwd: root, encoding: 'utf8', maxBuffer: 50 * 1024 * 1024 }
+    );
+    const regex = new RegExp(`"name"\\s*:\\s*"@${ORG}\\/([a-z0-9-]+)"`, 'g');
+    let match;
+    while ((match = regex.exec(output)) !== null) {
+      const shortName = match[1];
+      if (shortName && shortName !== ROOT_PRIVATE_NAME) {
+        historical.add(shortName);
+      }
+    }
+  } catch (err) {
+    console.warn(`[admin-packages] Warning: Could not inspect Git history (${err.message}).`);
+  }
+
+  return historical;
+}
+
+// Fetch packages via organization listing (returns public packages or all packages when using Classic PAT)
+// and supplement with direct candidate probing from active workspace + Git commit history.
 async function fetchPackages(activePackages) {
   const packageMap = new Map();
   let page = 1;
@@ -126,9 +127,12 @@ async function fetchPackages(activePackages) {
     page++;
   }
 
+  const historicalPackages = getHistoricalPackagesFromGit();
+  console.log(`[admin-packages] Unique package names discovered in Git history: ${historicalPackages.size}`);
+
   const candidates = new Set([
     ...activePackages,
-    ...KNOWN_OBSOLETE_PACKAGES,
+    ...historicalPackages,
     ...(TARGET_PACKAGE ? [toShortName(TARGET_PACKAGE)] : []),
   ]);
 
@@ -207,7 +211,9 @@ async function run() {
     for (const pkg of remotePackages) {
       const shortName = toShortName(pkg.name);
       const isCurrent = activePackages.has(shortName);
-      console.log(`- ${toScopedName(shortName)} (v${pkg.version_count || 1}) -> ${isCurrent ? 'ACTIVE' : 'OBSOLETE / ORPHAN'}`);
+      console.log(
+        `- ${toScopedName(shortName)} (v${pkg.version_count || 1}, visibility: ${pkg.visibility || 'private'}) -> ${isCurrent ? 'ACTIVE' : 'OBSOLETE / ORPHAN'}`
+      );
     }
   } else if (ACTION === 'purge-obsolete') {
     const obsolete = remotePackages.filter((p) => !activePackages.has(toShortName(p.name)));
