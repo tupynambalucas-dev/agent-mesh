@@ -29,6 +29,8 @@ This directory houses cross-repository architectural plans, AI-generated reports
 - [Cortex Gateway & Agent Mesh Master Plan](./plans/cortex-gateway-and-self-contained-agent-mesh-architecture.md): 7-phase execution master plan establishing zero-Dockerfile Kubernetes manifests and capability workspace.
 - [Monorepo & GitHub App Architecture](./plans/agent-monorepo-and-github-app-architecture.md): Blueprint for decomposing the monolithic repository into an enterprise capability monorepo.
 - [Plugin Independence & Enforcement Hooks Plan](./plans/plugin-independence-playwright-isolation-and-enforcement-hooks.md): Self-contained plugins, isolated per-plugin Playwright, per-plugin launchers, and lifecycle hooks enforcing plugin mandates.
+- [GitHub App Machine Identity & Token Governance Strategy](./plans/github-app-machine-identity-and-token-governance-strategy.md): Enterprise token governance boundaries between the 3-tier GitHub Apps (`org-manager`, `ci-bot`, `developer-tools`) and granular GitHub Packages `GITHUB_TOKEN` administration.
+- [GitHub Packages Visibility & Dynamic Lifecycle Governance](./plans/github-packages-visibility-and-dynamic-lifecycle-governance.md): Canonical specification for GitHub Packages (`npm.pkg.github.com`) visibility control (`private` vs. `public`) and zero-declaration dynamic obsolete package reconciliation via Git history discovery.
 
 ### 2.3 Verification & Analytical Reports (`reports/`)
 - [Refactoring Audit Report](./reports/agent-mesh-refactoring-and-governance-report.md): Exhaustive audit and refactoring of legacy nomenclature, paths, and standards.
