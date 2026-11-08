@@ -1,8 +1,8 @@
 # Agent Plugins Enterprise Distribution, Presets & Cross-Repository Consumption Architecture
 **Organization**: `tupynambalucas-dev`  
 **Target Monorepo**: `tupynambalucas-dev/agent-mesh`  
-**Consumer Workspaces**: `omnichannel` (WhatsApp/Instagram API), `platform`, `docs`  
-**Domain**: AI Agent Plugins Distribution, Umbrella Meta-Packages, Antigravity Discovery & pnpm Catalogs  
+**Consumer Workspaces**: `omnichannel` (WhatsApp/Instagram Gateway API), `platform`, `docs`  
+**Domain**: AI Agent Plugins Distribution, Umbrella Meta-Packages, Antigravity Discovery, Cross-Repo MCP Runtimes  
 **Document Standard**: en-US Technical Specification (Strict Zero-Emoji Policy)
 
 ---
@@ -47,12 +47,12 @@ In `docs/package.json`:
 
 ---
 
-## 2. Upstream Technical Capabilities & Runtime Specifications
+## 2. Upstream Runtime Capabilities: Antigravity Discovery & Packaging
 
-To design an enterprise-grade solution, we synthesize four official platform mechanisms:
+Antigravity operates as a filesystem-based agent customization engine. To evaluate packaging approaches, we analyze how it discovers and evaluates plugin manifests:
 
 ### 2.1 Antigravity Customization Discovery Engine (`.agents/plugins.json`)
-Per official Google Antigravity runtime documentation (`C:/Users/tupyn/.gemini/antigravity-cli/builtin/skills/agy-customizations/docs/json_configs.md`):
+Per official Google Antigravity runtime documentation (`~/.gemini/antigravity-cli/builtin/skills/agy-customizations/docs/json_configs.md`):
 
 1. **One-Level-Deep Subdirectory Scanning**:
    When an entry in `plugins.json` points to a directory (e.g. `node_modules/@tupynambalucas-dev/agent-mesh/plugins/packages`), the engine **automatically scans all subdirectories one level deep** for `plugin.json` markers. It does NOT require listing each child plugin explicitly.
@@ -79,162 +79,216 @@ Per official Google Antigravity runtime documentation (`C:/Users/tupyn/.gemini/a
      ]
    }
    ```
-
-### 2.2 pnpm Catalogs (`pnpm-workspace.yaml`)
-Per pnpm 9+ and 10+ catalog specifications:
-- Catalogs centralize dependency versions across workspace packages.
-- When consuming packages published to GitHub Packages (`npm.pkg.github.com`), pnpm resolves them natively using `.npmrc` (`@tupynambalucas-dev:registry=https://npm.pkg.github.com`).
-- Standard semver strings (`^1.0.0`) replace fragile `github:...#path:...` git URLs, leveraging pnpm's content-addressable store for sub-second installs.
-
-### 2.3 NPM Umbrella / Bundle Meta-Package Pattern
-In major industry ecosystems (e.g., Babel's `@babel/preset-env`, Radix UI's `@radix-ui/react-primitive`, ESLint's plugin suites):
-- An **Umbrella Meta-Package** bundles either:
-  1. Direct subpath distributions (`package.json` `"files": ["plugins/"]`), shipping all plugin manifests and assets within a single tarball.
-  2. Orchestrated dependencies (`dependencies` referencing all individual scoped packages `@tupynambalucas-dev/plugin-*`).
+4. **Machine-Wide Discovery (`~/.gemini/config/plugins/`)**:
+   Antigravity scans the user's home configuration directory (`~/.gemini/config/plugins/` or `%USERPROFILE%\.gemini\config\plugins\` on Windows) by default. Any directory placed in this folder containing a `plugin.json` is loaded across every project on the workstation without local repository configuration.
 
 ---
 
-## 3. Comparative Architecture Evaluation: 4 Strategic Approaches
+## 3. Analysis: Is `node_modules` Strictly Required? (Evaluation of 3 Installation Modalities)
 
-| Evaluation Criteria | Approach 1: Granular Registry Packages via pnpm Catalog | Approach 2: Sovereign Umbrella Package (`@tupynambalucas-dev/agent-mesh`) | Approach 3: Domain Presets / Tag Packages (`@tupynambalucas-dev/agent-plugins-*`) | Approach 4: Hybrid Umbrella + Declarative Antigravity Presets (Recommended) |
-| :--- | :--- | :--- | :--- | :--- |
-| **Number of `package.json` lines in consumer** | High (8-10 lines) | **Minimal (1 line)** | Low (1-2 lines per domain) | **Minimal (1 line)** |
-| **`.agents/plugins.json` complexity** | 8-10 entries | 1 directory entry | 1 entry per preset | **1 entry (with `include_only`) OR 1 `inherits` line** |
-| **Installation Speed & Network Overhead** | Fast (Registry tarballs) | Fast (Single tarball download) | Fast (Small subset tarballs) | **Maximum (Single cached tarball)** |
-| **Granular Tag / Category Selection** | Manual package filtering | Via `include_only` in `plugins.json` | Via preset package choice | **Both: Via preset file OR via `include_only` filter** |
-| **Decoupling from Filesystem Paths** | High (in node_modules) | High (in node_modules) | High (in node_modules) | **High (Standard `node_modules` structure)** |
-| **Maintenance Burden on Plugin Evolution** | High (consumer must update lists) | **Zero (umbrella auto-includes new plugins)** | Low (update preset definitions) | **Zero (automatic 1-level-deep discovery)** |
-
----
-
-## 4. The Recommended Enterprise Solution: Hybrid Umbrella + Declarative Presets
-
-We implement **Approach 4**: Transforming `@tupynambalucas-dev/agent-mesh` into a published public umbrella package on GitHub Packages that ships:
-1. All domain plugins under `plugins/packages/*`.
-2. Standardized declarative preset files under `presets/*.json`.
-3. Support for both bulk import ("all plugins at once") and tag/domain filtering ("only backend API plugins") without declaring individual packages.
+A primary architectural question is whether consuming repositories MUST install `@tupynambalucas-dev/agent-mesh` into local `node_modules`, or if zero-`node_modules` consumption is feasible and enterprise-compliant.
 
 ```mermaid
 flowchart TD
-    subgraph Publisher ["tupynambalucas-dev / agent-mesh"]
-        Core["agent-mesh Repository"]
-        PkgMesh["Published Package: @tupynambalucas-dev/agent-mesh@1.0.0 (Public on npm.pkg.github.com)"]
-        PresetAll["presets/all.json"]
-        PresetBackend["presets/backend-api.json"]
-        PresetWeb["presets/web-frontend.json"]
-        PluginsDir["plugins/packages/* (atelier, repo, github-flow, secrets, web, ...)"]
-        
-        Core --> PkgMesh
-        PkgMesh --> PresetAll
-        PkgMesh --> PresetBackend
-        PkgMesh --> PresetWeb
-        PkgMesh --> PluginsDir
+    subgraph Modality1 ["Modality 1: Project-Scoped node_modules (Standard Enterprise)"]
+        A1["External Repo (omnichannel)"] --> B1["pnpm add -D @tupynambalucas-dev/agent-mesh"]
+        B1 --> C1["node_modules/@tupynambalucas-dev/agent-mesh"]
+        C1 --> D1[".agents/plugins.json points to node_modules"]
+        D1 --> E1["Deterministic in CI/CD, Git, and Dev Machines"]
     end
 
-    subgraph Consumer ["omnichannel Service (WhatsApp / Instagram Gateway)"]
-        WorkYAML["pnpm-workspace.yaml (catalog: @tupynambalucas-dev/agent-mesh: ^1.0.0)"]
-        PkgJSON["package.json (devDependencies: @tupynambalucas-dev/agent-mesh)"]
-        PluginsJSON[".agents/plugins.json"]
-        
-        WorkYAML --> PkgJSON
-        PkgJSON --> Install["pnpm install (fetches single cached tarball)"]
-        Install --> NodeMod["node_modules/@tupynambalucas-dev/agent-mesh/"]
-        
-        PluginsJSON -- "Option A: 1-line Bulk Import" --> NodeMod
-        PluginsJSON -- "Option B: include_only Filter (Tags)" --> NodeMod
-        PluginsJSON -- "Option C: inherits from Preset" --> NodeMod
+    subgraph Modality2 ["Modality 2: Machine-Wide Global Plugin Cache (Zero node_modules in Project)"]
+        A2["Engineer Workstation"] --> B2["gh tl onboard OR pnpm add -g @tupynambalucas-dev/agent-mesh"]
+        B2 --> C2["~/.gemini/config/plugins/agent-mesh"]
+        C2 --> D2["External Repo has 0 lines in package.json & 0 node_modules"]
+        D2 --> E2["Requires local environment setup; breaks on vanilla CI"]
+    end
+
+    subgraph Modality3 ["Modality 3: Git Sparse-Checkout / Cache Directory (Zero NPM)"]
+        A3["External Repo"] --> B3["git clone --depth 1 into .agents/mesh"]
+        B3 --> C3[".agents/plugins.json points to .agents/mesh/plugins/packages"]
+        C3 --> D3["Zero NPM registry dependencies"]
+        D3 --> E3["Requires Git sub-tree sync scripts"]
     end
 ```
+
+### 3.1 Modality Comparison Matrix
+
+| Criteria | Modality 1: Project `node_modules` (Recommended) | Modality 2: Global `~/.gemini/config/plugins/` | Modality 3: Sparse Git Tree `.agents/mesh/` |
+| :--- | :--- | :--- | :--- |
+| **Project `node_modules` Presence** | Yes (in `devDependencies`) | **Zero (Clean repo)** | **Zero (Clean repo)** |
+| **Reproducibility in CI/CD** | **100% (Locked in `pnpm-lock.yaml`)** | Low (Requires CI provisioning step) | Medium (Requires git clone step in CI) |
+| **Team Synchronization** | **Automatic on `pnpm install`** | Manual (Engineers must run CLI setup) | Requires composite git actions |
+| **Version Pinning & Semver** | **Strict (`^1.0.0` or pinned version)** | Unpinned (Machine-wide version) | Git commit ref / tag |
+| **Config Complexity in Consumer** | 1 line in `pnpm-workspace.yaml`, 1 in `plugins.json` | **0 lines in `package.json`, 0 in `plugins.json`** | 1 line in `plugins.json` + checkout script |
+| **Suitability for Production CI** | **Enterprise Standard** | Developer Workstation Only | Air-Gapped Git Environments |
+
+### 3.2 Verdict on `node_modules`
+- **For Local Development**: Engineers CAN use Modality 2 (installing or symlinking `@tupynambalucas-dev/agent-mesh` into `~/.gemini/config/plugins/agent-mesh`), completely bypassing `node_modules` in their local repositories.
+- **For Organizational Production (Enterprise Standard)**: Modality 1 (consuming `@tupynambalucas-dev/agent-mesh` via `node_modules` locked by pnpm) remains the canonical, tamper-proof pattern because it guarantees that GitHub Actions CI, Docker builds, and new team members experience identical agent behavior without out-of-band machine configuration.
 
 ---
 
-## 5. Ergonomic Consumption Specifications for External Repositories
+## 4. Cross-Repository MCP Server Execution Architecture
 
-### 5.1 In `omnichannel` (and any external service)
+A critical architectural consideration is: **How do our MCP servers (`@tupynambalucas-dev/mcp-*`) work when invoked from an external repository like `omnichannel`?**
 
-#### Step 1: Update `.npmrc` (already configured in `omnichannel`)
-```ini
-@tupynambalucas-dev:registry=https://npm.pkg.github.com
-```
+### 4.1 The Three-Tier MCP Launcher Architecture
+Every plugin authored in `agent-mesh` includes an authoritative sovereign launcher: `plugins/packages/<plugin>/scripts/launcher.cjs`. When Antigravity activates a plugin from `node_modules` in an external repository, it invokes the launcher via `mcp_config.json`:
 
-#### Step 2: Declare in `pnpm-workspace.yaml`
-Replace the 8 individual git lines with a single, clean catalog entry:
-```yaml
-catalogs:
-  plugins-stack:
-    '@tupynambalucas-dev/agent-mesh': ^1.0.0
-```
-
-#### Step 3: Declare in `package.json`
-Remove the 8 individual plugin dependencies. Add only the umbrella package:
 ```json
 {
-  "devDependencies": {
-    "@tupynambalucas-dev/agent-mesh": "catalog:plugins-stack"
+  "mcpServers": {
+    "github-org": {
+      "command": "node",
+      "args": ["./scripts/launcher.cjs", "github-org"]
+    }
   }
 }
 ```
 
-#### Step 4: Configure `.agents/plugins.json`
+The launcher dynamically resolves the execution environment across three hierarchical tiers:
 
-Developers have three clean, enterprise options depending on their granularity needs:
+```mermaid
+flowchart TD
+    Start["Antigravity invokes launcher.cjs in external repo (e.g. omnichannel)"] --> Step1["loadEnvCascade(): Reads process.cwd()/.env (omnichannel secrets)"]
+    Step1 --> CheckMode{"Is MESH_PROFILE=cluster OR CORTEX_GATEWAY_ENABLED=true?"}
 
-##### Pattern A: Zero-Declaration Bulk Import (All Current and Future Plugins)
-Scans all plugins in the umbrella package automatically with **a single line**:
-```json
-{
-  "entries": [
-    {
-      "path": "node_modules/@tupynambalucas-dev/agent-mesh/plugins/packages"
-    }
-  ]
-}
+    CheckMode -- Yes --> Tier3["Tier 3: Remote Streamable-HTTP Gateway<br/><code>npx -y mcp-remote ${CORTEX_GATEWAY_URL}/mcp</code><br/>Runs over HTTP, zero local process overhead"]
+    CheckMode -- No --> CheckLocal{"Does local monorepo source exist?<br/>(mcp/servers/<service>/dist/bin.js)"}
+
+    CheckLocal -- Yes (Inside agent-mesh) --> Tier1["Tier 1: Local Precompiled Binary<br/><code>node mcp/servers/.../dist/bin.js</code>"]
+    CheckLocal -- No (Inside omnichannel) --> Tier2["Tier 2: Dynamic Standalone Execution<br/><code>npx -y @tupynambalucas-dev/mcp-<service></code><br/>(or pnpm dlx) via GitHub Packages"]
+
+    Tier1 --> Settle["MCP Server Process Stdio Bridge Active"]
+    Tier2 --> Settle
+    Tier3 --> Settle
 ```
-*Benefit*: When `agent-mesh` publishes a new plugin, `omnichannel` automatically receives it on `pnpm update` with zero configuration changes.
 
-##### Pattern B: Tag-Based / Subset Import via `include_only`
-Imports only the exact domain plugins relevant to the messaging service without installing separate packages:
-```json
-{
-  "entries": [
-    {
-      "path": "node_modules/@tupynambalucas-dev/agent-mesh/plugins/packages",
-      "include_only": [
-        "repo",
-        "github-flow",
-        "secrets",
-        "research",
-        "web"
-      ]
-    }
-  ]
-}
-```
-*Benefit*: Excludes `docusaurus`, `appsheet`, and `atelier` from the agent's active context window, saving LLM token budget.
+### 4.2 Tier Breakdown:
+1. **Tier 1 (Internal Monorepo Fast-Path)**:
+   - When running directly inside `agent-mesh`, the launcher detects `mcp/servers/<service>/dist/bin.js` and runs the precompiled binary directly.
+2. **Tier 2 (External Repository Standalone Execution - The `omnichannel` Case)**:
+   - When running inside `omnichannel`, the local monorepo path does not exist.
+   - The launcher immediately falls back to `npx -y @tupynambalucas-dev/mcp-<service>`.
+   - Because `omnichannel` has `.npmrc` configured with `@tupynambalucas-dev:registry=https://npm.pkg.github.com`, npm/pnpm downloads and runs the published MCP server package on demand.
+3. **Tier 3 (Centralized Kubernetes Cluster Gateway)**:
+   - When operating inside a cluster or cloud environment (`MESH_PROFILE=cluster`), the launcher routes tool execution via `mcp-remote` to the centralized Kubernetes Cortex Gateway (`http://gateway.cortex.svc.cluster.local:8080/mcp`).
+   - Requires zero local Node.js binaries or dependencies.
 
-##### Pattern C: Declarative Preset Inheritance (`inherits`)
-Points to an authoritative preset provided by the umbrella package:
-```json
-{
-  "inherits": [
-    {
-      "path": "node_modules/@tupynambalucas-dev/agent-mesh/presets/backend-api.json"
-    }
-  ]
-}
+### 4.3 Environment Variable & Secret Cascade Across Repositories
+How do MCP tools get credentials (`GITHUB_TOKEN`, `INFISICAL_*`, `APPSHEET_*`) when running from another repository?
+- In `launcher.cjs`, `loadEnvCascade()` inspects `path.resolve(process.cwd(), '.env')`.
+- When Antigravity runs in `omnichannel`, `process.cwd()` is `C:/.../omnichannel`.
+- Therefore, `omnichannel/.env` is read automatically into `process.env`.
+- Any token configured in the consumer repository (or injected via Infisical Universal Auth) is inherited by the spawned MCP process with zero cross-repository leakage and zero hardcoded credentials.
+
+---
+
+## 5. Granular vs. Bulk vs. Tagged Plugin Consumption in Hybrid Umbrella
+
+The **Hybrid Umbrella** architecture solves the dilemma of importing all plugins vs. importing only selected ones, while requiring only ONE package installation in the consumer repository:
+
 ```
-*Benefit*: Centralizes what "backend-api" means inside `agent-mesh`, so all backend microservices share identical plugin presets.
+@tupynambalucas-dev/agent-mesh (Single Package on GitHub Packages)
+├── plugins/
+│   └── packages/
+│       ├── atelier/         (Agent plugins, hooks, context routers)
+│       ├── repo/            (README, licenses, monorepo, standards)
+│       ├── github-flow/     (Git flow, PRs, actions)
+│       ├── github-org/      (Teams, RBAC, rulesets, security)
+│       ├── secrets/         (Infisical vault, secret rotation)
+│       ├── research/        (Firecrawl, Context7)
+│       ├── web/             (Playwright browser automation)
+│       ├── docusaurus/      (Docusaurus v3 documentation)
+│       ├── appsheet/        (AppSheet relational models & API)
+│       └── gwork/           (Google Workspace, Sheets, Docs, Drive)
+└── presets/
+    ├── all.json             (Imports all 10 plugins)
+    ├── backend-api.json     (repo, github-flow, secrets, research, web)
+    ├── frontend-web.json    (repo, github-flow, secrets, web, research)
+    └── docs-portal.json     (repo, github-flow, docusaurus, research)
+```
+
+### 5.1 Pattern 1: Bulk Import (All Plugins at Once)
+For projects that want the complete organizational agent capability:
+- **`package.json`**:
+  ```json
+  {
+    "devDependencies": {
+      "@tupynambalucas-dev/agent-mesh": "catalog:plugins-stack"
+    }
+  }
+  ```
+- **`.agents/plugins.json`**:
+  ```json
+  {
+    "entries": [
+      {
+        "path": "node_modules/@tupynambalucas-dev/agent-mesh/plugins/packages"
+      }
+    ]
+  }
+  ```
+Because Antigravity automatically scans 1 level deep, pointing to `plugins/packages` instantly mounts all 10 plugins.
+
+### 5.2 Pattern 2: Tag-Based / Filtered Selection (Selective Import)
+For projects like `omnichannel` that want only specific capabilities without downloading multiple packages:
+- **`package.json`**: Exactly the same single package (`@tupynambalucas-dev/agent-mesh`).
+- **`.agents/plugins.json`**:
+  ```json
+  {
+    "entries": [
+      {
+        "path": "node_modules/@tupynambalucas-dev/agent-mesh/plugins/packages",
+        "include_only": [
+          "repo",
+          "github-flow",
+          "secrets",
+          "research",
+          "web"
+        ]
+      }
+    ]
+  }
+  ```
+*Benefit*: Only loads the 5 specified plugins into the agent's prompt context, saving LLM tokens while maintaining single-dependency simplicity.
+
+### 5.3 Pattern 3: Declarative Preset Inheritance
+For microservices wanting standardized configurations without maintaining plugin lists:
+- **`.agents/plugins.json`**:
+  ```json
+  {
+    "inherits": [
+      {
+        "path": "node_modules/@tupynambalucas-dev/agent-mesh/presets/backend-api.json"
+      }
+    ]
+  }
+  ```
+
+### 5.4 Pattern 4: Individual Standalone Packages (Granular Fallback)
+If a consumer repository strictly refuses to download the umbrella package and only wants a single plugin (e.g. only `@tupynambalucas-dev/plugin-repo`):
+- All 10 `@tupynambalucas-dev/plugin-*` packages remain published as standalone packages on GitHub Packages.
+- The consumer installs only `@tupynambalucas-dev/plugin-repo` and points `"path": "node_modules/@tupynambalucas-dev/plugin-repo"`.
 
 ---
 
 ## 6. Implementation Architecture in `agent-mesh`
 
-To enable this model, `agent-mesh` requires three concrete enhancements:
+To activate the Hybrid Umbrella across the organization:
 
-### 6.1 Publishing `@tupynambalucas-dev/agent-mesh` as a Public Package
+### 6.1 Publishing `@tupynambalucas-dev/agent-mesh`
 In `agent-mesh/package.json`:
-- Change `"private": true` to `"private": false` (or retain root private and declare a dedicated package `@tupynambalucas-dev/agent-mesh` via `publishConfig`).
-- Ensure `"files"` includes:
+- Change `"private": true` to `"private": false`.
+- Configure `publishConfig`:
+  ```json
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  }
+  ```
+- Declare explicit publication payload:
   ```json
   "files": [
     "plugins/packages/",
@@ -245,57 +299,47 @@ In `agent-mesh/package.json`:
   ]
   ```
 
-### 6.2 Authoring Authoritative Domain Presets in `agent-mesh/presets/`
+### 6.2 Authoring Presets in `agent-mesh/presets/`
 Create standardized preset manifests:
-- **`agent-mesh/presets/all.json`**:
-  ```json
-  {
-    "entries": [
-      { "path": "../plugins/packages" }
-    ]
-  }
-  ```
-- **`agent-mesh/presets/backend-api.json`** (Tailored for services like `omnichannel`):
-  ```json
-  {
-    "entries": [
-      {
-        "path": "../plugins/packages",
-        "include_only": ["repo", "github-flow", "secrets", "research", "web"]
-      }
-    ]
-  }
-  ```
-- **`agent-mesh/presets/documentation-portal.json`** (Tailored for `docs`):
-  ```json
-  {
-    "entries": [
-      {
-        "path": "../plugins/packages",
-        "include_only": ["repo", "github-flow", "docusaurus", "research"]
-      }
-    ]
-  }
-  ```
+- `agent-mesh/presets/all.json`
+- `agent-mesh/presets/backend-api.json` (Tailored for `omnichannel`)
+- `agent-mesh/presets/frontend-web.json`
+- `agent-mesh/presets/docs-portal.json` (Tailored for `docs`)
 
 ### 6.3 Updating `manage-packages.js` Reconciler
 In `agent-mesh/.github/scripts/manage-packages.js`:
-- Include `agent-mesh` in `getActivePackages()` when `private === false`.
-- Ensure `fetchPackages()` reconciles `@tupynambalucas-dev/agent-mesh` alongside the 19 individual child packages.
+- Reconcile `@tupynambalucas-dev/agent-mesh` alongside individual packages, ensuring its GitHub Packages visibility is set to `public`.
 
 ---
 
-## 7. Migration Roadmap
+## 7. Migration Plan for `omnichannel`
 
-1. **Phase 1: Package & Presets Authoring in `agent-mesh`**:
-   - Create `presets/` directory with `all.json`, `backend-api.json`, and `documentation-portal.json`.
-   - Configure root `package.json` for publishing with explicit `"files"`.
-   - Validate publication to `npm.pkg.github.com` via `publish.yml`.
-2. **Phase 2: Migration of `omnichannel`**:
-   - Replace 8 Git URLs in `pnpm-workspace.yaml` with `@tupynambalucas-dev/agent-mesh: ^1.0.0`.
-   - Update `package.json` to depend only on `@tupynambalucas-dev/agent-mesh`.
-   - Update `.agents/plugins.json` to use Pattern B (`include_only`) or Pattern C (`inherits`).
-   - Run `pnpm install` and verify agent plugin discovery via Antigravity.
-3. **Phase 3: Migration of `platform` and `docs`**:
-   - Eliminate `../../agent-mesh/plugins/packages` traversal in `platform/.agents/plugins.json`.
-   - Replace `github:tupynambalucas-dev/agent-mesh` with registry dependency in `docs`.
+```mermaid
+sequenceDiagram
+    participant Dev as Developer / CI
+    participant Omni as omnichannel Repo
+    participant Registry as GitHub Packages (npm.pkg.github.com)
+    participant Agent as Antigravity Agent Runtime
+
+    Dev->>Omni: Replace 8 git URLs with single @tupynambalucas-dev/agent-mesh
+    Dev->>Omni: Configure .agents/plugins.json with include_only filter
+    Omni->>Registry: pnpm install (fetches single cached umbrella tarball)
+    Registry-->>Omni: node_modules/@tupynambalucas-dev/agent-mesh
+    Dev->>Agent: Launch agent in omnichannel workspace
+    Agent->>Omni: Reads .agents/plugins.json
+    Agent->>Omni: Scans plugins/packages with include_only filter
+    Agent->>Omni: Evaluates launcher.cjs -> connects to MCPs via standalone/gateway
+    Agent-->>Dev: Ready with tailored backend-api plugins active
+```
+
+1. **Step 1**: In `omnichannel/pnpm-workspace.yaml`, replace 8 git lines with:
+   ```yaml
+   plugins-stack:
+     '@tupynambalucas-dev/agent-mesh': ^1.0.0
+   ```
+2. **Step 2**: In `omnichannel/package.json`, replace 8 plugin dependencies with:
+   ```json
+   "@tupynambalucas-dev/agent-mesh": "catalog:plugins-stack"
+   ```
+3. **Step 3**: In `omnichannel/.agents/plugins.json`, use Pattern B or C.
+4. **Step 4**: Run `pnpm install` and verify zero git clone overhead.
