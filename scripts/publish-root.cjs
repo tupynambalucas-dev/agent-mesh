@@ -6,25 +6,35 @@
  * when the exact version has already been published to GitHub Packages.
  */
 
-const { execSync } = require('child_process');
+const { spawnSync } = require('child_process');
 
-try {
-  console.log('[publish-root] Publishing root umbrella package @tupynambalucas-dev/agent-mesh...');
-  execSync('pnpm publish --access public --no-git-checks --report-summary', {
-    stdio: 'inherit',
+console.log('[publish-root] Publishing root umbrella package @tupynambalucas-dev/agent-mesh...');
+
+const res = spawnSync(
+  process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
+  ['publish', '--access', 'public', '--no-git-checks', '--report-summary'],
+  {
+    encoding: 'utf8',
     env: process.env,
-  });
-  console.log('[publish-root] Successfully published @tupynambalucas-dev/agent-mesh.');
-} catch (err) {
-  const output = (err.stdout?.toString() || '') + (err.stderr?.toString() || '') + (err.message || '');
+    shell: false,
+  }
+);
+
+if (res.stdout) process.stdout.write(res.stdout);
+if (res.stderr) process.stderr.write(res.stderr);
+
+if (res.status !== 0) {
+  const combined = (res.stdout || '') + (res.stderr || '');
   if (
-    output.includes('409 Conflict') ||
-    output.includes('Cannot publish over existing version') ||
-    output.includes('E409')
+    combined.includes('409 Conflict') ||
+    combined.includes('Cannot publish over existing version') ||
+    combined.includes('E409')
   ) {
     console.log('[publish-root] Version is already published on registry. Skipping idempotently.');
     process.exit(0);
   }
-  console.error('[publish-root] Error publishing root package:', err.message);
-  process.exit(1);
+  console.error(`[publish-root] Error: pnpm publish exited with code ${res.status}`);
+  process.exit(res.status || 1);
 }
+
+console.log('[publish-root] Successfully published @tupynambalucas-dev/agent-mesh.');
