@@ -68,10 +68,16 @@ if (isClusterMode) {
   const child = spawnCommand('npx', ['-y', 'mcp-remote', `${gatewayBaseUrl}/mcp`]);
   child.on('exit', (code) => process.exit(code || 0));
 } else {
+  let hasLocalPlaywright = false;
+  try {
+    require.resolve('playwright', { paths: [process.cwd(), __dirname, path.resolve(__dirname, '..')] });
+    hasLocalPlaywright = true;
+  } catch (e) {}
+
   const bundledBin = path.resolve(__dirname, '..', 'dist', 'bin.cjs');
   const srcTsBin = path.resolve(__dirname, '..', 'src', 'bin.ts');
 
-  if (fs.existsSync(bundledBin)) {
+  if (hasLocalPlaywright && fs.existsSync(bundledBin)) {
     const child = spawn(process.execPath, [bundledBin, ...forwardedArgs], {
       stdio: 'inherit',
       shell: false,
@@ -82,15 +88,42 @@ if (isClusterMode) {
       process.stderr.write(`[launcher:mcp-${SERVER_NAME}] Failed to spawn bundled binary: ${err.message}\n`);
       process.exit(1);
     });
-  } else if (fs.existsSync(srcTsBin)) {
+  } else if (hasLocalPlaywright && fs.existsSync(srcTsBin)) {
     const child = spawnCommand('npx', ['-y', 'tsx', srcTsBin, ...forwardedArgs]);
     child.on('exit', (code) => process.exit(code || 0));
-    child.on('error', (err) => {
-      process.stderr.write(`[launcher:mcp-${SERVER_NAME}] Failed to spawn TypeScript binary: ${err.message}\n`);
-      process.exit(1);
-    });
   } else {
-    process.stderr.write(`[launcher:mcp-${SERVER_NAME}] Error: No executable binary found in package.\n`);
-    process.exit(1);
+    // Upstream fallback
+    const mode = process.env.PLAYWRIGHT_MODE || 'auto';
+    const hasExtensionToken = Boolean(
+      process.env.PLAYWRIGHT_MCP_EXTENSION_TOKEN &&
+      process.env.PLAYWRIGHT_MCP_EXTENSION_TOKEN.trim()
+    );
+    const effectiveMode = (mode === 'auto')
+      ? (hasExtensionToken ? 'extension' : 'headless')
+      : mode;
+
+    const resolvedArgs = [];
+    if (effectiveMode === 'extension') {
+      resolvedArgs.push('--extension');
+    } else if (effectiveMode === 'cdp') {
+      resolvedArgs.push('--cdp-endpoint', process.env.PLAYWRIGHT_CDP_URL || 'http://localhost:9222');
+    } else if (effectiveMode === 'channel') {
+      resolvedArgs.push('--browser', process.env.PLAYWRIGHT_CHANNEL || 'chrome');
+      if (process.env.PLAYWRIGHT_HEADLESS === 'true') {
+        resolvedArgs.push('--headless');
+      }
+    } else {
+      const pluginDataDir = process.env.PLUGIN_DATA || path.resolve(process.cwd(), '.agent-data');
+      resolvedArgs.push('--user-data-dir', path.join(pluginDataDir, 'browser-profile'), '--headless');
+    }
+
+    if (process.env.PLAYWRIGHT_MCP_EXECUTABLE_PATH) {
+      resolvedArgs.push('--executable-path', process.env.PLAYWRIGHT_MCP_EXECUTABLE_PATH);
+    }
+
+    resolvedArgs.push(...forwardedArgs);
+    process.stderr.write(`[launcher:mcp-${SERVER_NAME}] Engaging upstream Playwright MCP in '${effectiveMode}' mode\n`);
+    const child = spawnCommand('npx', ['-y', '@playwright/mcp@0.0.84', ...resolvedArgs]);
+    child.on('exit', (code) => process.exit(code || 0));
   }
 }
