@@ -12,6 +12,9 @@ catalogs:
     rimraf:
       specifier: ^6.0.1
       version: 6.1.3
+    tsup:
+      specifier: ^9.0.0
+      version: 9.0.0
     tsx:
       specifier: ^4.19.2
       version: 4.23.15
@@ -71,7 +74,7 @@ importers:
         specifier: 'catalog:'
         version: 6.1.3
       tsup:
-        specifier: ^9.0.0
+        specifier: 'catalog:'
         version: 9.0.0(tsx@4.23.15)(typescript@6.0.3)
       tsx:
         specifier: 'catalog:'
@@ -129,6 +132,9 @@ importers:
       rimraf:
         specifier: 'catalog:'
         version: 6.1.3
+      tsup:
+        specifier: 'catalog:'
+        version: 9.0.0(tsx@4.23.15)(typescript@6.0.3)
       tsx:
         specifier: 'catalog:'
         version: 4.23.15
@@ -160,6 +166,9 @@ importers:
       rimraf:
         specifier: 'catalog:'
         version: 6.1.3
+      tsup:
+        specifier: 'catalog:'
+        version: 9.0.0(tsx@4.23.15)(typescript@6.0.3)
       tsx:
         specifier: 'catalog:'
         version: 4.23.15
@@ -188,6 +197,9 @@ importers:
       rimraf:
         specifier: 'catalog:'
         version: 6.1.3
+      tsup:
+        specifier: 'catalog:'
+        version: 9.0.0(tsx@4.23.15)(typescript@6.0.3)
       tsx:
         specifier: 'catalog:'
         version: 4.23.15
@@ -216,6 +228,9 @@ importers:
       rimraf:
         specifier: 'catalog:'
         version: 6.1.3
+      tsup:
+        specifier: 'catalog:'
+        version: 9.0.0(tsx@4.23.15)(typescript@6.0.3)
       tsx:
         specifier: 'catalog:'
         version: 4.23.15
@@ -247,6 +262,9 @@ importers:
       rimraf:
         specifier: 'catalog:'
         version: 6.1.3
+      tsup:
+        specifier: 'catalog:'
+        version: 9.0.0(tsx@4.23.15)(typescript@6.0.3)
       tsx:
         specifier: 'catalog:'
         version: 4.23.15
@@ -275,6 +293,9 @@ importers:
       rimraf:
         specifier: 'catalog:'
         version: 6.1.3
+      tsup:
+        specifier: 'catalog:'
+        version: 9.0.0(tsx@4.23.15)(typescript@6.0.3)
       tsx:
         specifier: 'catalog:'
         version: 4.23.15
@@ -303,6 +324,9 @@ importers:
       rimraf:
         specifier: 'catalog:'
         version: 6.1.3
+      tsup:
+        specifier: 'catalog:'
+        version: 9.0.0(tsx@4.23.15)(typescript@6.0.3)
       tsx:
         specifier: 'catalog:'
         version: 4.23.15
@@ -340,6 +364,9 @@ importers:
       rimraf:
         specifier: 'catalog:'
         version: 6.1.3
+      tsup:
+        specifier: 'catalog:'
+        version: 9.0.0(tsx@4.23.15)(typescript@6.0.3)
       tsx:
         specifier: 'catalog:'
         version: 4.23.15
