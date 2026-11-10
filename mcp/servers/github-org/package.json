@@ -14,15 +14,15 @@
     "access": "public"
   },
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "bin": {
-    "mcp-github-org": "./dist/bin.js"
+    "mcp-github-org": "./scripts/launcher.cjs"
   },
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js",
+    "build": "tsup",
+    "start": "node dist/index.cjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -34,11 +34,14 @@
   "devDependencies": {
     "@types/node": "catalog:",
     "rimraf": "catalog:",
+    "tsup": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:"
   },
   "files": [
     "dist",
+    "scripts",
+    "mcp.json",
     "CHANGELOG.md",
     "README.md",
     "LICENSE"

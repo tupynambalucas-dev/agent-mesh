@@ -1,6 +1,6 @@
 {
   "name": "@tupynambalucas-dev/agent-mesh",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": false,
   "description": "Universal enterprise AI agent mesh: governance, MCP servers, domain plugins, and modular skills.",
   "packageManager": "pnpm@10.33.2",
@@ -47,12 +47,13 @@
     "version:packages": "changeset version"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.7",
     "@types/node": "catalog:",
     "rimraf": "catalog:",
+    "tsup": "catalog:",
     "tsx": "catalog:",
     "turbo": "catalog:",
-    "typescript": "catalog:",
-    "@changesets/cli": "^2.29.7"
+    "typescript": "catalog:"
   },
   "files": [
     ".claude-plugin/",
