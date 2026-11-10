@@ -7,5 +7,5 @@ export default defineConfig({
   clean: true,
   noExternal: [/.*/],
   sourcemap: false,
-  minify: false,
+  minify: true,
 });
