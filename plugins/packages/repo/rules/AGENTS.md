@@ -58,4 +58,5 @@ trigger: always_on
 10. The Agent Plans Directory Ignore Invariant:
    - Every repository across the organization MUST ignore planning containers (`.agents/plans/` and `plans/`) in `.gitignore` to prevent working blueprints from cluttering Git history.
    - To guarantee that developers and AI agents can still attach and search files from `.agents/plans/` via `@`, every repository MUST declare negative negation rules in `.ignore` and `.rgignore` (`!.agents/plans/`, `!.agents/plans/**`, `!plans/`, `!plans/**`).
+   - Dual-Storage Invariant: Whenever an agent creates an architectural plan artifact in the Antigravity conversation directory, an identical synchronized copy MUST ALWAYS be mirrored directly in `.agents/plans/<plan-slug>/` within the target repository.
    - Bounded Context Rule: Plans containers (`.agents/plans/`) MUST NOT declare child `AGENTS.md` context routers (strictly governed by Rule 1).

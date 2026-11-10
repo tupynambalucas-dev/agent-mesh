@@ -38,6 +38,7 @@ trigger: always_on
 
 8. Architectural Plan Taxonomy and Storage Invariant:
    - All architectural plans, master plans, and implementation blueprints must reside strictly within `.agents/plans/<plan-slug>/`.
+   - Dual-Storage Invariant: Whenever an agent generates or updates an architectural plan artifact (even when written to the conversation brain directory `<appDataDir>/brain/<conversation-id>/`), an identical synchronized copy MUST ALWAYS be created in the target repository's planning container at `.agents/plans/<plan-slug>/`.
    - Single-artifact plans must declare a complete specification in `.agents/plans/<plan-slug>/README.md` (or `.agents/plans/<plan-slug>.md`).
    - Multi-artifact plan suites must conform to the gold standard of `.github/.agents/plans/github-app-architecture/`: Master `README.md` declaring Strategic Baseline, Mermaid diagrams, Document Suite Catalog table, and modular numbered domain documents.
    - Anti-Proliferation: Plan folders MUST NOT declare child `AGENTS.md` context routers (strictly governed by Rule 6).
