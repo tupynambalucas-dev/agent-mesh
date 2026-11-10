@@ -16,15 +16,32 @@ Every MCP server package in `mcp/servers/*` implements two execution entrypoints
 
 | Directory Path | NPM Package Name | Entrypoint / Binary | Default HTTP Port | Primary Capabilities |
 | :--- | :--- | :--- | :--- | :--- |
-| `mcp/servers/appsheet` | `@tupynambalucas-dev/mcp-appsheet` | `dist/bin.js` | `:8080` | AppSheet REST API v2 CRUD, table queries, and action triggers. |
-| `mcp/servers/firecrawl` | `@tupynambalucas-dev/mcp-firecrawl` | `dist/bin.js` | `:8080` | Deep web scraping, crawling, domain mapping, and markdown extraction. |
-| `mcp/servers/github-flow` | `@tupynambalucas-dev/mcp-github-flow` | `dist/bin.js` | `:8080` | Tier 3 developer Git workflows, branches, pull requests, and Actions diagnostics. |
-| `mcp/servers/github-org` | `@tupynambalucas-dev/mcp-github-org` | `dist/bin.js` | `:8080` | Tier 1 GitHub App authenticated RBAC, teams, rulesets, and Dependabot/Secret auditing. |
-| `mcp/servers/gwork` | `@tupynambalucas-dev/mcp-gwork` | `dist/bin.js` | `:8080` | Google Drive folder taxonomy, Sheets synthesis, and Docs authoring. |
-| `mcp/servers/infisical` | `@tupynambalucas-dev/mcp-infisical` | `dist/bin.js` | `:8080` | Universal Auth machine tokens, secret CRUD, and vault management. |
-| `mcp/servers/memory` | `@tupynambalucas-dev/mcp-memory` | `dist/bin.js` | `:8080` | Semantic RAG vector store, episodic memory, and knowledge graph. |
-| `mcp/servers/playwright` | `@tupynambalucas-dev/mcp-playwright` | `dist/bin.js` | `:8080` | Universal browser automation, extension bridge, and ARIA snapshots. |
+| `mcp/servers/appsheet` | `@tupynambalucas-dev/mcp-appsheet` | `dist/bin.cjs` / `scripts/launcher.cjs` | `:8080` | AppSheet REST API v2 CRUD, table queries, and action triggers. |
+| `mcp/servers/firecrawl` | `@tupynambalucas-dev/mcp-firecrawl` | `dist/bin.cjs` / `scripts/launcher.cjs` | `:8080` | Deep web scraping, crawling, domain mapping, and markdown extraction. |
+| `mcp/servers/github-flow` | `@tupynambalucas-dev/mcp-github-flow` | `dist/bin.cjs` / `scripts/launcher.cjs` | `:8080` | Tier 3 developer Git workflows, branches, pull requests, and Actions diagnostics. |
+| `mcp/servers/github-org` | `@tupynambalucas-dev/mcp-github-org` | `dist/bin.cjs` / `scripts/launcher.cjs` | `:8080` | Tier 1 GitHub App authenticated RBAC, teams, rulesets, and Dependabot/Secret auditing. |
+| `mcp/servers/gwork` | `@tupynambalucas-dev/mcp-gwork` | `dist/bin.cjs` / `scripts/launcher.cjs` | `:8080` | Google Drive folder taxonomy, Sheets synthesis, and Docs authoring. |
+| `mcp/servers/infisical` | `@tupynambalucas-dev/mcp-infisical` | `dist/bin.cjs` / `scripts/launcher.cjs` | `:8080` | Universal Auth machine tokens, secret CRUD, and vault management. |
+| `mcp/servers/memory` | `@tupynambalucas-dev/mcp-memory` | `dist/bin.cjs` / `scripts/launcher.cjs` | `:8080` | Semantic RAG vector store, episodic memory, and knowledge graph. |
+| `mcp/servers/playwright` | `@tupynambalucas-dev/mcp-playwright` | `dist/bin.cjs` / `scripts/launcher.cjs` | `:8080` | Universal browser automation, extension bridge, and ARIA snapshots. |
 | `mcp/core/github` | `@tupynambalucas-dev/mcp-core-github` | `dist/index.js` *(Library)* | N/A | Shared Three-Tier GitHub App authentication, Octokit client factory, and Zod schemas. |
+
+---
+
+## Sovereign Launcher & Self-Contained Bundling Architecture
+
+To enable frictionless consumption across external repositories (such as `omnichannel`) and prevent runtime module resolution errors (e.g. `Cannot find package '@modelcontextprotocol/sdk'`), each MCP server enforces a sovereign packaging model:
+
+1. **Self-Contained CJS Bundle (`dist/bin.cjs`)**:
+   - Built via `tsup` targeting Node 20.
+   - All runtime dependencies (`@modelcontextprotocol/sdk`, `@octokit/*`, `zod`, `fastify`, etc.) are bundled directly into the standalone binary. Consumers require zero external packages or peer dependencies to execute the server.
+2. **Dedicated Sovereign Launcher (`scripts/launcher.cjs`)**:
+   - Packaged directly within each MCP server (`mcp/servers/<name>/scripts/launcher.cjs`).
+   - Automatically executes `loadEnvCascade()` across parent directories to inject environment configurations.
+   - Dispatches directly to the co-located bundled binary `dist/bin.cjs` with standard Node.js without requiring path traversals outside its package structure.
+   - Supports Cluster Gateway fallback (`MESH_PROFILE=cluster`) via `CORTEX_GATEWAY_URL`.
+3. **Declarative MCP Stdio Specification (`mcp.json`)**:
+   - Each MCP server ships its own `mcp.json` declaring its executable command (`node ./scripts/launcher.cjs`), allowing direct inclusion in Antigravity or Claude Code configurations.
 
 ---
 

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "firecrawl": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["./scripts/launcher.cjs"]
+    }
+  }
+}

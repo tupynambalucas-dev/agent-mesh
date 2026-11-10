@@ -117,6 +117,14 @@ Available presets:
 - `presets/frontend-web.json`: `repo`, `github-flow`, `secrets`, `research`, `web`.
 - `presets/docs-portal.json`: `repo`, `github-flow`, `docusaurus`, `research`.
 
+### 4. Zero-Dependency Sovereign MCP Execution
+
+When consumed in external projects like `omnichannel`, plugins execute their associated MCP servers through sovereign, bundled binaries:
+
+- **No Root Path Dependencies**: Plugin launchers (`scripts/launcher.cjs`) dynamically resolve MCP launchers either from standalone installed packages (`@tupynambalucas-dev/mcp-*`) or from the umbrella package layout (`@tupynambalucas-dev/agent-mesh/mcp/servers/*`).
+- **Inlined Runtime Stack**: All MCP server dependencies (such as `@modelcontextprotocol/sdk`, `@octokit/*`, Fastify, and Zod) are bundled directly into `dist/bin.cjs`. The consuming application does not need to install `@modelcontextprotocol/sdk` or any other MCP dependencies into its own `node_modules`.
+- **Environment Isolation**: The launcher loads configuration variables from the consumer repository's `.env` automatically via cascade resolution.
+
 ---
 
 ## Scenario C: Machine-Wide Global Plugin Discovery (Zero `node_modules`)

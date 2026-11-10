@@ -57,6 +57,39 @@ function spawnCommand(bin, args, options = {}) {
   });
 }
 
+function resolveMcpLauncher(pkgName, monorepoDir) {
+  if (pkgName) {
+    try {
+      const pkgJsonPath = require.resolve(`${pkgName}/package.json`, {
+        paths: [process.cwd(), __dirname]
+      });
+      const pkgDir = path.dirname(pkgJsonPath);
+      const pkgLauncher = path.join(pkgDir, 'scripts', 'launcher.cjs');
+      if (fs.existsSync(pkgLauncher)) return { type: 'launcher', path: pkgLauncher };
+      const pkgBin = path.join(pkgDir, 'dist', 'bin.cjs');
+      if (fs.existsSync(pkgBin)) return { type: 'bin', path: pkgBin };
+    } catch (e) {}
+  }
+
+  if (monorepoDir) {
+    const umbrellaCandidates = [
+      path.resolve(__dirname, '..', '..', '..', 'mcp', 'servers', monorepoDir),
+      path.resolve(__dirname, '..', '..', '..', '..', 'mcp', 'servers', monorepoDir)
+    ];
+
+    for (const dir of umbrellaCandidates) {
+      const launcher = path.join(dir, 'scripts', 'launcher.cjs');
+      if (fs.existsSync(launcher)) return { type: 'launcher', path: launcher };
+      const binCjs = path.join(dir, 'dist', 'bin.cjs');
+      if (fs.existsSync(binCjs)) return { type: 'bin', path: binCjs };
+      const binTs = path.join(dir, 'src', 'bin.ts');
+      if (fs.existsSync(binTs)) return { type: 'ts', path: binTs };
+    }
+  }
+
+  return null;
+}
+
 const targetService = process.argv[2];
 const forwardedArgs = process.argv.slice(3);
 
@@ -69,57 +102,68 @@ if (isClusterMode) {
   const child = spawnCommand('npx', ['-y', 'mcp-remote', `${gatewayBaseUrl}/mcp`]);
   child.on('exit', (code) => process.exit(code || 0));
 } else if (targetService === 'playwright') {
-  const mode = process.env.PLAYWRIGHT_MODE || 'auto';
-  const hasExtensionToken = Boolean(
-    process.env.PLAYWRIGHT_MCP_EXTENSION_TOKEN &&
-    process.env.PLAYWRIGHT_MCP_EXTENSION_TOKEN.trim()
-  );
-  const effectiveMode = (mode === 'auto')
-    ? (hasExtensionToken ? 'extension' : 'headless')
-    : mode;
+  const resolved = resolveMcpLauncher('@tupynambalucas-dev/mcp-playwright', 'playwright');
 
-  const resolvedArgs = [];
-  if (effectiveMode === 'extension') {
-    resolvedArgs.push('--extension');
-  } else if (effectiveMode === 'cdp') {
-    resolvedArgs.push('--cdp-endpoint', process.env.PLAYWRIGHT_CDP_URL || 'http://localhost:9222');
-  } else if (effectiveMode === 'channel') {
-    resolvedArgs.push('--browser', process.env.PLAYWRIGHT_CHANNEL || 'chrome');
-    if (process.env.PLAYWRIGHT_HEADLESS === 'true') {
-      resolvedArgs.push('--headless');
-    }
-  } else {
-    // headless standalone
-    const pluginDataDir = process.env.PLUGIN_DATA || path.resolve(process.cwd(), '.agent-data');
-    resolvedArgs.push('--user-data-dir', path.join(pluginDataDir, 'browser-profile'), '--headless');
-  }
-
-  if (process.env.PLAYWRIGHT_MCP_EXECUTABLE_PATH) {
-    resolvedArgs.push('--executable-path', process.env.PLAYWRIGHT_MCP_EXECUTABLE_PATH);
-  }
-
-  resolvedArgs.push(...forwardedArgs);
-
-  process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging Playwright MCP in '${effectiveMode}' mode\n`);
-  const child = spawnCommand('npx', ['-y', '@playwright/mcp@0.0.84', ...resolvedArgs]);
-  child.on('exit', (code) => process.exit(code || 0));
-} else if (targetService === 'firecrawl') {
-  const localPkgDir = path.resolve(__dirname, '..', '..', '..', '..', 'mcp', 'servers', 'firecrawl');
-  const localJsBin = path.join(localPkgDir, 'dist', 'bin.js');
-  const localTsBin = path.join(localPkgDir, 'src', 'bin.ts');
-
-  if (fs.existsSync(localJsBin)) {
-    process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging monorepo precompiled binary for 'firecrawl': node ${localJsBin}\n`);
-    const child = spawn(process.execPath, [localJsBin, ...forwardedArgs], {
+  if (resolved && (resolved.type === 'launcher' || resolved.type === 'bin')) {
+    process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging sovereign Playwright MCP: node ${resolved.path}\n`);
+    const child = spawn(process.execPath, [resolved.path, ...forwardedArgs], {
       stdio: 'inherit',
       shell: false,
       env: process.env
     });
     child.on('exit', (code) => process.exit(code || 0));
-  } else if (fs.existsSync(localTsBin)) {
-    process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging monorepo TypeScript binary for 'firecrawl': tsx ${localTsBin}\n`);
-    const child = spawnCommand('npx', ['-y', 'tsx', localTsBin, ...forwardedArgs]);
+  } else {
+    // Upstream fallback
+    const mode = process.env.PLAYWRIGHT_MODE || 'auto';
+    const hasExtensionToken = Boolean(
+      process.env.PLAYWRIGHT_MCP_EXTENSION_TOKEN &&
+      process.env.PLAYWRIGHT_MCP_EXTENSION_TOKEN.trim()
+    );
+    const effectiveMode = (mode === 'auto')
+      ? (hasExtensionToken ? 'extension' : 'headless')
+      : mode;
+
+    const resolvedArgs = [];
+    if (effectiveMode === 'extension') {
+      resolvedArgs.push('--extension');
+    } else if (effectiveMode === 'cdp') {
+      resolvedArgs.push('--cdp-endpoint', process.env.PLAYWRIGHT_CDP_URL || 'http://localhost:9222');
+    } else if (effectiveMode === 'channel') {
+      resolvedArgs.push('--browser', process.env.PLAYWRIGHT_CHANNEL || 'chrome');
+      if (process.env.PLAYWRIGHT_HEADLESS === 'true') {
+        resolvedArgs.push('--headless');
+      }
+    } else {
+      const pluginDataDir = process.env.PLUGIN_DATA || path.resolve(process.cwd(), '.agent-data');
+      resolvedArgs.push('--user-data-dir', path.join(pluginDataDir, 'browser-profile'), '--headless');
+    }
+
+    if (process.env.PLAYWRIGHT_MCP_EXECUTABLE_PATH) {
+      resolvedArgs.push('--executable-path', process.env.PLAYWRIGHT_MCP_EXECUTABLE_PATH);
+    }
+
+    resolvedArgs.push(...forwardedArgs);
+    process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging Playwright MCP in '${effectiveMode}' mode\n`);
+    const child = spawnCommand('npx', ['-y', '@playwright/mcp@0.0.84', ...resolvedArgs]);
     child.on('exit', (code) => process.exit(code || 0));
+  }
+} else if (targetService === 'firecrawl') {
+  const resolved = resolveMcpLauncher('@tupynambalucas-dev/mcp-firecrawl', 'firecrawl');
+
+  if (resolved) {
+    if (resolved.type === 'launcher' || resolved.type === 'bin') {
+      process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging sovereign MCP executable for 'firecrawl': node ${resolved.path}\n`);
+      const child = spawn(process.execPath, [resolved.path, ...forwardedArgs], {
+        stdio: 'inherit',
+        shell: false,
+        env: process.env
+      });
+      child.on('exit', (code) => process.exit(code || 0));
+    } else if (resolved.type === 'ts') {
+      process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging monorepo TypeScript binary for 'firecrawl': tsx ${resolved.path}\n`);
+      const child = spawnCommand('npx', ['-y', 'tsx', resolved.path, ...forwardedArgs]);
+      child.on('exit', (code) => process.exit(code || 0));
+    }
   } else {
     process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging standalone package for 'firecrawl': npx -y @tupynambalucas-dev/mcp-firecrawl\n`);
     const child = spawnCommand('npx', ['-y', '@tupynambalucas-dev/mcp-firecrawl', ...forwardedArgs]);

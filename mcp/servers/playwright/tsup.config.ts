@@ -1,0 +1,12 @@
+import { defineConfig } from 'tsup';
+
+export default defineConfig({
+  entry: ['src/bin.ts', 'src/index.ts'],
+  format: ['cjs'],
+  target: 'node20',
+  clean: true,
+  external: ['playwright', 'playwright-core'],
+  noExternal: ['@modelcontextprotocol/sdk', 'fastify', 'zod', 'dotenv', 'ws'],
+  sourcemap: false,
+  minify: false,
+});

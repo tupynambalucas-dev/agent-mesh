@@ -57,6 +57,39 @@ function spawnCommand(bin, args, options = {}) {
   });
 }
 
+function resolveMcpLauncher(pkgName, monorepoDir) {
+  if (pkgName) {
+    try {
+      const pkgJsonPath = require.resolve(`${pkgName}/package.json`, {
+        paths: [process.cwd(), __dirname]
+      });
+      const pkgDir = path.dirname(pkgJsonPath);
+      const pkgLauncher = path.join(pkgDir, 'scripts', 'launcher.cjs');
+      if (fs.existsSync(pkgLauncher)) return { type: 'launcher', path: pkgLauncher };
+      const pkgBin = path.join(pkgDir, 'dist', 'bin.cjs');
+      if (fs.existsSync(pkgBin)) return { type: 'bin', path: pkgBin };
+    } catch (e) {}
+  }
+
+  if (monorepoDir) {
+    const umbrellaCandidates = [
+      path.resolve(__dirname, '..', '..', '..', 'mcp', 'servers', monorepoDir),
+      path.resolve(__dirname, '..', '..', '..', '..', 'mcp', 'servers', monorepoDir)
+    ];
+
+    for (const dir of umbrellaCandidates) {
+      const launcher = path.join(dir, 'scripts', 'launcher.cjs');
+      if (fs.existsSync(launcher)) return { type: 'launcher', path: launcher };
+      const binCjs = path.join(dir, 'dist', 'bin.cjs');
+      if (fs.existsSync(binCjs)) return { type: 'bin', path: binCjs };
+      const binTs = path.join(dir, 'src', 'bin.ts');
+      if (fs.existsSync(binTs)) return { type: 'ts', path: binTs };
+    }
+  }
+
+  return null;
+}
+
 const SERVICE_CONFIGS = {
   appsheet: {
     pkg: '@tupynambalucas-dev/mcp-appsheet',
@@ -82,30 +115,26 @@ if (isClusterMode) {
   process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging cluster gateway for '${targetService}' via ${gatewayBaseUrl}/mcp\n`);
   const child = spawnCommand('npx', ['-y', 'mcp-remote', `${gatewayBaseUrl}/mcp`]);
   child.on('exit', (code) => process.exit(code || 0));
-} else if (serviceConfig.monorepoDir) {
-  const localPkgDir = path.resolve(__dirname, '..', '..', '..', '..', 'mcp', 'servers', serviceConfig.monorepoDir);
-  const localJsBin = path.join(localPkgDir, 'dist', 'bin.js');
-  const localTsBin = path.join(localPkgDir, 'src', 'bin.ts');
+} else {
+  const resolved = resolveMcpLauncher(serviceConfig.pkg, serviceConfig.monorepoDir);
 
-  if (fs.existsSync(localJsBin)) {
-    process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging monorepo precompiled binary for '${targetService}': node ${localJsBin}\n`);
-    const child = spawn(process.execPath, [localJsBin, ...forwardedArgs], {
-      stdio: 'inherit',
-      shell: false,
-      env: process.env
-    });
-    child.on('exit', (code) => process.exit(code || 0));
-  } else if (fs.existsSync(localTsBin)) {
-    process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging monorepo TypeScript binary for '${targetService}': tsx ${localTsBin}\n`);
-    const child = spawnCommand('npx', ['-y', 'tsx', localTsBin, ...forwardedArgs]);
-    child.on('exit', (code) => process.exit(code || 0));
+  if (resolved) {
+    if (resolved.type === 'launcher' || resolved.type === 'bin') {
+      process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging sovereign MCP executable for '${targetService}': node ${resolved.path}\n`);
+      const child = spawn(process.execPath, [resolved.path, ...forwardedArgs], {
+        stdio: 'inherit',
+        shell: false,
+        env: process.env
+      });
+      child.on('exit', (code) => process.exit(code || 0));
+    } else if (resolved.type === 'ts') {
+      process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging monorepo TypeScript binary for '${targetService}': tsx ${resolved.path}\n`);
+      const child = spawnCommand('npx', ['-y', 'tsx', resolved.path, ...forwardedArgs]);
+      child.on('exit', (code) => process.exit(code || 0));
+    }
   } else {
     process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging standalone package for '${targetService}': npx -y ${serviceConfig.pkg}\n`);
     const child = spawnCommand('npx', ['-y', serviceConfig.pkg, ...forwardedArgs]);
     child.on('exit', (code) => process.exit(code || 0));
   }
-} else {
-  process.stderr.write(`[launcher:${PLUGIN_NAME}] Engaging standalone package for '${targetService}': npx -y ${serviceConfig.pkg}\n`);
-  const child = spawnCommand('npx', ['-y', serviceConfig.pkg, ...forwardedArgs]);
-  child.on('exit', (code) => process.exit(code || 0));
 }
