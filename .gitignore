@@ -26,3 +26,6 @@ keys/
 *.log
 npm-debug.log*
 pnpm-debug.log*
+# Agent Plans Container (Ignored by Git, preserved for local @ attachment via .ignore / .rgignore)
+.agents/plans/
+plans/

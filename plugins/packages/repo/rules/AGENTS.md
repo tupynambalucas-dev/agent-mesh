@@ -5,7 +5,7 @@ trigger: always_on
 # Repository Management Domain Rules
 
 0. Autonomous Domain Mandate:
-   - When requested to create, audit, align, or format repository root files (`README.md`, `LICENSE.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CHANGELOG.md`, `GOVERNANCE.md`), monorepo configurations (`pnpm-workspace.yaml`, `turbo.json`), package manifests (`package.json`), TypeScript configurations (`tsconfig*.json`), or repository `.github` directory structures (`CODEOWNERS`, `dependabot.yml`, composite actions), the agent MUST autonomously engage the `repo` skills (`readme-architect`, `community-health-architect`, `license-architect`, `monorepo-architect`, `github-standards-architect`) without waiting for explicit skill invocations from the user.
+   - When requested to create, audit, align, or format repository root files (`README.md`, `LICENSE.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CHANGELOG.md`, `GOVERNANCE.md`), monorepo configurations (`pnpm-workspace.yaml`, `turbo.json`), multi-repository manifests (`mani.yaml`), package manifests (`package.json`), TypeScript configurations (`tsconfig*.json`), or repository `.github` directory structures (`CODEOWNERS`, `dependabot.yml`, composite actions), the agent MUST autonomously engage the `repo` skills (`readme-architect`, `community-health-architect`, `license-architect`, `monorepo-architect`, `github-standards-architect`, `mani-operator`) without waiting for explicit skill invocations from the user.
 
 1. The AGENTS-README Co-existence & Layer Invariant:
    - Wherever an `AGENTS.md` bounded context router file exists in a directory, a corresponding `README.md` file MUST also exist within that same directory.
@@ -49,3 +49,13 @@ trigger: always_on
    - Every repository, package, or service that defines a local `.env` configuration MUST maintain an authoritative `.env.example` file that is a faithful, complete structural replica of `.env`.
    - The `.env.example` file MUST adhere strictly to the enterprise format exemplified by `platform/k8s/.env.example`: boxed ASCII headers, numbered domain sections, inline operational comments (`# --`), and standardized `<YOUR_VARIABLE_NAME>` placeholders.
    - Committing real secrets, tokens, passwords, or private keys into `.env.example` is strictly prohibited.
+
+9. Mani Multi-Repository Orchestration Invariant:
+   - Meta-repositories managing multiple sovereign repositories MUST declare an authoritative `mani.yaml` manifest.
+   - The top-level `sync_gitignore` configuration in `mani.yaml` MUST always be explicitly set to `false` (`sync_gitignore: false`).
+   - Meta-repositories MUST pair `mani.yaml` with `.ignore` and `.rgignore` negation rules (`!managed-repo/` and `!managed-repo/**`) to preserve search and `@` mention indexing while keeping meta-repo Git status clean.
+
+10. The Agent Plans Directory Ignore Invariant:
+   - Every repository across the organization MUST ignore planning containers (`.agents/plans/` and `plans/`) in `.gitignore` to prevent working blueprints from cluttering Git history.
+   - To guarantee that developers and AI agents can still attach and search files from `.agents/plans/` via `@`, every repository MUST declare negative negation rules in `.ignore` and `.rgignore` (`!.agents/plans/`, `!.agents/plans/**`, `!plans/`, `!plans/**`).
+   - Bounded Context Rule: Plans containers (`.agents/plans/`) MUST NOT declare child `AGENTS.md` context routers (strictly governed by Rule 1).

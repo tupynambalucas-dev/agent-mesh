@@ -19,18 +19,20 @@ Enterprise Antigravity and Claude Code domain plugin for repository governance, 
 | [**`community-health-architect`**](./skills/community-health-architect/SKILL.md) | Authors and audits standard GitHub community health and governance files, including Contributor Covenant, security policies, and changelogs. | `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CHANGELOG.md`, `GOVERNANCE.md`. |
 | [**`license-architect`**](./skills/license-architect/SKILL.md) | Authors and audits LICENSE files, SPDX identifiers, copyright notices, and open-source compliance across monorepos and package manifests. | `LICENSE`, `LICENSE.md`, `package.json` license fields. |
 | [**`github-standards-architect`**](./skills/github-standards-architect/SKILL.md) | Audits, scaffolds, and standardizes `.github` directories, CODEOWNERS, dependabot.yml, composite actions, and GitHub Actions workflows across organization repositories. | `.github/CODEOWNERS`, `.github/dependabot.yml`, `.github/actions/*`, `.github/workflows/*`. |
+| [**`mani-operator`**](./skills/mani-operator/SKILL.md) | Orchestrates multi-repository workspaces, executes batch tasks across managed projects, maintains declarative mani.yaml manifests, handles selective tag filtering, and enforces multi-repo workspace hygiene. | `mani.yaml`, `.ignore`, `.rgignore`, `.vscode/settings.json`, `*.code-workspace`. |
 
 ---
 
 ## 3. Directory Layout
 
 - [plugin.json](./plugin.json): Agent Plugins 1.0.0 manifest declaring identity, version, author, and keywords.
-- [rules/AGENTS.md](./rules/AGENTS.md): Active domain rules, AGENTS-README co-existence invariant, monorepo catalog and tsconfig rules, `.github` folder architecture, and Autonomous Domain Mandate.
+- [rules/AGENTS.md](./rules/AGENTS.md): Active domain rules, AGENTS-README co-existence invariant, monorepo catalog and tsconfig rules, `.github` folder architecture, Mani multi-repo invariant, and Autonomous Domain Mandate.
 - [skills/readme-architect/SKILL.md](./skills/readme-architect/SKILL.md): README hierarchy guidelines and recursive directory navigation rules.
 - [skills/monorepo-architect/SKILL.md](./skills/monorepo-architect/SKILL.md): Monorepo orchestration, pnpm catalogs, package manifest scoping (`@tupynambalucas-dev/*`), and TypeScript project references.
 - [skills/community-health-architect/SKILL.md](./skills/community-health-architect/SKILL.md): GitHub community health file templates and standards.
 - [skills/license-architect/SKILL.md](./skills/license-architect/SKILL.md): License architecture, SPDX identifiers, and manifest alignment.
 - [skills/github-standards-architect/SKILL.md](./skills/github-standards-architect/SKILL.md): Organization `.github` directory taxonomy, code ownership, and zero-script monorepo releases.
+- [skills/mani-operator/SKILL.md](./skills/mani-operator/SKILL.md): Mani multi-repository orchestration runbooks, batch task execution, and manifest management.
 
 ---
 

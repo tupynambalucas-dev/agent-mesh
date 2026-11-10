@@ -19,6 +19,7 @@ Enterprise Antigravity and Claude Code domain plugin for agent engineering: craf
 | [**`rule-architect`**](./skills/rule-architect/SKILL.md) | Authors and audits Antigravity and Claude Code rule files (`rules/*.md`, `rules/AGENTS.md`), configuring trigger modes (`always_on`, `model_decision`), context budgets, and autonomous domain mandates. | `rules/AGENTS.md`, `rules/*.md`. |
 | [**`hook-architect`**](./skills/hook-architect/SKILL.md) | Authors and validates lifecycle hooks (`hooks.json`), event handlers (`SessionStart`, `PreToolUse`, `PostToolUse`, `PreInvocation`, `PostInvocation`, `Stop`), matchers, and execution timeouts. | `hooks.json`. |
 | [**`plugin-architect`**](./skills/plugin-architect/SKILL.md) | Authors and validates Agent Plugin manifests (`plugin.json`), cross-vendor `agent-plugins.org` v1.0.0 standards, pnpm workspace configuration, and MCP server configuration bindings. | `plugin.json`, `mcp.json`, `mcp_config.json`. |
+| [**`plan-architect`**](./skills/plan-architect/SKILL.md) | Authors, structures, and audits master architectural plans and execution blueprints inside `.agents/plans/<plan-slug>/` for both single-artifact plans and multi-artifact suites following the enterprise standard. | `.agents/plans/*`. |
 
 ---
 
@@ -31,6 +32,7 @@ Enterprise Antigravity and Claude Code domain plugin for agent engineering: craf
 - [skills/rule-architect/SKILL.md](./skills/rule-architect/SKILL.md): Domain rule authoring and context budgeting.
 - [skills/hook-architect/SKILL.md](./skills/hook-architect/SKILL.md): Lifecycle hook definitions.
 - [skills/plugin-architect/SKILL.md](./skills/plugin-architect/SKILL.md): Plugin manifest and workspace configuration.
+- [skills/plan-architect/SKILL.md](./skills/plan-architect/SKILL.md): Architectural plan authoring, multi-artifact suite structuring, and roadmap checklists.
 - [references/antigravity-customizations-and-plugins.md](./references/antigravity-customizations-and-plugins.md): Antigravity runtime customization specifications.
 - [references/agent-plugins-standard-spec.md](./references/agent-plugins-standard-spec.md): Cross-vendor Agent Plugins 1.0.0 specifications.
 - [references/claude-code-plugins-and-marketplace.md](./references/claude-code-plugins-and-marketplace.md): Claude Code plugin and marketplace reference.

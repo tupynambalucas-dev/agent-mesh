@@ -5,7 +5,7 @@ trigger: always_on
 # Tupynamba Lucas Enterprise Governance Constraints
 
 0. Autonomous Domain Mandate:
-   - When requested to design, audit, or update AI agent context routers (AGENTS.md), agent skills (SKILL.md), rule files (rules/AGENTS.md), lifecycle hooks (hooks.json), or plugin manifests (plugin.json), the agent MUST autonomously engage the Atelier AI skills (`router-architect`, `skill-architect`, `rule-architect`, `hook-architect`, `plugin-architect`) without waiting for explicit skill invocations from the user.
+   - When requested to design, audit, or update AI agent context routers (AGENTS.md), architectural plans (.agents/plans/), agent skills (SKILL.md), rule files (rules/AGENTS.md), lifecycle hooks (hooks.json), or plugin manifests (plugin.json), the agent MUST autonomously engage the Atelier AI skills (`router-architect`, `skill-architect`, `rule-architect`, `hook-architect`, `plugin-architect`, `plan-architect`) without waiting for explicit skill invocations from the user.
 
 1. Cryptographic Signature Requirement:
    - All Git commits and annotated tags MUST be cryptographically signed using SSH: `git commit -S -m "..."`.
@@ -35,3 +35,10 @@ trigger: always_on
    - Every subsystem, package, or repository declaring a `.env` file MUST maintain an authoritative `.env.example` template.
    - The `.env.example` file MUST adhere strictly to the enterprise format exemplified by `platform/k8s/.env.example`: boxed ASCII headers, numbered domain sections, inline descriptive comments (`# --`), and standardized `<YOUR_VARIABLE_NAME>` placeholders.
    - Never commit or emit plaintext secrets, passwords, API tokens, or private keys in `.env.example`.
+
+8. Architectural Plan Taxonomy and Storage Invariant:
+   - All architectural plans, master plans, and implementation blueprints must reside strictly within `.agents/plans/<plan-slug>/`.
+   - Single-artifact plans must declare a complete specification in `.agents/plans/<plan-slug>/README.md` (or `.agents/plans/<plan-slug>.md`).
+   - Multi-artifact plan suites must conform to the gold standard of `.github/.agents/plans/github-app-architecture/`: Master `README.md` declaring Strategic Baseline, Mermaid diagrams, Document Suite Catalog table, and modular numbered domain documents.
+   - Anti-Proliferation: Plan folders MUST NOT declare child `AGENTS.md` context routers (strictly governed by Rule 6).
+   - Git Ignore & Visibility Invariant: Planning containers (`.agents/plans/` and `plans/`) MUST be ignored by `.gitignore` across all repositories, while explicitly declaring negative un-ignore patterns in `.ignore` and `.rgignore` (`!.agents/plans/`, `!.agents/plans/**`, `!plans/`, `!plans/**`) so files can always be attached via `@`.
