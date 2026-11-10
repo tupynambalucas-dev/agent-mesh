@@ -1,20 +1,19 @@
 # Memory MCP Server (`@tupynambalucas-dev/mcp-memory`)
 
-MCP adapter for the Cortex Memory RAG Subsystem. Bridges AgentGateway to the
-`memory-api` Fastify REST service, exposing four tools over a Streamable HTTP
-transport at `/mcp` on port `8080`.
+Dual-transport Model Context Protocol adapter for the Cortex Memory RAG Subsystem. Bridges AI agents and the Kubernetes Envoy AgentGateway to the `memory-api` Fastify REST service, exposing four tools over both Stdio (`dist/bin.cjs` via `scripts/launcher.cjs`) and Streamable HTTP at `/mcp` on port `8080` (`dist/index.cjs`).
 
 ---
 
 ## Technology Stack
 
-| Layer             | Technology                                    |
-| :---------------- | :-------------------------------------------- |
-| Runtime           | Node.js 22                                    |
-| HTTP server       | Fastify 5                                     |
-| MCP transport     | `@modelcontextprotocol/sdk` (Streamable HTTP) |
-| Schema validation | Zod                                           |
-| Language          | TypeScript 5                                  |
+| Layer             | Technology                                               |
+| :---------------- | :------------------------------------------------------- |
+| Runtime           | Node.js 20+ (Node.js 22 LTS recommended)                 |
+| Bundler           | `tsup` (`noExternal` self-contained CommonJS bundles)    |
+| HTTP server       | Fastify 5                                                |
+| MCP transport     | `@modelcontextprotocol/sdk` (Stdio & Streamable HTTP)    |
+| Schema validation | Zod                                                      |
+| Language          | TypeScript 6                                             |
 
 ---
 
@@ -29,13 +28,13 @@ transport at `/mcp` on port `8080`.
 
 ---
 
-## Transport
+## Transport & Sovereign Execution
 
-- **Path**: `/mcp`
-- **Protocol**: Streamable HTTP (MCP specification)
-- **Session model**: Stateless. `sessionIdGenerator` is `undefined` — each POST
-  to `/mcp` creates a fresh `Server` instance that is destroyed after the
-  response completes.
+1. **Stdio Transport (`dist/bin.cjs` / `scripts/launcher.cjs`)**:
+   - Self-contained CJS bundle inlining `@modelcontextprotocol/sdk`, `fastify`, `zod`, and `dotenv` so the server runs in standalone consumer repositories without external dependencies.
+2. **Streamable HTTP Transport (`dist/index.cjs`)**:
+   - **Path**: `/mcp` on port `8080`.
+   - **Session model**: Stateless (`sessionIdGenerator: undefined`). Each POST to `/mcp` creates a fresh `Server` instance that is disposed after the response completes.
 
 ---
 
@@ -43,26 +42,14 @@ transport at `/mcp` on port `8080`.
 
 All tools delegate HTTP calls to the `memory-api` Fastify service:
 
+```text
+mcp-memory -> memory-api:3006/api/memory/*
 ```
-mcp-memory:8080/mcp  ->  memory-api:3006/api/memory/*
-```
 
-The `memory-api` service must be reachable from within the same Kubernetes
-namespace or Docker network as `mcp-memory`.
-
----
-
-## MemoryApiClient
-
-The `MemoryApiClient` class encapsulates all HTTP calls to `memory-api`. URL
-resolution logic:
-
+### MemoryApiClient URL Resolution
 1. Reads `MEMORY_API_URL` (defaults to `http://memory-api:3006`).
 2. If the URL does not end with `/api/memory`, appends `/api/memory`.
 3. All tool method calls use relative paths against this resolved base.
-
-Both `http://memory-api:3006` and `http://memory-api:3006/api/memory` are valid
-values for `MEMORY_API_URL`.
 
 ---
 
@@ -78,33 +65,20 @@ values for `MEMORY_API_URL`.
 ## Development Scripts
 
 ```bash
-pnpm dev        # tsx watch — hot-reload TypeScript development server
-pnpm build      # tsc — compile to dist/
-pnpm start      # node dist/index.js — run compiled output
-pnpm typecheck  # tsc --noEmit — type-check without emitting
-pnpm lint       # eslint — lint TypeScript sources
+pnpm dev                    # tsx watch src/index.ts - hot-reload development server
+pnpm build                  # tsup - bundle into dist/bin.cjs and dist/index.cjs
+node scripts/launcher.cjs   # Run sovereign Stdio launcher with .env cascade
+node dist/bin.cjs           # Run compiled Stdio bundle directly
+pnpm start                  # node dist/index.cjs - run compiled HTTP server
+pnpm typecheck              # tsc --noEmit - type-check without emitting
 ```
 
 ---
 
-## Health Check
+## Health Check (HTTP Mode)
 
-```
+```text
 GET /health
 ```
 
 Returns `{ "status": "healthy", "service": "memory-mcp" }`.
-
----
-
-## Integration
-
-This service is not called directly by agents. It is registered as a downstream
-target in the AgentGateway configuration (`cortex/gateway/config.yaml`). All
-requests pass through:
-
-```
-AgentGateway (agentgateway:8080) -> mcp-memory:8080/mcp -> memory-api:3006
-```
-
-Do not configure agents to call `mcp-memory` or `memory-api` directly.

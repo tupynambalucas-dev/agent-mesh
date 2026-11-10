@@ -12,6 +12,9 @@ This bounded context encapsulates the in-house Model Context Protocol server pro
 
 ## Directory Layout
 
+- [scripts/launcher.cjs](./scripts/launcher.cjs): Sovereign MCP launcher (`bin: mcp-infisical`) loading `.env` in cascade and executing `dist/bin.cjs` or routing to the Cortex Gateway.
+- [mcp.json](./mcp.json): Agent Plugins 1.0.0 stdio server configuration targeting `./scripts/launcher.cjs`.
+- [tsup.config.ts](./tsup.config.ts): Declarative `tsup` configuration bundling all dependencies (`noExternal`) into `dist/bin.cjs` and `dist/index.cjs`.
 - [src/bin.ts](./src/bin.ts): Stdio transport entrypoint executing the MCP server over standard input/output.
 - [src/index.ts](./src/index.ts): Fastify Streamable HTTP transport entrypoint listening on `:8080`.
 - [src/config.ts](./src/config.ts): Configuration schema via Zod (`INFISICAL_HOST_URL`, `INFISICAL_CLIENT_ID`, `INFISICAL_CLIENT_SECRET`).
@@ -27,5 +30,5 @@ This bounded context encapsulates the in-house Model Context Protocol server pro
 
 ## Required Skills
 
-- **`infisical-vault-manager`**: Active when managing Infisical Cloud projects, folders, and environments.
+- **`infisical-vault-operator`**: Active when managing Infisical Cloud projects, folders, and environments.
 - **`secret-rotation-operator`**: Active when executing secret rotation workflows.

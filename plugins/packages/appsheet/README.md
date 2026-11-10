@@ -45,16 +45,27 @@ The plugin consumes the following environment variables:
 | `APPSHEET_APP_ID` | Yes (for data ops) | AppSheet Application ID located in Manage > Integrations. |
 | `APPSHEET_APP_KEY` | Yes (for data ops) | Application access token for REST API v2 requests. |
 | `PLAYWRIGHT_MODE` | Optional | Execution mode for AppSheet Studio UI automation (defaults to `headless` with isolated `${PLUGIN_DATA}/appsheet-profile`). |
+| `MESH_PROFILE` | Optional | Set to `cluster` (or `CORTEX_GATEWAY_ENABLED=true`) to route via Cortex Gateway; defaults to `local` sovereign bundle execution. |
 | `CORTEX_GATEWAY_URL` | Optional | Envoy AgentGateway cluster URL (defaults to `http://localhost:8080`). |
-| `CORTEX_PROBE_TIMEOUT_MS` | Optional | Smart gateway probe timeout in milliseconds (defaults to `300`). |
 
 ---
 
 ## 5. Usage & Activation
 
-### Antigravity (`agy`)
+### Antigravity (`agy`) — External Repositories (Umbrella Package)
 
-Add the plugin to `.agents/plugins.json` in your project root:
+```json
+{
+  "entries": [
+    {
+      "path": "node_modules/@tupynambalucas-dev/agent-mesh/plugins/packages",
+      "include_only": ["appsheet"]
+    }
+  ]
+}
+```
+
+### Antigravity (`agy`) — Meta-Repository Root (`org-core`)
 
 ```json
 {

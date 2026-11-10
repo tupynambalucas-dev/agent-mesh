@@ -7,19 +7,25 @@
 
 # Scripts Subsystem Agent Context
 
-This document defines the bounded context router for orchestration and automation scripts in `scripts/`.
+This document defines the bounded context router for release orchestration scripts in `scripts/`.
+
+## Navigation & Directory Layout
+
+- [README.md](./README.md): Developer documentation and operational runbooks for release automation and launcher architecture.
+- [publish-root.cjs](./publish-root.cjs): Idempotent root umbrella package publisher for `@tupynambalucas-dev/agent-mesh`, invoked as the second stage of `pnpm run packages:publish`.
 
 ## Architecture Overview
 
-- [README.md](./README.md): Developer documentation and operational runbooks for automation scripts.
-- **Zero-Script Publishing**: Package publishing is executed natively via `pnpm -r publish` with Turborepo, eliminating custom publishing scripts.
-
-## Sovereign Plugin Launchers Notice
-
-The legacy root router `mcp-gateway-router.js` has been retired. MCP server launching is now governed autonomously by self-contained launchers located within each plugin package at `plugins/packages/<plugin>/scripts/launcher.cjs`.
+1. **Two-Stage Monorepo Publishing (`packages:publish`)**:
+   - Stage 1: Native recursive workspace publication via `pnpm -r publish --access public --no-git-checks --report-summary` (publishes all 10 domain plugins, 8 MCP servers, and 1 core library).
+   - Stage 2: Root umbrella package publication via `node ./scripts/publish-root.cjs` (publishes `@tupynambalucas-dev/agent-mesh` and treats `409 Conflict` / `E409` as an idempotent no-op).
+2. **Two-Tier Sovereign Launchers Architecture**:
+   - The legacy root router script has been retired.
+   - **Tier 1 - Plugin Launchers (`plugins/packages/<plugin>/scripts/launcher.cjs`)**: Resolve target MCP servers deterministically via `resolveMcpLauncher()` (standalone package -> umbrella hierarchy -> monorepo sibling) or route to the cluster gateway (`MESH_PROFILE=cluster`).
+   - **Tier 2 - MCP Server Launchers (`mcp/servers/<server>/scripts/launcher.cjs`)**: Load `.env` in cascade and spawn the co-located self-contained CommonJS bundle `dist/bin.cjs` (with resilient upstream `@playwright/mcp@0.0.84` fallback in `mcp-playwright` when local `playwright` packages are absent).
 
 ## Operational Guardrails
 
 - MUST NOT leak secrets or private keys into terminal output or log files.
 - MUST preserve the Zero-Emoji Invariant across all scripts and log messages.
-- Developer workstation provisioning and verification scripts belong strictly to `.github/scripts/`.
+- Developer workstation provisioning and verification scripts belong strictly to [`.github/scripts/`](../../.github/scripts/README.md).

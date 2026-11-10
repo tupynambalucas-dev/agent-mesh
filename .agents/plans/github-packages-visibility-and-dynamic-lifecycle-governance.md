@@ -4,6 +4,10 @@
 **Domain**: Enterprise Package Registry Architecture, Visibility Control & Automated Reconciliation  
 **Document Standard**: en-US Technical Specification (Zero-Emoji Policy)
 
+> [!IMPORTANT]
+> **Operational Note on Registry Read Authentication**:
+> While all `@tupynambalucas-dev/*` packages are provisioned with `public` visibility on `npm.pkg.github.com`, GitHub Packages enforces a platform-wide authentication requirement (`NODE_AUTH_TOKEN` with `read:packages` scope) on all npm registry downloads, even for public packages. External consumers without a registry token consume `@tupynambalucas-dev/agent-mesh` via the zero-token Git distribution channel (`github:tupynambalucas-dev/agent-mesh`) backed by committed `mcp/servers/*/dist/*.cjs` bundles. See [Umbrella Package & Presets Specification](../../references/reference/umbrella-package-and-presets.md).
+
 ---
 
 ## 1. Executive Summary

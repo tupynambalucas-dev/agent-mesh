@@ -6,7 +6,9 @@ Model Context Protocol server for Infisical Vault Universal Auth machine identit
 
 ## Overview
 
-`@tupynambalucas-dev/mcp-infisical` provides a dual-transport interface (Fastify Streamable HTTP on `:8080` and Stdio via `dist/bin.js`) enabling AI agents to manage secrets and projects across environments (`dev`, `staging`, `prod`) using Machine Identity authentication.
+`@tupynambalucas-dev/mcp-infisical` provides a dual-transport interface (Fastify Streamable HTTP on `:8080` via `dist/index.cjs` and Stdio via `dist/bin.cjs` / `scripts/launcher.cjs`) enabling AI agents to manage secrets and projects across environments (`dev`, `staging`, `prod`) using Machine Identity authentication.
+
+Built with `tsup` (`noExternal`), `dist/bin.cjs` bundles `@modelcontextprotocol/sdk`, `fastify`, `zod`, and `dotenv` into a standalone CommonJS binary for zero-dependency execution across external consumer repositories.
 
 ---
 
@@ -40,12 +42,15 @@ Model Context Protocol server for Infisical Vault Universal Auth machine identit
 ## Building and Running
 
 ```bash
-# Build the TypeScript package
+# Bundle into dist/bin.cjs and dist/index.cjs via tsup
 pnpm build
 
-# Run via Stdio
-node dist/bin.js
+# Run via Sovereign Launcher (loads .env cascade)
+node scripts/launcher.cjs
+
+# Run via Stdio bundle directly
+node dist/bin.cjs
 
 # Run HTTP server
-node dist/index.js
+node dist/index.cjs
 ```

@@ -80,15 +80,15 @@ In Antigravity plugins (`plugins/packages/web/mcp_config.json`), child MCP serve
 sequenceDiagram
   autonumber
   participant Dev as Developer Browser (Vivaldi/Chrome + Extension)
-  participant Router as mcp-gateway-router.js
+  participant Launcher as scripts/launcher.cjs
   participant MCP as @tupynambalucas-dev/mcp-playwright
-  participant Env as agent-mesh/.env
+  participant Env as .env (Cascade)
 
   Note over Dev: Extension installed with Token T
   Note over Env: PLAYWRIGHT_MCP_EXTENSION_TOKEN=T stored
 
-  Router->>MCP: Spawn local MCP process
-  MCP->>Env: dotenv.config() loads Token T
+  Launcher->>MCP: Spawn sovereign MCP process
+  MCP->>Env: loadEnvCascade() loads Token T
   MCP->>Dev: Connect via WebSocket with Token T
   Dev->>Dev: Validate Token T matches Extension Token
   alt Token Matches

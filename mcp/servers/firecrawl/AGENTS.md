@@ -12,6 +12,9 @@ This bounded context encapsulates the in-house Model Context Protocol server pro
 
 ## Directory Layout
 
+- [scripts/launcher.cjs](./scripts/launcher.cjs): Sovereign MCP launcher (`bin: mcp-firecrawl`) loading `.env` in cascade and executing `dist/bin.cjs` or routing to the Cortex Gateway.
+- [mcp.json](./mcp.json): Agent Plugins 1.0.0 stdio server configuration targeting `./scripts/launcher.cjs`.
+- [tsup.config.ts](./tsup.config.ts): Declarative `tsup` configuration bundling all dependencies (`noExternal`) into `dist/bin.cjs` and `dist/index.cjs`.
 - [src/bin.ts](./src/bin.ts): Stdio transport entrypoint executing the MCP server over standard input/output.
 - [src/index.ts](./src/index.ts): Fastify Streamable HTTP transport entrypoint serving `/mcp` on port `8080`.
 - [src/config.ts](./src/config.ts): Configuration and environment validation via Zod (`FIRECRAWL_API_KEY`).

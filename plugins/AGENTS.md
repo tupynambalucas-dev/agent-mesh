@@ -31,15 +31,16 @@ This document defines the bounded context router for all Antigravity and Claude 
    - `skills/`: Modular agent skills with `SKILL.md` frontmatter and progressive disclosure matching directory names.
    - `rules/AGENTS.md`: Mandatory domain rules and Autonomous Domain Mandates loaded unconditionally when the plugin is active.
    - `references/`: Supporting documentation, schemas, and specifications.
-2. **Dynamic Launcher MCP Integration**:
-   - Native Antigravity: `mcp_config.json` targeting `./scripts/launcher.cjs` (sovereign per-plugin launcher managing environment cascade and mode resolution).
-   - Cross-vendor Agent Plugins 1.0.0: `mcp.json` with explicit `"type": "stdio"`.
-   - Dynamic Browser Execution: `web` and `appsheet` leverage multi-mode Playwright launchers supporting `auto`, `extension`, `headless`, `channel`, and `cdp` modes via `.env`.
+2. **Sovereign Two-Tier Launcher MCP Integration**:
+   - Native Antigravity: `mcp_config.json` targeting `./scripts/launcher.cjs`.
+   - Cross-vendor Agent Plugins 1.0.0: `mcp.json` with explicit `"type": "stdio"` targeting `./scripts/launcher.cjs`.
+   - **Three-Layer Resolution (`resolveMcpLauncher()`)**: Plugin launchers resolve their target MCP server without external path assumptions: (1) standalone `@tupynambalucas-dev/mcp-<name>` package, (2) umbrella package `mcp/servers/<name>/scripts/launcher.cjs` (spawning self-contained `dist/bin.cjs`), or (3) monorepo sibling directory. When `MESH_PROFILE=cluster` or `CORTEX_GATEWAY_ENABLED=true`, launchers route to the Kubernetes Cortex Gateway via `mcp-remote`.
+   - **Dynamic Browser Execution**: `web` and `appsheet` delegate Playwright operations to `@tupynambalucas-dev/mcp-playwright/scripts/launcher.cjs`, which runs the local bundle when `playwright` is installed or falls back resiliently to `@playwright/mcp@0.0.84` in unbundled consumers.
 3. **Strict Validation**:
-   - Every domain plugin MUST pass `agy plugin validate <dir> --strict` with zero errors and zero warnings.
+   - Every domain plugin MUST pass `agy plugin validate <dir> --strict` (or `pnpm plugins:validate` from the monorepo root) with zero errors and zero warnings.
 
 ## Operational Guardrails
 
-- MUST NOT introduce circular references between plugins.
+- MUST NOT introduce circular references between plugins or rely on relative paths outside the plugin or umbrella package hierarchy.
 - MUST keep all skills single-responsibility and bounded to their respective domain.
 - MUST preserve the Zero-Emoji Invariant across all documentation and rule files.

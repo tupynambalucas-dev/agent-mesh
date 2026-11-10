@@ -12,6 +12,9 @@ This bounded context encapsulates the domain-scoped Model Context Protocol serve
 
 ## Directory Layout
 
+- [scripts/launcher.cjs](./scripts/launcher.cjs): Sovereign MCP launcher (`bin: mcp-github-flow`) loading `.env` in cascade and executing `dist/bin.cjs` or routing to the Cortex Gateway.
+- [mcp.json](./mcp.json): Agent Plugins 1.0.0 stdio server configuration targeting `./scripts/launcher.cjs`.
+- [tsup.config.ts](./tsup.config.ts): Declarative `tsup` configuration bundling all dependencies (`noExternal`) into `dist/bin.cjs` and `dist/index.cjs`.
 - [src/bin.ts](./src/bin.ts): Stdio transport entrypoint executing the MCP server over standard input/output.
 - [src/index.ts](./src/index.ts): Fastify Streamable HTTP transport entrypoint listening on `:8080`.
 - [src/tools/index.ts](./src/tools/index.ts): Tool registration and request dispatcher.
@@ -22,8 +25,8 @@ This bounded context encapsulates the domain-scoped Model Context Protocol serve
 
 ## Architecture & Conventions
 
-1. **Shared Core Dependency**: Consumes [`@tupynambalucas-dev/mcp-core-github`](../../core/github/README.md) (`getOctokitClient('developer-tools')`) for Tier 3 User Access Token / PAT authentication with fallback to App credentials.
-2. **Dual Transport**: Supports Fastify Streamable HTTP for cluster deployments and Stdio CLI for workstation pairing.
+1. **Inlined Core Dependency**: Consumes [`@tupynambalucas-dev/mcp-core-github`](../../core/github/README.md) (`getOctokitClient('developer-tools')`) for Tier 3 User Access Token / PAT authentication and bundles it directly into `dist/bin.cjs` and `dist/index.cjs`.
+2. **Self-Contained Dual Transport**: Supports Fastify Streamable HTTP (`dist/index.cjs`) for cluster deployments and Stdio CLI (`dist/bin.cjs`) for workstation pairing with zero external runtime dependencies.
 
 ## Operational Guardrails
 

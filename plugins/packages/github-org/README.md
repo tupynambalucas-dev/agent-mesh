@@ -25,13 +25,14 @@ Enterprise Antigravity and Claude Code domain plugin for GitHub organization adm
 
 - [plugin.json](./plugin.json): Agent Plugins 1.0.0 manifest declaring identity, version, author, and keywords.
 - [rules/AGENTS.md](./rules/AGENTS.md): Active domain rules, SSH commit signing standards, branch protection rulesets, secret scanning hygiene, and Autonomous Domain Mandate.
+- [scripts/launcher.cjs](./scripts/launcher.cjs): Sovereign plugin MCP launcher resolving `@tupynambalucas-dev/mcp-github-org` across standalone, umbrella, and monorepo installations.
 - [skills/github-org-operator/SKILL.md](./skills/github-org-operator/SKILL.md): Organization RBAC, team management, and repository provisioning.
 - [skills/github-ruleset-operator/SKILL.md](./skills/github-ruleset-operator/SKILL.md): Branch protection rulesets and tag policies.
 - [skills/github-security-auditor/SKILL.md](./skills/github-security-auditor/SKILL.md): Security scanning, Dependabot alerts, and Secret Scanning interrogation.
 - [skills/github-app-operator/SKILL.md](./skills/github-app-operator/SKILL.md): GitHub App Manifest flow and credential bootstrapping.
 - [references/github-app-mcp-spec.md](./references/github-app-mcp-spec.md): Technical specification for GitHub App authentication within MCP servers.
 - [mcp.json](./mcp.json): Agent Plugins 1.0.0 stdio bindings for `@tupynambalucas-dev/mcp-github-org`.
-- [mcp_config.json](./mcp_config.json): Native Antigravity MCP router bindings targeting smart gateway fallback.
+- [mcp_config.json](./mcp_config.json): Native Antigravity MCP router bindings targeting `./scripts/launcher.cjs`.
 
 ---
 
@@ -44,16 +45,27 @@ The underlying MCP servers consumed by this plugin require the following environ
 | `ORG_MANAGER_APP_ID` | Yes (or `GITHUB_TOKEN`) | Tier 1 GitHub App identifier for organizational authentication (`5648756`). |
 | `ORG_MANAGER_APP_PRIVATE_KEY_BASE64` | Yes (or `_PRIVATE_KEY`) | Base64-encoded RSA private key for `tupynambalucas-org-manager`. |
 | `ORG_MANAGER_APP_INSTALLATION_ID` | Yes (or `GITHUB_TOKEN`) | Target organization installation ID (`124653780`). |
+| `MESH_PROFILE` | Optional | Set to `cluster` (or `CORTEX_GATEWAY_ENABLED=true`) to route via Cortex Gateway; defaults to `local` sovereign bundle execution. |
 | `CORTEX_GATEWAY_URL` | Optional | Envoy AgentGateway cluster URL (defaults to `http://localhost:8080`). |
-| `CORTEX_PROBE_TIMEOUT_MS` | Optional | Smart gateway probe timeout in milliseconds (defaults to `300`). |
 
 ---
 
 ## 5. Usage & Activation
 
-### Antigravity (`agy`)
+### Antigravity (`agy`) — External Repositories (Umbrella Package)
 
-Add to `.agents/plugins.json` in your project root:
+```json
+{
+  "entries": [
+    {
+      "path": "node_modules/@tupynambalucas-dev/agent-mesh/plugins/packages",
+      "include_only": ["github-org"]
+    }
+  ]
+}
+```
+
+### Antigravity (`agy`) — Meta-Repository Root (`org-core`)
 
 ```json
 {

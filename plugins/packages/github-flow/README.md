@@ -23,10 +23,11 @@ Enterprise Antigravity and Claude Code domain plugin for Git developer workflows
 
 - [plugin.json](./plugin.json): Agent Plugins 1.0.0 manifest declaring identity, version, author, and keywords.
 - [rules/AGENTS.md](./rules/AGENTS.md): Active domain rules, SSH signing requirements, Conventional Commits standards, branching strategies, and Autonomous Domain Mandate.
+- [scripts/launcher.cjs](./scripts/launcher.cjs): Sovereign plugin MCP launcher resolving `@tupynambalucas-dev/mcp-github-flow` across standalone, umbrella, and monorepo installations.
 - [skills/github-flow-operator/SKILL.md](./skills/github-flow-operator/SKILL.md): Git workflow execution, Conventional Commits, SSH signing, and pull requests.
 - [skills/github-actions-operator/SKILL.md](./skills/github-actions-operator/SKILL.md): GitHub Actions workflow orchestration, log polling, and diagnostics.
 - [mcp.json](./mcp.json): Agent Plugins 1.0.0 stdio bindings for `@tupynambalucas-dev/mcp-github-flow`.
-- [mcp_config.json](./mcp_config.json): Native Antigravity MCP router bindings targeting smart gateway fallback.
+- [mcp_config.json](./mcp_config.json): Native Antigravity MCP router bindings targeting `./scripts/launcher.cjs`.
 
 ---
 
@@ -38,16 +39,27 @@ The underlying MCP servers consumed by this plugin require the following environ
 | :--- | :--- | :--- |
 | `GITHUB_TOKEN` | Yes (or Tier 3 Device Flow) | Developer Personal Access Token or OAuth User Access Token with repo scopes. |
 | `DEVELOPER_TOOLS_APP_CLIENT_ID` | Optional | Tier 3 OAuth Client ID for `tupynambalucas-developer-tools` (`Iv23li59lbd1aDC24pN8`). |
+| `MESH_PROFILE` | Optional | Set to `cluster` (or `CORTEX_GATEWAY_ENABLED=true`) to route via Cortex Gateway; defaults to `local` sovereign bundle execution. |
 | `CORTEX_GATEWAY_URL` | Optional | Envoy AgentGateway cluster URL (defaults to `http://localhost:8080`). |
-| `CORTEX_PROBE_TIMEOUT_MS` | Optional | Smart gateway probe timeout in milliseconds (defaults to `300`). |
 
 ---
 
 ## 5. Usage & Activation
 
-### Antigravity (`agy`)
+### Antigravity (`agy`) — External Repositories (Umbrella Package)
 
-Add to `.agents/plugins.json` in your project root:
+```json
+{
+  "entries": [
+    {
+      "path": "node_modules/@tupynambalucas-dev/agent-mesh/plugins/packages",
+      "include_only": ["github-flow"]
+    }
+  ]
+}
+```
+
+### Antigravity (`agy`) — Meta-Repository Root (`org-core`)
 
 ```json
 {
