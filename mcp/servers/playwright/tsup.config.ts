@@ -8,5 +8,5 @@ export default defineConfig({
   external: ['playwright', 'playwright-core'],
   noExternal: ['@modelcontextprotocol/sdk', 'fastify', 'zod', 'dotenv', 'ws'],
   sourcemap: false,
-  minify: false,
+  minify: true,
 });
