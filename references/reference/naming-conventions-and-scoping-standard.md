@@ -36,7 +36,11 @@ All packages published from or developed within `agent-mesh` MUST use the organi
    plugins/packages/<slug>/
    ├── plugin.json         # Agent Plugins 1.0.0 manifest ($schema)
    ├── package.json        # NPM package metadata (@tupynambalucas-dev/plugin-<slug>)
+   ├── mcp.json            # Cross-vendor stdio MCP bindings (for MCP-enabled plugins)
+   ├── mcp_config.json     # Native Antigravity MCP bindings (for MCP-enabled plugins)
    ├── README.md           # Subsystem documentation
+   ├── scripts/
+   │   └── launcher.cjs    # Sovereign plugin MCP launcher (resolveMcpLauncher)
    ├── rules/
    │   └── AGENTS.md       # Mandatory domain rules & Rule 0 Autonomous Domain Mandate
    ├── skills/
@@ -45,6 +49,24 @@ All packages published from or developed within `agent-mesh` MUST use the organi
    │       ├── scripts/    # Optional deterministic scripts
    │       └── references/ # Optional supporting documentation
    └── references/         # Supporting domain specifications
+   ```
+4. **Internal Structure of a Sovereign MCP Server**:
+   ```text
+   mcp/servers/<slug>/
+   ├── package.json        # NPM package metadata (@tupynambalucas-dev/mcp-<slug>, bin: mcp-<slug>)
+   ├── mcp.json            # Standalone stdio MCP server declaration
+   ├── tsup.config.ts      # Declarative tsup bundler configuration (noExternal)
+   ├── tsconfig.json       # Package TypeScript configuration
+   ├── AGENTS.md           # Layer 3 bounded context router
+   ├── README.md           # Server documentation & tool catalog
+   ├── scripts/
+   │   └── launcher.cjs    # Sovereign MCP launcher (.env cascade + dist/bin.cjs execution)
+   ├── dist/               # Tracked in Git (!mcp/servers/*/dist/) for zero-token Git distribution
+   │   ├── bin.cjs         # Self-contained Stdio bundle
+   │   └── index.cjs       # Self-contained Fastify Streamable HTTP bundle (:8080)
+   └── src/
+       ├── bin.ts          # Stdio transport entrypoint
+       └── index.ts        # Streamable HTTP transport entrypoint
    ```
 
 ---

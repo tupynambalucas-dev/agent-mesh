@@ -20,7 +20,7 @@ This directory houses cross-repository architectural plans, AI-generated reports
 ## 2. Document Index
 
 ### 2.1 Deep Architectural Analyses (`analyses/`)
-- [MCP Gateway Router Deep Analysis](./analyses/analise-profunda-mcp-gateway-router.md): Exhaustive analysis of the dual-mode failover logic, 300ms probe, and Stdio fallback architecture.
+- [Historical Gateway Failover Deep Analysis](./analyses/analise-profunda-mcp-gateway-router.md): Historical analysis of the initial dual-mode failover router, now superseded by the two-tier sovereign launcher architecture (`plugins/packages/*/scripts/launcher.cjs` and `mcp/servers/*/scripts/launcher.cjs`).
 - [Playwright Isolation & Lifecycle Hooks Analysis](./analyses/analise-arquitetural-isolamento-playwright-e-lifecycle-hooks.md): Architectural analysis of isolated Playwright runtimes, deterministic lifecycle hooks, and supply chain CI hardening.
 - [Monolithic vs. Domain-Scoped MCP Servers Analysis](./analyses/mcp-architecture-single-vs-modular-github-apps.md): Enterprise analysis of domain-scoped GitHub MCP servers (`mcp-github-org` and `mcp-github-flow`), subsystem-internal core package partitioning (`mcp/servers/*`, `mcp/core/*`), and recursive `AGENTS.md` and `README.md` governance.
 
@@ -31,7 +31,8 @@ This directory houses cross-repository architectural plans, AI-generated reports
 - [Plugin Independence & Enforcement Hooks Plan](./plans/plugin-independence-playwright-isolation-and-enforcement-hooks.md): Self-contained plugins, isolated per-plugin Playwright, per-plugin launchers, and lifecycle hooks enforcing plugin mandates.
 - [GitHub App Machine Identity & Token Governance Strategy](./plans/github-app-machine-identity-and-token-governance-strategy.md): Enterprise token governance boundaries between the 3-tier GitHub Apps (`org-manager`, `ci-bot`, `developer-tools`) and granular GitHub Packages `GITHUB_TOKEN` administration.
 - [GitHub Packages Visibility & Dynamic Lifecycle Governance](./plans/github-packages-visibility-and-dynamic-lifecycle-governance.md): Canonical specification for GitHub Packages (`npm.pkg.github.com`) visibility control (`private` vs. `public`) and zero-declaration dynamic obsolete package reconciliation via Git history discovery.
-- [Agent Plugins Enterprise Distribution & Presets Architecture](./plans/agent-plugins-distribution-presets-and-external-consumption-architecture.md): Blueprint for publishing `@tupynambalucas-dev/agent-mesh` as an umbrella meta-package with declarative presets and tag filtering, eliminating repetitive Git URLs and manual plugin declarations across external services (`omnichannel`, `platform`, `docs`).
+- [Agent Plugins Enterprise Distribution & Presets Architecture](./plans/agent-plugins-distribution-presets-and-external-consumption-architecture.md): Blueprint for publishing `@tupynambalucas-dev/agent-mesh` as an umbrella meta-package with declarative presets and tag filtering across external services (`omnichannel`, `platform`, `docs`).
+- [Documentation Alignment & Correction Plan for Package Distribution](./plans/documentation-alignment-and-correction-plan-for-package-distribution.md): Comprehensive audit and alignment runbook synchronizing all documentation, `README.md`, and `AGENTS.md` files with the v1.2.0 umbrella package, self-contained `tsup` MCP bundles, and two-tier sovereign launchers.
 
 ### 2.3 Verification & Analytical Reports (`reports/`)
 - [Refactoring Audit Report](./reports/agent-mesh-refactoring-and-governance-report.md): Exhaustive audit and refactoring of legacy nomenclature, paths, and standards.

@@ -23,11 +23,12 @@ Enterprise Antigravity and Claude Code domain plugin for secret management, Infi
 
 - [plugin.json](./plugin.json): Agent Plugins 1.0.0 manifest declaring identity, version, author, and keywords.
 - [rules/AGENTS.md](./rules/AGENTS.md): Active domain rules, zero plaintext leakage invariant, Machine Identity authentication standards, environment isolation, and Autonomous Domain Mandate.
+- [scripts/launcher.cjs](./scripts/launcher.cjs): Sovereign plugin MCP launcher resolving `@tupynambalucas-dev/mcp-infisical` across standalone, umbrella, and monorepo installations.
 - [skills/infisical-vault-operator/SKILL.md](./skills/infisical-vault-operator/SKILL.md): Infisical vault management and secret querying.
 - [skills/secret-rotation-operator/SKILL.md](./skills/secret-rotation-operator/SKILL.md): Zero-downtime secret rotation and credential regeneration.
 - [references/infisical-rest-api-v1-schema.md](./references/infisical-rest-api-v1-schema.md): Infisical REST API v1 endpoint schemas.
 - [mcp.json](./mcp.json): Agent Plugins 1.0.0 stdio bindings for `@tupynambalucas-dev/mcp-infisical`.
-- [mcp_config.json](./mcp_config.json): Native Antigravity MCP router bindings targeting smart gateway fallback.
+- [mcp_config.json](./mcp_config.json): Native Antigravity MCP router bindings targeting `./scripts/launcher.cjs`.
 
 ---
 
@@ -41,16 +42,27 @@ The underlying MCP servers consumed by this plugin require the following environ
 | `INFISICAL_CLIENT_SECRET` | Yes (for Universal Auth) | Infisical Machine Identity Client Secret. |
 | `INFISICAL_PROJECT_ID` | Yes | Target Infisical Project ID. |
 | `INFISICAL_HOST_URL` | Optional | Infisical instance URL (defaults to `https://app.infisical.com`). |
+| `MESH_PROFILE` | Optional | Set to `cluster` (or `CORTEX_GATEWAY_ENABLED=true`) to route via Cortex Gateway; defaults to `local` sovereign bundle execution. |
 | `CORTEX_GATEWAY_URL` | Optional | Envoy AgentGateway cluster URL (defaults to `http://localhost:8080`). |
-| `CORTEX_PROBE_TIMEOUT_MS` | Optional | Smart gateway probe timeout in milliseconds (defaults to `300`). |
 
 ---
 
 ## 5. Usage & Activation
 
-### Antigravity (`agy`)
+### Antigravity (`agy`) — External Repositories (Umbrella Package)
 
-Add to `.agents/plugins.json` in your project root:
+```json
+{
+  "entries": [
+    {
+      "path": "node_modules/@tupynambalucas-dev/agent-mesh/plugins/packages",
+      "include_only": ["secrets"]
+    }
+  ]
+}
+```
+
+### Antigravity (`agy`) — Meta-Repository Root (`org-core`)
 
 ```json
 {

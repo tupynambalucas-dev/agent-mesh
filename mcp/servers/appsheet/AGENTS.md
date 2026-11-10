@@ -12,6 +12,9 @@ This bounded context encapsulates the in-house Model Context Protocol server pro
 
 ## Directory Layout
 
+- [scripts/launcher.cjs](./scripts/launcher.cjs): Sovereign MCP launcher (`bin: mcp-appsheet`) loading `.env` in cascade and executing `dist/bin.cjs` or routing to the Cortex Gateway.
+- [mcp.json](./mcp.json): Agent Plugins 1.0.0 stdio server configuration targeting `./scripts/launcher.cjs`.
+- [tsup.config.ts](./tsup.config.ts): Declarative `tsup` configuration bundling all dependencies (`noExternal`) into `dist/bin.cjs` and `dist/index.cjs`.
 - [src/bin.ts](./src/bin.ts): Stdio transport entrypoint executing the MCP server over standard input/output.
 - [src/index.ts](./src/index.ts): Fastify Streamable HTTP transport entrypoint listening on `:8080`.
 - [src/config.ts](./src/config.ts): Environment variable validation via Zod (`APPSHEET_APP_ID`, `APPSHEET_APPLICATION_ACCESS_KEY`).
@@ -23,7 +26,7 @@ This bounded context encapsulates the in-house Model Context Protocol server pro
 
 ## Architecture & Conventions
 
-1. **Dual Transport**: Supports Fastify HTTP for Kubernetes pods and Stdio CLI for local agent sessions.
+1. **Self-Contained Dual Transport**: Bundles `dist/bin.cjs` (Stdio) and `dist/index.cjs` (Fastify HTTP on `:8080`) with zero external runtime dependencies.
 2. **Deterministic Keys**: All mutations require unique key identifiers to guarantee REST API v2 idempotency during retries.
 3. **Selector Filtering**: Find operations accept AppSheet expression selectors (e.g. `FILTER(TableName, [Status] = "Active")`).
 

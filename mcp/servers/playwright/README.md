@@ -5,13 +5,13 @@ Enterprise Model Context Protocol server for sovereign browser automation, multi
 ---
 
 > [!NOTE]
-> **Operational Status: Sovereign Reference Package (Staged for Future Cluster Hosting)**
+> **Operational Status: Active Sovereign Engine with Resilient Upstream Fallback**
 >
-> `@tupynambalucas-dev/mcp-playwright` is a fully compiled, in-house TypeScript MCP package featuring the `UniversalSessionManager` (supporting Fastify HTTP on port `:8080`, stdio transport, and custom session resolution).
+> `@tupynambalucas-dev/mcp-playwright` compiles into `dist/bin.cjs` (Stdio) and `dist/index.cjs` (Fastify Streamable HTTP on `:8080`) using `tsup` (`noExternal` for `@modelcontextprotocol/sdk`, `fastify`, `zod`, `dotenv`, `ws`, while keeping `playwright` and `playwright-core` external due to OS-native browser binaries).
 >
-> In the current daily developer runtime, the agent mesh plugins (`@tupynambalucas-dev/plugin-web` and `@tupynambalucas-dev/plugin-appsheet`) delegate browser operations via `launcher.cjs` directly to upstream `@playwright/mcp@0.0.84` to utilize official Chrome Web Store extension relay binaries.
->
-> This package serves as our sovereign foundation for upcoming Kubernetes Cortex cluster microservices and future unified browser runtime consolidation.
+> When invoked via its sovereign launcher [`scripts/launcher.cjs`](./scripts/launcher.cjs) (either directly or from [`@tupynambalucas-dev/plugin-web`](../../../plugins/packages/web/README.md) and [`@tupynambalucas-dev/plugin-appsheet`](../../../plugins/packages/appsheet/README.md)):
+> 1. **Local Playwright Available**: If `playwright` is resolvable in the active workspace, `launcher.cjs` executes the local bundled `dist/bin.cjs` directly.
+> 2. **External Consumer Fallback**: If `playwright` is not installed in the consumer repository (such as lightweight backend APIs like `omnichannel`), `launcher.cjs` transparently falls back to `npx -y @playwright/mcp@0.0.84`, forwarding all mode flags (`--extension`, `--cdp-endpoint`, `--browser`, `--user-data-dir`, `--headless`).
 
 ---
 
@@ -26,16 +26,16 @@ Enterprise Model Context Protocol server for sovereign browser automation, multi
 - **Universal Multi-Platform Support**: Zero hardcoded filesystem paths or operating-system-specific scripts. Works identically on Windows, macOS, and Linux.
 - **Official Extension Bridge**: Connects to the developer's already-opened browser session via the official Playwright Browser Extension without restarting or launching subprocesses with flags.
 - **Native Channel Resolution**: Dynamically discovers and launches system-installed browsers via OS registry lookup (`channel: 'chrome'` or `channel: 'msedge'`).
-- **Headless Standalone Engine**: Spawns isolated, ephemeral Chromium sandboxes for background tasks, CI/CD pipelines, and Kubernetes workloads.
+- **Headless Standalone Engine**: Spawns isolated, ephemeral Chromium sandboxes (`${PLUGIN_DATA}/browser-profile`) for background tasks, CI/CD pipelines, and Kubernetes workloads.
 - **Accessibility-First Inspection**: Exposes page structure via structured accessibility snapshots (`browser_snapshot`), saving over 80% token costs compared to screenshot-based reasoning.
 
 ---
 
 ## 3. Running Locally
 
-### Development Mode
+### Sovereign Launcher (Recommended)
 ```bash
-pnpm --filter @tupynambalucas-dev/mcp-playwright dev
+node scripts/launcher.cjs
 ```
 
 ### Build & Typecheck
@@ -44,9 +44,13 @@ pnpm --filter @tupynambalucas-dev/mcp-playwright build
 pnpm --filter @tupynambalucas-dev/mcp-playwright typecheck
 ```
 
-### Stdio Mode
+### Direct Bundle Execution (Requires Local `playwright`)
 ```bash
-node dist/bin.js
+# Stdio Mode
+node dist/bin.cjs
+
+# HTTP Server Mode (:8080)
+node dist/index.cjs
 ```
 
 ---

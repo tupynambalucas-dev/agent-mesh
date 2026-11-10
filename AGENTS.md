@@ -5,23 +5,27 @@ This document serves as the sovereign root context router (Layer 1) for AI agent
 
 ## Navigation
 
-- [README.md](./README.md): Primary developer documentation, package architecture, and setup guide.
-- [mcp](./mcp/AGENTS.md): In-house Model Context Protocol (MCP) packages, dual-transport servers, and protocol definitions.
-- [plugins](./plugins/AGENTS.md): Antigravity and Claude Code domain plugins, modular skills, and rule sets.
-- [scripts](./scripts/AGENTS.md): Smart MCP gateway router, fallback runners, package publisher, and setup automation.
+- [README.md](./README.md): Primary developer documentation, umbrella package distribution, and setup guide.
+- [mcp](./mcp/AGENTS.md): In-house Model Context Protocol (MCP) packages, self-contained dual-transport servers, and core libraries.
+- [plugins](./plugins/AGENTS.md): Antigravity and Claude Code domain plugins, modular skills, rules, and sovereign launchers.
+- [presets](./presets/all.json): Declarative domain plugin preset profiles (`all`, `backend-api`, `frontend-web`, `docs-portal`).
+- [scripts](./scripts/AGENTS.md): Root umbrella package release publisher (`publish-root.cjs`) and two-tier launcher architecture documentation.
 - [references](./references/AGENTS.md): Sovereign documentation hub organized according to the Diátaxis framework (tutorials, how-to guides, reference, explanation).
-- [.agents](./.agents/AGENTS.md): AI agent planning hub, architectural master plans, and verification reports.
+- [.agents](./.agents/AGENTS.md): AI agent planning hub, deep analyses, architectural master plans, and verification reports.
+- [.claude-plugin/marketplace.json](./.claude-plugin/marketplace.json): Anthropic Claude Code plugin marketplace registry.
+- [.github/workflows/publish.yml](./.github/workflows/publish.yml): Automated CI/CD validation, dynamic package reconciliation, and release pipeline.
 
 ## Architecture
 
 The `agent-mesh` repository is structured as a pnpm monorepo managed with Turborepo (`turbo.json`) and pnpm named catalogs:
 
-- **Build Pipeline**: Turborepo coordinates build, dev, clean, and typecheck tasks with intelligent workspace caching (`turbo run build --filter="@tupynambalucas-dev/mcp-*"`).
-- **Dependency Catalogs**: Pnpm catalogs (`catalog:`, `catalog:shared`, `catalog:mcp-stack`, `catalog:`) eliminate version drift across all packages.
-- **Dual-Transport MCP Servers**: Packages in `mcp/servers/*` provide both Streamable HTTP (Fastify on `:8080`) and Stdio (`dist/bin.js`) transports for zero-friction local or cluster operation.
-- **Shared MCP Core Libraries**: Packages in `mcp/core/*` (such as `@tupynambalucas-dev/mcp-core-github`) encapsulate non-executable shared authentication engines, client factories, and Zod schemas.
-- **Domain Plugins**: Packages in `plugins/packages/*` implement bounded skills, references, and domain-specific validation rules for AI agents complying with `agent-plugins.org` v1.0.0. Shared plugin governance utilities reside in `plugins/core/*`. Plugins like `web` and `appsheet` leverage sovereign `launcher.cjs` scripts for dynamic multi-mode browser execution (`extension`, `headless`, `channel`, `cdp`).
-- **Sovereign MCP Engine**: `mcp/servers/playwright` provides an in-house reference engine staged for future Kubernetes Cortex cluster hosting, while active developer sessions delegate via `launcher.cjs` to upstream `@playwright/mcp`.
+- **Umbrella Distribution Package (`@tupynambalucas-dev/agent-mesh`)**: The root `package.json` (`v1.2.0`) bundles `plugins/packages/`, `mcp/`, `presets/`, `scripts/`, and `.claude-plugin/` into a single public package consumable via Git (`github:tupynambalucas-dev/agent-mesh` — zero token required) or GitHub Packages (`https://npm.pkg.github.com` — requires `NODE_AUTH_TOKEN` with `read:packages`).
+- **Build Pipeline**: Turborepo coordinates `build`, `dev`, `clean`, and `typecheck` tasks with workspace caching (`turbo run build --filter="@tupynambalucas-dev/mcp-*"`).
+- **Dependency Catalogs**: Pnpm catalogs (`catalog:`, `catalog:shared`, `catalog:mcp-stack`) eliminate version drift across all workspace packages.
+- **Self-Contained Dual-Transport MCP Servers**: Packages in `mcp/servers/*` compile via `tsup` (`noExternal`) into standalone CommonJS executables for both Stdio (`dist/bin.cjs`) and Streamable HTTP (`dist/index.cjs` on Fastify `:8080`). All runtime dependencies (`@modelcontextprotocol/sdk`, `@octokit/*`, `fastify`, `zod`, `dotenv`) are inlined, and `mcp/servers/*/dist/` is tracked in Git (`!mcp/servers/*/dist/`) so external consumers require zero MCP dependencies or build steps.
+- **Shared MCP Core Libraries**: Packages in `mcp/core/*` (such as `@tupynambalucas-dev/mcp-core-github`) encapsulate non-executable shared authentication engines, client factories, and Zod schemas compiled via `tsc` (`dist/index.js`) and bundled into downstream MCP servers at build time.
+- **Domain Plugins & Two-Tier Sovereign Launchers**: Packages in `plugins/packages/*` implement bounded skills, references, and domain rules complying with `agent-plugins.org` v1.0.0. Each MCP-enabled plugin ships `scripts/launcher.cjs`, which resolves its corresponding MCP server launcher across three layers (1. standalone package `@tupynambalucas-dev/mcp-<name>`, 2. umbrella package `mcp/servers/<name>/scripts/launcher.cjs`, 3. monorepo sibling) or routes to the Kubernetes Cortex Gateway when `MESH_PROFILE=cluster`.
+- **Sovereign Playwright Engine with Resilient Fallback**: `mcp/servers/playwright/scripts/launcher.cjs` executes the bundled `dist/bin.cjs` when `playwright` driver packages are resolvable in the local workspace, and transparently falls back to `npx -y @playwright/mcp@0.0.84` (preserving `headless`, `extension`, `channel`, and `cdp` mode flags) when consumed in lightweight repositories without local Playwright installations.
 
 ## Scoped Guardrails
 
@@ -31,7 +35,8 @@ The `agent-mesh` repository is structured as a pnpm monorepo managed with Turbor
 - MUST NOT use emojis anywhere in code, markdown headers, body text, commit messages, or chat responses (Zero-Emoji Invariant).
 - MUST sign all Git commits and annotated tags with SSH: `git commit -S -m "..."`.
 - MUST use Conventional Commits v1.0.0 (`<type>(<scope>): <description>`).
-- MUST use relative paths for all Markdown links. Absolute filesystem paths are strictly forbidden.
+- MUST use relative paths for all Markdown links inside repository files. Absolute `file:///` filesystem paths are strictly forbidden in repository documentation.
+- **Committed MCP Bundle Invariant**: Whenever source files under `mcp/servers/*/src` or `mcp/core/*/src` are modified, agents MUST run `pnpm mcp:build` and commit the updated `mcp/servers/*/dist/*.cjs` bundles so Git package consumers remain synchronized.
 - **Secret Hygiene**: Secrets are resolved via Infisical Universal Auth or local `.env` cascade. Plaintext secrets must never be logged or committed.
 - **Context Routing**: When working within a sub-package or directory, agents MUST read the corresponding local `AGENTS.md` before executing modifications.
 
@@ -44,7 +49,7 @@ When opened as part of the `tupynambalucas-dev/org-core` multi-root workspace or
 When authoring or modifying documents and configurations in this monorepo, agents MUST activate the relevant skill:
 
 - **`router-architect`**: Active when authoring or reviewing any `AGENTS.md` context router file.
-- **`readme-architect`, `monorepo-architect`**: Active when creating or modifying any `README.md` or markdown documentation.
+- **`readme-architect`, `monorepo-architect`, `github-standards-architect`**: Active when creating or modifying any `README.md`, workspace configuration, or `.github` asset.
 - **`plugin-architect`**: Active when managing `plugin.json` manifests, pnpm workspaces, and catalogs.
 - **`skill-architect`**: Active when authoring, auditing, or optimizing modular `SKILL.md` files.
 - **`rule-architect`**: Active when authoring or auditing domain rules and Autonomous Domain Mandates.

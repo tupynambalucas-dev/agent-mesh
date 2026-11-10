@@ -1,80 +1,80 @@
-# How to Configure Smart Gateway Local Failover
+# How to Configure Sovereign Launcher & Cluster Gateway Routing
 
-This guide explains how `plugins/packages/<plugin>/scripts/launcher.cjs` provides automatic, non-blocking failover between cloud-native Kubernetes AgentGateway microservices and local standalone MCP binaries.
-
----
-
-## Failover Overview
-
-When an agent invokes an MCP tool, `launcher.cjs` acts as an intelligent proxy:
-1. **Health Probe**: Issues a 300ms HTTP healthcheck probe to `CORTEX_GATEWAY_URL/health` (port `8080`).
-2. **Mode A (Online)**: If Envoy AgentGateway responds with HTTP `200`, the router proxies the JSON-RPC request to the cluster over Streamable HTTP/SSE.
-3. **Mode B (Offline)**: If the cluster gateway is unreachable, timed out, or returning errors, the router automatically spawns the local compiled binary (`mcp/servers/<target>/dist/bin.js`) or executes registry fallbacks via `pnpm dlx`.
+This guide explains how the two-tier launcher architecture (`plugins/packages/<plugin>/scripts/launcher.cjs` and `mcp/servers/<server>/scripts/launcher.cjs`) routes Model Context Protocol (MCP) tool execution between local self-contained CommonJS bundles (`dist/bin.cjs`) and the cloud-native Kubernetes Cortex Gateway.
 
 ---
 
-## Environment Variables & Configuration
+## 1. Routing Modes Overview
 
-The smart router inspects the following environment variables:
+When an AI agent invokes an MCP tool, the launcher inspects the active runtime profile:
+
+1. **Local Sovereign Mode (`MESH_PROFILE=local` - Default)**:
+   - The plugin launcher executes `resolveMcpLauncher(pkgName, monorepoDir)`, locating the target MCP server across:
+     1. Standalone installed package (`@tupynambalucas-dev/mcp-<service>`).
+     2. Umbrella package hierarchy (`node_modules/@tupynambalucas-dev/agent-mesh/mcp/servers/<service>/scripts/launcher.cjs`).
+     3. Monorepo sibling directory (`mcp/servers/<service>/scripts/launcher.cjs`).
+   - The target MCP server launcher spawns its co-located, self-contained bundle `dist/bin.cjs` over Stdio.
+   - For `mcp-playwright`, if `playwright` is not installed in the consumer workspace, it automatically falls back to `npx -y @playwright/mcp@0.0.84` with configured mode flags.
+2. **Cluster Gateway Mode (`MESH_PROFILE=cluster` or `CORTEX_GATEWAY_ENABLED=true`)**:
+   - The launcher routes JSON-RPC requests over Streamable HTTP/SSE to the Kubernetes Cortex Gateway via `npx -y mcp-remote ${CORTEX_GATEWAY_URL}/mcp`.
+
+---
+
+## 2. Environment Variables & Configuration
 
 | Variable | Default Value | Description |
 | :--- | :--- | :--- |
+| `MESH_PROFILE` | `local` | Execution profile selector (`local` for sovereign Stdio bundles; `cluster` for Cortex Gateway proxy). |
+| `CORTEX_GATEWAY_ENABLED` | `false` | When set to `true`, forces cluster gateway routing even if `MESH_PROFILE` is unset. |
 | `CORTEX_GATEWAY_URL` | `http://localhost:8080` | Base URL of the Envoy AgentGateway ingress. |
-| `CORTEX_PROBE_TIMEOUT_MS` | `300` | Non-blocking socket timeout for the healthcheck probe in milliseconds. |
 
 ---
 
-## Cascade `.env` Resolution
+## 3. Cascade `.env` Resolution
 
-The router automatically scans for `.env` files up to two parent directories above the current working directory:
-1. `process.cwd()/.env`
+Both plugin launchers and MCP server launchers automatically scan for `.env` files across the workspace hierarchy via `loadEnvCascade()`:
+1. `process.cwd()/.env` (consumer repository root, e.g., `omnichannel/.env`)
 2. `process.cwd()/../.env`
-3. `agent-mesh/.env`
-4. `org-core/.env`
+3. Package-local and parent monorepo `.env` files (`agent-mesh/.env`, `org-core/.env`)
 
-Variables already defined in the active process environment are never overwritten.
+Variables already defined in `process.env` are never overwritten.
 
 ---
 
-## Testing Failover Locally
+## 4. Verifying Execution Locally and in Consumer Repositories
 
-### 1. Test Gateway Inactive State (Local Stdio Binary)
+### 4.1 Verify Sovereign Local Execution (Default `local` Profile)
 
-Ensure nothing is running on port 8080, then execute:
+From `agent-mesh` or an external consumer repository (such as `omnichannel`):
 
 ```bash
-node plugins/packages/<plugin>/scripts/launcher.cjs firecrawl
+node plugins/packages/research/scripts/launcher.cjs firecrawl --help
 ```
 
 Expected output on `stderr`:
+```text
+[launcher:research] Engaging sovereign MCP executable for 'firecrawl': node .../mcp/servers/firecrawl/scripts/launcher.cjs
+Firecrawl MCP server running on stdio
 ```
-[mesh-router] AgentGateway offline. Engaging local compiled binary: node .../mcp/servers/firecrawl/dist/bin.js
-```
 
-The process transitions into a standard Stdio JSON-RPC server listening on standard input.
+### 4.2 Verify Cluster Gateway Routing (`cluster` Profile)
 
-### 2. Test Gateway Active State (HTTP Proxy)
-
-Start the local or port-forwarded AgentGateway pod on `:8080`:
+Port-forward the Cortex Gateway service on `:8080` and set `MESH_PROFILE=cluster`:
 
 ```bash
 kubectl port-forward -n cortex svc/agentgateway 8080:8080
-```
-
-Re-run the router:
-
-```bash
-node plugins/packages/<plugin>/scripts/launcher.cjs firecrawl
+MESH_PROFILE=cluster node plugins/packages/research/scripts/launcher.cjs firecrawl
 ```
 
 Expected output on `stderr`:
-```
-[mesh-router] AgentGateway healthy. Routing 'firecrawl' via http://localhost:8080/mcp
+```text
+[launcher:research] Engaging cluster gateway for 'firecrawl' via http://localhost:8080/mcp
 ```
 
 ---
 
 ## Related References
 
-- [Dual-Transport and Zero-Downtime Failover Architecture](../explanation/dual-transport-and-zero-downtime-failover.md)
+- [Dual-Transport and Sovereign Failover Architecture](../explanation/dual-transport-and-zero-downtime-failover.md)
 - [MCP Server Catalog](../reference/mcp-server-catalog.md)
+- [Umbrella Package & Presets Specification](../reference/umbrella-package-and-presets.md)

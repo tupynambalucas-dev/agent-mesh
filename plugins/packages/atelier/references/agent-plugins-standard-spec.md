@@ -75,7 +75,7 @@ MCP servers must declare an explicit transport `"type"` (`stdio` or `streamable-
     "github": {
       "type": "stdio",
       "command": "node",
-      "args": ["dist/bin.js"],
+      "args": ["./scripts/launcher.cjs", "github-flow"],
       "env": {
         "DEBUG": "false"
       }

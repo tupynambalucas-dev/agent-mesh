@@ -1,21 +1,20 @@
 # Firecrawl MCP Server (`@tupynambalucas-dev/mcp-firecrawl`)
 
-Stateless Fastify MCP adapter that bridges AgentGateway to the Firecrawl
-web-intelligence API. Exposes six tools over a Streamable HTTP transport at
-`/mcp` on port `8080`.
+Dual-transport Model Context Protocol server that bridges AI agents and the Kubernetes Envoy AgentGateway to the Firecrawl web-intelligence API. Exposes six tools over both Stdio (`dist/bin.cjs` via `scripts/launcher.cjs`) and Streamable HTTP at `/mcp` on port `8080` (`dist/index.cjs`).
 
 ---
 
 ## Technology Stack
 
-| Layer             | Technology                                    |
-| :---------------- | :-------------------------------------------- |
-| Runtime           | Node.js 22                                    |
-| HTTP server       | Fastify 5                                     |
-| MCP transport     | `@modelcontextprotocol/sdk` (Streamable HTTP) |
-| Firecrawl client  | `@mendable/firecrawl-js` SDK                  |
-| Schema validation | Zod                                           |
-| Language          | TypeScript 5                                  |
+| Layer             | Technology                                               |
+| :---------------- | :------------------------------------------------------- |
+| Runtime           | Node.js 20+ (Node.js 22 LTS recommended)                 |
+| Bundler           | `tsup` (`noExternal` self-contained CommonJS bundles)    |
+| HTTP server       | Fastify 5                                                |
+| MCP transport     | `@modelcontextprotocol/sdk` (Stdio & Streamable HTTP)    |
+| Firecrawl client  | `firecrawl` SDK                                          |
+| Schema validation | Zod                                                      |
+| Language          | TypeScript 6                                             |
 
 ---
 
@@ -32,30 +31,15 @@ web-intelligence API. Exposes six tools over a Streamable HTTP transport at
 
 ---
 
-## Transport
+## Transport & Sovereign Execution
 
-- **Path**: `/mcp`
-- **Protocol**: Streamable HTTP (MCP specification)
-- **Session model**: Stateless. `sessionIdGenerator` is `undefined` — each POST
-  to `/mcp` instantiates a fresh `Server` object that is destroyed after the
-  response completes. No server-side session memory is retained between requests.
-
----
-
-## Architecture
-
-Each incoming POST to `/mcp` follows this flow:
-
-1. Fastify receives the request.
-2. A new `@modelcontextprotocol/sdk` `Server` instance is created with all six
-   tools registered.
-3. The MCP `StreamableHTTPServerTransport` handles framing and dispatches the
-   tool call to the corresponding Firecrawl SDK method.
-4. The result is returned and the `Server` instance is discarded.
-
-`localhost` / `127.0.0.1` URLs in tool arguments are automatically rewritten to
-`host.docker.internal` to allow containerized tools to reach host-machine
-processes.
+1. **Stdio Transport (`dist/bin.cjs` / `scripts/launcher.cjs`)**:
+   - Invoked directly by domain plugins (`@tupynambalucas-dev/plugin-research`, `@tupynambalucas-dev/plugin-web`) or standalone consumers via `node scripts/launcher.cjs`.
+   - Self-contained CJS bundle requires zero external packages in consumer `node_modules`.
+2. **Streamable HTTP Transport (`dist/index.cjs`)**:
+   - **Path**: `/mcp` on port `8080`.
+   - **Session model**: Stateless (`sessionIdGenerator: undefined`). Each POST to `/mcp` instantiates a fresh `Server` object that is disposed after the response completes.
+   - `localhost` / `127.0.0.1` URLs in tool arguments are automatically rewritten to `host.docker.internal` to allow containerized tools to reach host-machine processes.
 
 ---
 
@@ -63,7 +47,7 @@ processes.
 
 | Variable            | Required | Default                     | Description                                               |
 | :------------------ | :------: | :-------------------------- | :-------------------------------------------------------- |
-| `FIRECRAWL_API_KEY` |   Yes    | —                           | API key for the Firecrawl service.                        |
+| `FIRECRAWL_API_KEY` |   Yes    | *(none)*                    | API key for the Firecrawl service.                        |
 | `FIRECRAWL_API_URL` |    No    | `https://api.firecrawl.dev` | Firecrawl base URL. Override for self-hosted deployments. |
 | `PORT`              |    No    | `8080`                      | Port the Fastify server listens on.                       |
 | `NODE_ENV`          |    No    | `development`               | Runtime environment flag.                                 |
@@ -73,33 +57,20 @@ processes.
 ## Development Scripts
 
 ```bash
-pnpm dev        # tsx watch — hot-reload TypeScript development server
-pnpm build      # tsc — compile to dist/
-pnpm start      # node dist/index.js — run compiled output
-pnpm typecheck  # tsc --noEmit — type-check without emitting
-pnpm lint       # eslint — lint TypeScript sources
+pnpm dev                    # tsx watch src/index.ts - hot-reload development server
+pnpm build                  # tsup - bundle into dist/bin.cjs and dist/index.cjs
+node scripts/launcher.cjs   # Run sovereign Stdio launcher with .env cascade
+node dist/bin.cjs           # Run compiled Stdio bundle directly
+pnpm start                  # node dist/index.cjs - run compiled HTTP server
+pnpm typecheck              # tsc --noEmit - type-check without emitting
 ```
 
 ---
 
-## Health Check
+## Health Check (HTTP Mode)
 
-```
+```text
 GET /health
 ```
 
 Returns `{ "status": "healthy", "service": "firecrawl-mcp" }`.
-
----
-
-## Integration
-
-This service is not called directly by agents. It is registered as a downstream
-target in the AgentGateway configuration (`cortex/gateway/config.yaml`). All
-requests pass through:
-
-```
-AgentGateway (agentgateway:8080) -> mcp-firecrawl:8080/mcp
-```
-
-Do not configure agents to call `mcp-firecrawl` directly.

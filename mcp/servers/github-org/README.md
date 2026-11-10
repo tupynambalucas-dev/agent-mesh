@@ -6,7 +6,9 @@ Domain-scoped Model Context Protocol server for GitHub organization governance, 
 
 ## 1. Overview
 
-`@tupynambalucas-dev/mcp-github-org` provides a dual-transport interface (Fastify Streamable HTTP on `:8080` and Stdio via `dist/bin.js`) bound exclusively to [`@tupynambalucas-dev/plugin-github-org`](../../../plugins/packages/github-org/README.md). Authentication and shared schemas are delegated to [`@tupynambalucas-dev/mcp-core-github`](../../core/github/README.md).
+`@tupynambalucas-dev/mcp-github-org` provides a dual-transport interface (Fastify Streamable HTTP on `:8080` via `dist/index.cjs` and Stdio via `dist/bin.cjs` / `scripts/launcher.cjs`) bound to [`@tupynambalucas-dev/plugin-github-org`](../../../plugins/packages/github-org/README.md).
+
+Authentication and shared schemas from [`@tupynambalucas-dev/mcp-core-github`](../../core/github/README.md) alongside `@modelcontextprotocol/sdk` and `@octokit/*` are bundled directly into `dist/bin.cjs` via `tsup` (`noExternal`), enabling zero-dependency execution across external consumer repositories.
 
 ---
 
@@ -40,12 +42,15 @@ Domain-scoped Model Context Protocol server for GitHub organization governance, 
 ## 4. Building and Running
 
 ```bash
-# Build the TypeScript package
+# Bundle the package into dist/bin.cjs and dist/index.cjs
 pnpm mcp:github-org:build
 
-# Run via Stdio
-node dist/bin.js
+# Run via Sovereign Launcher (loads .env cascade)
+node scripts/launcher.cjs
+
+# Run via Stdio bundle directly
+node dist/bin.cjs
 
 # Run HTTP server
-node dist/index.js
+node dist/index.cjs
 ```

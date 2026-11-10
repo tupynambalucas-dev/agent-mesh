@@ -42,6 +42,11 @@ To enable frictionless consumption across external repositories (such as `omnich
    - Supports Cluster Gateway fallback (`MESH_PROFILE=cluster`) via `CORTEX_GATEWAY_URL`.
 3. **Declarative MCP Stdio Specification (`mcp.json`)**:
    - Each MCP server ships its own `mcp.json` declaring its executable command (`node ./scripts/launcher.cjs`), allowing direct inclusion in Antigravity or Claude Code configurations.
+4. **Playwright Resilient Fallback (`mcp-playwright`)**:
+   - Because OS-native browser binaries cannot be inlined into a JS bundle, `mcp/servers/playwright/tsup.config.ts` marks `playwright` and `playwright-core` as external while bundling `@modelcontextprotocol/sdk`, `fastify`, `zod`, `dotenv`, and `ws`.
+   - When `mcp/servers/playwright/scripts/launcher.cjs` runs, it checks whether `playwright` is resolvable in the local workspace: if present, it spawns the bundled `dist/bin.cjs`; if absent (e.g., in backend services like `omnichannel`), it automatically falls back to `npx -y @playwright/mcp@0.0.84` with all configured mode flags (`--headless`, `--user-data-dir`, `--extension`, `--cdp-endpoint`).
+5. **Git Persistence for Zero-Token Consumption (`!mcp/servers/*/dist/`)**:
+   - All `mcp/servers/*/dist/*.cjs` bundles are tracked in Git so external repositories consuming `github:tupynambalucas-dev/agent-mesh` can execute every MCP server immediately without a build step or `NODE_AUTH_TOKEN`.
 
 ---
 

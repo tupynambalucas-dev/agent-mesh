@@ -36,9 +36,20 @@ Enterprise Antigravity and Claude Code domain plugin for repository governance, 
 
 ## 4. Usage & Activation
 
-### Antigravity (`agy`)
+### Antigravity (`agy`) — External Repositories (Umbrella Package)
 
-Add to `.agents/plugins.json` in your project root:
+```json
+{
+  "entries": [
+    {
+      "path": "node_modules/@tupynambalucas-dev/agent-mesh/plugins/packages",
+      "include_only": ["repo"]
+    }
+  ]
+}
+```
+
+### Antigravity (`agy`) — Meta-Repository Root (`org-core`)
 
 ```json
 {

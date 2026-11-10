@@ -12,6 +12,9 @@ This bounded context encapsulates the in-house Model Context Protocol server pro
 
 ## Directory Layout
 
+- [scripts/launcher.cjs](./scripts/launcher.cjs): Sovereign MCP launcher (`bin: mcp-gwork`) loading `.env` in cascade and executing `dist/bin.cjs` or routing to the Cortex Gateway.
+- [mcp.json](./mcp.json): Agent Plugins 1.0.0 stdio server configuration targeting `./scripts/launcher.cjs`.
+- [tsup.config.ts](./tsup.config.ts): Declarative `tsup` configuration bundling all dependencies (`noExternal`) into `dist/bin.cjs` and `dist/index.cjs`.
 - [src/bin.ts](./src/bin.ts): Stdio transport entrypoint executing the MCP server over standard input/output.
 - [src/index.ts](./src/index.ts): Fastify Streamable HTTP transport entrypoint listening on `:8080`.
 - [src/config.ts](./src/config.ts): Configuration schema via Zod (`GOOGLE_SERVICE_ACCOUNT_JSON`).
@@ -29,6 +32,6 @@ This bounded context encapsulates the in-house Model Context Protocol server pro
 
 ## Required Skills
 
-- **`gwork-drive-manager`**: Active when searching and organizing Google Drive folders and files.
-- **`gwork-sheets-builder`**: Active when generating structured spreadsheets for AppSheet databases.
-- **`gwork-docs-publisher`**: Active when publishing formatted technical specifications into Google Docs.
+- **`gwork-drive-operator`**: Active when searching and organizing Google Drive folders and files.
+- **`gwork-sheets-architect`**: Active when generating structured spreadsheets for AppSheet databases.
+- **`gwork-docs-architect`**: Active when publishing formatted technical specifications into Google Docs.

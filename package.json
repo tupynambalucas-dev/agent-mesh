@@ -18,6 +18,7 @@
     "dev": "turbo run dev",
     "clean": "turbo run clean",
     "typecheck": "turbo run typecheck",
+    "plugins:validate": "node -e \"const {execSync}=require('child_process'),fs=require('fs'),path=require('path'),dir=path.join('plugins','packages');for(const p of fs.readdirSync(dir)){const full=path.join(dir,p);if(fs.statSync(full).isDirectory()){console.log('[plugins:validate] Validating',p);execSync('agy plugin validate . --strict',{cwd:full,stdio:'inherit'});}}\"",
     "// MCP Context (All In-House MCP Packages)": "-------------------------------",
     "mcp:build": "turbo run build --filter=\"@tupynambalucas-dev/mcp-*\"",
     "mcp:dev": "turbo run dev --filter=\"@tupynambalucas-dev/mcp-*\"",

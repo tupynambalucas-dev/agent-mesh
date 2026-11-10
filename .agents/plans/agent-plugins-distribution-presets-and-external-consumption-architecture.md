@@ -5,6 +5,10 @@
 **Domain**: AI Agent Plugins Distribution, Umbrella Meta-Packages, Antigravity Discovery, Cross-Repo MCP Runtimes  
 **Document Standard**: en-US Technical Specification (Strict Zero-Emoji Policy)
 
+> [!IMPORTANT]
+> **Implementation Status & Post-Execution Evolution (`v1.2.0`)**:
+> This architectural blueprint has been implemented and extended with **Self-Contained `tsup` MCP Bundling (`dist/bin.cjs`)**, **Two-Tier Sovereign Launchers**, and **Zero-Token Git Package Distribution (`github:tupynambalucas-dev/agent-mesh`)** to bypass GitHub Packages' mandatory `read:packages` token requirement on unauthenticated installs. For the active operational specification, see [Umbrella Package & Presets Specification](../../references/reference/umbrella-package-and-presets.md) and [Consuming Plugins in Antigravity and Claude Code](../../references/how-to-guides/consuming-plugins-in-antigravity-and-claude.md).
+
 ---
 
 ## 1. Executive Summary & Diagnostic of Current State
