@@ -44,12 +44,22 @@ The `agent-mesh` repository is structured as a pnpm monorepo managed with Turbor
 
 When opened as part of the `tupynambalucas-dev/org-core` multi-root workspace orchestrated via Mani, this repository operates as an autonomous sovereign repository while adhering to the cross-repository context defined in `org-core/AGENTS.md`.
 
+## Architectural Plans & Artifact Dual-Storage Standard
+
+Architectural blueprints, technical analyses, and master plans follow strict enterprise storage standards:
+- **Storage Location**: Blueprints, analyses, and reports reside in `plans/<artifact-slug>/` (or `plans/<artifact-slug>.md`), with `.agents/plans/<artifact-slug>/` fully recognized for backward compatibility.
+- **Topologies**: Topology 1 (Single-File Artifact) for atomic refactors, analyses, and reports; Topology 2 (Multi-Artifact Suite) for multi-domain frameworks with master `README.md` and numbered domain documents.
+- **Dual-Storage Invariant**: Whenever an agent creates an architectural plan, analysis, or report artifact in the Antigravity conversation directory (`<appDataDir>/brain/<conversation-id>/`), an identical synchronized copy MUST ALWAYS be mirrored in `plans/<artifact-slug>/` (or `plans/<artifact-slug>.md`).
+- **Ignore & Index Triad**: All repositories ignore `plans/` and `.agents/plans/` in `.gitignore`, while explicitly un-ignoring them in `.ignore` and `.rgignore` (`!plans/`, `!plans/**`, `!.agents/plans/`, `!.agents/plans/**`) and setting `"search.useIgnoreFiles": false` in `.vscode/settings.json` so files can always be attached with `@`.
+
 ## Required Skills
 
 When authoring or modifying documents and configurations in this monorepo, agents MUST activate the relevant skill:
 
+- **`plan-architect`**: Active when designing, structuring, authoring, or auditing architectural plans, technical analyses, and governance reports following the dual-storage standard.
 - **`router-architect`**: Active when authoring or reviewing any `AGENTS.md` context router file.
 - **`readme-architect`, `monorepo-architect`, `github-standards-architect`**: Active when creating or modifying any `README.md`, workspace configuration, or `.github` asset.
+- **`mani-operator`**: Active when auditing or maintaining multi-repo manifests and synchronization rules.
 - **`plugin-architect`**: Active when managing `plugin.json` manifests, pnpm workspaces, and catalogs.
 - **`skill-architect`**: Active when authoring, auditing, or optimizing modular `SKILL.md` files.
 - **`rule-architect`**: Active when authoring or auditing domain rules and Autonomous Domain Mandates.
