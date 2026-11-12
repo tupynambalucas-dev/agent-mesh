@@ -36,10 +36,10 @@ trigger: always_on
    - The `.env.example` file MUST adhere strictly to the enterprise format exemplified by `platform/k8s/.env.example`: boxed ASCII headers, numbered domain sections, inline descriptive comments (`# --`), and standardized `<YOUR_VARIABLE_NAME>` placeholders.
    - Never commit or emit plaintext secrets, passwords, API tokens, or private keys in `.env.example`.
 
-8. Architectural Plan Taxonomy and Storage Invariant:
-   - All architectural plans, master plans, and implementation blueprints must reside strictly within `.agents/plans/<plan-slug>/`.
-   - Dual-Storage Invariant: Whenever an agent generates or updates an architectural plan artifact (even when written to the conversation brain directory `<appDataDir>/brain/<conversation-id>/`), an identical synchronized copy MUST ALWAYS be created in the target repository's planning container at `.agents/plans/<plan-slug>/`.
-   - Single-artifact plans must declare a complete specification in `.agents/plans/<plan-slug>/README.md` (or `.agents/plans/<plan-slug>.md`).
+8. Architectural Plan, Analysis & Report Artifact Storage Invariant:
+   - All architectural plans, technical analyses, master blueprints, and governance/audit reports must reside strictly within `<workspace-root>/plans/<artifact-slug>/` (or `<workspace-root>/plans/<artifact-slug>.md`), with `<workspace-root>/.agents/plans/<artifact-slug>/` fully recognized for backward compatibility.
+   - Dual-Storage Invariant: Whenever an agent generates or updates an architectural plan, technical analysis, or report artifact (even when written to the conversation brain directory `<appDataDir>/brain/<conversation-id>/`), an identical synchronized copy MUST ALWAYS be created in the target workspace's planning container at `plans/<artifact-slug>/` (or `plans/<artifact-slug>.md`).
+   - Single-artifact documents must declare a complete specification in `plans/<artifact-slug>.md` (or `plans/<artifact-slug>/README.md`).
    - Multi-artifact plan suites must conform to the gold standard of `.github/.agents/plans/github-app-architecture/`: Master `README.md` declaring Strategic Baseline, Mermaid diagrams, Document Suite Catalog table, and modular numbered domain documents.
-   - Anti-Proliferation: Plan folders MUST NOT declare child `AGENTS.md` context routers (strictly governed by Rule 6).
-   - Git Ignore & Visibility Invariant: Planning containers (`.agents/plans/` and `plans/`) MUST be ignored by `.gitignore` across all repositories, while explicitly declaring negative un-ignore patterns in `.ignore` and `.rgignore` (`!.agents/plans/`, `!.agents/plans/**`, `!plans/`, `!plans/**`) so files can always be attached via `@`.
+   - Anti-Proliferation: Artifact containers (`plans/`, `.agents/plans/`) MUST NOT declare child `AGENTS.md` context routers (strictly governed by Rule 6).
+   - Git Ignore & Visibility Invariant: Planning containers (`plans/` and `.agents/plans/`) MUST be ignored by `.gitignore` across all repositories, while explicitly declaring negative un-ignore patterns in `.ignore` and `.rgignore` (`!plans/`, `!plans/**`, `!.agents/plans/`, `!.agents/plans/**`) so files can always be attached via `@`.

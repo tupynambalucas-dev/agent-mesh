@@ -1,58 +1,67 @@
 ---
 name: plan-architect
-description: Authors, structures, and audits master architectural plans and execution blueprints inside .agents/plans/<plan-slug>/ for both single-artifact plans and multi-artifact suites following the enterprise standard.
+description: Authors, structures, and audits master architectural plans, technical analyses, and governance/audit reports inside plans/<slug>/ (or .agents/plans/<slug>/) for both single-artifact documents and multi-artifact suites following the enterprise dual-storage standard.
 ---
 
-# Architectural Plan & Blueprint Architect
+# Architectural Plan, Analysis & Report Architect
 
-This skill guides the design, structuring, authoring, and auditing of master architectural plans and execution blueprints across the `tupynambalucas-dev` organization.
+This skill guides the design, structuring, authoring, and auditing of master architectural plans, technical analyses, and governance/audit reports across the `tupynambalucas-dev` organization.
 
 ---
 
-## 1. Plan Storage & Dual-Storage Invariant
+## 1. Storage Location & Dual-Storage Invariant
 
-All architectural plans, master plans, and implementation blueprints must reside strictly within:
+All architectural plans, technical analyses, and governance reports must reside strictly within:
 
 ```plaintext
-<repo-root>/.agents/plans/<plan-slug>/
+<workspace-root>/plans/<artifact-slug>/
+# or for single-file artifacts:
+<workspace-root>/plans/<artifact-slug>.md
+# with full backward compatibility for:
+<workspace-root>/.agents/plans/<artifact-slug>/
 ```
 
+### The Three Artifact Classes:
+1. **Architectural Plans & Implementation Blueprints**: Master plans, migration strategies, execution roadmaps, and multi-artifact suites.
+2. **Architectural Analyses & Technical Deep-Dives**: Architectural trade-off reviews, RFC-style evaluations, protocol analyses, and library assessments.
+3. **Governance, Audit & Verification Reports**: Compliance audits, refactoring reports, post-mortems, security assessments, and verification logs.
+
 ### The Dual-Storage Invariant for Artifacts:
-Whenever an agent creates or updates an architectural plan, design blueprint, or specification artifact:
-1. **Internal Session Artifact**: The agent may write the artifact to the Antigravity conversation directory (`<appDataDir>/brain/<conversation-id>/`).
-2. **Repository Mirror (Mandatory)**: An identical, synchronized copy MUST ALWAYS be authored directly in the target repository's planning container at `<repo-root>/.agents/plans/<plan-slug>/` (or `<repo-root>/plans/<plan-slug>/`).
+Whenever an agent creates or updates an architectural plan, technical analysis, design blueprint, or report artifact:
+1. **Internal Session Artifact**: The agent writes the artifact to the Antigravity conversation directory (`<appDataDir>/brain/<conversation-id>/`).
+2. **Workspace Mirror (Mandatory)**: An identical, synchronized copy MUST ALWAYS be authored directly in the target workspace's planning container at `<workspace-root>/plans/<artifact-slug>/` (or `<workspace-root>/plans/<artifact-slug>.md`).
 3. **Rationale**: This guarantees that architectural artifacts are permanently persisted within the codebase, accessible across different developer sessions, fully resolvable offline, and immediately available for `@` mention context resolution.
 
 ### The Universal Ignore & Indexing Standard:
 Every repository across the organization MUST declare the ignore-and-index triad:
-- **`.gitignore`**: Ignores `.agents/plans/` and `plans/` so working blueprints never pollute Git history or trigger dirty working tree states in production.
-- **`.ignore`**: Declares negative negation rules (`!.agents/plans/`, `!.agents/plans/**`, `!plans/`, `!plans/**`).
-- **`.rgignore`**: Declares identical negative negation rules (`!.agents/plans/`, `!.agents/plans/**`, `!plans/`, `!plans/**`).
+- **`.gitignore`**: Ignores `plans/` and `.agents/plans/` so working blueprints, analyses, and reports never pollute Git history or trigger dirty working tree states in production.
+- **`.ignore`**: Declares negative negation rules (`!plans/`, `!plans/**`, `!.agents/plans/`, `!.agents/plans/**`).
+- **`.rgignore`**: Declares identical negative negation rules (`!plans/`, `!plans/**`, `!.agents/plans/`, `!.agents/plans/**`).
 - **`.vscode/settings.json`**: Sets `"search.useIgnoreFiles": false` so IDE and CLI search engines index plan files for `@` mentions.
 
 ### Additional Constraints:
-- **Slug Taxonomy**: `<plan-slug>` must be kebab-case (e.g. `github-app-architecture`, `cortex-gateway-migration`, `omnichannel-guided-flow`).
-- **Layer 4+ Context Anti-Proliferation**: Planning containers (`.agents/plans/`) MUST NOT declare child `AGENTS.md` context routers. The parent repository or subsystem context router governs the entire repository.
+- **Slug Taxonomy**: `<artifact-slug>` must be kebab-case (e.g. `github-app-architecture`, `cortex-gateway-migration`, `agent-mesh-refactoring-and-governance-report`).
+- **Layer 4+ Context Anti-Proliferation**: Planning containers (`plans/`, `.agents/plans/`) MUST NOT declare child `AGENTS.md` context routers. The parent repository or subsystem context router governs the entire repository.
 
 ---
 
-## 2. Two Canonical Plan Topologies
+## 2. Canonical Topologies: Single-File vs Multi-Artifact Suite
 
-Plans must be authored in one of two distinct structural topologies:
+Artifacts must be authored in one of two distinct structural topologies:
 
 | Topology | Best For | Directory & File Anatomy |
 | :--- | :--- | :--- |
-| **Topology 1: Single-File Plan** | Atomic features, single-domain refactors, self-contained runbooks | `<repo>/.agents/plans/<plan-slug>/README.md` (or `<plan-slug>.md`) |
-| **Topology 2: Multi-Artifact Plan Suite** | Multi-subsystem architectures, enterprise governance frameworks, complex workflows | `<repo>/.agents/plans/<plan-slug>/` with Master `README.md` + numbered domain documents |
+| **Topology 1: Single-File Artifact** | Atomic features, single-domain analyses, refactoring reports, self-contained runbooks | `<workspace>/plans/<slug>.md` (or `<workspace>/plans/<slug>/README.md`) |
+| **Topology 2: Multi-Artifact Suite** | Multi-subsystem architectures, enterprise governance frameworks, complex multi-domain workflows | `<workspace>/plans/<slug>/` with Master `README.md` + numbered domain documents |
 
 ---
 
-## 3. Topology 2: Multi-Artifact Plan Suite Standard (The Gold Standard)
+## 3. Topology 2: Multi-Artifact Suite Standard (The Gold Standard)
 
 Multi-artifact plan suites follow the enterprise architecture exemplified by `.github/.agents/plans/github-app-architecture/`:
 
 ```plaintext
-.agents/plans/<plan-slug>/
+plans/<plan-slug>/
 ├── README.md                                             # Master Plan, Strategic Baseline & Document Suite Catalog
 ├── 01-core-fundamentals-and-webhooks.md                  # Core principles, protocols, taxonomy, and comparison matrix
 ├── 02-topology-and-permissions-catalog.md                # Multi-tier topology, models, exhaustive permissions matrix
@@ -118,16 +127,18 @@ flowchart TD
 
 ## 5. Navigation
 
-- [Parent Architectural Plans Index](../README.md)
+- [Parent Plans Index](../README.md)
 - [Repository Root](../../README.md)
 - [Enterprise Agent Mesh Context Router](../../agent-mesh/AGENTS.md)
 ```
 
 ---
 
-## 4. Topology 1: Single-File Plan Standard
+## 4. Topology 1: Single-File Artifact Templates
 
-For focused, atomic features or isolated domain tasks, author a single document (`.agents/plans/<plan-slug>/README.md` or `.agents/plans/<plan-slug>.md`):
+### Template 1A: Architectural Implementation Plan
+
+For focused, atomic features or isolated domain refactors, author a single document (`plans/<plan-slug>.md` or `plans/<plan-slug>/README.md`):
 
 ```markdown
 # [Feature/Refactor Slug] Implementation Plan
@@ -184,18 +195,93 @@ pnpm typecheck
 - [Parent Plans Index](../README.md)
 ```
 
+### Template 1B: Technical Analysis & Architectural Deep-Dive
+
+For evaluating architectural alternatives, trade-offs, performance benchmarks, or migration feasibility (`plans/<slug>-analysis.md`):
+
+```markdown
+# [Domain/Subsystem] Architectural Analysis & Technical Evaluation
+
+Deep architectural evaluation, risk assessment, and technical trade-off matrix for [Domain/Subsystem].
+
 ---
 
-## 5. Quality Checklist & Verification for Plans
+## 1. Executive Overview & Problem Statement
+Detailed context, architectural friction points, and evaluation motivation.
 
-Before finalizing any architectural plan:
-- [ ] **Dual-Storage Invariant**: An identical copy is persisted at `<repo-root>/.agents/plans/<plan-slug>/`.
-- [ ] **Universal Ignore & Indexing**: The repository maintains `.gitignore`, `.ignore`, and `.rgignore` for plans.
+---
+
+## 2. Architectural Comparison Matrix
+
+| Dimension | Pattern A ([Option 1]) | Pattern B ([Option 2]) | Selected Approach |
+| :--- | :--- | :--- | :--- |
+| **Complexity** | Low | High | Pattern A |
+| **Security / Isolation** | Isolated sandbox | Shared process | Pattern A |
+| **Performance Overhead** | Minimal | Moderate | Pattern A |
+| **Maintainability** | High | Low | Pattern A |
+
+---
+
+## 3. Structural Topology & Risk Assessment
+\`\`\`mermaid
+flowchart TD
+    Current["Current State"] --> Transition["Refactoring Path"]
+    Transition --> Target["Target Architecture"]
+\`\`\`
+
+---
+
+## 4. Architectural Recommendations & Next Steps
+- **Immediate Action 1**: Technical mitigation and baseline implementation.
+- **Immediate Action 2**: Policy updates and automated rule enforcement.
+```
+
+### Template 1C: Governance, Audit & Verification Report
+
+For documenting refactoring results, compliance audits, or security inspections (`plans/<slug>-report.md`):
+
+```markdown
+# [Domain/Subsystem] Governance & Refactoring Audit Report
+
+Executive audit report and verification findings for [Domain/Subsystem].
+
+---
+
+## 1. Audit Scope & Baseline Objectives
+Audit parameters, checked components, and organizational governance criteria.
+
+---
+
+## 2. Compliance & Verification Findings
+
+| Component / File | Compliance Status | Rule Reference | Remediated Action |
+| :--- | :--- | :--- | :--- |
+| `component-a` | Compliant | Rule 1 | Verified zero drift |
+| `component-b` | Remediated | Rule 7 | Scaffolding updated |
+
+---
+
+## 3. Terminal Runbook & Verification Evidence
+Terminal outputs, status checks, and cryptographic verification logs.
+
+---
+
+## 4. Final Disposition & Sign-off
+Summary of remediations and sign-off criteria.
+```
+
+---
+
+## 5. Quality Checklist & Verification for Artifacts
+
+Before finalizing any plan, analysis, or report artifact:
+- [ ] **Dual-Storage Invariant**: An identical copy is persisted at `<workspace-root>/plans/<artifact-slug>/` (or `<workspace-root>/plans/<artifact-slug>.md`).
+- [ ] **Universal Ignore & Indexing**: The workspace maintains `.gitignore`, `.ignore`, and `.rgignore` ignoring `plans/` while preserving `@` indexing.
 - [ ] **Topology Alignment**: Correctly chosen between Topology 1 (Single-File) and Topology 2 (Multi-Artifact Suite).
-- [ ] **Strategic Baseline**: Plan starts with clear Strategic Decisions and Architecture Baseline.
+- [ ] **Strategic Baseline**: Plan or analysis starts with clear Strategic Decisions and Architecture Baseline.
 - [ ] **Mermaid Visualizations**: Includes at least one Mermaid topology diagram (`flowchart TD` or `sequenceDiagram`).
-- [ ] **Document Suite Catalog**: Multi-artifact plans contain a structured catalog table indexing all child documents.
-- [ ] **Phased Roadmap**: Implementation roadmap contains explicit phased checkboxes (`- [ ]`).
+- [ ] **Document Suite Catalog**: Multi-artifact suites contain a structured catalog table indexing all child documents.
+- [ ] **Phased Roadmap / Action Items**: Implementation plans contain explicit phased checkboxes (`- [ ]`).
 - [ ] **Zero-Emoji Policy**: Strictly zero emojis across all headings, tables, code blocks, and body text.
 - [ ] **Link Integrity**: All relative markdown links point to existing files on disk.
 - [ ] **Layer 4+ Anti-Proliferation**: The plan container does NOT declare a child `AGENTS.md` context router.

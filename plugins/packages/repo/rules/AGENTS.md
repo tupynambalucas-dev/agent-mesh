@@ -55,8 +55,8 @@ trigger: always_on
    - The top-level `sync_gitignore` configuration in `mani.yaml` MUST always be explicitly set to `false` (`sync_gitignore: false`).
    - Meta-repositories MUST pair `mani.yaml` with `.ignore` and `.rgignore` negation rules (`!managed-repo/` and `!managed-repo/**`) to preserve search and `@` mention indexing while keeping meta-repo Git status clean.
 
-10. The Agent Plans Directory Ignore Invariant:
-   - Every repository across the organization MUST ignore planning containers (`.agents/plans/` and `plans/`) in `.gitignore` to prevent working blueprints from cluttering Git history.
-   - To guarantee that developers and AI agents can still attach and search files from `.agents/plans/` via `@`, every repository MUST declare negative negation rules in `.ignore` and `.rgignore` (`!.agents/plans/`, `!.agents/plans/**`, `!plans/`, `!plans/**`).
-   - Dual-Storage Invariant: Whenever an agent creates an architectural plan artifact in the Antigravity conversation directory, an identical synchronized copy MUST ALWAYS be mirrored directly in `.agents/plans/<plan-slug>/` within the target repository.
-   - Bounded Context Rule: Plans containers (`.agents/plans/`) MUST NOT declare child `AGENTS.md` context routers (strictly governed by Rule 1).
+10. The Workspace Plans, Analyses & Reports Artifact Invariant:
+   - Every repository across the organization MUST ignore planning containers (`plans/` and `.agents/plans/`) in `.gitignore` to prevent working blueprints, analyses, and reports from cluttering Git history.
+   - To guarantee that developers and AI agents can still attach and search files from `plans/` and `.agents/plans/` via `@`, every repository MUST declare negative negation rules in `.ignore` and `.rgignore` (`!plans/`, `!plans/**`, `!.agents/plans/`, `!.agents/plans/**`).
+   - Dual-Storage Invariant: Whenever an agent creates an architectural plan, technical analysis, or report artifact in the Antigravity conversation directory, an identical synchronized copy MUST ALWAYS be mirrored directly in `plans/<artifact-slug>/` (or `plans/<artifact-slug>.md`) within the target repository.
+   - Bounded Context Rule: Artifact containers (`plans/`, `.agents/plans/`) MUST NOT declare child `AGENTS.md` context routers (strictly governed by Rule 1).
