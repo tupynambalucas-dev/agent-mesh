@@ -5,13 +5,13 @@ description: Orchestrates multi-repository workspaces, executes batch tasks acro
 
 # Mani Multi-Repository Operator
 
-This skill provides comprehensive operational runbooks and standards for managing multi-repository workspaces using the [Mani CLI](https://manicli.com) (`mani`) across the `tupynambalucas-dev` organization.
+This skill provides comprehensive operational runbooks and standards for managing multi-repository workspaces using the [Mani CLI](https://manicli.com) (`mani`) across any multi-repository environment, with production reference configurations from the `tupynambalucas-dev` organization (`org-core`, `org-ecosystem`).
 
 ---
 
 ## 1. Overview and Core Philosophy
 
-In our architecture, meta-repositories (`org-core`, `org-ecosystem`) use **Mani** rather than Git submodules (`160000` gitlinks) or monolithic monorepos. This provides:
+In our architecture, meta-repositories (such as `org-core`, `org-ecosystem`, or any multi-repo workspace) use **Mani** rather than Git submodules (`160000` gitlinks) or monolithic monorepos. This provides:
 - **Independent Git Histories**: Each repository maintains sovereign branches, commits, tags, and PR lifecycles.
 - **Unified Workspace Experience**: Developers and AI agents can execute cross-cutting batch queries, status checks, and branch operations from a single terminal or IDE workspace.
 - **Selective Tag Targeting**: Workflows can target subsets of repositories (e.g. `commercial`, `internal`, `core`, `governance`) without checking out unneeded code.
@@ -29,7 +29,7 @@ sync_gitignore: false
 projects:
   project-slug:
     path: relative/path/to/project
-    url: git@github.com:tupynambalucas-dev/project-slug.git
+    url: git@github.com:<org>/project-slug.git
     desc: Brief functional description of the repository and its role.
     tags:
       - category-tag

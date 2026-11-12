@@ -5,14 +5,14 @@ description: Provisions GitHub Apps programmatically using the official GitHub A
 
 # GitHub App Provisioner
 
-Automates the creation and configuration of sovereign GitHub Apps for the `tupynambalucas-dev` organization using GitHub App Manifests.
+Automates the creation and configuration of sovereign GitHub Apps using GitHub App Manifests, with native profiles for `tupynambalucas-dev` and customizable profiles for external GitHub organizations.
 
 ---
 
 ## 1. When to Use
 
 Activate this skill when:
-- Bootstrapping a new organizational GitHub App (`tupynambalucas-github-manager` or `tupynambalucas-github-assistant`).
+- Bootstrapping a new organizational GitHub App (`<org>-github-manager` or `<org>-github-assistant`, defaulting to `tupynambalucas-github-manager` / `tupynambalucas-github-assistant` within the organization).
 - Rotating or regenerating GitHub App credentials and private keys.
 - Enrolling machine identities into Infisical vaults without manual browser form filling.
 
@@ -20,9 +20,9 @@ Activate this skill when:
 
 ## 2. Supported Profiles
 
-1. **`manager` (`tupynambalucas-github-manager`)**:
+1. **`manager` (`<org>-github-manager`)**:
    - Full organizational administration, member management, branch protection rulesets, and security auditing (Secret Scanning, Dependabot).
-2. **`assistant` (`tupynambalucas-github-assistant`)**:
+2. **`assistant` (`<org>-github-assistant`)**:
    - Scoped developer productivity: `contents: write`, `pull_requests: write`, `issues: write`, `actions: read`.
 
 ---

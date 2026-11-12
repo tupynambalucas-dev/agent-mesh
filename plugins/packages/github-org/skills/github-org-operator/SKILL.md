@@ -5,7 +5,7 @@ description: Automates organization RBAC, team creation, membership assignments,
 
 # GitHub Organization Operator Skill
 
-Use this skill to manage GitHub organization teams, assign repository RBAC permissions, create repositories, and manage collaborator access across the `tupynambalucas-dev` organization.
+Use this skill to manage GitHub organization teams, assign repository RBAC permissions, create repositories, and manage collaborator access across GitHub organizations, with default bindings for `tupynambalucas-dev`.
 
 ## Activation Triggers
 
@@ -19,7 +19,7 @@ Activate this skill when:
 ## Operational Standards
 
 1. Use GitHub CLI (`gh`) or `@octokit/rest` via the `cortex-github` MCP server.
-2. Organization target is strictly `tupynambalucas-dev`.
+2. Organization target defaults to `tupynambalucas-dev` within enterprise workspaces, or accepts `<target-org>` for external organizations.
 3. Default visibility for new organization projects is `private` unless explicitly directed.
 4. Always enforce the Zero-Emoji Policy across repository descriptions and team names.
 
@@ -31,7 +31,10 @@ Activate this skill when:
   ```
 - **Bootstrap Functional Teams**:
   ```bash
+  # In enterprise workspaces (defaults to tupynambalucas-dev):
   bash ./scripts/bootstrap-teams.sh "tupynambalucas-dev"
+  # In external organizations:
+  bash ./scripts/bootstrap-teams.sh "<target_org>"
   ```
 - **Synchronize Repository Permissions**:
   ```bash

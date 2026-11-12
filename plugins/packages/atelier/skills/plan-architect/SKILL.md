@@ -5,7 +5,7 @@ description: Authors, structures, and audits master architectural plans, technic
 
 # Architectural Plan, Analysis & Report Architect
 
-This skill guides the design, structuring, authoring, and auditing of master architectural plans, technical analyses, and governance/audit reports across the `tupynambalucas-dev` organization.
+This skill guides the design, structuring, authoring, and auditing of master architectural plans, technical analyses, and governance/audit reports across any software repository or organization, adhering to the enterprise dual-storage standard established in `tupynambalucas-dev`.
 
 ---
 
@@ -77,7 +77,7 @@ plans/<plan-slug>/
 ```markdown
 # [Domain] Enterprise Identity & Architecture Suite
 
-Master architectural plan, operational framework, and execution suite for [System/Domain] across the tupynambalucas-dev organization.
+Master architectural plan, operational framework, and execution suite for [System/Domain] across [Organization/Project].
 
 ---
 

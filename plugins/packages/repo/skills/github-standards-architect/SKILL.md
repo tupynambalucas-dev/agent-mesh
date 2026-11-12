@@ -5,7 +5,7 @@ description: Audits, scaffolds, and standardizes .github directories, CODEOWNERS
 
 # GitHub Standards Architect
 
-This skill defines the authoritative enterprise standard for authoring, auditing, and enforcing `.github` directory structures across all repositories within the `tupynambalucas-dev` organization (`.github`, `agent-mesh`, `platform`, `docs`, and `gh-tl`).
+This skill defines the authoritative enterprise standard for authoring, auditing, and enforcing `.github` directory structures across repositories, using `tupynambalucas-dev` (`.github`, `agent-mesh`, `platform`, `docs`, and `gh-tl`) as the canonical enterprise reference model.
 
 ---
 
@@ -13,9 +13,9 @@ This skill defines the authoritative enterprise standard for authoring, auditing
 
 > [!IMPORTANT]
 > **Organization-Wide .github Taxonomy Standard:**
-> 1. **Inheritance Maximization**: Repositories must leverage native GitHub organizational inheritance from `tupynambalucas-dev/.github` for community health files (`CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`), Pull Request templates, and YAML Issue Forms.
+> 1. **Inheritance Maximization**: Repositories must leverage native GitHub organizational inheritance from the organization repository (`.github`) for community health files (`CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`), Pull Request templates, and YAML Issue Forms.
 > 2. **Anti-Shadowing Invariant**: Child repositories MUST NOT define local `.github/ISSUE_TEMPLATE/` directories unless they require strictly bespoke, repository-specific schemas. Defining *any* local issue template suppresses all organization-level issue forms.
-> 3. **Mandatory Local Code Ownership**: GitHub strictly prohibits inheriting `CODEOWNERS` across repositories. Every repository MUST define `.github/CODEOWNERS` assigning global ownership to `@tupynambalucas-dev/core-maintainers`.
+> 3. **Mandatory Local Code Ownership**: GitHub strictly prohibits inheriting `CODEOWNERS` across repositories. Every repository MUST define `.github/CODEOWNERS` assigning global ownership (mapping `*` to `@tupynambalucas-dev/core-maintainers` in enterprise workspaces, or `@<org>/<team>` / `@<user>` in external repositories).
 > 4. **Composite Action Modularization**: Repositories must encapsulate repeated CI/CD logic into dedicated composite actions under `.github/actions/<action-name>/action.yml` following the Single Responsibility Principle.
 > 5. **Zero-Secret Repository Configs**: Monorepo `.npmrc` files committed to Git must strictly define registry and scope routing without embedding secrets or environment variables (`${NODE_AUTH_TOKEN}`). Authentication tokens are resolved exclusively via runner environments in CI or global user configs locally.
 > 6. **Zero-Script Monorepo Publishing**: Workflows must consume native toolchain primitives (`pnpm -r publish --access public --no-git-checks --report-summary`) and Turborepo caching rather than maintaining custom Node.js publication scripts.
@@ -39,7 +39,7 @@ This skill defines the authoritative enterprise standard for authoring, auditing
 ## 3. Standard File Templates
 
 ### 3.1 Standard `.github/CODEOWNERS`
-Every repository in the organization must declare:
+Every repository must declare code ownership. In `tupynambalucas-dev`:
 ```ini
 # Global owners for all files in this repository
 * @tupynambalucas-dev/core-maintainers
@@ -49,6 +49,7 @@ Every repository in the organization must declare:
 /pnpm-lock.yaml @tupynambalucas-dev/core-maintainers
 /package.json @tupynambalucas-dev/core-maintainers
 ```
+In external repositories, replace `@tupynambalucas-dev/core-maintainers` with the target organization or maintainer handle (e.g. `@<org>/<team>` or `@<user>`).
 
 ### 3.2 Standard `.github/dependabot.yml` (For pnpm Monorepos)
 ```yaml
@@ -228,7 +229,7 @@ pnpm -r publish --access public --no-git-checks --report-summary
 ## 5. Audit & Remediation Checklist
 
 When auditing a repository:
-1. Verify `.github/CODEOWNERS` exists and maps `*` to `@tupynambalucas-dev/core-maintainers`.
+1. Verify `.github/CODEOWNERS` exists and maps `*` to `@tupynambalucas-dev/core-maintainers` (or the target maintainer team `@<org>/<team>` in external repositories).
 2. Check if `.github/ISSUE_TEMPLATE/` exists locally in a child repo: if redundant with org templates, remove it to restore global YAML forms.
 3. Verify `.github/dependabot.yml` is configured with America/Sao_Paulo timezone and Conventional Commit prefixes (`chore`, `ci`).
 4. Ensure monorepo CI workflows consume `.github/actions/*` composite actions (`setup-pnpm-env`, `build-mcp`, `validate-plugins`) instead of maintaining inline bash blocks.

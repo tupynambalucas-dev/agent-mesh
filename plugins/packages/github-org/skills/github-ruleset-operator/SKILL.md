@@ -18,14 +18,17 @@ Activate this skill when:
 
 ## Enforcement Standard
 
-- All organization repositories MUST enforce cryptographic commit signing (`git commit -S`).
-- Direct pushes to `main` MUST be blocked; changes must flow via Pull Requests with required passing status checks.
+- When operating within `tupynambalucas-dev` or signed-commit organizations, repositories MUST enforce cryptographic commit signing (`git commit -S`).
+- Direct pushes to protected branches (`main`, `master`) MUST be blocked; changes must flow via Pull Requests with required passing status checks.
 
 ## Script Helpers & Runbooks
 
 - **Apply Branch Protection Rulesets**:
   ```bash
+  # In enterprise workspaces (defaults to tupynambalucas-dev):
   bash ./scripts/configure-rulesets.sh "tupynambalucas-dev" "<target_repo>"
+  # In external organizations:
+  bash ./scripts/configure-rulesets.sh "<target_org>" "<target_repo>"
   ```
 
 For detailed JSON schemas and ruleset definitions, consult [ruleset-schemas.md](./references/ruleset-schemas.md).

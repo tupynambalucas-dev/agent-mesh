@@ -5,7 +5,7 @@ description: Authors and audits standard GitHub community health and governance 
 
 # Community Health Architect
 
-This skill defines the authoritative specifications for authoring, auditing, and maintaining standard repository community health and governance files across `tupynambalucas-dev` repositories.
+This skill defines the authoritative specifications for authoring, auditing, and maintaining standard repository community health and governance files across open-source and enterprise repositories, with native presets for `tupynambalucas-dev`.
 
 ---
 
@@ -26,13 +26,13 @@ This skill defines the authoritative specifications for authoring, auditing, and
 
 ### A. `CODE_OF_CONDUCT.md`
 - MUST adopt Contributor Covenant v2.1.
-- MUST designate a valid security/governance contact email (`security@tupynambalucas.dev` or `conduct@tupynambalucas.dev`).
+- MUST designate a valid security/governance contact email (`security@tupynambalucas.dev` or `conduct@tupynambalucas.dev` in the organization, or the project contact email in external repositories).
 - MUST maintain zero emojis in headings or body text.
 
 ### B. `CONTRIBUTING.md`
 - **Prerequisites**: Node.js/pnpm/Docker/k3d versions.
 - **Branch Conventions**: `feat/<slug>`, `fix/<slug>`, `chore/<slug>` branching off `main`.
-- **Commit Standards**: Mandatory cryptographic SSH commit signing (`git commit -S -m "..."`) and Conventional Commits v1.0.0.
+- **Commit Standards**: Cryptographic SSH commit signing (`git commit -S -m "..."`) in signed-commit repositories / `tupynambalucas-dev`, and Conventional Commits v1.0.0.
 - **Pull Request Process**: PR template compliance, passing CI checks, and review requirements.
 
 ### C. `SECURITY.md`

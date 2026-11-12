@@ -46,7 +46,7 @@ When scaffolding a new plugin, the agent MUST first inspect the active repositor
 3. If the plugin provides tools, author both `mcp_config.json` (native Antigravity) and `mcp.json` (agent-plugins.org v1.0.0 with explicit `"type": "stdio"`).
 4. Author domain rules in `rules/AGENTS.md` with `trigger: always_on` and Rule 0 (Autonomous Domain Mandate).
 5. Create `skills/` directory and place domain skills adhering to the closed role vocabulary.
-6. Create `package.json` for npm package publishing as `@tupynambalucas-dev/plugin-<slug>`.
+6. Create `package.json` for npm package publishing as `@<scope>/plugin-<slug>` (or `@tupynambalucas-dev/plugin-<slug>` when operating in the organization).
 7. Register bare plugin slug in `.claude-plugin/marketplace.json`.
 8. Validate using `agy plugin validate plugins/packages/<slug> --strict`.
 
@@ -67,6 +67,9 @@ When consuming published organizational plugins via npm/pnpm in a downstream rep
 ### Rule 1: Root `package.json` Exclusivity
 - All plugin packages MUST be installed in the **root `package.json`** of the project as `devDependencies`:
   ```bash
+  # Enterprise or generic scoped package installation:
+  pnpm add -D @<scope>/plugin-<slug>
+  # For tupynambalucas-dev plugins:
   pnpm add -D @tupynambalucas-dev/plugin-atelier
   ```
 - **Prohibition**: NEVER create a `package.json` inside the `.agents/` directory. The `.agents/` folder is reserved strictly for customization configuration files (`plugins.json`, `skills.json`, local `rules/`, local `skills/`, and local `plugins/`).
@@ -76,6 +79,7 @@ When consuming published organizational plugins via npm/pnpm in a downstream rep
   ```json
   {
     "entries": [
+      { "path": "node_modules/@<scope>/plugin-<slug>" },
       { "path": "node_modules/@tupynambalucas-dev/plugin-atelier" }
     ]
   }
