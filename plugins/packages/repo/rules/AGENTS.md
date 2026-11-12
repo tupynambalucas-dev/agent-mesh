@@ -29,17 +29,17 @@ trigger: always_on
    - Workspace packages MUST consume shared dependencies strictly via pnpm catalogs (`catalog:` or `catalog:<name>`). Hardcoding raw version strings in package dependencies is prohibited.
    - Monorepos MUST implement modern TypeScript Project References (`tsconfig.base.json`, solution-style `tsconfig.json` with `files: []`, and package-level `tsconfig.json`). Legacy `tsconfig.build.json` files are strictly prohibited.
 
-6. Enterprise Package Name & Scope Invariant:
-   - All `package.json` manifests across repositories in the organization MUST use the `@tupynambalucas-dev/` npm scope.
-   - Package names MUST adhere strictly to the deterministic domain taxonomy:
+6. Enterprise Package Name & Scope Standard:
+   - When operating within the `tupynambalucas-dev` organization, all `package.json` manifests MUST strictly use the `@tupynambalucas-dev/` npm scope and adhere to the deterministic domain taxonomy:
      - `agent-mesh` plugins: `@tupynambalucas-dev/plugin-<slug>`
      - `agent-mesh` MCP servers: `@tupynambalucas-dev/mcp-<slug>`
      - `platform` packages/services: `@tupynambalucas-dev/<domain>-<subsystem>` (e.g., `corporate-api`, `corporate-web`, `corporate-core`, `cortex-memory-api`, `studio-assets`, `tools-github`, `shared-config`, `k8s`, `renderer`).
      - Standalone repositories: `@tupynambalucas-dev/<repo>-<service>` and `@tupynambalucas-dev/plugin-<slug>`.
+   - In external workspaces or third-party repositories, adapt dynamically to the target workspace's existing npm scope (`@<scope>/<name>`) or package naming convention without imposing organizational scopes.
 
-7. Organization-Wide .github Directory & Workflow Taxonomy Invariant:
-   - All repositories across the organization MUST declare local `.github/CODEOWNERS` mapping `*` to `@tupynambalucas-dev/core-maintainers`.
-   - Child repositories MUST NOT define local `.github/ISSUE_TEMPLATE/` directories unless strictly required, preserving native organizational inheritance from `tupynambalucas-dev/.github` without shadowing.
+7. Organization-Wide .github Directory & Workflow Taxonomy Standard:
+   - In the `tupynambalucas-dev` organization, all repositories MUST declare local `.github/CODEOWNERS` mapping `*` to `@tupynambalucas-dev/core-maintainers`. Child repositories preserve native organizational inheritance from `tupynambalucas-dev/.github` without local issue template shadowing.
+   - In external repositories, inspect existing CODEOWNERS, root maintainers, or repository configuration to set appropriate ownership and issue templates without hardcoding organizational team handles.
    - Monorepos must standardize `.github/actions/` composite action primitives (`setup-pnpm-env`, domain validations) for unified runtime setup and step modularity.
    - Workflows must declare least-privilege token permissions, strict concurrency cancellation groups (`concurrency.cancel-in-progress: true` for CI), and third-party action SHA pinning with semver comments.
    - Monorepo publishing must execute natively via `pnpm -r publish --access public --no-git-checks --report-summary` with Zero-Script overhead.

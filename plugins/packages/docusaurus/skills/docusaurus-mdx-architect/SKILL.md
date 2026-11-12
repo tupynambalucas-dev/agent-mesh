@@ -36,7 +36,7 @@ import TabItem from '@theme/TabItem';
 <Tabs>
   <TabItem value="pnpm" label="pnpm" default>
     ```bash
-    pnpm add @tupynambalucas-dev/agent-mesh
+    pnpm add @<scope>/<package>
     ```
   </TabItem>
 </Tabs>

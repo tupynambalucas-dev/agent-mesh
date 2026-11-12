@@ -1,6 +1,6 @@
 ---
 name: monorepo-architect
-description: Designs and maintains enterprise monorepo workspace configurations, pnpm catalogs, package manifest naming taxonomies (@tupynambalucas-dev/*), Turborepo pipelines, and hierarchical project-referenced TypeScript architectures (tsconfig.base.json, tsconfig.json, tsconfig.node.json, tsconfig.app.json).
+description: Designs and maintains enterprise monorepo workspace configurations, pnpm catalogs, package manifest naming taxonomies (@<scope>/*, @tupynambalucas-dev/*), Turborepo pipelines, and hierarchical project-referenced TypeScript architectures (tsconfig.base.json, tsconfig.json, tsconfig.node.json, tsconfig.app.json).
 ---
 
 # Monorepo Architect
@@ -25,9 +25,11 @@ Activate this skill when:
 ## 2. Core Monorepo Invariants
 
 ### Invariant 1: Enterprise Scoped Package Naming Taxonomy
-Every `package.json` created or audited within the enterprise organization MUST belong to the `@tupynambalucas-dev/` npm scope. Unscoped package names (e.g., `web`, `api`, `mcp-server`) are strictly forbidden.
+When operating within the `tupynambalucas-dev` organization, every `package.json` created or audited MUST belong to the `@tupynambalucas-dev/` npm scope. Unscoped package names (e.g., `web`, `api`, `mcp-server`) are strictly forbidden.
 
-Package names must be derived deterministically according to the monorepo boundary and domain layer:
+In external workspaces or third-party repositories, adapt dynamically to the target workspace's existing npm scope `@<scope>/` (or package naming convention) while enforcing the same clean hierarchical domain patterns.
+
+Package names are derived deterministically according to the monorepo boundary and domain layer (with `agent-mesh` and `platform` serving as the enterprise reference architecture):
 
 #### 1. `agent-mesh` Workspace Taxonomy
 | Workspace Layer | Directory Pattern | Package Name Formula | Canonical Examples |

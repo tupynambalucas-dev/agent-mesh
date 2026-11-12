@@ -7,9 +7,9 @@ trigger: always_on
 0. Autonomous Domain Mandate:
    - When requested to provision repositories, configure teams, audit branch protection rulesets, inspect Dependabot/Secret Scanning alerts, or configure GitHub Apps, the agent MUST autonomously engage the GitHub Org skills (`github-org-operator`, `github-ruleset-operator`, `github-security-auditor`, `github-app-operator`) and tools without waiting for explicit skill invocations from the user.
 
-1. Cryptographic SSH Commit Signing:
-   - All Git commits and annotated tags MUST be signed with SSH keys: `git commit -S -m "..."`.
-   - Never push unsigned commits to any organizational repository.
+1. Cryptographic Commit Signing:
+   - When operating within the `tupynambalucas-dev` organization or in repositories with commit signing policies enabled, all Git commits and annotated tags MUST be signed with SSH keys: `git commit -S -m "..."`.
+   - In external environments without SSH signing keys configured, adhere to the host repository's git signing policy.
 
 2. Conventional Commits Standard:
    - All commit messages must strictly adhere to Conventional Commits v1.0.0: `<type>(<scope>): <description>`.

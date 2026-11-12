@@ -5,7 +5,7 @@ description: Authors and audits LICENSE and LICENSE.md files, SPDX license ident
 
 # License Architect
 
-This skill defines the authoritative standards for authoring, auditing, and enforcing software licenses, copyright notices, and SPDX identifiers across `tupynambalucas-dev` repositories and packages.
+This skill defines the authoritative standards for authoring, auditing, and enforcing software licenses, copyright notices, and SPDX identifiers across any software repository, with native defaults for the `tupynambalucas-dev` organization.
 
 ---
 
@@ -22,6 +22,8 @@ This skill defines the authoritative standards for authoring, auditing, and enfo
 ## 2. Standard Copyright Header & Notice Formatting
 
 ### Canonical Repository Root Notice
+When operating within `tupynambalucas-dev`, copyright defaults to `Copyright (c) 2026 tupynambalucas.dev`. In external workspaces, adapt the copyright holder (`<year> <holder>`) based on project configuration, root `package.json` author, or user instructions:
+
 ```text
 Copyright (c) 2026 tupynambalucas.dev
 

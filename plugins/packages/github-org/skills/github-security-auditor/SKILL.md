@@ -12,7 +12,7 @@ Interrogates and triages GitHub Security advisories, Dependabot alerts, and secr
 ## 1. When to Use
 
 Activate this skill when:
-- Performing security hygiene audits across organization repositories.
+- Performing security hygiene audits across organization repositories (defaults to `owner: "tupynambalucas-dev"` in enterprise workspaces, or accepts any target repository owner/organization).
 - Listing open Dependabot vulnerabilities (`list_dependabot_alerts`).
 - Triaging exposed credential alerts (`list_secret_scanning_alerts`).
 - Validating branch and tag ruleset enforcement (`list_rulesets`, `get_ruleset`).
