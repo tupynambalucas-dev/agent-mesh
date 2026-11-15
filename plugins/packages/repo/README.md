@@ -14,7 +14,8 @@ Enterprise Antigravity and Claude Code domain plugin for repository governance, 
 
 | Skill | Primary Focus | Target Files |
 | :--- | :--- | :--- |
-| [**`readme-architect`**](./skills/readme-architect/SKILL.md) | Authors and audits `README.md` files across monorepos and packages, enforcing recursive directory navigation, GitHub Flavored Markdown standards, and the AGENTS-README co-existence invariant. | `README.md` across all directories. |
+| [**`readme-architect`**](./skills/readme-architect/SKILL.md) | Authors, scaffolds, and refactors enterprise-grade `README.md` files across meta-repositories (`org-core`, `org-ecosystem`), monorepos, subsystems, and packages using deterministic archetype templates. | `README.md` across all directories. |
+| [**`readme-auditor`**](./skills/readme-auditor/SKILL.md) | Audits and validates `README.md` files against the 7-gate Enterprise README Standard (canonical H1, numbered H2 sequence, relative link integrity, manifest script truthfulness, and zero-emoji hygiene). | `README.md`, `AGENTS.md`, `package.json`, `mani.yaml`. |
 | [**`monorepo-architect`**](./skills/monorepo-architect/SKILL.md) | Designs and maintains enterprise monorepo workspace configurations, pnpm catalogs, package manifest naming taxonomies (`@tupynambalucas-dev/*`), Turborepo pipelines, and hierarchical project-referenced TypeScript architectures. | `package.json`, `pnpm-workspace.yaml`, `turbo.json`, `tsconfig.base.json`, `tsconfig*.json`. |
 | [**`community-health-architect`**](./skills/community-health-architect/SKILL.md) | Authors and audits standard GitHub community health and governance files, including Contributor Covenant, security policies, and changelogs. | `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CHANGELOG.md`, `GOVERNANCE.md`. |
 | [**`license-architect`**](./skills/license-architect/SKILL.md) | Authors and audits LICENSE files, SPDX identifiers, copyright notices, and open-source compliance across monorepos and package manifests. | `LICENSE`, `LICENSE.md`, `package.json` license fields. |
@@ -26,8 +27,10 @@ Enterprise Antigravity and Claude Code domain plugin for repository governance, 
 ## 3. Directory Layout
 
 - [plugin.json](./plugin.json): Agent Plugins 1.0.0 manifest declaring identity, version, author, and keywords.
-- [rules/AGENTS.md](./rules/AGENTS.md): Active domain rules, AGENTS-README co-existence invariant, monorepo catalog and tsconfig rules, `.github` folder architecture, Mani multi-repo invariant, and Autonomous Domain Mandate.
-- [skills/readme-architect/SKILL.md](./skills/readme-architect/SKILL.md): README hierarchy guidelines and recursive directory navigation rules.
+- [rules/AGENTS.md](./rules/AGENTS.md): Active domain rules, AGENTS-README co-existence invariant, Enterprise README Architecture standard, monorepo catalog and tsconfig rules, `.github` folder architecture, Mani multi-repo invariant, and Autonomous Domain Mandate.
+- [references/enterprise-readme-standard.md](./references/enterprise-readme-standard.md): Authoritative specification and deterministic templates for Archetypes A, B, C, and D `README.md` files.
+- [skills/readme-architect/SKILL.md](./skills/readme-architect/SKILL.md): Enterprise README archetype templates, hierarchy guidelines, and recursive directory navigation rules.
+- [skills/readme-auditor/SKILL.md](./skills/readme-auditor/SKILL.md): 7-gate deterministic README audit framework and link/manifest verification workflows.
 - [skills/monorepo-architect/SKILL.md](./skills/monorepo-architect/SKILL.md): Monorepo orchestration, pnpm catalogs, package manifest scoping (`@tupynambalucas-dev/*`), and TypeScript project references.
 - [skills/community-health-architect/SKILL.md](./skills/community-health-architect/SKILL.md): GitHub community health file templates and standards.
 - [skills/license-architect/SKILL.md](./skills/license-architect/SKILL.md): License architecture, SPDX identifiers, and manifest alignment.
@@ -85,4 +88,4 @@ agy plugin install @tupynambalucas-dev/plugin-repo
 
 > [!IMPORTANT]
 > **Autonomous Domain Mandate (Rule 0):**
-> When requested to create, audit, align, or format repository root files (`README.md`, `LICENSE.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CHANGELOG.md`, `GOVERNANCE.md`), monorepo configurations (`pnpm-workspace.yaml`, `turbo.json`), `.github` directory structures, or TypeScript configurations (`tsconfig*.json`), the agent MUST autonomously engage the `repo` skills (`readme-architect`, `community-health-architect`, `license-architect`, `monorepo-architect`, `github-standards-architect`) without waiting for explicit skill invocations from the user.
+> When requested to create, audit, align, or format repository root files (`README.md`, `LICENSE.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CHANGELOG.md`, `GOVERNANCE.md`), monorepo configurations (`pnpm-workspace.yaml`, `turbo.json`), multi-repository manifests (`mani.yaml`), `.github` directory structures, or TypeScript configurations (`tsconfig*.json`), the agent MUST autonomously engage the `repo` skills (`readme-architect`, `readme-auditor`, `community-health-architect`, `license-architect`, `monorepo-architect`, `github-standards-architect`, `mani-operator`) without waiting for explicit skill invocations from the user.

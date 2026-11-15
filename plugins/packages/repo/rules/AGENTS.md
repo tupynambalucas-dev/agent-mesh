@@ -5,7 +5,7 @@ trigger: always_on
 # Repository Management Domain Rules
 
 0. Autonomous Domain Mandate:
-   - When requested to create, audit, align, or format repository root files (`README.md`, `LICENSE.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CHANGELOG.md`, `GOVERNANCE.md`), monorepo configurations (`pnpm-workspace.yaml`, `turbo.json`), multi-repository manifests (`mani.yaml`), package manifests (`package.json`), TypeScript configurations (`tsconfig*.json`), or repository `.github` directory structures (`CODEOWNERS`, `dependabot.yml`, composite actions), the agent MUST autonomously engage the `repo` skills (`readme-architect`, `community-health-architect`, `license-architect`, `monorepo-architect`, `github-standards-architect`, `mani-operator`) without waiting for explicit skill invocations from the user.
+   - When requested to create, audit, align, or format repository root files (`README.md`, `LICENSE.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CHANGELOG.md`, `GOVERNANCE.md`), monorepo configurations (`pnpm-workspace.yaml`, `turbo.json`), multi-repository manifests (`mani.yaml`), package manifests (`package.json`), TypeScript configurations (`tsconfig*.json`), or repository `.github` directory structures (`CODEOWNERS`, `dependabot.yml`, composite actions), the agent MUST autonomously engage the `repo` skills (`readme-architect`, `readme-auditor`, `community-health-architect`, `license-architect`, `monorepo-architect`, `github-standards-architect`, `mani-operator`) without waiting for explicit skill invocations from the user.
 
 1. The AGENTS-README Co-existence & Layer Invariant:
    - Wherever an `AGENTS.md` bounded context router file exists in a directory, a corresponding `README.md` file MUST also exist within that same directory.
@@ -14,9 +14,11 @@ trigger: always_on
    - Pure documentation directories and subtrees that do not declare autonomous agent boundaries MUST NOT spawn child `AGENTS.md` files. The parent subsystem `README.md` and `AGENTS.md` provide all requisite navigation and context.
    - Internal plugin configuration directories (`rules/`) containing `rules/AGENTS.md` are exempt from the `README.md` requirement as they are engine rule assets.
 
-2. Recursive Navigation Standard:
-   - Every `README.md` at a root or subsystem layer MUST provide structured, recursive navigation tables or lists linking to all child subsystem and package `README.md` files.
-   - Stale pointers are strictly forbidden: all relative markdown links must point to existing files on disk.
+2. Enterprise README Architecture & Recursive Navigation Standard:
+   - Every `README.md` MUST begin with a canonical H1 heading `# <Title> (\`<identifier>\`)` matching `package.json` `"name"` or `<org>/<repo>`, followed by a concise 1–2 sentence executive summary.
+   - All top-level sections (`##`) in root and subsystem `README.md` files MUST be sequentially numbered (`## 1. Architecture Overview`, `## 2. Subsystems & Navigation` / `## 2. Managed Repositories & Navigation`, `## 3. Environment & Secret Governance`, `## 4. Getting Started`, `## 5. Development & Pipeline Scripts` / `## 5. Multi-Repository Operations`, `## 6. Governance & Contributing Standards`, `## 7. License`) and separated by horizontal dividers (`---`) per `references/enterprise-readme-standard.md`.
+   - Every `README.md` at a root or subsystem layer MUST provide structured, recursive navigation tables or lists linking to all child subsystem and package `README.md` and `AGENTS.md` files.
+   - Stale pointers are strictly forbidden: all relative markdown links (`./` or `../`) must point to existing files on disk, and all documented scripts must match `package.json` or `mani.yaml`.
 
 3. Zero-Emoji Invariant:
    - Emojis are strictly forbidden across all repository documentation files, headings, callouts, tables, and body text.
