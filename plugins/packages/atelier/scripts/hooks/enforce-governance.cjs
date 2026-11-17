@@ -31,16 +31,27 @@ function main() {
       const filePath = args.Path || args.TargetFile || '';
       const content = args.Content || args.Replacement || args.ReplacementContent || args.CodeContent || '';
 
-      // 1. Check for 3-layer ceiling violation
+      // 1. Check for 3-layer ceiling violation and root plans/ prohibition
       const normalizedPath = filePath.replace(/\\/g, '/');
+      const isAgentsMd = /(^|\/)AGENTS\.md$/i.test(normalizedPath);
       const isRouterOrReadme = /(^|\/)(AGENTS\.md|README\.md)$/i.test(normalizedPath);
-      const isForbiddenDir = /\/(\.agents\/(analyses|plans|reports)|(docs|references)\/(tutorials|how-to-guides|reference|explanation))\//i.test(normalizedPath);
+      const isDiataxisQuadrant = /\/(docs|references)\/(tutorials|how-to-guides|reference|explanation)\//i.test(normalizedPath);
+      const isPlanningContainer = /\/\.agents\/(analyses|plans|reports)\//i.test(normalizedPath);
       const isIntermediateGroupingRoot = /\/(mcp\/(servers|core)|plugins\/(packages|core))\/(AGENTS|README)\.md$/i.test(normalizedPath);
+      const isRootPlansDir = /\/plans\//i.test(normalizedPath) && !/\/\.agents\/plans\//i.test(normalizedPath);
 
-      if ((isRouterOrReadme && isForbiddenDir) || isIntermediateGroupingRoot) {
+      if (isRootPlansDir) {
         process.stdout.write(JSON.stringify({
           decision: 'deny',
-          reason: 'Bounded Context 3-Layer Ceiling: Creating AGENTS.md or boilerplate README.md files inside planning/reporting hubs, Diataxis documentation quadrants, or intermediate grouping containers (mcp/servers, mcp/core, plugins/packages, plugins/core) is strictly prohibited.'
+          reason: 'Architectural Plan Storage Invariant: Creating or modifying artifacts inside a root "plans/" directory is strictly prohibited. All plans, analyses, and reports must reside inside "<target-repo>/.agents/plans/" of the respective repository.'
+        }));
+        return;
+      }
+
+      if ((isRouterOrReadme && isDiataxisQuadrant) || (isAgentsMd && isPlanningContainer) || isIntermediateGroupingRoot) {
+        process.stdout.write(JSON.stringify({
+          decision: 'deny',
+          reason: 'Bounded Context 3-Layer Ceiling: Creating AGENTS.md inside planning/reporting hubs (.agents/plans/), or AGENTS.md/README.md inside Diataxis documentation quadrants or intermediate grouping containers (mcp/servers, mcp/core, plugins/packages, plugins/core) is strictly prohibited.'
         }));
         return;
       }

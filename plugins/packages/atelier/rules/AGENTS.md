@@ -5,7 +5,7 @@ trigger: always_on
 # Enterprise AI Agent Governance & Architecture Rules
 
 0. Autonomous Domain Mandate:
-   - When requested to design, audit, or update AI agent context routers (AGENTS.md), architectural plans (plans/ or .agents/plans/), agent skills (SKILL.md), rule files (rules/AGENTS.md), lifecycle hooks (hooks.json), or plugin manifests (plugin.json), the agent MUST autonomously engage the Atelier AI skills (`router-architect`, `skill-architect`, `rule-architect`, `hook-architect`, `plugin-architect`, `plan-architect`) without waiting for explicit skill invocations from the user.
+   - When requested to design, audit, or update AI agent context routers (AGENTS.md), architectural plans (.agents/plans/), agent skills (SKILL.md), rule files (rules/AGENTS.md), lifecycle hooks (hooks.json), or plugin manifests (plugin.json), the agent MUST autonomously engage the Atelier AI skills (`router-architect`, `skill-architect`, `rule-architect`, `hook-architect`, `plugin-architect`, `plan-architect`) without waiting for explicit skill invocations from the user.
 
 1. Cryptographic Signature Requirement:
    - When operating in repositories configured for signed commits or within the `tupynambalucas-dev` organization, all Git commits and annotated tags MUST be cryptographically signed using SSH: `git commit -S -m "..."`.
@@ -29,7 +29,7 @@ trigger: always_on
 6. Bounded Context 3-Layer Ceiling & Anti-Proliferation:
    - `AGENTS.md` context routers are strictly limited to 3 architectural layers: Layer 1 (Root), Layer 2 (Subsystem), and Layer 3 (Package/Domain).
    - Layer 4+ context routers are strictly prohibited.
-   - Content folders under documentation hubs (e.g. Diátaxis quadrants `tutorials/`, `how-to-guides/`, `reference/`, `explanation/`) and planning containers (`plans/`, `.agents/plans/`, `.agents/reports/`) MUST NOT declare `AGENTS.md` or boilerplate `README.md` files. The parent bounded context router governs the entire subsystem.
+   - Content folders under documentation hubs (e.g. Diátaxis quadrants `tutorials/`, `how-to-guides/`, `reference/`, `explanation/`) and planning containers (`.agents/plans/`, `.agents/reports/`) MUST NOT declare `AGENTS.md` or boilerplate `README.md` files. The parent bounded context router governs the entire subsystem.
 
 7. Environment Configuration Template Invariant (.env.example):
    - Every subsystem, package, or repository declaring a `.env` file MUST maintain an authoritative `.env.example` template.
@@ -37,9 +37,10 @@ trigger: always_on
    - Never commit or emit plaintext secrets, passwords, API tokens, or private keys in `.env.example`.
 
 8. Architectural Plan, Analysis & Report Artifact Storage Invariant:
-   - All architectural plans, technical analyses, master blueprints, and governance/audit reports must reside strictly within `<workspace-root>/plans/<artifact-slug>/` (or `<workspace-root>/plans/<artifact-slug>.md`), with `<workspace-root>/.agents/plans/<artifact-slug>/` fully recognized for backward compatibility.
-   - Dual-Storage Invariant: Whenever an agent generates or updates an architectural plan, technical analysis, or report artifact (even when written to the conversation brain directory `<appDataDir>/brain/<conversation-id>/`), an identical synchronized copy MUST ALWAYS be created in the target workspace's planning container at `plans/<artifact-slug>/` (or `plans/<artifact-slug>.md`).
-   - Single-artifact documents must declare a complete specification in `plans/<artifact-slug>.md` (or `plans/<artifact-slug>/README.md`).
+   - All architectural plans, technical analyses, master blueprints, and governance/audit reports must reside strictly within `<target-repo>/.agents/plans/<artifact-slug>/` (or `<target-repo>/.agents/plans/<artifact-slug>.md`) of the respective repository for which the artifact is being created. Creating a `plans/` folder at the root of any repository (`<target-repo>/plans/`) is strictly prohibited.
+   - Target Repository Resolution: When operating in a multi-root meta-repository (`org-core` or `org-ecosystem`), always resolve the specific child repository (`<target-repo>`) that owns the domain and place the artifact inside `<target-repo>/.agents/plans/` (creating `.agents/plans/` automatically if it does not exist).
+   - Dual-Storage Invariant: Whenever an agent generates or updates an architectural plan, technical analysis, or report artifact (even when written to the conversation brain directory `<appDataDir>/brain/<conversation-id>/`), an identical synchronized copy MUST ALWAYS be created in the target repository's planning container at `<target-repo>/.agents/plans/<artifact-slug>/` (or `<target-repo>/.agents/plans/<artifact-slug>.md`).
+   - Single-artifact documents must declare a complete specification in `<target-repo>/.agents/plans/<artifact-slug>.md` (or `<target-repo>/.agents/plans/<artifact-slug>/README.md`).
    - Multi-artifact plan suites must conform to the gold standard of `.github/.agents/plans/github-app-architecture/`: Master `README.md` declaring Strategic Baseline, Mermaid diagrams, Document Suite Catalog table, and modular numbered domain documents.
-   - Anti-Proliferation: Artifact containers (`plans/`, `.agents/plans/`) MUST NOT declare child `AGENTS.md` context routers (strictly governed by Rule 6).
-   - Git Ignore & Visibility Invariant: Planning containers (`plans/` and `.agents/plans/`) MUST be ignored by `.gitignore` across all repositories, while explicitly declaring negative un-ignore patterns in `.ignore` and `.rgignore` (`!plans/`, `!plans/**`, `!.agents/plans/`, `!.agents/plans/**`) so files can always be attached via `@`.
+   - Anti-Proliferation: Artifact containers (`.agents/plans/`) MUST NOT declare child `AGENTS.md` context routers (strictly governed by Rule 6).
+   - Git Ignore & Visibility Invariant: Planning containers (`.agents/plans/`) MUST be ignored by `.gitignore` across all repositories, while explicitly declaring negative un-ignore patterns in `.ignore` and `.rgignore` (`!.agents/plans/`, `!.agents/plans/**`) so files can always be attached via `@`.

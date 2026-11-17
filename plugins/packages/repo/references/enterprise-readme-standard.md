@@ -77,7 +77,7 @@ flowchart TD
 
 ### Multi-Root IDE Workspace
 
-Open [`<workspace-file>.code-workspace`](./<workspace-file>.code-workspace) in VS Code or Antigravity IDE to mount all managed repositories in a unified workspace with integrated Mani tasks.
+Open [`tupynambalucas-dev-<domain>.code-workspace`](./tupynambalucas-dev-<domain>.code-workspace) in VS Code or Antigravity IDE to mount all managed repositories in a unified workspace with integrated Mani tasks.
 
 ---
 

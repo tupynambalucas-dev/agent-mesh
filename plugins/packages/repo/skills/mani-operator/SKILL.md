@@ -156,7 +156,7 @@ mani describe projects
 
 ## 4. Multi-Root IDE Integration Standard
 
-Meta-repositories must pair `mani.yaml` with a multi-root workspace file (`<repo>.code-workspace`) and `.vscode/settings.json`:
+Meta-repositories must pair `mani.yaml` with a domain-specific multi-root workspace file (`tupynambalucas-dev-<domain>.code-workspace`, e.g., `tupynambalucas-dev-core.code-workspace` for `org-core` and `tupynambalucas-dev-ecosystem.code-workspace` for `org-ecosystem`) and `.vscode/settings.json`:
 
 1. **Workspace Folders**: Explicitly bind root and each managed repository child path.
 2. **VS Code Tasks**: Declare tasks matching the primary Mani workflows (`Mani: Sync Repositories`, `Mani: Check Git Status`, `Mani: Pull All Main`).
