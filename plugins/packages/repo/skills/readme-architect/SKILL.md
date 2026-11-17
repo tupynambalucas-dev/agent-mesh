@@ -25,7 +25,7 @@ Activate this skill when:
 > **Invariant 1 — The AGENTS-README Co-existence & 3-Layer Ceiling Invariant:**
 > - Wherever an `AGENTS.md` bounded context router exists at Layer 1 (Root), Layer 2 (Subsystem), or Layer 3 (Package/Domain), a corresponding `README.md` developer documentation file **MUST** also exist in that same directory.
 > - The reverse is **NOT** mandatory: pure documentation directories, package sub-modules, or asset directories may contain a `README.md` without an `AGENTS.md`.
-> - **Layer 4+ Proliferation Prohibition**: Subdirectories inside documentation hubs (Diátaxis quadrants `tutorials/`, `how-to-guides/`, `reference/`, `explanation/`) or planning containers (`plans/`, `.agents/plans/`, `.agents/reports/`) MUST NOT declare child `AGENTS.md` or boilerplate `README.md` files.
+> - **Layer 4+ Proliferation Prohibition**: Subdirectories inside documentation hubs (Diátaxis quadrants `tutorials/`, `how-to-guides/`, `reference/`, `explanation/`) or planning containers (`.agents/plans/`, `.agents/reports/`) MUST NOT declare child `AGENTS.md` or boilerplate `README.md` files.
 > - Internal plugin rule folders (`rules/AGENTS.md`) are exempt from requiring a sibling `README.md`.
 
 > [!IMPORTANT]
