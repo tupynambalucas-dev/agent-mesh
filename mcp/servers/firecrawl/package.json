@@ -1,0 +1,50 @@
+{
+  "name": "@vitoria-rodrigues/mcp-firecrawl",
+  "version": "1.0.0",
+  "description": "Enterprise Model Context Protocol server for Firecrawl advanced web scraping, crawling, and extraction.",
+  "author": "Vitoria Rodrigues <contato@vitoriarodrigues.dev>",
+  "license": "Apache-2.0",
+  "homepage": "https://docs.vitoriarodrigues.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vitoria-Rodrigues/agent-mesh.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "type": "module",
+  "main": "dist/index.cjs",
+  "bin": {
+    "mcp-firecrawl": "./scripts/launcher.cjs"
+  },
+  "scripts": {
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "dev": "tsx watch src/index.ts",
+    "build": "tsup",
+    "start": "node dist/index.cjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "catalog:mcp-stack",
+    "dotenv": "catalog:shared",
+    "fastify": "catalog:mcp-stack",
+    "firecrawl": "catalog:mcp-stack",
+    "zod": "catalog:shared"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "rimraf": "catalog:",
+    "tsup": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
+  },
+  "files": [
+    "dist",
+    "scripts",
+    "mcp.json",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE"
+  ]
+}

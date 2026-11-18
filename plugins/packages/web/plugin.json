@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "web",
+  "version": "1.0.0",
+  "description": "Universal web automation, headless Playwright execution, interactive desktop pairing via CDP, and clean content extraction.",
+  "author": {
+    "name": "Vitoria Rodrigues",
+    "url": "https://vitoriarodrigues.dev"
+  },
+  "homepage": "https://docs.vitoriarodrigues.dev",
+  "repository": "https://github.com/Vitoria-Rodrigues/agent-mesh",
+  "license": "Apache-2.0",
+  "keywords": [
+    "web",
+    "playwright",
+    "browser",
+    "automation",
+    "scraping",
+    "firecrawl"
+  ]
+}

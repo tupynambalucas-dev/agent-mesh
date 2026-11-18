@@ -1,0 +1,70 @@
+{
+  "name": "@vitoria-rodrigues/agent-mesh",
+  "version": "1.2.0",
+  "private": false,
+  "description": "Universal enterprise AI agent mesh: governance, MCP servers, domain plugins, and modular skills.",
+  "packageManager": "pnpm@10.33.2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vitoria-Rodrigues/agent-mesh.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "scripts": {
+    "// Pipeline Tasks (Turborepo)": "-------------------------------------------",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "clean": "turbo run clean",
+    "typecheck": "turbo run typecheck",
+    "plugins:validate": "node -e \"const {execSync}=require('child_process'),fs=require('fs'),path=require('path'),dir=path.join('plugins','packages');for(const p of fs.readdirSync(dir)){const full=path.join(dir,p);if(fs.statSync(full).isDirectory()){console.log('[plugins:validate] Validating',p);execSync('agy plugin validate . --strict',{cwd:full,stdio:'inherit'});}}\"",
+    "// MCP Context (All In-House MCP Packages)": "-------------------------------",
+    "mcp:build": "turbo run build --filter=\"@vitoria-rodrigues/mcp-*\"",
+    "mcp:dev": "turbo run dev --filter=\"@vitoria-rodrigues/mcp-*\"",
+    "mcp:clean": "turbo run clean --filter=\"@vitoria-rodrigues/mcp-*\"",
+    "mcp:typecheck": "turbo run typecheck --filter=\"@vitoria-rodrigues/mcp-*\"",
+    "// Individual MCP Target Scripts": "-----------------------------------------",
+    "mcp:core-github:build": "pnpm --filter @vitoria-rodrigues/mcp-core-github build",
+    "mcp:firecrawl:build": "pnpm --filter @vitoria-rodrigues/mcp-firecrawl build",
+    "mcp:firecrawl:dev": "pnpm --filter @vitoria-rodrigues/mcp-firecrawl dev",
+    "mcp:github-flow:build": "pnpm --filter @vitoria-rodrigues/mcp-github-flow build",
+    "mcp:github-flow:dev": "pnpm --filter @vitoria-rodrigues/mcp-github-flow dev",
+    "mcp:linkedin:build": "pnpm --filter @vitoria-rodrigues/mcp-linkedin build",
+    "mcp:linkedin:dev": "pnpm --filter @vitoria-rodrigues/mcp-linkedin dev",
+    "mcp:playwright:build": "pnpm --filter @vitoria-rodrigues/mcp-playwright build",
+    "mcp:playwright:dev": "pnpm --filter @vitoria-rodrigues/mcp-playwright dev",
+    "// Packaging & Deployment": "------------------------------------------------",
+    "packages:publish": "pnpm -r publish --access public --no-git-checks --report-summary && node ./scripts/publish-root.cjs",
+    "changeset": "changeset",
+    "version:packages": "changeset version"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.7",
+    "@types/node": "catalog:",
+    "rimraf": "catalog:",
+    "tsup": "catalog:",
+    "tsx": "catalog:",
+    "turbo": "catalog:",
+    "typescript": "catalog:"
+  },
+  "files": [
+    ".claude-plugin/",
+    "scripts/",
+    "plugins/packages/",
+    "presets/",
+    "mcp/",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "antigravity",
+    "claude-code",
+    "agent-mesh",
+    "agent-plugins",
+    "governance",
+    "skills"
+  ],
+  "author": "Vitoria Rodrigues <contato@vitoriarodrigues.dev>",
+  "license": "Apache-2.0"
+}

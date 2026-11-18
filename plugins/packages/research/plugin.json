@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "research",
+  "version": "1.0.0",
+  "description": "Enterprise autonomous technical research plugin utilizing Context7 for live official API/SDK documentation and Firecrawl for deep web exploration.",
+  "author": {
+    "name": "Vitoria Rodrigues",
+    "url": "https://vitoriarodrigues.dev"
+  },
+  "homepage": "https://docs.vitoriarodrigues.dev",
+  "repository": "https://github.com/Vitoria-Rodrigues/agent-mesh",
+  "license": "Apache-2.0",
+  "keywords": [
+    "research",
+    "context7",
+    "firecrawl",
+    "documentation",
+    "deep-research"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "context7": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["./scripts/launcher.cjs", "context7"]
+    },
+    "firecrawl": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["./scripts/launcher.cjs", "firecrawl"]
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@vitoria-rodrigues/plugin-repo",
+  "version": "1.0.0",
+  "description": "Enterprise repository health, community files, licensing compliance, and recursive README navigation architecture.",
+  "author": "Vitoria Rodrigues <contato@vitoriarodrigues.dev>",
+  "license": "Apache-2.0",
+  "homepage": "https://docs.vitoriarodrigues.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vitoria-Rodrigues/agent-mesh.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  },
+  "files": [
+    "plugin.json",
+    "rules",
+    "skills",
+    "CHANGELOG.md"
+  ]
+}
