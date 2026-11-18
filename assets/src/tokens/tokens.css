@@ -1,0 +1,74 @@
+@font-face {
+  font-family: 'Nunito';
+  src: url('../fonts/nunito/nunito-variable.woff2') format('woff2');
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('../fonts/nunito/nunito-variable-italic.woff2') format('woff2');
+  font-weight: 300 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/**
+ * project.local - Design Tokens (Pure Theme)
+ * Centralized in @studio to ensure consistency across the monorepo.
+ * This file contains ONLY the @theme block to avoid breaking 
+ * third-party styles with Tailwind's Preflight or global resets.
+ */
+
+@theme {
+  /* --- Font Configuration --- */
+  --font-sans: 'Nunito', sans-serif;
+
+  /* --- Main Identity (Brand Triad) --- */
+  --color-identity-primary: #4c4d9a;
+  --color-identity-secondary: #2e55a3;
+  --color-identity-tertiary: #aa77a7;
+
+  /* --- Background System (Surfaces) --- */
+  --color-background-light: #f6f6f7;
+  --color-background-dark: #0f0f0f;
+  --color-background-tint: #ffffff;
+  --color-background-shade: #1c1c21;
+
+  /* --- Structural Neutrals --- */
+  --color-border-light: #e2e2e9;
+  --color-border-dark: #2a2a30;
+  --color-disabled: #7e7e86;
+  --color-overlay: #0f0f0f;
+
+  /* --- Typographic System --- */
+  --color-title-dark: #0f0f0f;
+  --color-title-light: #f6f6f7;
+  --color-subtitle-dark: #4c4d9a;
+  --color-subtitle-light: #aa77a7;
+  --color-body-dark: #2b2b30;
+  --color-body-light: #e2e2e9;
+  --color-label-dark: #7e7e86;
+  --color-label-light: #9a9ab0;
+
+  /* --- Feedback Colors --- */
+  --color-accent: #aa77a7;
+  --color-highlight: #e2a53c;
+  --color-success: #10b981;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+  --color-info: #2e55a3;
+
+  /* --- Shadow Colors --- */
+  --color-shadow-float: rgba(15, 15, 15, 0.15);
+  --color-shadow-dense: rgba(15, 15, 15, 0.3);
+
+  /* --- Iconography --- */
+  --color-icon-primary-dark: #0f0f0f;
+  --color-icon-primary-light: #f6f6f7;
+  --color-icon-secondary-dark: #4c4d9a;
+  --color-icon-invert-dark: #f6f6f7;
+  --color-icon-invert-light: #0f0f0f;
+  --color-icon-active: #aa77a7;
+}

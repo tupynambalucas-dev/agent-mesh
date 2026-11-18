@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "d-koppenhagen.file-tree-to-text-generator",
+    "dbaeumer.vscode-eslint",
+    "emanuelebartolesi.taskdeck",
+    "esbenp.prettier-vscode",
+    "github.vscode-github-actions",
+    "redhat.vscode-yaml",
+    "shd101wyy.markdown-preview-enhanced",
+    "unifiedjs.vscode-mdx"
+  ],
+  "unwantedRecommendations": []
+}

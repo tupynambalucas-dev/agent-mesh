@@ -1,0 +1,34 @@
+name: 'Generate Renderer Documents'
+description: 'Cleans the generated branch and executes the monorepo renderer pipeline'
+
+inputs:
+  github_token:
+    description: 'GitHub Personal Access Token for API requests'
+    required: true
+  target_branch:
+    description: 'Target branch to process'
+    required: true
+    default: 'main'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Clean Generated Branch
+      shell: bash
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git fetch origin generated:generated || true
+        git checkout generated || git checkout --orphan generated
+        git rm -rf . || true
+        git commit --allow-empty -m "chore: clear generated assets [skip ci]"
+        git push origin generated
+        git checkout -
+
+    - name: Run Profile Generator
+      shell: bash
+      env:
+        RENDERER_GH_PAT: ${{ inputs.github_token }}
+        GITHUB_ACTIONS: 'true'
+        TARGET_BRANCH: ${{ inputs.target_branch }}
+      run: pnpm --filter @profile/renderer generate

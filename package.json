@@ -1,0 +1,60 @@
+{
+  "name": "@tupynambalucas/profile",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Special GitHub profile repository for @tupynambalucas with automated stats rendering.",
+  "author": "Tupynambá Lucas Varela Rodrigues <tupynambalucas.dev>",
+  "license": "MIT",
+  "homepage": "https://tupynambalucas.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tupynambalucas/tupynambalucas.git"
+  },
+  "type": "module",
+  "packageManager": "pnpm@12.6.0",
+  "scripts": {
+    "prepare": "husky",
+    "generate": "pnpm --filter @profile/renderer generate",
+    "renderer:clean": "pnpm --filter @profile/renderer clean",
+    "renderer:generate": "pnpm --filter @profile/renderer generate",
+    "renderer:typecheck": "pnpm --filter @profile/renderer typecheck",
+    "renderer:lint": "pnpm --filter @profile/renderer lint",
+    "format:check": "prettier --check .",
+    "format:write": "prettier --write .",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck"
+  },
+  "devDependencies": {
+    "@eslint-react/eslint-plugin": "catalog:web-stack",
+    "@eslint/js": "catalog:tooling-stack",
+    "@types/node": "catalog:",
+    "@typescript-eslint/eslint-plugin": "catalog:tooling-stack",
+    "dotenv-cli": "catalog:",
+    "eslint": "catalog:tooling-stack",
+    "eslint-config-prettier": "catalog:tooling-stack",
+    "eslint-import-resolver-typescript": "catalog:tooling-stack",
+    "eslint-plugin-import-x": "catalog:tooling-stack",
+    "eslint-plugin-mdx": "catalog:tooling-stack",
+    "eslint-plugin-prettier": "catalog:tooling-stack",
+    "eslint-plugin-react-refresh": "catalog:web-stack",
+    "husky": "catalog:",
+    "jiti": "catalog:tooling-stack",
+    "lint-staged": "catalog:",
+    "prettier": "catalog:tooling-stack",
+    "rimraf": "catalog:",
+    "tsx": "catalog:",
+    "turbo": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:tooling-stack"
+  },
+  "prettier": "./.prettierrc.json",
+  "lint-staged": {
+    "**/*.{js,mjs,ts,tsx,mdx}": [
+      "eslint --fix --no-warn-ignored"
+    ],
+    "**/*.{json,yaml,md,css,html}": [
+      "prettier --write"
+    ]
+  }
+}
