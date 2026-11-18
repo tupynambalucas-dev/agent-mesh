@@ -1,1 +1,0 @@
-pnpm exec tsx scripts/prepare-commit-msg.ts "$1" "$2"

@@ -1,9 +1,0 @@
-{
-  "mcpServers": {
-    "github-flow": {
-      "type": "stdio",
-      "command": "node",
-      "args": ["./scripts/launcher.cjs", "github-flow"]
-    }
-  }
-}
