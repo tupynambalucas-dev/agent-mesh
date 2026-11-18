@@ -1,0 +1,15 @@
+{
+  "enforce-github-flow-governance": {
+    "PreToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "command": "node ./scripts/hooks/enforce-git-signing.cjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "enforce-linkedin-safety-gates": {
+    "PreToolUse": [
+      {
+        "matcher": "submit_easy_apply|connect_with_person|send_message|reply_to_conversation|call_mcp_tool",
+        "hooks": [
+          {
+            "command": "node ./scripts/hooks/confirm-application-submission.cjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

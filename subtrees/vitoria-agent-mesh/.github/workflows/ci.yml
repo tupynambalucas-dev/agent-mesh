@@ -1,0 +1,39 @@
+name: Continuous Integration & Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify Types, Builds & Plugin Schemas
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+
+      - name: Setup Node.js & pnpm
+        uses: ./.github/actions/setup-pnpm-env
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Typecheck Workspace
+        run: pnpm typecheck
+
+      - name: Build MCP Packages
+        uses: ./.github/actions/build-mcp
+
+      - name: Validate Antigravity Domain Plugins
+        uses: ./.github/actions/validate-plugins

@@ -1,0 +1,15 @@
+{
+  "enforce-atelier-governance": {
+    "PreToolUse": [
+      {
+        "matcher": "write_file|write_to_file|edit_file|replace_file_content|multi_replace_file_content",
+        "hooks": [
+          {
+            "command": "node ./scripts/hooks/enforce-governance.cjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+# Global owners for all files in this repository
+* @vitoria-rodrigues/core-maintainers
+
+# Security critical configurations
+/.github/workflows/ @vitoria-rodrigues/core-maintainers
+/pnpm-lock.yaml @vitoria-rodrigues/core-maintainers
+/package.json @vitoria-rodrigues/core-maintainers

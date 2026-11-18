@@ -1,0 +1,91 @@
+# Enterprise Naming Conventions & Scoping Standard
+
+This document defines the authoritative, mandatory naming taxonomies, directory structures, and package scoping conventions across the `Vitoria-Rodrigues/agent-mesh` repository.
+
+---
+
+## 1. Package Naming & NPM Scope Standard
+
+All packages published from or developed within `agent-mesh` MUST use the organizational scope `@vitoria-rodrigues/`.
+
+### 1.1 Taxonomy Table
+
+| Domain Layer | Directory Location | Package Name Pattern | Example |
+| :--- | :--- | :--- | :--- |
+| **Root Monorepo** | `./` | `@vitoria-rodrigues/agent-mesh` | `@vitoria-rodrigues/agent-mesh` |
+| **Domain Plugins** | `plugins/packages/<slug>` | `@vitoria-rodrigues/plugin-<slug>` | `@vitoria-rodrigues/plugin-github-flow` |
+| **Plugin Core Libraries** | `plugins/core/<slug>` | `@vitoria-rodrigues/plugin-core-<slug>` | `@vitoria-rodrigues/plugin-core-governance` |
+| **In-House MCP Servers** | `mcp/servers/<slug>` | `@vitoria-rodrigues/mcp-<slug>` | `@vitoria-rodrigues/mcp-github-flow` |
+| **MCP Core Libraries** | `mcp/core/<slug>` | `@vitoria-rodrigues/mcp-core-<slug>` | `@vitoria-rodrigues/mcp-core-github` |
+
+---
+
+## 2. Directory Alignment Invariants
+
+1. **Plugin Directory Hierarchy**:
+   - Deployable domain plugins MUST be located within `plugins/packages/<slug>/`.
+   - Shared plugin libraries MUST be located within `plugins/core/<slug>/`.
+   - Never place plugin packages directly in the root of `plugins/`.
+2. **MCP Directory Hierarchy**:
+   - Deployable in-house MCP servers MUST be located within `mcp/servers/<slug>/`.
+   - Shared non-executable MCP libraries MUST be located within `mcp/core/<slug>/`.
+   - Never place MCP packages directly in the root of `mcp/`.
+   - Intermediate grouping directories (`mcp/servers/`, `mcp/core/`, `plugins/packages/`, `plugins/core/`) MUST NOT contain `AGENTS.md` or `README.md` files to preserve the 3-Layer Bounded Context Ceiling.
+3. **Internal Structure of a Domain Plugin**:
+   ```text
+   plugins/packages/<slug>/
+   ├── plugin.json         # Agent Plugins 1.0.0 manifest ($schema)
+   ├── package.json        # NPM package metadata (@vitoria-rodrigues/plugin-<slug>)
+   ├── mcp.json            # Cross-vendor stdio MCP bindings (for MCP-enabled plugins)
+   ├── mcp_config.json     # Native Antigravity MCP bindings (for MCP-enabled plugins)
+   ├── README.md           # Subsystem documentation
+   ├── scripts/
+   │   └── launcher.cjs    # Sovereign plugin MCP launcher (resolveMcpLauncher)
+   ├── rules/
+   │   └── AGENTS.md       # Mandatory domain rules & Rule 0 Autonomous Domain Mandate
+   ├── skills/
+   │   └── <skill-name>/
+   │       ├── SKILL.md    # Frontmatter 'name' must strictly equal <skill-name>
+   │       ├── scripts/    # Optional deterministic scripts
+   │       └── references/ # Optional supporting documentation
+   └── references/         # Supporting domain specifications
+   ```
+4. **Internal Structure of a Sovereign MCP Server**:
+   ```text
+   mcp/servers/<slug>/
+   ├── package.json        # NPM package metadata (@vitoria-rodrigues/mcp-<slug>, bin: mcp-<slug>)
+   ├── mcp.json            # Standalone stdio MCP server declaration
+   ├── tsup.config.ts      # Declarative tsup bundler configuration (noExternal)
+   ├── tsconfig.json       # Package TypeScript configuration
+   ├── AGENTS.md           # Layer 3 bounded context router
+   ├── README.md           # Server documentation & tool catalog
+   ├── scripts/
+   │   └── launcher.cjs    # Sovereign MCP launcher (.env cascade + dist/bin.cjs execution)
+   ├── dist/               # Tracked in Git (!mcp/servers/*/dist/) for zero-token Git distribution
+   │   ├── bin.cjs         # Self-contained Stdio bundle
+   │   └── index.cjs       # Self-contained Fastify Streamable HTTP bundle (:8080)
+   └── src/
+       ├── bin.ts          # Stdio transport entrypoint
+       └── index.ts        # Streamable HTTP transport entrypoint
+   ```
+
+---
+
+## 3. Modular Skill Taxonomy & Closed Role Vocabulary
+
+Skill directory names and frontmatter `name` values MUST match identically.
+
+### 3.1 Closed Role Suffixes
+
+Skill names MUST strictly adhere to the enterprise role vocabulary:
+- **`-operator`**: Executes deterministic runtime commands, queries APIs, runs bash/node scripts, and triggers operations (e.g., `github-flow-operator`, `browser-operator`).
+- **`-architect`**: Designs, scaffolds, refactors, and authors structural specifications, configurations, schemas, and markdown architectures (e.g., `router-architect`, `monorepo-architect`, `gwork-sheets-architect`).
+- **`-auditor`**: Analyzes existing files, linters, security alerts, and schemas to identify regressions, link errors, and compliance violations without mutating state directly (e.g., `docusaurus-auditor`, `browser-auditor`).
+
+---
+
+## 4. AGENTS-README Co-existence Invariant
+
+- Wherever an `AGENTS.md` context router file exists in a directory, a corresponding `README.md` file MUST also exist within that same directory.
+- The reverse is NOT mandatory: directories containing only `README.md` without autonomous agent boundaries do not require `AGENTS.md`.
+- Plugin rules located in `rules/AGENTS.md` are exempt from this requirement as they are engine rule assets.

@@ -1,0 +1,34 @@
+{
+  "name": "@vitoria-rodrigues/plugin-github-flow",
+  "version": "1.0.0",
+  "description": "Developer Git workflow automation, Conventional Commits, cryptographic SSH commit signing, and GitHub Actions orchestration.",
+  "author": "Vitoria Rodrigues <contato@vitoriarodrigues.dev>",
+  "license": "Apache-2.0",
+  "homepage": "https://docs.vitoriarodrigues.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vitoria-Rodrigues/agent-mesh.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  },
+  "files": [
+    "plugin.json",
+    "rules",
+    "skills",
+    "CHANGELOG.md",
+    "mcp.json",
+    "mcp_config.json",
+    "hooks.json",
+    "scripts"
+  ]
+}
