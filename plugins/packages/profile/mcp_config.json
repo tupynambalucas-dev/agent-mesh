@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "linkedin": {
+      "command": "node",
+      "args": ["./scripts/launcher.cjs", "linkedin"]
+    }
+  }
+}

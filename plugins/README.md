@@ -28,6 +28,7 @@ Each domain plugin in `plugins/packages/*` is a self-contained unit bundling:
 | [packages/research/](./packages/research/README.md) | `@tupynambalucas-dev/plugin-research` | `documentation-researcher`<br>`web-deep-researcher` | `context7` (Upstream APIs)<br>`firecrawl` (`mcp-firecrawl`) | Autonomous documentation retrieval, source attribution. |
 | [packages/secrets/](./packages/secrets/README.md) | `@tupynambalucas-dev/plugin-secrets` | `infisical-vault-operator`<br>`secret-rotation-operator` | `infisical` (`mcp-infisical`) | Universal Auth identity, zero plaintext leakage, env isolation. |
 | [packages/web/](./packages/web/README.md) | `@tupynambalucas-dev/plugin-web` | `browser-operator`<br>`browser-auditor`<br>`web-extractor` | `playwright` (`mcp-playwright`)<br>`firecrawl` (`mcp-firecrawl`) | Dynamic browser modes (extension vs headless), ARIA snapshotting. |
+| [packages/profile/](./packages/profile/README.md) | `@tupynambalucas-dev/plugin-profile` | `developer-profile-architect`<br>`developer-advancement-strategist`<br>`linkedin-profile-architect`<br>`linkedin-job-operator`<br>`linkedin-application-auditor`<br>`linkedin-outreach-operator` | `linkedin` (`mcp-linkedin`) | Dual-presence cohesion, GitHub profile README architecture, resume isolation, and LinkedIn Easy Apply gating. |
 
 ---
 
@@ -52,7 +53,7 @@ Each domain plugin in `plugins/packages/*` is a self-contained unit bundling:
 Every plugin must strictly pass Antigravity validation:
 
 ```bash
-# Validate all 10 plugins
+# Validate all 11 plugins
 pnpm plugins:validate
 
 # Validate a single plugin

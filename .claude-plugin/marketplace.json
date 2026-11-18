@@ -68,6 +68,12 @@
       "description": "Universal web automation, headless Playwright testing, developer desktop browser pairing, and extraction.",
       "version": "1.0.0",
       "source": "./plugins/packages/web"
+    },
+    {
+      "name": "profile",
+      "description": "Autonomous developer profile optimization, GitHub profile README architecture, career positioning, and LinkedIn talent discovery.",
+      "version": "1.0.0",
+      "source": "./plugins/packages/profile"
     }
   ]
 }

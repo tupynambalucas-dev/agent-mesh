@@ -1,0 +1,10 @@
+{
+  "name": "linkedin",
+  "version": "1.0.0",
+  "transport": "stdio",
+  "command": "node",
+  "args": ["dist/bin.cjs"],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}

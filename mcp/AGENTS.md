@@ -21,6 +21,7 @@ This document defines the bounded context router for all in-house Model Context 
 | [servers/infisical/](./servers/infisical/) | `@tupynambalucas-dev/mcp-infisical` | [AGENTS.md](./servers/infisical/AGENTS.md) | [README.md](./servers/infisical/README.md) | Active: Universal Auth machine tokens, secret CRUD, and vault management (`dist/bin.cjs` + `scripts/launcher.cjs`). |
 | [servers/memory/](./servers/memory/) | `@tupynambalucas-dev/mcp-memory` | [AGENTS.md](./servers/memory/AGENTS.md) | [README.md](./servers/memory/README.md) | Active: Semantic RAG vector store, episodic memory, and chat history (`dist/bin.cjs` + `scripts/launcher.cjs`). |
 | [servers/playwright/](./servers/playwright/) | `@tupynambalucas-dev/mcp-playwright` | [AGENTS.md](./servers/playwright/AGENTS.md) | [README.md](./servers/playwright/README.md) | Active Sovereign Engine: Executes bundled `dist/bin.cjs` when local `playwright` is resolvable, with resilient fallback to `@playwright/mcp@0.0.84` in unbundled consumers. |
+| [servers/linkedin/](./servers/linkedin/) | `@tupynambalucas-dev/mcp-linkedin` | [AGENTS.md](./servers/linkedin/AGENTS.md) | [README.md](./servers/linkedin/README.md) | Active: LinkedIn profile intelligence, ATS keyword extraction, multi-vector job discovery, and Easy Apply automation (`dist/bin.cjs` + `scripts/launcher.cjs`). |
 
 ## 2. Shared Core Libraries (`core/*`)
 
