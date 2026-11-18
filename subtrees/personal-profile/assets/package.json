@@ -1,0 +1,48 @@
+{
+  "name": "@profile/assets",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Canonical design tokens, icons, and visual brand assets.",
+  "author": "Tupynambá Lucas Varela Rodrigues <tupynambalucas.dev>",
+  "license": "MIT",
+  "homepage": "https://tupynambalucas.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tupynambalucas/tupynambalucas.git"
+  },
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    "./assets-manifest.json": "./src/assets-manifest.json",
+    "./assets.d.ts": "./src/assets.d.ts",
+    "./icons": "./src/icons/index.tsx",
+    "./logos": "./src/org/logos/index.ts",
+    "./logos/*": "./src/org/logos/*",
+    "./three/*": "./src/three/*",
+    "./images/*": "./src/images/*",
+    "./org/*": "./src/org/*",
+    "./brand/*": "./src/org/*",
+    "./fonts/*": "./src/fonts/*",
+    "./github/*": "./src/renderer/github/*",
+    "./renderer/*": "./src/renderer/*",
+    "./tokens": "./src/tokens/index.ts",
+    "./tokens.css": "./src/tokens/tokens.css",
+    "./theme.css": "./src/tokens/theme.css",
+    "./*": "./src/*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "react": "catalog:web-stack",
+    "react-dom": "catalog:web-stack",
+    "react-icons": "catalog:studio-stack"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:web-stack",
+    "@types/react-dom": "catalog:web-stack",
+    "tailwindcss": "catalog:shared-stack",
+    "typescript": "catalog:"
+  }
+}

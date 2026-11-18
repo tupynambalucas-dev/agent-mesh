@@ -1,0 +1,35 @@
+name: Renderer Document Generator
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: 'renderer'
+  cancel-in-progress: false
+
+jobs:
+  generate-documents:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.ref_name || 'main' }}
+
+      - name: Setup PNPM Environment
+        uses: ./.github/actions/setup-pnpm-env
+        with:
+          node-version: 22
+          frozen-lockfile: 'true'
+          filter: '@profile/renderer...'
+
+      - name: Generate and Publish Documents
+        uses: ./.github/actions/generate-renderer
+        with:
+          github_token: ${{ secrets.RENDERER_GH_PAT }}
+          target_branch: ${{ github.event_name == 'workflow_dispatch' && github.ref_name || 'main' }}

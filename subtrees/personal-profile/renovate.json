@@ -1,0 +1,31 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:best-practices", "group:monorepos", "group:recommended"],
+  "schedule": ["before 5am on Monday"],
+  "timezone": "America/Sao_Paulo",
+  "baseBranches": ["develop"],
+  "packageRules": [
+    {
+      "description": "Lock TypeScript to v6.x due to TS 7.0 AST incompatibility with the ESLint ecosystem",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<7.0.0"
+    },
+    {
+      "description": "Group ESLint and TypeScript-ESLint updates together (Allowed to update to their latest versions as long as they support TS 6)",
+      "matchPackageNames": [
+        "eslint",
+        "@eslint/js",
+        "@typescript-eslint/eslint-plugin",
+        "typescript-eslint",
+        "eslint-plugin-*",
+        "@docusaurus/eslint-plugin"
+      ],
+      "groupName": "ESLint Ecosystem"
+    },
+    {
+      "description": "Group React and React DOM updates together",
+      "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
+      "groupName": "React Ecosystem"
+    }
+  ]
+}
