@@ -1,10 +1,12 @@
-# Firecrawl MCP Server (`@tupynambalucas-dev/mcp-firecrawl`)
+# Firecrawl Model Context Protocol Server (`@tupynambalucas-dev/mcp-firecrawl`)
 
-Dual-transport Model Context Protocol server that bridges AI agents and the Kubernetes Envoy AgentGateway to the Firecrawl web-intelligence API. Exposes six tools over both Stdio (`dist/bin.cjs` via `scripts/launcher.cjs`) and Streamable HTTP at `/mcp` on port `8080` (`dist/index.cjs`).
+Dual-transport Model Context Protocol server bridging AI agents and the Kubernetes Envoy AgentGateway to the Firecrawl web-intelligence API. Exposes six tools over both Stdio (`dist/bin.cjs` via `scripts/launcher.cjs`) and Streamable HTTP at `/mcp` on port `8080` (`dist/index.cjs`).
 
 ---
 
-## Technology Stack
+## 1. Overview & Technology Stack
+
+`@tupynambalucas-dev/mcp-firecrawl` provides high-throughput web scraping, site crawling, and structured markdown extraction.
 
 | Layer             | Technology                                               |
 | :---------------- | :------------------------------------------------------- |
@@ -18,7 +20,7 @@ Dual-transport Model Context Protocol server that bridges AI agents and the Kube
 
 ---
 
-## Available Tools
+## 2. Capabilities / Exports Catalog
 
 | Tool           | Description                                                       | Required Params |
 | :------------- | :---------------------------------------------------------------- | :-------------- |
@@ -31,7 +33,7 @@ Dual-transport Model Context Protocol server that bridges AI agents and the Kube
 
 ---
 
-## Transport & Sovereign Execution
+## 3. Transport & Sovereign Execution
 
 1. **Stdio Transport (`dist/bin.cjs` / `scripts/launcher.cjs`)**:
    - Invoked directly by domain plugins (`@tupynambalucas-dev/plugin-research`, `@tupynambalucas-dev/plugin-web`) or standalone consumers via `node scripts/launcher.cjs`.
@@ -43,7 +45,7 @@ Dual-transport Model Context Protocol server that bridges AI agents and the Kube
 
 ---
 
-## Configuration & Environment
+## 4. Configuration & Environment
 
 | Variable            | Required | Default                     | Description                                               |
 | :------------------ | :------: | :-------------------------- | :-------------------------------------------------------- |
@@ -54,7 +56,7 @@ Dual-transport Model Context Protocol server that bridges AI agents and the Kube
 
 ---
 
-## Development Scripts
+## 5. Development Scripts
 
 ```bash
 pnpm dev                    # tsx watch src/index.ts - hot-reload development server
@@ -67,10 +69,20 @@ pnpm typecheck              # tsc --noEmit - type-check without emitting
 
 ---
 
-## Health Check (HTTP Mode)
+## 6. Health Check (HTTP Mode)
 
 ```text
 GET /health
 ```
 
 Returns `{ "status": "healthy", "service": "firecrawl-mcp" }`.
+
+---
+
+## 7. Governance & Context
+
+This package adheres to enterprise governance standards:
+- [Root Context Router](../../../AGENTS.md)
+- [MCP Subsystem Context](../../AGENTS.md)
+- [MCP Subsystem README](../../README.md)
+- [License](./LICENSE): Apache License 2.0

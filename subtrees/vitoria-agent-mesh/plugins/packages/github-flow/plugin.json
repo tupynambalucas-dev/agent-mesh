@@ -1,0 +1,22 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "github-flow",
+  "version": "1.0.0",
+  "description": "Developer Git workflow automation, Conventional Commits, cryptographic SSH commit signing, and GitHub Actions orchestration.",
+  "author": {
+    "name": "Vitoria Rodrigues",
+    "url": "https://vitoriarodrigues.dev"
+  },
+  "homepage": "https://docs.vitoriarodrigues.dev",
+  "repository": "https://github.com/Vitoria-Rodrigues/agent-mesh",
+  "license": "Apache-2.0",
+  "keywords": [
+    "github",
+    "git",
+    "github-flow",
+    "conventional-commits",
+    "ssh-signing",
+    "actions",
+    "ci-cd"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "@vitoria-rodrigues/plugin-docusaurus",
+  "version": "1.0.0",
+  "description": "Enterprise Docusaurus v3 documentation architecture: Diataxis taxonomy, MDX v3 authoring, and link/schema validation.",
+  "author": "Vitoria Rodrigues <contato@vitoriarodrigues.dev>",
+  "license": "Apache-2.0",
+  "homepage": "https://docs.vitoriarodrigues.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vitoria-Rodrigues/agent-mesh.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  },
+  "files": [
+    "plugin.json",
+    "rules",
+    "skills",
+    "CHANGELOG.md",
+    "references"
+  ]
+}

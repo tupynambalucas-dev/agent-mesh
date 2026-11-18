@@ -1,0 +1,25 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "profile",
+  "version": "1.0.0",
+  "description": "Autonomous developer profile optimization, GitHub profile README architecture, career positioning, and LinkedIn talent discovery.",
+  "author": {
+    "name": "Tupynamba Lucas Development Team",
+    "url": "https://tupynambalucas.dev"
+  },
+  "homepage": "https://tupynambalucas.dev",
+  "repository": "https://github.com/tupynambalucas-dev/agent-mesh",
+  "license": "Apache-2.0",
+  "keywords": [
+    "profile",
+    "developer-profile",
+    "github-profile",
+    "linkedin",
+    "careers",
+    "ats-optimization",
+    "readme-architecture",
+    "job-matching",
+    "recruiter-outreach",
+    "resumes"
+  ]
+}

@@ -1,6 +1,6 @@
 # MCP Server Catalog
 
-Technical reference detailing all 8 in-house Model Context Protocol (MCP) server packages authored in `mcp/servers/*` and the shared core library in `mcp/core/*`, their dual transports, exposed tools, and environment variables.
+Technical reference detailing all 9 in-house Model Context Protocol (MCP) server packages authored in `mcp/servers/*` and the shared core library in `mcp/core/*`, their dual transports, exposed tools, and environment variables.
 
 ---
 
@@ -22,6 +22,7 @@ Every MCP server package in `mcp/servers/*` implements two execution entrypoints
 | `mcp/servers/github-org` | `@tupynambalucas-dev/mcp-github-org` | `dist/bin.cjs` / `scripts/launcher.cjs` | `:8080` | Tier 1 GitHub App authenticated RBAC, teams, rulesets, and Dependabot/Secret auditing. |
 | `mcp/servers/gwork` | `@tupynambalucas-dev/mcp-gwork` | `dist/bin.cjs` / `scripts/launcher.cjs` | `:8080` | Google Drive folder taxonomy, Sheets synthesis, and Docs authoring. |
 | `mcp/servers/infisical` | `@tupynambalucas-dev/mcp-infisical` | `dist/bin.cjs` / `scripts/launcher.cjs` | `:8080` | Universal Auth machine tokens, secret CRUD, and vault management. |
+| `mcp/servers/linkedin` | `@tupynambalucas-dev/mcp-linkedin` | `dist/bin.cjs` / `scripts/launcher.cjs` | `:8080` | LinkedIn profile intelligence, ATS keyword extraction, job matching, and Easy Apply automation. |
 | `mcp/servers/memory` | `@tupynambalucas-dev/mcp-memory` | `dist/bin.cjs` / `scripts/launcher.cjs` | `:8080` | Semantic RAG vector store, episodic memory, and knowledge graph. |
 | `mcp/servers/playwright` | `@tupynambalucas-dev/mcp-playwright` | `dist/bin.cjs` / `scripts/launcher.cjs` | `:8080` | Universal browser automation, extension bridge, and ARIA snapshots. |
 | `mcp/core/github` | `@tupynambalucas-dev/mcp-core-github` | `dist/index.js` *(Library)* | N/A | Shared Three-Tier GitHub App authentication, Octokit client factory, and Zod schemas. |
@@ -106,3 +107,17 @@ To enable frictionless consumption across external repositories (such as `omnich
 - `browser_fill_form`: Fills form input fields with deterministic values.
 - `browser_wait_for`: Waits for network settle or DOM selector presence.
 - `browser_close`: Closes browser or active session tab.
+
+### 9. `@tupynambalucas-dev/mcp-linkedin`
+- `get_my_profile`: Extracts authenticated candidate profile data.
+- `get_person_profile`: Fetches public profile details of a member or recruiter.
+- `search_jobs`: Queries LinkedIn jobs by title, tags, location, and filters.
+- `get_job_details`: Fetches description, requirements, and Easy Apply availability.
+- `get_easy_apply_form`: Inspects multi-step Easy Apply fields and required attachments.
+- `dismiss_job`: Dismisses a job from discovery feeds.
+- `list_resumes`: Discovers candidate resume files inside `$PLUGIN_DATA/resumes/`.
+- `get_resume_content`: Reads text or metadata of a candidate resume for job matching.
+- `submit_easy_apply`: Submits an Easy Apply application (gated by confirmation).
+- `connect_with_person`: Dispatches a connection request with optional note.
+- `send_message`: Sends a direct message or InMail to a member.
+- `reply_to_conversation`: Replies to an existing messaging thread.

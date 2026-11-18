@@ -1,4 +1,4 @@
-# @tupynambalucas-dev/mcp-core-github
+# GitHub Model Context Protocol Core Library (`@tupynambalucas-dev/mcp-core-github`)
 
 Shared TypeScript core library providing Three-Tier GitHub App authentication, Octokit client factories, and common Zod validation schemas for `agent-mesh` GitHub Model Context Protocol servers.
 
@@ -45,7 +45,7 @@ Shared TypeScript core library providing Three-Tier GitHub App authentication, O
 
 ---
 
-## 4. Building & Typechecking
+## 4. Development Scripts
 
 ```bash
 # Build via root script
@@ -54,3 +54,13 @@ pnpm mcp:core-github:build
 # Typecheck package
 pnpm --filter @tupynambalucas-dev/mcp-core-github typecheck
 ```
+
+---
+
+## 5. Governance & Context
+
+This core library adheres to enterprise governance standards:
+- [Root Context Router](../../../AGENTS.md)
+- [MCP Subsystem Context](../../AGENTS.md)
+- [MCP Subsystem README](../../README.md)
+- [License](./LICENSE): Apache License 2.0

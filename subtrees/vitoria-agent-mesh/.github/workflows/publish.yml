@@ -1,0 +1,64 @@
+name: Publish Packages to GitHub Packages
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      force_republish:
+        description: "Purge existing packages before publishing to overwrite current version tarballs"
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: publish-packages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  validate-and-publish:
+    name: Validate, Build and Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository (Full History for Dynamic Package Reconciliation)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js & pnpm
+        uses: ./.github/actions/setup-pnpm-env
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Typecheck Workspace
+        run: pnpm typecheck
+
+      - name: Build MCP Packages
+        uses: ./.github/actions/build-mcp
+
+      - name: Validate Antigravity Domain Plugins
+        uses: ./.github/actions/validate-plugins
+
+      - name: Reconcile Registry & Purge Obsolete Packages
+        env:
+          ADMIN_TOKEN: ${{ secrets.ADMIN_PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+          ADMIN_ACTION: ${{ inputs.force_republish && 'purge-all' || 'purge-obsolete' }}
+          DRY_RUN: "false"
+        run: node .github/scripts/manage-packages.js
+
+      - name: Publish Workspace Packages Idempotently (Native pnpm)
+        env:
+          # GitHub Packages npm registry (npm.pkg.github.com) requires GITHUB_TOKEN
+          # (with packages: write) rather than a GitHub App installation token (ghs_*).
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm run packages:publish

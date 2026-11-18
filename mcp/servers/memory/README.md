@@ -1,10 +1,12 @@
-# Memory MCP Server (`@tupynambalucas-dev/mcp-memory`)
+# Cortex Memory Model Context Protocol Server (`@tupynambalucas-dev/mcp-memory`)
 
 Dual-transport Model Context Protocol adapter for the Cortex Memory RAG Subsystem. Bridges AI agents and the Kubernetes Envoy AgentGateway to the `memory-api` Fastify REST service, exposing four tools over both Stdio (`dist/bin.cjs` via `scripts/launcher.cjs`) and Streamable HTTP at `/mcp` on port `8080` (`dist/index.cjs`).
 
 ---
 
-## Technology Stack
+## 1. Overview & Technology Stack
+
+`@tupynambalucas-dev/mcp-memory` connects agents with semantic vector memory and episodic history.
 
 | Layer             | Technology                                               |
 | :---------------- | :------------------------------------------------------- |
@@ -17,7 +19,7 @@ Dual-transport Model Context Protocol adapter for the Cortex Memory RAG Subsyste
 
 ---
 
-## Available Tools
+## 2. Capabilities / Exports Catalog
 
 | Tool               | Description                                                     | Required Params                |
 | :----------------- | :-------------------------------------------------------------- | :----------------------------- |
@@ -28,7 +30,7 @@ Dual-transport Model Context Protocol adapter for the Cortex Memory RAG Subsyste
 
 ---
 
-## Transport & Sovereign Execution
+## 3. Transport & Sovereign Execution
 
 1. **Stdio Transport (`dist/bin.cjs` / `scripts/launcher.cjs`)**:
    - Self-contained CJS bundle inlining `@modelcontextprotocol/sdk`, `fastify`, `zod`, and `dotenv` so the server runs in standalone consumer repositories without external dependencies.
@@ -38,7 +40,7 @@ Dual-transport Model Context Protocol adapter for the Cortex Memory RAG Subsyste
 
 ---
 
-## Dependency: memory-api
+## 4. Upstream Service Integration (memory-api)
 
 All tools delegate HTTP calls to the `memory-api` Fastify service:
 
@@ -53,7 +55,7 @@ mcp-memory -> memory-api:3006/api/memory/*
 
 ---
 
-## Configuration & Environment
+## 5. Configuration & Environment
 
 | Variable         | Required | Default                  | Description                              |
 | :--------------- | :------: | :----------------------- | :--------------------------------------- |
@@ -62,7 +64,7 @@ mcp-memory -> memory-api:3006/api/memory/*
 
 ---
 
-## Development Scripts
+## 6. Development Scripts
 
 ```bash
 pnpm dev                    # tsx watch src/index.ts - hot-reload development server
@@ -75,10 +77,20 @@ pnpm typecheck              # tsc --noEmit - type-check without emitting
 
 ---
 
-## Health Check (HTTP Mode)
+## 7. Health Check (HTTP Mode)
 
 ```text
 GET /health
 ```
 
 Returns `{ "status": "healthy", "service": "memory-mcp" }`.
+
+---
+
+## 8. Governance & Context
+
+This package adheres to enterprise governance standards:
+- [Root Context Router](../../../AGENTS.md)
+- [MCP Subsystem Context](../../AGENTS.md)
+- [MCP Subsystem README](../../README.md)
+- [License](./LICENSE): Apache License 2.0

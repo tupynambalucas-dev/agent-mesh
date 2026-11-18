@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "node",
+      "args": ["./scripts/launcher.cjs", "context7"]
+    },
+    "firecrawl": {
+      "command": "node",
+      "args": ["./scripts/launcher.cjs", "firecrawl"]
+    }
+  }
+}

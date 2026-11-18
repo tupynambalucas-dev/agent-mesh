@@ -1,0 +1,9 @@
+name: "Build MCP Packages"
+description: "Compiles all Model Context Protocol (MCP) packages in parallel via Turborepo"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Build MCP Packages
+      shell: bash
+      run: pnpm mcp:build

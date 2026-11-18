@@ -1,0 +1,60 @@
+# In-House Model Context Protocol Subsystem (`mcp/`)
+
+This directory houses the sovereign in-house Model Context Protocol (MCP) servers (`mcp/servers/*`) and shared protocol libraries (`mcp/core/*`) authored for the `Vitoria-Rodrigues` organization.
+
+---
+
+## 1. Overview
+
+The `mcp/` subsystem enforces **Subsystem-Internal Partitioning** and **Self-Contained Sovereign Packaging**:
+- **Deployable MCP Servers (`mcp/servers/*`)**: Independent, versioned TypeScript packages bundled via `tsup` (`noExternal`) into standalone CommonJS executables implementing a **Dual-Transport Architecture**:
+  1. **Streamable HTTP Transport (`src/index.ts` -> `dist/index.cjs`)**: Fastify HTTP server listening on `:8080` (or `PORT` environment variable) serving `/mcp` endpoints for Kubernetes cluster deployments.
+  2. **Stdio Transport (`src/bin.ts` -> `dist/bin.cjs`)**: Self-contained CLI runner inlining `@modelcontextprotocol/sdk` and runtime dependencies, connecting via standard input/output with diagnostic logging routed to `stderr`.
+  3. **Sovereign Launcher (`scripts/launcher.cjs` & `mcp.json`)**: Co-located launcher script exposed as the package `bin` (`mcp-<name>`) that loads `.env` in cascade, manages upstream delegation or native bundles, and spawns executables with zero external dependencies.
+- **Shared Core Libraries (`mcp/core/*`)**: Non-executable TypeScript libraries shared across multiple domain-scoped MCP servers via `workspace:*` and bundled directly into downstream server executables at build time.
+
+---
+
+## 2. Deployable Server Matrix (`mcp/servers/*`)
+
+| Server Directory | NPM Package Name | Sovereign Launcher & Bundles | Default HTTP Port | Status & Role | Primary Capabilities |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| [servers/firecrawl/](./servers/firecrawl/README.md) | `@vitoria-rodrigues/mcp-firecrawl` | `scripts/launcher.cjs`<br>`dist/bin.cjs` / `dist/index.cjs` | `:8080` | Production Active | Deep web scraping, crawling, site mapping, and markdown extraction. |
+| [servers/github-flow/](./servers/github-flow/README.md) | `@vitoria-rodrigues/mcp-github-flow` | `scripts/launcher.cjs`<br>`dist/bin.cjs` / `dist/index.cjs` | `:8080` | Production Active | Tier 3 developer Git workflows, branches, pull requests, and Actions diagnostics. |
+| [servers/playwright/](./servers/playwright/README.md) | `@vitoria-rodrigues/mcp-playwright` | `scripts/launcher.cjs`<br>`dist/bin.cjs` / `dist/index.cjs` | `:8080` | Production Active (Sovereign + Fallback) | Executes local `dist/bin.cjs` when `playwright` is installed; falls back to `@playwright/mcp@0.0.84` when unbundled in external consumers. |
+| [servers/linkedin/](./servers/linkedin/README.md) | `@vitoria-rodrigues/mcp-linkedin` | `scripts/launcher.cjs`<br>`dist/bin.cjs` / `dist/index.cjs` | `:8080` | Production Active | LinkedIn profile optimization, job matching, Easy Apply automation, and candidate resume catalog management. |
+
+---
+
+## 3. Shared Core Libraries Matrix (`mcp/core/*`)
+
+| Core Directory | NPM Package Name | Entrypoint | Consumed & Bundled By | Primary Capabilities |
+| :--- | :--- | :--- | :--- | :--- |
+| [core/github/](./core/github/README.md) | `@vitoria-rodrigues/mcp-core-github` | `dist/index.js` | `mcp-github-flow` | Three-Tier GitHub App authentication, Octokit client factory, and shared Zod schemas. |
+
+---
+
+## 4. Build & Development Pipeline
+
+Pipelines are orchestrated through Turborepo using pnpm catalogs and `tsup`. Because `mcp/servers/*/dist/` is tracked in Git (`!mcp/servers/*/dist/`) for zero-token Git package consumption, always commit rebuilt bundles after source changes:
+
+```bash
+# Build all MCP packages (core tsc + servers tsup bundles) topologically
+pnpm mcp:build
+
+# Typecheck all MCP packages
+pnpm mcp:typecheck
+
+# Clean all build outputs
+pnpm mcp:clean
+```
+
+### Individual Target Builds
+
+```bash
+pnpm mcp:core-github:build
+pnpm mcp:firecrawl:build
+pnpm mcp:github-flow:build
+pnpm mcp:linkedin:build
+pnpm mcp:playwright:build
+```

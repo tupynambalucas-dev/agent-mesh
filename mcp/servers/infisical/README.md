@@ -1,10 +1,10 @@
-# @tupynambalucas-dev/mcp-infisical
+# Infisical Model Context Protocol Server (`@tupynambalucas-dev/mcp-infisical`)
 
-Model Context Protocol server for Infisical Vault Universal Auth machine identity and secret lifecycle management.
+Dual-transport Model Context Protocol (MCP) server for Infisical Vault Universal Auth machine identity and secret lifecycle management. Exposes tools over both Stdio (`dist/bin.cjs` via `scripts/launcher.cjs`) and Streamable HTTP at `/mcp` on port `8080` (`dist/index.cjs`).
 
 ---
 
-## Overview
+## 1. Overview
 
 `@tupynambalucas-dev/mcp-infisical` provides a dual-transport interface (Fastify Streamable HTTP on `:8080` via `dist/index.cjs` and Stdio via `dist/bin.cjs` / `scripts/launcher.cjs`) enabling AI agents to manage secrets and projects across environments (`dev`, `staging`, `prod`) using Machine Identity authentication.
 
@@ -12,7 +12,7 @@ Built with `tsup` (`noExternal`), `dist/bin.cjs` bundles `@modelcontextprotocol/
 
 ---
 
-## Tools Exposed
+## 2. Capabilities / Exports Catalog
 
 | Tool Name | Parameters | Description |
 | :--- | :--- | :--- |
@@ -28,7 +28,34 @@ Built with `tsup` (`noExternal`), `dist/bin.cjs` bundles `@modelcontextprotocol/
 
 ---
 
-## Configuration
+## 3. Directory Layout
+
+```text
+mcp/servers/infisical/
+├── scripts/
+│   └── launcher.cjs             # Sovereign MCP launcher with .env cascade
+├── src/
+│   ├── client/
+│   │   └── infisical-auth.client.ts # Infisical Universal Auth token client
+│   ├── tools/
+│   │   ├── index.ts             # Tool registry and registration
+│   │   ├── projects.tool.ts     # Project CRUD tools
+│   │   └── secrets.tool.ts      # Secret CRUD tools
+│   ├── bin.ts                   # Stdio transport entrypoint
+│   ├── config.ts                # Zod environment schema
+│   ├── index.ts                 # Fastify Streamable HTTP transport entrypoint (:8080)
+│   └── types.ts                 # Infisical types
+├── AGENTS.md                    # Layer 3 context router
+├── mcp.json                     # Agent Plugins stdio declaration
+├── package.json                 # Package manifest (@tupynambalucas-dev/mcp-infisical)
+├── README.md                    # Layer 3 package documentation
+├── tsconfig.json                # TypeScript compiler configuration
+└── tsup.config.ts               # Inlined CommonJS bundle configuration
+```
+
+---
+
+## 4. Configuration & Usage
 
 | Environment Variable | Description |
 | :--- | :--- |
@@ -39,7 +66,7 @@ Built with `tsup` (`noExternal`), `dist/bin.cjs` bundles `@modelcontextprotocol/
 
 ---
 
-## Building and Running
+## 5. Development Scripts
 
 ```bash
 # Bundle into dist/bin.cjs and dist/index.cjs via tsup
@@ -53,4 +80,17 @@ node dist/bin.cjs
 
 # Run HTTP server
 node dist/index.cjs
+
+# Typecheck package
+pnpm typecheck
 ```
+
+---
+
+## 6. Governance & Context
+
+This package adheres to enterprise governance standards:
+- [Root Context Router](../../../AGENTS.md)
+- [MCP Subsystem Context](../../AGENTS.md)
+- [MCP Subsystem README](../../README.md)
+- [License](./LICENSE): Apache License 2.0

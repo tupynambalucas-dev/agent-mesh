@@ -36,8 +36,8 @@ Task-focused runbooks and recipes to accomplish specific operational goals:
 Declarative specifications, catalogs, schemas, and matrices:
 - [Umbrella Package & Presets Specification](./reference/umbrella-package-and-presets.md): Specification for the `@tupynambalucas-dev/agent-mesh` (`v1.2.0`) umbrella distribution package, installation channels, presets, and two-tier launcher resolution.
 - [Enterprise Naming Conventions & Scoping Standard](./reference/naming-conventions-and-scoping-standard.md): Package names (`@tupynambalucas-dev/*`), closed role vocabulary, and directory invariants for plugins and sovereign MCP servers.
-- [Domain Plugin Catalog](./reference/domain-plugin-catalog.md): Comprehensive matrix of all 10 domain plugins, included skills, rules, and sovereign launcher targets.
-- [MCP Server Catalog](./reference/mcp-server-catalog.md): Technical breakdown of all 8 self-contained MCP servers (`dist/bin.cjs` + `scripts/launcher.cjs`) and 1 shared core library.
+- [Domain Plugin Catalog](./reference/domain-plugin-catalog.md): Comprehensive matrix of all 11 domain plugins, included skills, rules, and sovereign launcher targets.
+- [MCP Server Catalog](./reference/mcp-server-catalog.md): Technical breakdown of all 9 self-contained MCP servers (`dist/bin.cjs` + `scripts/launcher.cjs`) and 1 shared core library.
 - [GitHub App Permissions Matrix](./reference/github-app-permissions-matrix.md): Permission scopes, token lifecycles, and Infisical project mappings.
 
 ### 2.4 Architecture Explanation (Understanding-Oriented)

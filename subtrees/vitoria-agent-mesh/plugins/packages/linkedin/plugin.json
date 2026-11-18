@@ -1,0 +1,22 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "linkedin",
+  "version": "1.0.0",
+  "description": "Sovereign LinkedIn AI agent domain plugin: profile optimization, multi-vector job discovery, candidate resume matching, and Easy Apply automation.",
+  "author": {
+    "name": "Vitoria Rodrigues",
+    "url": "https://vitoriarodrigues.dev"
+  },
+  "homepage": "https://docs.vitoriarodrigues.dev",
+  "repository": "https://github.com/Vitoria-Rodrigues/agent-mesh",
+  "license": "Apache-2.0",
+  "keywords": [
+    "linkedin",
+    "careers",
+    "easy-apply",
+    "ats-optimization",
+    "job-matching",
+    "recruiter-outreach",
+    "resumes"
+  ]
+}

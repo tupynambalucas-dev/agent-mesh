@@ -1,0 +1,77 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+/**
+ * Tupynambalucas - Full Theme (Tokens + Global Resets)
+ * Centralized in @studio to ensure consistency across the monorepo.
+ * This file is suitable for standard React applications where Tailwind's 
+ * Preflight and global element resets are desired.
+ */
+
+@layer base {
+  html,
+  body,
+  #root {
+    @apply h-full w-full m-0 p-0;
+    font-weight: 400;
+  }
+
+  body {
+    @apply font-sans antialiased;
+    color: var(--color-body-dark);
+    background-color: var(--color-background-light);
+    line-height: 1.6;
+  }
+
+  h1 {
+    color: var(--color-title-dark);
+    @apply font-extrabold tracking-tight;
+    letter-spacing: -0.025em;
+  }
+
+  h2 {
+    color: var(--color-title-dark);
+    @apply font-bold tracking-tight;
+    letter-spacing: -0.015em;
+  }
+
+  h3 {
+    color: var(--color-title-dark);
+    @apply font-semibold;
+  }
+
+  h4,
+  h5,
+  h6 {
+    color: var(--color-subtitle-dark);
+    @apply font-medium;
+  }
+
+  p,
+  span,
+  li {
+    font-weight: 400;
+  }
+
+  label,
+  caption {
+    @apply font-medium;
+    color: var(--color-label-dark);
+  }
+
+  small {
+    @apply font-light;
+    color: var(--color-label-dark);
+  }
+
+  strong,
+  b {
+    @apply font-bold;
+  }
+
+  .display-text {
+    @apply font-black uppercase;
+  }
+
+  /* --- Dark Mode Overrides --- */
+}

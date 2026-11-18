@@ -303,6 +303,37 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
+  mcp/servers/linkedin:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: catalog:mcp-stack
+        version: 1.32.2(zod@3.25.76)
+      dotenv:
+        specifier: catalog:shared
+        version: 16.6.1
+      fastify:
+        specifier: catalog:mcp-stack
+        version: 5.12.7
+      zod:
+        specifier: catalog:shared
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.20.5
+      rimraf:
+        specifier: 'catalog:'
+        version: 6.1.3
+      tsup:
+        specifier: 'catalog:'
+        version: 9.0.0(tsx@4.23.15)(typescript@6.0.3)
+      tsx:
+        specifier: 'catalog:'
+        version: 4.23.15
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
   mcp/servers/memory:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -420,6 +451,15 @@ importers:
         version: 6.0.3
 
   plugins/packages/gwork:
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.20.5
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  plugins/packages/profile:
     devDependencies:
       '@types/node':
         specifier: 'catalog:'

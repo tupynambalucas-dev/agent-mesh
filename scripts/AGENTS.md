@@ -17,7 +17,7 @@ This document defines the bounded context router for release orchestration scrip
 ## Architecture Overview
 
 1. **Two-Stage Monorepo Publishing (`packages:publish`)**:
-   - Stage 1: Native recursive workspace publication via `pnpm -r publish --access public --no-git-checks --report-summary` (publishes all 10 domain plugins, 8 MCP servers, and 1 core library).
+   - Stage 1: Native recursive workspace publication via `pnpm -r publish --access public --no-git-checks --report-summary` (publishes all 11 domain plugins, 9 MCP servers, and 1 core library).
    - Stage 2: Root umbrella package publication via `node ./scripts/publish-root.cjs` (publishes `@tupynambalucas-dev/agent-mesh` and treats `409 Conflict` / `E409` as an idempotent no-op).
 2. **Two-Tier Sovereign Launchers Architecture**:
    - The legacy root router script has been retired.
@@ -28,4 +28,4 @@ This document defines the bounded context router for release orchestration scrip
 
 - MUST NOT leak secrets or private keys into terminal output or log files.
 - MUST preserve the Zero-Emoji Invariant across all scripts and log messages.
-- Developer workstation provisioning and verification scripts belong strictly to [`.github/scripts/`](../../.github/scripts/README.md).
+- Developer workstation provisioning and verification scripts belong strictly to [`tupynambalucas-dev/.github/scripts/`](https://github.com/tupynambalucas-dev/.github/tree/main/scripts).

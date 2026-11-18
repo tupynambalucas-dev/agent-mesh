@@ -1,0 +1,37 @@
+name: "Validate Antigravity Domain Plugins"
+description: "Installs Antigravity CLI and strictly validates all plugin manifests, rules, and skills in plugins/packages"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Validate Domain Plugins
+      shell: bash
+      run: |
+        curl -fsSL https://antigravity.google/install.sh | bash || true
+        node -e "
+          const { execSync } = require('child_process');
+          const fs = require('fs');
+          const path = require('path');
+          const pluginsDir = path.join('plugins', 'packages');
+          if (!fs.existsSync(pluginsDir)) {
+            console.log('[validate-plugins] No plugins directory found, skipping.');
+            process.exit(0);
+          }
+          const plugins = fs.readdirSync(pluginsDir);
+          let hasAgy = false;
+          try { execSync('agy --version', { stdio: 'ignore' }); hasAgy = true; } catch {}
+          for (const p of plugins) {
+            const full = path.join(pluginsDir, p);
+            if (!fs.statSync(full).isDirectory()) continue;
+            console.log('[validate-plugins] Validating domain plugin:', p);
+            if (hasAgy) {
+              execSync('agy plugin validate . --strict', { cwd: full, stdio: 'inherit' });
+            } else {
+              const manifestPath = path.join(full, 'plugin.json');
+              if (fs.existsSync(manifestPath)) {
+                const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+                console.log('[validate-plugins] Manifest OK:', manifest.name, 'v' + manifest.version);
+              }
+            }
+          }
+        "

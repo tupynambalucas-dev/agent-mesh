@@ -1,0 +1,33 @@
+{
+  "name": "@vitoria-rodrigues/plugin-atelier",
+  "version": "1.0.0",
+  "description": "Authoritative AI Agent Atelier for crafting context routers, modular skills, lifecycle hooks, rules, and plugin manifests.",
+  "author": "Vitoria Rodrigues <contato@vitoriarodrigues.dev>",
+  "license": "Apache-2.0",
+  "homepage": "https://docs.vitoriarodrigues.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vitoria-Rodrigues/agent-mesh.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  },
+  "files": [
+    "plugin.json",
+    "rules",
+    "skills",
+    "CHANGELOG.md",
+    "hooks.json",
+    "scripts",
+    "references"
+  ]
+}

@@ -38,6 +38,8 @@
     "mcp:gwork:dev": "pnpm --filter @tupynambalucas-dev/mcp-gwork dev",
     "mcp:infisical:build": "pnpm --filter @tupynambalucas-dev/mcp-infisical build",
     "mcp:infisical:dev": "pnpm --filter @tupynambalucas-dev/mcp-infisical dev",
+    "mcp:linkedin:build": "pnpm --filter @tupynambalucas-dev/mcp-linkedin build",
+    "mcp:linkedin:dev": "pnpm --filter @tupynambalucas-dev/mcp-linkedin dev",
     "mcp:memory:build": "pnpm --filter @tupynambalucas-dev/mcp-memory build",
     "mcp:memory:dev": "pnpm --filter @tupynambalucas-dev/mcp-memory dev",
     "mcp:playwright:build": "pnpm --filter @tupynambalucas-dev/mcp-playwright build",

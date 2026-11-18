@@ -23,6 +23,7 @@ This document defines the bounded context router for all Antigravity and Claude 
 | [packages/research/](./packages/research/) | `@tupynambalucas-dev/plugin-research` | [rules/AGENTS.md](./packages/research/rules/AGENTS.md) | [README.md](./packages/research/README.md) | [plugin.json](./packages/research/plugin.json) |
 | [packages/secrets/](./packages/secrets/) | `@tupynambalucas-dev/plugin-secrets` | [rules/AGENTS.md](./packages/secrets/rules/AGENTS.md) | [README.md](./packages/secrets/README.md) | [plugin.json](./packages/secrets/plugin.json) |
 | [packages/web/](./packages/web/) | `@tupynambalucas-dev/plugin-web` | [rules/AGENTS.md](./packages/web/rules/AGENTS.md) | [README.md](./packages/web/README.md) | [plugin.json](./packages/web/plugin.json) |
+| [packages/profile/](./packages/profile/) | `@tupynambalucas-dev/plugin-profile` | [rules/AGENTS.md](./packages/profile/rules/AGENTS.md) | [README.md](./packages/profile/README.md) | [plugin.json](./packages/profile/plugin.json) |
 
 ## Architecture & Conventions
 

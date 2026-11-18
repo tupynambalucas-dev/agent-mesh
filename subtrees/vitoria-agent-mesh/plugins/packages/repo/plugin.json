@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "repo",
+  "version": "1.0.0",
+  "description": "Enterprise repository governance, monorepo orchestration, pnpm catalogs, package manifest scoping, TypeScript project references, licensing compliance, and recursive README architecture.",
+  "author": {
+    "name": "Vitoria Rodrigues",
+    "url": "https://vitoriarodrigues.dev"
+  },
+  "homepage": "https://docs.vitoriarodrigues.dev",
+  "repository": "https://github.com/Vitoria-Rodrigues/agent-mesh",
+  "license": "Apache-2.0",
+  "keywords": [
+    "repo",
+    "monorepo",
+    "pnpm",
+    "tsconfig",
+    "readme",
+    "community-health",
+    "licensing",
+    "agent-mesh"
+  ]
+}

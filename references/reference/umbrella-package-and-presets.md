@@ -66,7 +66,8 @@ node_modules/@tupynambalucas-dev/agent-mesh/
 │       ├── repo/            (README, licenses, monorepo & .github standards architects)
 │       ├── research/        (Firecrawl web research & Context7 doc researcher + scripts/launcher.cjs)
 │       ├── secrets/         (Infisical vault & secret rotation operators + scripts/launcher.cjs)
-│       └── web/             (Multi-mode Playwright & Firecrawl operators + scripts/launcher.cjs)
+│       ├── web/             (Multi-mode Playwright & Firecrawl operators + scripts/launcher.cjs)
+│       └── profile/         (Developer profile, GitHub README, career positioning & LinkedIn + scripts/launcher.cjs)
 ├── mcp/
 │   ├── core/
 │   │   └── github/          (Three-tier GitHub App authentication & shared Zod schemas)
@@ -77,10 +78,11 @@ node_modules/@tupynambalucas-dev/agent-mesh/
 │       ├── github-org/      (Sovereign launcher scripts/launcher.cjs + self-contained dist/bin.cjs)
 │       ├── gwork/           (Sovereign launcher scripts/launcher.cjs + self-contained dist/bin.cjs)
 │       ├── infisical/       (Sovereign launcher scripts/launcher.cjs + self-contained dist/bin.cjs)
+│       ├── linkedin/        (Sovereign launcher scripts/launcher.cjs + self-contained dist/bin.cjs + upstream fallback)
 │       ├── memory/          (Sovereign launcher scripts/launcher.cjs + self-contained dist/bin.cjs)
 │       └── playwright/      (Sovereign launcher scripts/launcher.cjs + dist/bin.cjs + upstream fallback)
 ├── presets/
-│   ├── all.json             (References all 10 domain plugins)
+│   ├── all.json             (References all 11 domain plugins)
 │   ├── backend-api.json     (repo, github-flow, secrets, research, web)
 │   ├── frontend-web.json    (repo, github-flow, secrets, research, web)
 │   └── docs-portal.json     (repo, github-flow, docusaurus, research)
@@ -96,11 +98,11 @@ node_modules/@tupynambalucas-dev/agent-mesh/
 
 ## 4. Declarative Presets & Selective Filtering Matrix
 
-Consumer repositories configure `.agents/plugins.json` using `entries` pointing to `node_modules/@tupynambalucas-dev/agent-mesh/plugins/packages`. They can either mount all 10 plugins at once or filter active plugins via `include_only` corresponding to our canonical preset definitions in `presets/*.json`:
+Consumer repositories configure `.agents/plugins.json` using `entries` pointing to `node_modules/@tupynambalucas-dev/agent-mesh/plugins/packages`. They can either mount all 11 plugins at once or filter active plugins via `include_only` corresponding to our canonical preset definitions in `presets/*.json`:
 
 | Preset Profile | Reference File | Included Domain Plugins (`include_only`) | Primary Use Case |
 | :--- | :--- | :--- | :--- |
-| **All Plugins** | [`presets/all.json`](../../presets/all.json) | All 10 domain plugins (omit `include_only`) | Full-stack services, developer workstations, platform hubs (`omnichannel`, `platform`, `docs`) |
+| **All Plugins** | [`presets/all.json`](../../presets/all.json) | All 11 domain plugins (omit `include_only`) | Full-stack services, developer workstations, platform hubs (`omnichannel`, `platform`, `docs`) |
 | **Backend API** | [`presets/backend-api.json`](../../presets/backend-api.json) | `repo`, `github-flow`, `secrets`, `research`, `web` | Backend microservices and REST/GraphQL gateways |
 | **Frontend Web** | [`presets/frontend-web.json`](../../presets/frontend-web.json) | `repo`, `github-flow`, `secrets`, `research`, `web` | Web frontends, Next.js, and Astro applications |
 | **Documentation** | [`presets/docs-portal.json`](../../presets/docs-portal.json) | `repo`, `github-flow`, `docusaurus`, `research` | Docusaurus documentation portals |

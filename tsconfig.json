@@ -9,6 +9,7 @@
     { "path": "./mcp/servers/github-org" },
     { "path": "./mcp/servers/gwork" },
     { "path": "./mcp/servers/infisical" },
+    { "path": "./mcp/servers/linkedin" },
     { "path": "./mcp/servers/memory" },
     { "path": "./mcp/servers/playwright" }
   ]

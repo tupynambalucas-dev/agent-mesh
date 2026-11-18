@@ -64,3 +64,4 @@ When authoring or modifying documents and configurations in this monorepo, agent
 - **`skill-architect`**: Active when authoring, auditing, or optimizing modular `SKILL.md` files.
 - **`rule-architect`**: Active when authoring or auditing domain rules and Autonomous Domain Mandates.
 - **`hook-architect`**: Active when configuring Antigravity lifecycle hooks.
+- **`developer-profile-architect`, `developer-advancement-strategist`, `linkedin-profile-architect`, `linkedin-job-operator`, `linkedin-application-auditor`, `linkedin-outreach-operator`**: Active when authoring or auditing developer profile READMEs, professional positioning, candidate resume catalogs, and LinkedIn recruitment automation.

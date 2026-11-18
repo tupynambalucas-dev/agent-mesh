@@ -1,0 +1,40 @@
+name: 'Setup PNPM Environment'
+description: 'Installs Node, PNPM, and configures dependency caching'
+
+inputs:
+  node-version:
+    description: 'Node.js version to use'
+    required: false
+    default: '22'
+  frozen-lockfile:
+    description: 'Whether to enforce frozen-lockfile during install'
+    required: false
+    default: 'true'
+  filter:
+    description: 'pnpm filter to limit dependency installation (e.g. @tupynambalucas-dev/kb-docusaurus-monorepo...)'
+    required: false
+    default: ''
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install pnpm
+      uses: pnpm/action-setup@v6
+
+    - name: Setup Node
+      uses: actions/setup-node@v6
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'pnpm'
+
+    - name: Install Dependencies
+      shell: bash
+      run: |
+        ARGS=()
+        if [ "${{ inputs.frozen-lockfile }}" = "true" ]; then
+          ARGS+=("--frozen-lockfile")
+        fi
+        if [ -n "${{ inputs.filter }}" ]; then
+          ARGS+=("--filter" "${{ inputs.filter }}")
+        fi
+        pnpm install "${ARGS[@]}"

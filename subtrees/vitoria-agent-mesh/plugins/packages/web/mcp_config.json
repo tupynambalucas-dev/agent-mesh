@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "node",
+      "args": ["./scripts/launcher.cjs", "playwright"]
+    },
+    "firecrawl": {
+      "command": "node",
+      "args": ["./scripts/launcher.cjs", "firecrawl"]
+    }
+  }
+}

@@ -1,0 +1,62 @@
+name: Administer & Purge GitHub Packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Administrative action to execute"
+        required: true
+        type: choice
+        default: "list"
+        options:
+          - "list"
+          - "delete-one"
+          - "purge-obsolete"
+          - "purge-all"
+      package_name:
+        description: "Target package name (required for delete-one, e.g. @vitoria-rodrigues/mcp-playwright)"
+        required: false
+        type: string
+        default: ""
+      dry_run:
+        description: "Run in dry-run mode (set false to execute permanent deletion)"
+        required: true
+        type: boolean
+        default: true
+      admin_token:
+        description: "Personal Access Token (classic) with delete:packages and read:packages scopes (optional, defaults to secrets.GITHUB_TOKEN)"
+        required: false
+        type: string
+        default: ""
+
+concurrency:
+  group: admin-packages
+  cancel-in-progress: false
+
+permissions:
+  packages: write
+  contents: read
+
+jobs:
+  admin-packages:
+    name: Execute Package Administration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository (Full History for Dynamic Package Discovery)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js & pnpm
+        uses: ./.github/actions/setup-pnpm-env
+
+      - name: Execute Package Administration Script
+        env:
+          # GitHub Packages granular permissions grant the publishing repository's GITHUB_TOKEN
+          # the "admin" role on its packages, whereas GitHub App installation tokens are not
+          # supported by GitHub Packages npm endpoints.
+          ADMIN_TOKEN: ${{ inputs.admin_token || secrets.ADMIN_PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+          ADMIN_ACTION: ${{ inputs.action }}
+          TARGET_PACKAGE: ${{ inputs.package_name }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: node .github/scripts/manage-packages.js

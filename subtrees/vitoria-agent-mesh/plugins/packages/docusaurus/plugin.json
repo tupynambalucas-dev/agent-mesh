@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "docusaurus",
+  "version": "1.0.0",
+  "description": "Enterprise Docusaurus v3 documentation architecture: Diataxis taxonomy, MDX v3 authoring, and link/schema validation.",
+  "author": {
+    "name": "Vitoria Rodrigues",
+    "url": "https://vitoriarodrigues.dev"
+  },
+  "homepage": "https://docs.vitoriarodrigues.dev",
+  "repository": "https://github.com/Vitoria-Rodrigues/agent-mesh",
+  "license": "Apache-2.0",
+  "keywords": [
+    "docusaurus",
+    "mdx",
+    "diataxis",
+    "documentation",
+    "crowdin"
+  ]
+}

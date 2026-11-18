@@ -1,0 +1,55 @@
+{
+  "name": "vitoria-rodrigues",
+  "owner": {
+    "name": "Vitoria Rodrigues",
+    "email": "contato@vitoriarodrigues.dev",
+    "url": "https://vitoriarodrigues.dev"
+  },
+  "metadata": {
+    "description": "Official Vitoria Rodrigues Enterprise Agent Mesh Marketplace providing domain plugins, governance rules, and smart MCP tools."
+  },
+  "plugins": [
+    {
+      "name": "github-flow",
+      "description": "Developer GitHub assistant for Git workflows, Conventional Commits, Pull Requests, and Actions CI/CD triage.",
+      "version": "1.0.0",
+      "source": "./plugins/packages/github-flow"
+    },
+    {
+      "name": "atelier",
+      "description": "Authoritative AI Agent Atelier for crafting context routers, modular skills, lifecycle hooks, rules, and plugin manifests.",
+      "version": "1.0.0",
+      "source": "./plugins/packages/atelier"
+    },
+    {
+      "name": "repo",
+      "description": "Enterprise repository governance, root file standards, README architecture, licensing, and community health files.",
+      "version": "1.0.0",
+      "source": "./plugins/packages/repo"
+    },
+    {
+      "name": "docusaurus",
+      "description": "Sovereign Docusaurus documentation architecture, MDX v3 authoring, and Diataxis compliance.",
+      "version": "1.0.0",
+      "source": "./plugins/packages/docusaurus"
+    },
+    {
+      "name": "research",
+      "description": "Autonomous technical research via Context7 live docs and Firecrawl deep web exploration.",
+      "version": "1.0.0",
+      "source": "./plugins/packages/research"
+    },
+    {
+      "name": "web",
+      "description": "Universal web automation, headless Playwright testing, developer desktop browser pairing, and extraction.",
+      "version": "1.0.0",
+      "source": "./plugins/packages/web"
+    },
+    {
+      "name": "linkedin",
+      "description": "Sovereign LinkedIn AI agent domain plugin: profile optimization, multi-vector job discovery, candidate resume matching, and Easy Apply automation.",
+      "version": "1.0.0",
+      "source": "./plugins/packages/linkedin"
+    }
+  ]
+}

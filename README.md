@@ -8,8 +8,8 @@ Universal enterprise AI agent substrate, domain plugin marketplace, modular skil
 
 `agent-mesh` operates as both an **Enterprise Agent Marketplace & Monorepo Hub** and a **Public Umbrella Package (`@tupynambalucas-dev/agent-mesh`)**. Capabilities are partitioned into sovereign, independently versioned packages that can be consumed either all at once via the umbrella package or selectively per domain:
 
-- **10 Domain Plugins** ([`plugins/`](./plugins/README.md)): Self-contained plugins compliant with `agent-plugins.org` v1.0.0 and native Antigravity with dedicated manifests (`plugin.json`), dual-mode MCP bindings (`mcp.json` + `mcp_config.json`), domain rules (`rules/AGENTS.md`), modular skills, and sovereign launchers (`scripts/launcher.cjs`).
-- **8 Sovereign MCP Servers & 1 Core Library** ([`mcp/`](./mcp/README.md)): Domain-scoped dual-transport TypeScript services (`mcp/servers/*`) compiled via `tsup` into self-contained CommonJS bundles (`dist/bin.cjs` for Stdio and `dist/index.cjs` for Fastify HTTP on port `:8080`), backed by shared internal libraries (`mcp/core/*`).
+- **11 Domain Plugins** ([`plugins/`](./plugins/README.md)): Self-contained plugins compliant with `agent-plugins.org` v1.0.0 and native Antigravity with dedicated manifests (`plugin.json`), dual-mode MCP bindings (`mcp.json` + `mcp_config.json`), domain rules (`rules/AGENTS.md`), modular skills, and sovereign launchers (`scripts/launcher.cjs`).
+- **9 Sovereign MCP Servers & 1 Core Library** ([`mcp/`](./mcp/README.md)): Domain-scoped dual-transport TypeScript services (`mcp/servers/*`) compiled via `tsup` into self-contained CommonJS bundles (`dist/bin.cjs` for Stdio and `dist/index.cjs` for Fastify HTTP on port `:8080`), backed by shared internal libraries (`mcp/core/*`).
 - **4 Declarative Presets** ([`presets/`](./references/reference/umbrella-package-and-presets.md)): Pre-configured domain filter profiles (`all.json`, `backend-api.json`, `frontend-web.json`, `docs-portal.json`).
 - **1 Marketplace Registry** ([`.claude-plugin/marketplace.json`](./.claude-plugin/marketplace.json)): Canonical manifest enabling selective plugin discovery and installation in Anthropic Claude Code.
 - **Release & Orchestration Scripts** ([`scripts/`](./scripts/README.md)): Two-stage monorepo and root umbrella package release pipeline (`publish-root.cjs`).
@@ -71,6 +71,7 @@ agent-mesh/
 | `@tupynambalucas-dev/plugin-research` | `plugins/packages/research` | [`README.md`](./plugins/packages/research/README.md) | [`rules/AGENTS.md`](./plugins/packages/research/rules/AGENTS.md) | Upstream SDK documentation lookup via Context7 and web extraction via Firecrawl. |
 | `@tupynambalucas-dev/plugin-secrets` | `plugins/packages/secrets` | [`README.md`](./plugins/packages/secrets/README.md) | [`rules/AGENTS.md`](./plugins/packages/secrets/rules/AGENTS.md) | Infisical Cloud secret governance, Universal Auth identities, and zero-downtime secret rotation. |
 | `@tupynambalucas-dev/plugin-web` | `plugins/packages/web` | [`README.md`](./plugins/packages/web/README.md) | [`rules/AGENTS.md`](./plugins/packages/web/rules/AGENTS.md) | Multi-mode Playwright browser automation (extension pairing + headless) and Firecrawl scraping. |
+| `@tupynambalucas-dev/plugin-profile` | `plugins/packages/profile` | [`README.md`](./plugins/packages/profile/README.md) | [`rules/AGENTS.md`](./plugins/packages/profile/rules/AGENTS.md) | Developer GitHub profile README architecture, career positioning, and LinkedIn talent discovery. |
 
 ### Layer-3 Sovereign MCP Packages (`mcp/*`)
 
@@ -83,6 +84,7 @@ agent-mesh/
 | `@tupynambalucas-dev/mcp-github-org` | `mcp/servers/github-org` | [`README.md`](./mcp/servers/github-org/README.md) | [`AGENTS.md`](./mcp/servers/github-org/AGENTS.md) | Tier-1 organization governance, rulesets, Dependabot, and Secret Scanning server. |
 | `@tupynambalucas-dev/mcp-gwork` | `mcp/servers/gwork` | [`README.md`](./mcp/servers/gwork/README.md) | [`AGENTS.md`](./mcp/servers/gwork/AGENTS.md) | Google Workspace Drive, Sheets, and Docs automation server. |
 | `@tupynambalucas-dev/mcp-infisical` | `mcp/servers/infisical` | [`README.md`](./mcp/servers/infisical/README.md) | [`AGENTS.md`](./mcp/servers/infisical/AGENTS.md) | Infisical Universal Auth secret vault management server. |
+| `@tupynambalucas-dev/mcp-linkedin` | `mcp/servers/linkedin` | [`README.md`](./mcp/servers/linkedin/README.md) | [`AGENTS.md`](./mcp/servers/linkedin/AGENTS.md) | Dual-transport (`stdio` + HTTP `:8080`) LinkedIn intelligence, job matching, and Easy Apply server. |
 | `@tupynambalucas-dev/mcp-memory` | `mcp/servers/memory` | [`README.md`](./mcp/servers/memory/README.md) | [`AGENTS.md`](./mcp/servers/memory/AGENTS.md) | Persistent agent vector memory and semantic knowledge retrieval server. |
 | `@tupynambalucas-dev/mcp-playwright` | `mcp/servers/playwright` | [`README.md`](./mcp/servers/playwright/README.md) | [`AGENTS.md`](./mcp/servers/playwright/AGENTS.md) | Sovereign multi-mode Playwright server with automatic `@playwright/mcp` fallback. |
 
@@ -157,7 +159,7 @@ cp .env.example .env
 # 3. Install workspace dependencies
 pnpm install
 
-# 4. Build all self-contained MCP bundles and validate all 10 plugins
+# 4. Build all self-contained MCP bundles and validate all 11 plugins
 pnpm build
 pnpm plugins:validate
 ```
@@ -168,11 +170,11 @@ pnpm plugins:validate
 
 | Command | Description |
 | :--- | :--- |
-| `pnpm build` | Compiles `@tupynambalucas-dev/mcp-core-github` and all 8 MCP server bundles via Turborepo. |
+| `pnpm build` | Compiles `@tupynambalucas-dev/mcp-core-github` and all 9 MCP server bundles via Turborepo. |
 | `pnpm dev` | Starts all MCP servers in watch/development mode via Turborepo. |
 | `pnpm typecheck` | Executes solution-wide TypeScript typechecking (`tsc -b`) across all packages. |
 | `pnpm clean` | Removes `dist/` and `.turbo/` build caches across all workspaces. |
-| `pnpm plugins:validate` | Validates all 10 domain plugins in `plugins/packages/*` using `agy plugin validate . --strict`. |
+| `pnpm plugins:validate` | Validates all 11 domain plugins in `plugins/packages/*` using `agy plugin validate . --strict`. |
 | `pnpm mcp:build` | Compiles only `@tupynambalucas-dev/mcp-*` packages. |
 | `pnpm mcp:typecheck` | Runs TypeScript validation across all `@tupynambalucas-dev/mcp-*` packages. |
 | `pnpm changeset` | Creates a new semantic versioning changeset entry. |

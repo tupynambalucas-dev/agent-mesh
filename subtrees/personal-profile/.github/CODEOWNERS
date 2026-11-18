@@ -1,0 +1,35 @@
+# ==============================================================================
+#  tupynambalucas.dev - Repository CODEOWNERS
+# ==============================================================================
+# This file defines team/user ownership for files and directories in the monorepo.
+# Rules are processed in order, with the last matching rule taking precedence.
+#
+# Technical Standard: en-US, No Emojis, Zero Placeholders.
+# ==============================================================================
+
+# Global fallback (repository-wide ownership)
+*                                                 @tupynambalucas
+
+# Infrastructure, CI/CD, and Repository Configurations
+/.github/                                        @tupynambalucas
+/.changeset/                                     @tupynambalucas
+/.vscode/                                        @tupynambalucas
+/package.json                                    @tupynambalucas
+/pnpm-lock.yaml                                  @tupynambalucas
+/pnpm-workspace.yaml                             @tupynambalucas
+/turbo.json                                      @tupynambalucas
+
+# Bounded Workspace: Developer Hub (Web Client, API & Core)
+/hub/                                            @tupynambalucas
+
+# Bounded Workspace: GitHub Profile Visualizer
+/profile/                                        @tupynambalucas
+
+# Bounded Workspace: Visual Identity & Design System (Assets & Penpot)
+/studio/                                         @tupynambalucas
+
+# Bounded Workspace: AI & DevOps Automation (MCP, scripts, remote cache)
+/tools/                                          @tupynambalucas
+
+# Centralized Documentation (Docusaurus Knowledge Base & Handbooks)
+/docs/                                           @tupynambalucas

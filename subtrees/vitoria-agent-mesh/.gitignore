@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Builds & Caches
+dist/
+!mcp/servers/*/dist/
+build/
+.turbo/
+.eslintcache
+*.tsbuildinfo
+
+# Environment and Secrets
+.env
+*.env.*
+.env.*
+!.env.example
+!*.env.example*
+
+# Keys & Certificates
+*.pem
+*.key
+keys/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*

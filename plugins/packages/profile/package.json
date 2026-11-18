@@ -1,0 +1,35 @@
+{
+  "name": "@tupynambalucas-dev/plugin-profile",
+  "version": "1.0.0",
+  "description": "Autonomous developer profile optimization, GitHub profile README architecture, career positioning, and LinkedIn talent discovery.",
+  "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
+  "license": "Apache-2.0",
+  "homepage": "https://tupynambalucas.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tupynambalucas-dev/agent-mesh.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  },
+  "files": [
+    "plugin.json",
+    "rules",
+    "skills",
+    "references",
+    "CHANGELOG.md",
+    "mcp.json",
+    "mcp_config.json",
+    "hooks.json",
+    "scripts"
+  ]
+}
