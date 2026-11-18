@@ -3,7 +3,7 @@
 This directory houses the root umbrella package release script for `@tupynambalucas-dev/agent-mesh` and documents the two-tier sovereign launcher architecture across domain plugins and Model Context Protocol (MCP) servers.
 
 > [!NOTE]
-> Workstation onboarding and readiness gate verification scripts (`bootstrap-workstation.ps1`, `verify-workstation.ps1`) are maintained in the organization governance repository at [`.github/scripts/`](../../.github/scripts/README.md).
+> Workstation onboarding and readiness gate verification scripts (`bootstrap-workstation.ps1`, `verify-workstation.ps1`) are maintained in the organization governance repository at [`tupynambalucas-dev/.github/scripts/`](https://github.com/tupynambalucas-dev/.github/tree/main/scripts).
 
 ---
 

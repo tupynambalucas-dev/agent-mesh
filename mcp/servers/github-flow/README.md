@@ -1,6 +1,6 @@
-# @tupynambalucas-dev/mcp-github-flow
+# GitHub Flow Model Context Protocol Server (`@tupynambalucas-dev/mcp-github-flow`)
 
-Domain-scoped Model Context Protocol server for developer Git workflows, branches, pull requests, and GitHub Actions CI/CD diagnostics.
+Dual-transport Model Context Protocol (MCP) server for developer Git workflows, branch lifecycle management, pull request reviews, and GitHub Actions CI/CD diagnostics. Exposes tools over both Stdio (`dist/bin.cjs` via `scripts/launcher.cjs`) and Streamable HTTP at `/mcp` on port `8080` (`dist/index.cjs`).
 
 ---
 
@@ -12,7 +12,7 @@ Authentication and shared schemas from [`@tupynambalucas-dev/mcp-core-github`](.
 
 ---
 
-## 2. Tools Exposed
+## 2. Capabilities / Exports Catalog
 
 | Tool Name | Parameters | Description |
 | :--- | :--- | :--- |
@@ -25,7 +25,7 @@ Authentication and shared schemas from [`@tupynambalucas-dev/mcp-core-github`](.
 
 ---
 
-## 3. Configuration
+## 3. Configuration & Usage
 
 | Environment Variable | Description |
 | :--- | :--- |
@@ -36,7 +36,7 @@ Authentication and shared schemas from [`@tupynambalucas-dev/mcp-core-github`](.
 
 ---
 
-## 4. Building and Running
+## 4. Development Scripts
 
 ```bash
 # Bundle the package into dist/bin.cjs and dist/index.cjs
@@ -50,4 +50,17 @@ node dist/bin.cjs
 
 # Run HTTP server
 node dist/index.cjs
+
+# Typecheck package
+pnpm --filter @tupynambalucas-dev/mcp-github-flow typecheck
 ```
+
+---
+
+## 5. Governance & Context
+
+This package adheres to enterprise governance standards:
+- [Root Context Router](../../../AGENTS.md)
+- [MCP Subsystem Context](../../AGENTS.md)
+- [MCP Subsystem README](../../README.md)
+- [License](./LICENSE): Apache License 2.0
