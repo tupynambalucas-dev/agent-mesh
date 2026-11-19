@@ -59,10 +59,10 @@ Select the matching archetype for the target directory before authoring or refac
 7. `## 6. Governance & Contributing Standards` — SSH Commit Signing, Conventional Commits v1.0.0, Single-Branch GitHub Flow, Zero-Emoji Invariant, Secret Hygiene, and link to `[AGENTS.md](./AGENTS.md)`.
 8. `## 7. License` — SPDX license identifier, relative link to `[Apache License 2.0](./LICENSE)`, and copyright notice.
 
-### Archetype B: Monorepo, Product, or Service Root (`agent-mesh`, `platform`, `docs`, `workstation`, `omnichannel`, `tessel`)
+### Archetype B: Monorepo, Product, or Service Root
 1. `# <Project Title> (\`<@scope/package-or-repo>\`)` + Executive Summary + optional `> [!NOTE]` callout.
 2. `## 1. Architecture Overview` — Architectural narrative + Mermaid topology diagram and/or annotated ASCII directory tree.
-3. `## 2. Subsystems & Navigation` — Structured table linking all Layer-2 / Layer-3 bounded contexts (`Subsystem / Workspace`, `Package / Scope`, `Documentation`, `Agent Context`, `Responsibilities`).
+3. `## 2. Subsystems & Navigation` — Mandatory statement: *"Subsystems are organized into autonomous enterprise Bounded Contexts conforming to the Domain-Driven Monorepo standard. Each Bounded Context maintains explicit architectural boundaries, ubiquitous language, and dedicated AI agent routers:"* followed by a structured table linking all Layer-2 Bounded Contexts and Layer-3 Packages (`Layer`, `Bounded Context / Workspace`, `Scope / Package`, `Documentation`, `Agent Context`, `Responsibilities`).
 4. `## 3. Environment & Secret Governance` — Infisical CLI injection (`infisical run`), `.env.example` template replication, and key environment variables or consumption modes.
 5. `## 4. Getting Started` — Explicit runtime prerequisites (`Node.js`, `pnpm`, `Go`, `Docker`, `k3d`, `WSL2`) and step-by-step installation & local startup commands.
 6. `## 5. Development & Pipeline Scripts` — Structured table or categorized command reference synchronized with root `package.json` / toolchain commands.
