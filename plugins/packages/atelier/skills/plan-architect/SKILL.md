@@ -20,8 +20,8 @@ All architectural plans, technical analyses, and governance reports must reside 
 ```
 
 ### Target Repository Resolution (Multi-Root Workspace Mandate):
-- When operating inside a multi-root meta-repository workspace (`org-core` or `org-ecosystem`), agents MUST identify the specific sovereign **target repository** (`<target-repo>`, e.g., `agent-mesh`, `platform`, `docs`, `workstation`, `.github`, `.github-private`, `commercial/omnichannel`, `internal/tessel`) to which the artifact belongs, and write the synchronized copy directly into `<target-repo>/.agents/plans/`.
-- Only write to a meta-repository's own `.agents/plans/` directory (`org-core/.agents/plans/` or `org-ecosystem/.agents/plans/`) when the artifact governs cross-repository meta-orchestration itself.
+- When operating inside a multi-root meta-repository workspace, agents MUST identify the specific sovereign **target repository** (`<target-repo>`) to which the artifact belongs, and write the synchronized copy directly into `<target-repo>/.agents/plans/`.
+- Only write to a meta-repository's own `.agents/plans/` directory when the artifact governs cross-repository meta-orchestration itself.
 - **Automatic Container Creation**: If `<target-repo>/.agents/plans/` does not yet exist on disk, the agent MUST create the `<target-repo>/.agents/plans/` directory automatically before saving the artifact.
 - **Root `plans/` Prohibition**: Creating a `plans/` folder at the root of any repository (`<target-repo>/plans/`) is **strictly prohibited**.
 

@@ -33,7 +33,7 @@ trigger: always_on
 
 7. Environment Configuration Template Invariant (.env.example):
    - Every subsystem, package, or repository declaring a `.env` file MUST maintain an authoritative `.env.example` template.
-   - The `.env.example` file MUST adhere strictly to the enterprise format exemplified by `platform/k8s/.env.example`: boxed ASCII headers, numbered domain sections, inline descriptive comments (`# --`), and standardized `<YOUR_VARIABLE_NAME>` placeholders.
+   - The `.env.example` file MUST adhere strictly to the enterprise format: boxed ASCII headers, numbered domain sections, inline descriptive comments (`# --`), and standardized `<YOUR_VARIABLE_NAME>` placeholders.
    - Never commit or emit plaintext secrets, passwords, API tokens, or private keys in `.env.example`.
 
 8. Architectural Plan, Analysis & Report Artifact Storage Invariant:

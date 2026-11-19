@@ -26,8 +26,8 @@ Activate this skill when:
 {
   "tool": "list_dependabot_alerts",
   "arguments": {
-    "owner": "tupynambalucas-dev",
-    "repo": "agent-mesh",
+    "owner": "<target-owner>",
+    "repo": "<target-repo>",
     "state": "open"
   }
 }
@@ -38,8 +38,8 @@ Activate this skill when:
 {
   "tool": "list_secret_scanning_alerts",
   "arguments": {
-    "owner": "tupynambalucas-dev",
-    "repo": "agent-mesh",
+    "owner": "<target-owner>",
+    "repo": "<target-repo>",
     "state": "open"
   }
 }
@@ -50,8 +50,8 @@ Activate this skill when:
 {
   "tool": "list_rulesets",
   "arguments": {
-    "owner": "tupynambalucas-dev",
-    "repo": "agent-mesh"
+    "owner": "<target-owner>",
+    "repo": "<target-repo>"
   }
 }
 ```

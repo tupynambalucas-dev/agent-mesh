@@ -32,12 +32,14 @@ trigger: always_on
    - Monorepos MUST implement modern TypeScript Project References (`tsconfig.base.json`, solution-style `tsconfig.json` with `files: []`, and package-level `tsconfig.json`). Legacy `tsconfig.build.json` files are strictly prohibited.
 
 6. Enterprise Package Name & Scope Standard:
-   - When operating within the `tupynambalucas-dev` organization, all `package.json` manifests MUST strictly use the `@tupynambalucas-dev/` npm scope and adhere to the deterministic domain taxonomy:
-     - `agent-mesh` plugins: `@tupynambalucas-dev/plugin-<slug>`
-     - `agent-mesh` MCP servers: `@tupynambalucas-dev/mcp-<slug>`
-     - `platform` packages/services: `@tupynambalucas-dev/<domain>-<subsystem>` (e.g., `corporate-api`, `corporate-web`, `corporate-core`, `cortex-memory-api`, `studio-assets`, `tools-github`, `shared-config`, `k8s`, `renderer`).
-     - Standalone repositories: `@tupynambalucas-dev/<repo>-<service>` and `@tupynambalucas-dev/plugin-<slug>`.
-   - In external workspaces or third-party repositories, adapt dynamically to the target workspace's existing npm scope (`@<scope>/<name>`) or package naming convention without imposing organizational scopes.
+   - All `package.json` manifests MUST derive package names deterministically from inferred scope and directory patterns via convention over configuration:
+     $$\text{Package Name} = \text{@<scope>} / [\text{<discriminator>-}] \, [\text{<context>-}] \, \text{<slug>}$$
+     - Root Monorepo: `@<scope>/<repo-slug>`
+     - Domain Plugins: `@<scope>/plugin-<slug>`
+     - MCP Servers: `@<scope>/mcp-<slug>`
+     - Bounded Context Services & Packages: `@<scope>/<context>-<slug>`
+     - Direct Subsystem Packages: `@<scope>/<slug>`
+   - When operating in the `tupynambalucas-dev` organization, `@<scope>` defaults to `@tupynambalucas-dev/`. In external workspaces, adapt dynamically to the host workspace's existing npm scope without imposing organizational scopes.
 
 7. Organization-Wide .github Directory & Workflow Taxonomy Standard:
    - In the `tupynambalucas-dev` organization, all repositories MUST declare local `.github/CODEOWNERS` mapping `*` to `@tupynambalucas-dev/core-maintainers`. Child repositories preserve native organizational inheritance from `tupynambalucas-dev/.github` without local issue template shadowing.
@@ -49,7 +51,7 @@ trigger: always_on
 
 8. Environment Configuration Template Invariant (.env.example):
    - Every repository, package, or service that defines a local `.env` configuration MUST maintain an authoritative `.env.example` file that is a faithful, complete structural replica of `.env`.
-   - The `.env.example` file MUST adhere strictly to the enterprise format exemplified by `platform/k8s/.env.example`: boxed ASCII headers, numbered domain sections, inline operational comments (`# --`), and standardized `<YOUR_VARIABLE_NAME>` placeholders.
+   - The `.env.example` file MUST adhere strictly to the enterprise format: boxed ASCII headers, numbered domain sections, inline operational comments (`# --`), and standardized `<YOUR_VARIABLE_NAME>` placeholders.
    - Committing real secrets, tokens, passwords, or private keys into `.env.example` is strictly prohibited.
 
 9. Mani Multi-Repository Orchestration Invariant:
