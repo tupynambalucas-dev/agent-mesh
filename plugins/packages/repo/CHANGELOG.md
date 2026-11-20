@@ -5,6 +5,13 @@ All notable changes to `@tupynambalucas-dev/plugin-repo` will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-11-20
+
+### Added
+- **Workflow & Actions Modularization Standard**: Codified composite action primitives (`setup-pnpm-env`, `setup-go-env`, domain validations) and prohibited inline workflow bash duplication.
+- **Organization Centralization in `.github`**: Added standards for organization starter workflow templates (`workflow-templates/` with `.properties.json`) and inherited release notes configurations (`.github/release.yml`).
+- **Dual Changelog Taxonomy**: Formalized Changesets (`.changeset/`) for multi-package monorepos vs Conventional Commits + Keep a Changelog + dynamically stamped GitHub Release Notes for product and binary monorepos.
+
 ## [1.0.0] - 2026-11-03
 
 ### Added

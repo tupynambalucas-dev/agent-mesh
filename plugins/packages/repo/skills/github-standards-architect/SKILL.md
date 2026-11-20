@@ -33,6 +33,8 @@ This skill defines the authoritative enterprise standard for authoring, auditing
 | **Dependabot Config** (`dependabot.yml`) | `.github/dependabot.yml` | **NO** | **MANDATORY** in `.github/dependabot.yml` for every repository. |
 | **Composite Setup Action** | None | **NO** | Standardized as `.github/actions/setup-pnpm-env/action.yml` in monorepos. |
 | **Domain Validation Action** | None | **NO** | Standardized as `.github/actions/validate-plugins/action.yml` in plugin monorepos. |
+| **Release Notes Configuration** (`release.yml`) | `.github/release.yml` | **YES** | Inherited automatically for PR categorization in automated release notes. |
+| **Starter Workflow Templates** | `workflow-templates/` | **YES** | Displayed natively in GitHub Actions gallery under "By tupynambalucas-dev". |
 
 ---
 
@@ -187,6 +189,51 @@ runs:
       run: pnpm mcp:build
 ```
 
+#### D. Setup Go Toolchain (`.github/actions/setup-go-env/action.yml`)
+Standardizes Go compiler installation and module cache resolution across Go CLI projects:
+```yaml
+name: "Setup Go Environment"
+description: "Configures Go compiler and module cache from encapsulated go.mod"
+
+inputs:
+  go-version-file:
+    description: "Path to authoritative go.mod"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Go runtime
+      uses: actions/setup-go@cdcb36043654635271a94b9a6d1392de5bb323a7 # v5.0.1
+      with:
+        go-version-file: ${{ inputs.go-version-file }}
+        cache-dependency-path: ${{ inputs.go-version-file }}
+```
+
+### 3.4 Organization Release Notes Configuration (`.github/release.yml`)
+Centralized in `tupynambalucas-dev/.github/.github/release.yml` and inherited across organization repositories:
+```yaml
+changelog:
+  categories:
+    - title: "Features & Capabilities"
+      labels: ["feat", "feature", "enhancement"]
+    - title: "Bug Fixes & Resiliency"
+      labels: ["fix", "bug", "hotfix"]
+    - title: "Breaking Changes"
+      labels: ["breaking-change", "breaking"]
+    - title: "Security & Hardening"
+      labels: ["security", "sec"]
+    - title: "Documentation & Architecture"
+      labels: ["docs", "documentation"]
+    - title: "Tooling & Infrastructure"
+      labels: ["chore", "refactor", "ci", "perf", "build"]
+  exclude:
+    labels: ["skip-changelog", "meta", "duplicate", "invalid"]
+```
+
+### 3.5 Organization Starter Workflow Templates (`workflow-templates/`)
+Stored in `workflow-templates/` at the root of `tupynambalucas-dev/.github`, pairing `<slug>.yml` with companion `<slug>.properties.json` declaring `name`, `description`, `iconName`, `categories`, and `filePatterns`.
+
 ---
 
 ## 4. Monorepo CI/CD & Publishing Standards
@@ -219,10 +266,16 @@ pnpm -r publish --access public --no-git-checks --report-summary
 - Automatically excludes `"private": true` packages.
 - Generates `pnpm-publish-summary.json` for downstream release tagging.
 
-### 4.4 Intent-Based Versioning & Changelogs
-- Releases are orchestrated using `.changeset/*.md` intent files.
-- Version bumping and per-package `CHANGELOG.md` assembly are executed via `pnpm changeset version`.
-- Monolithic root changelogs are prohibited; each package maintains an independent `CHANGELOG.md`.
+### 4.4 Intent-Based Versioning & Dual Changelog Taxonomy
+The organization enforces a strict two-tier changelog model:
+1. **Multi-Package Library Monorepos (`agent-mesh`, `platform`)**:
+   - Releases are orchestrated using `.changeset/*.md` intent files.
+   - Version bumping and per-package `CHANGELOG.md` assembly are executed via `pnpm changeset version`.
+   - Monolithic root changelogs are prohibited for libraries; each package maintains an independent `CHANGELOG.md`.
+2. **Product & Binary Monorepos (`workstation`)**:
+   - Releases deliver a unified consumer toolchain (`gh tl` / `tl` binaries, `.wsl` rootfs distributions, `DistributionInfo.json`).
+   - Versioning is governed by Conventional Commits and tracked centrally in a root `CHANGELOG.md` adhering to Keep a Changelog.
+   - Release workflows dynamically generate a richly formatted GitHub Release body containing categorized PR highlights, cryptographic SHA-256 integrity tables, quick install runbooks, and attestation verification commands.
 
 ---
 

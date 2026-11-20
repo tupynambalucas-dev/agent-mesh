@@ -1,4 +1,4 @@
-# GitHub Repository Ruleset Schemas
+﻿# GitHub Repository Ruleset Schemas
 
 Authoritative ruleset configurations enforced across `tupynambalucas-dev` repositories.
 
@@ -57,13 +57,14 @@ Authoritative ruleset configurations enforced across `tupynambalucas-dev` reposi
   "conditions": {
     "ref_name": {
       "include": ["refs/tags/v*"],
-      "exclude": []
+      "exclude": ["refs/tags/v*-rc.*"]
     }
   },
   "rules": [
     { "type": "deletion" },
     { "type": "non_fast_forward" },
-    { "type": "update" }
+    { "type": "update" },
+    { "type": "required_signatures" }
   ]
 }
 ```

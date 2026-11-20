@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "github-repo": {
+      "command": "node",
+      "args": ["./scripts/launcher.cjs", "github-org"]
+    }
+  }
+}

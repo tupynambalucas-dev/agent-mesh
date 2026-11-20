@@ -1,0 +1,120 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "changelog-sections": [
+    { "type": "feat", "section": "Features & Capabilities", "hidden": false },
+    { "type": "fix", "section": "Bug Fixes & Corrections", "hidden": false },
+    { "type": "perf", "section": "Performance Optimizations", "hidden": false },
+    { "type": "refactor", "section": "Refactoring & Internal Architecture", "hidden": false },
+    { "type": "docs", "section": "Documentation & Specifications", "hidden": false },
+    { "type": "security", "section": "Security & Vulnerability Patches", "hidden": false },
+    { "type": "revert", "section": "Reverts & Rollbacks", "hidden": false },
+    { "type": "chore", "section": "Maintenance & Operational Chores", "hidden": true },
+    { "type": "test", "section": "Testing & Test Harness", "hidden": true },
+    { "type": "ci", "section": "Continuous Integration", "hidden": true },
+    { "type": "style", "section": "Styling & Linting", "hidden": true }
+  ],
+  "include-commit-authors": true,
+  "component-no-space": true,
+  "packages": {
+    ".": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/agent-mesh",
+      "changelog-path": "CHANGELOG.md"
+    },
+    "plugins/packages/appsheet": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/plugin-appsheet"
+    },
+    "plugins/packages/atelier": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/plugin-atelier"
+    },
+    "plugins/packages/docusaurus": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/plugin-docusaurus"
+    },
+    "plugins/packages/github-actions": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/plugin-github-actions"
+    },
+    "plugins/packages/github-flow": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/plugin-github-flow"
+    },
+    "plugins/packages/github-org": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/plugin-github-org"
+    },
+    "plugins/packages/github-releases": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/plugin-github-releases"
+    },
+    "plugins/packages/github-repo": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/plugin-github-repo"
+    },
+    "plugins/packages/gwork": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/plugin-gwork"
+    },
+    "plugins/packages/profile": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/plugin-profile"
+    },
+    "plugins/packages/repo": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/plugin-repo"
+    },
+    "plugins/packages/research": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/plugin-research"
+    },
+    "plugins/packages/secrets": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/plugin-secrets"
+    },
+    "plugins/packages/web": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/plugin-web"
+    },
+    "mcp/servers/appsheet": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/mcp-appsheet"
+    },
+    "mcp/servers/firecrawl": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/mcp-firecrawl"
+    },
+    "mcp/servers/github-flow": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/mcp-github-flow"
+    },
+    "mcp/servers/github-org": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/mcp-github-org"
+    },
+    "mcp/servers/gwork": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/mcp-gwork"
+    },
+    "mcp/servers/infisical": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/mcp-infisical"
+    },
+    "mcp/servers/linkedin": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/mcp-linkedin"
+    },
+    "mcp/servers/memory": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/mcp-memory"
+    },
+    "mcp/servers/playwright": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/mcp-playwright"
+    }
+  },
+  "plugins": [
+    "node-workspace"
+  ]
+}

@@ -21,8 +21,11 @@ Each domain plugin in `plugins/packages/*` is a self-contained unit bundling:
 | [packages/appsheet/](./packages/appsheet/README.md) | `@tupynambalucas-dev/plugin-appsheet` | `appsheet-prompt-architect`<br>`appsheet-data-operator`<br>`appsheet-ui-architect` | `appsheet` (`mcp-appsheet`)<br>`playwright` (`mcp-playwright`) | AppSheet schema standards, primary keys, and auto-engagement. |
 | [packages/atelier/](./packages/atelier/README.md) | `@tupynambalucas-dev/plugin-atelier` | `router-architect`<br>`skill-architect`<br>`rule-architect`<br>`hook-architect`<br>`plugin-architect`<br>`plan-architect` | *(none)* | AI Agent Mesh engineering, context routing, and governance. |
 | [packages/docusaurus/](./packages/docusaurus/README.md) | `@tupynambalucas-dev/plugin-docusaurus` | `docusaurus-architect`<br>`docusaurus-mdx-architect`<br>`docusaurus-auditor` | *(none)* | Diataxis quadrants, MDX v3 parser compliance, Crowdin isolation. |
-| [packages/github-flow/](./packages/github-flow/README.md) | `@tupynambalucas-dev/plugin-github-flow` | `github-flow-operator`<br>`github-actions-operator` | `github-flow` (`mcp-github-flow`) | Developer Git workflows, Conventional Commits, SSH signing. |
-| [packages/github-org/](./packages/github-org/README.md) | `@tupynambalucas-dev/plugin-github-org` | `github-org-operator`<br>`github-ruleset-operator`<br>`github-security-auditor`<br>`github-app-operator` | `github-org` (`mcp-github-org`) | Organization RBAC, rulesets, and Dependabot auditing. |
+| [packages/github-actions/](./packages/github-actions/README.md) | `@tupynambalucas-dev/plugin-github-actions` | `github-actions-operator` | `github-flow` (`mcp-github-flow`) | CI/CD automation engine, workflow authoring, composite actions, diagnostics. |
+| [packages/github-flow/](./packages/github-flow/README.md) | `@tupynambalucas-dev/plugin-github-flow` | `github-flow-operator` | `github-flow` (`mcp-github-flow`) | Single-Branch GitHub Flow, Conventional Commits, SSH signing, PRs. |
+| [packages/github-org/](./packages/github-org/README.md) | `@tupynambalucas-dev/plugin-github-org` | `github-org-operator`<br>`github-ruleset-operator`<br>`github-security-auditor`<br>`github-app-operator` | `github-org` (`mcp-github-org`) | Organization RBAC, org rulesets, org secrets, Dependabot, GitHub Apps. |
+| [packages/github-releases/](./packages/github-releases/README.md) | `@tupynambalucas-dev/plugin-github-releases` | `github-releases-operator` | `github-flow` (`mcp-github-flow`) | SemVer 2.0.0, Release Please, Changesets, git-cliff, Keep a Changelog curation, packages. |
+| [packages/github-repo/](./packages/github-repo/README.md) | `@tupynambalucas-dev/plugin-github-repo` | `github-repo-architect` | `github-org` (`mcp-github-org`) | Local repository infrastructure, CODEOWNERS, dependabot.yml, release.yml, local rulesets. |
 | [packages/gwork/](./packages/gwork/README.md) | `@tupynambalucas-dev/plugin-gwork` | `gwork-drive-operator`<br>`gwork-sheets-architect`<br>`gwork-docs-architect` | `gwork` (`mcp-gwork`) | Drive hierarchies, 1NF sheets modeling, typography rules. |
 | [packages/repo/](./packages/repo/README.md) | `@tupynambalucas-dev/plugin-repo` | `readme-architect`<br>`readme-auditor`<br>`monorepo-architect`<br>`community-health-architect`<br>`license-architect`<br>`github-standards-architect`<br>`mani-operator` | *(none)* | Repository root files, Enterprise README standard, AGENTS-README invariant, catalogs, `.github` standards, Mani multi-repo, and licensing. |
 | [packages/research/](./packages/research/README.md) | `@tupynambalucas-dev/plugin-research` | `documentation-researcher`<br>`web-deep-researcher` | `context7` (Upstream APIs)<br>`firecrawl` (`mcp-firecrawl`) | Autonomous documentation retrieval, source attribution. |
@@ -53,7 +56,7 @@ Each domain plugin in `plugins/packages/*` is a self-contained unit bundling:
 Every plugin must strictly pass Antigravity validation:
 
 ```bash
-# Validate all 11 plugins
+# Validate all plugins
 pnpm plugins:validate
 
 # Validate a single plugin

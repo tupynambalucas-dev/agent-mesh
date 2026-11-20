@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "repo",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Enterprise repository governance, monorepo orchestration, Mani multi-repository orchestration, pnpm catalogs, package manifest scoping, TypeScript project references, licensing compliance, and recursive README architecture.",
   "author": {
     "name": "Tupynamba Lucas Development Team",

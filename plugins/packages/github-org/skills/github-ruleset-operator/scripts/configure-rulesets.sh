@@ -4,7 +4,7 @@ set -euo pipefail
 ORG="${1:-tupynambalucas-dev}"
 REPO="${2:-tupynambalucas-dev}"
 
-echo "Configuring branch rulesets for ${ORG}/${REPO}..."
+echo "Configuring rulesets for ${ORG}/${REPO}..."
 
 MAIN_RULESET_PAYLOAD=$(cat <<'EOF'
 {
@@ -37,9 +37,42 @@ MAIN_RULESET_PAYLOAD=$(cat <<'EOF'
 EOF
 )
 
-echo "Applying production ruleset on 'main'..."
-gh api -X POST "/repos/${ORG}/${REPO}/rulesets" \
-  --input - <<< "${MAIN_RULESET_PAYLOAD}" >/dev/null 2>&1 || \
-echo "Ruleset already active or requires update."
+TAG_RULESET_PAYLOAD=$(cat <<'EOF'
+{
+  "name": "enterprise-release-tags",
+  "target": "tag",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": {
+      "include": ["refs/tags/v*"],
+      "exclude": ["refs/tags/v*-rc.*"]
+    }
+  },
+  "rules": [
+    { "type": "deletion" },
+    { "type": "non_fast_forward" },
+    { "type": "update" },
+    { "type": "required_signatures" }
+  ]
+}
+EOF
+)
+
+# Idempotent upsert: create when absent, update in place when present. Failures are fatal.
+apply_ruleset() {
+  local name="$1" payload="$2" id
+  id=$(gh api "/repos/${ORG}/${REPO}/rulesets" --jq ".[] | select(.name == \"${name}\") | .id")
+  if [ -n "${id}" ]; then
+    echo "Updating ruleset '${name}' (id ${id})..."
+    gh api -X PUT "/repos/${ORG}/${REPO}/rulesets/${id}" --input - <<< "${payload}" > /dev/null
+  else
+    echo "Creating ruleset '${name}'..."
+    gh api -X POST "/repos/${ORG}/${REPO}/rulesets" --input - <<< "${payload}" > /dev/null
+  fi
+}
+
+apply_ruleset "enterprise-production-main" "${MAIN_RULESET_PAYLOAD}"
+apply_ruleset "enterprise-release-tags" "${TAG_RULESET_PAYLOAD}"
 
 echo "Ruleset configuration completed successfully."
+gh api "/repos/${ORG}/${REPO}/rulesets" --jq '.[] | {name, target, enforcement}'

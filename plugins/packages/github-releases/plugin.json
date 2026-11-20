@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "github-releases",
+  "version": "1.0.0",
+  "description": "Enterprise release engineering, SemVer, Release Please, Changesets, git-cliff, Keep a Changelog curation, and package publishing.",
+  "author": {
+    "name": "Tupynamba Lucas Development Team",
+    "url": "https://tupynambalucas.dev"
+  },
+  "homepage": "https://docs.tupynambalucas.dev",
+  "repository": "https://github.com/tupynambalucas-dev/agent-mesh",
+  "license": "Apache-2.0",
+  "keywords": [
+    "github",
+    "releases",
+    "semver",
+    "release-please",
+    "changesets",
+    "git-cliff",
+    "changelog",
+    "packages"
+  ]
+}

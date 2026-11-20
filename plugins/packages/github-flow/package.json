@@ -1,6 +1,6 @@
 {
   "name": "@tupynambalucas-dev/plugin-github-flow",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Developer Git workflow automation, Conventional Commits, cryptographic SSH commit signing, and GitHub Actions orchestration.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "Apache-2.0",

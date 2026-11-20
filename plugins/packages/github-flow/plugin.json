@@ -1,8 +1,8 @@
-{
+﻿{
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "github-flow",
-  "version": "1.0.0",
-  "description": "Developer Git workflow automation, Conventional Commits, cryptographic SSH commit signing, and GitHub Actions orchestration.",
+  "version": "1.1.0",
+  "description": "Developer Git workflow automation, Single-Branch GitHub Flow, Conventional Commits, cryptographic SSH commit signing, and Pull Request lifecycle orchestration.",
   "author": {
     "name": "Tupynamba Lucas Development Team",
     "url": "https://tupynambalucas.dev"
@@ -16,7 +16,6 @@
     "github-flow",
     "conventional-commits",
     "ssh-signing",
-    "actions",
-    "ci-cd"
+    "pull-requests"
   ]
 }

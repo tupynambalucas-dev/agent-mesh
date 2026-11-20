@@ -1,0 +1,22 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "github-actions",
+  "version": "1.0.0",
+  "description": "GitHub Actions CI/CD automation engine, workflow authoring, composite actions, runner diagnostics, and security hardening.",
+  "author": {
+    "name": "Tupynamba Lucas Development Team",
+    "url": "https://tupynambalucas.dev"
+  },
+  "homepage": "https://docs.tupynambalucas.dev",
+  "repository": "https://github.com/tupynambalucas-dev/agent-mesh",
+  "license": "Apache-2.0",
+  "keywords": [
+    "github",
+    "actions",
+    "ci-cd",
+    "workflows",
+    "composite-actions",
+    "automation",
+    "runners"
+  ]
+}

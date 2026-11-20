@@ -5,6 +5,36 @@ All notable changes to the tupynambalucas-dev Agent Mesh monorepo will be docume
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-11-20
+
+### Modular Plugin Ecosystem Upgrades
+
+#### @tupynambalucas-dev/plugin-profile (v1.0.0)
+- **New Domain Plugin**: Added developer professional positioning and career advancement plugin integrating with sovereign LinkedIn Playwright automation.
+- **Autonomous Skills**: Added `developer-profile-architect`, `developer-advancement-strategist`, `linkedin-profile-architect`, `linkedin-job-operator`, `linkedin-application-auditor`, `linkedin-outreach-operator`.
+- **Safety Invariant**: Enforced Zero-Accidental-Submission confirmation gates on high-impact profile mutations.
+
+#### @tupynambalucas-dev/plugin-repo (v1.1.0)
+- **Workflow & Actions Modularization Standard**: Codified composite action primitives (`setup-pnpm-env`, `setup-go-env`, domain validations) and prohibited inline bash workflow duplication.
+- **Organization Centralization in `.github`**: Added standards for organization starter workflow templates (`workflow-templates/` with `.properties.json`) and inherited release notes configurations (`.github/release.yml`).
+- **Dual Changelog Taxonomy**: Formalized Changesets (`.changeset/`) for multi-package monorepos vs Conventional Commits + Keep a Changelog + dynamically stamped GitHub Release Notes for product and binary monorepos.
+- **Enterprise README Standard**: Added `readme-architect` and `readme-auditor` skills enforcing sequential numbered sections, AGENTS-README co-existence, and zero-emoji compliance.
+- **Multi-Repository Orchestration**: Added `mani-operator` skill and codified `sync_gitignore: false` invariant.
+
+#### @tupynambalucas-dev/plugin-github-flow (v1.1.0)
+- **Release Engineering Standard**: Codified `release-engineering.md` establishing release-from-trunk policy, signed annotated tags, SemVer 2.0.0, and just-in-time maintenance branches (`release/<major>.<minor>`).
+- **Hook Safeguards**: Updated `enforce-git-signing.cjs` to deny unannotated or unsigned tags, block production tag deletions, and enforce confirmation gates before version tag pushes or `gh release` mutations.
+- **Workflow Orchestration**: Added `Workflow E` (modularizing workflows into composite actions) and `Workflow F` (authoring and stamping rich enterprise release descriptions with SHA-256 integrity tables).
+
+#### @tupynambalucas-dev/plugin-github-org (v1.1.0)
+- **Release Tag Rulesets**: Codified `enterprise-release-tags` ruleset enforcing tag immutability, required cryptographic signatures, and excluding prerelease dry runs (`refs/tags/v*-rc.*`).
+- **Idempotent Automation**: Re-architected `configure-rulesets.sh` to support idempotent create-or-update operations without swallowing errors.
+- **Organization Auditing**: Added verification triggers for organization starter workflows and inherited release notes configurations in `tupynambalucas-dev/.github`.
+
+#### @tupynambalucas-dev/plugin-atelier (v1.0.0)
+- **Dual-Storage Invariant**: Enforced target repository artifact container standard (`<target-repo>/.agents/plans/`) across all architectural plans, analyses, and governance reports.
+- **Master Architecture Skills**: Added `plan-architect` skill governing single-file artifacts and multi-document plan suites.
+
 ## [1.2.0] - 2026-11-10
 
 ### Added
