@@ -16,14 +16,16 @@ This document defines the bounded context router for all Antigravity and Claude 
 | [packages/appsheet/](./packages/appsheet/) | `@tupynambalucas-dev/plugin-appsheet` | [rules/AGENTS.md](./packages/appsheet/rules/AGENTS.md) | [README.md](./packages/appsheet/README.md) | [plugin.json](./packages/appsheet/plugin.json) |
 | [packages/atelier/](./packages/atelier/) | `@tupynambalucas-dev/plugin-atelier` | [rules/AGENTS.md](./packages/atelier/rules/AGENTS.md) | [README.md](./packages/atelier/README.md) | [plugin.json](./packages/atelier/plugin.json) |
 | [packages/docusaurus/](./packages/docusaurus/) | `@tupynambalucas-dev/plugin-docusaurus` | [rules/AGENTS.md](./packages/docusaurus/rules/AGENTS.md) | [README.md](./packages/docusaurus/README.md) | [plugin.json](./packages/docusaurus/plugin.json) |
+| [packages/github-actions/](./packages/github-actions/) | `@tupynambalucas-dev/plugin-github-actions` | [rules/AGENTS.md](./packages/github-actions/rules/AGENTS.md) | [README.md](./packages/github-actions/README.md) | [plugin.json](./packages/github-actions/plugin.json) |
 | [packages/github-flow/](./packages/github-flow/) | `@tupynambalucas-dev/plugin-github-flow` | [rules/AGENTS.md](./packages/github-flow/rules/AGENTS.md) | [README.md](./packages/github-flow/README.md) | [plugin.json](./packages/github-flow/plugin.json) |
 | [packages/github-org/](./packages/github-org/) | `@tupynambalucas-dev/plugin-github-org` | [rules/AGENTS.md](./packages/github-org/rules/AGENTS.md) | [README.md](./packages/github-org/README.md) | [plugin.json](./packages/github-org/plugin.json) |
+| [packages/github-releases/](./packages/github-releases/) | `@tupynambalucas-dev/plugin-github-releases` | [rules/AGENTS.md](./packages/github-releases/rules/AGENTS.md) | [README.md](./packages/github-releases/README.md) | [plugin.json](./packages/github-releases/plugin.json) |
+| [packages/github-repo/](./packages/github-repo/) | `@tupynambalucas-dev/plugin-github-repo` | [rules/AGENTS.md](./packages/github-repo/rules/AGENTS.md) | [README.md](./packages/github-repo/README.md) | [plugin.json](./packages/github-repo/plugin.json) |
 | [packages/gwork/](./packages/gwork/) | `@tupynambalucas-dev/plugin-gwork` | [rules/AGENTS.md](./packages/gwork/rules/AGENTS.md) | [README.md](./packages/gwork/README.md) | [plugin.json](./packages/gwork/plugin.json) |
-| [packages/repo/](./packages/repo/) | `@tupynambalucas-dev/plugin-repo` | [rules/AGENTS.md](./packages/repo/rules/AGENTS.md) | [README.md](./packages/repo/README.md) | [plugin.json](./packages/repo/plugin.json) |
+| [packages/profile/](./packages/profile/) | `@tupynambalucas-dev/plugin-profile` | [rules/AGENTS.md](./packages/profile/rules/AGENTS.md) | [README.md](./packages/profile/README.md) | [plugin.json](./packages/profile/plugin.json) |
 | [packages/research/](./packages/research/) | `@tupynambalucas-dev/plugin-research` | [rules/AGENTS.md](./packages/research/rules/AGENTS.md) | [README.md](./packages/research/README.md) | [plugin.json](./packages/research/plugin.json) |
 | [packages/secrets/](./packages/secrets/) | `@tupynambalucas-dev/plugin-secrets` | [rules/AGENTS.md](./packages/secrets/rules/AGENTS.md) | [README.md](./packages/secrets/README.md) | [plugin.json](./packages/secrets/plugin.json) |
 | [packages/web/](./packages/web/) | `@tupynambalucas-dev/plugin-web` | [rules/AGENTS.md](./packages/web/rules/AGENTS.md) | [README.md](./packages/web/README.md) | [plugin.json](./packages/web/plugin.json) |
-| [packages/profile/](./packages/profile/) | `@tupynambalucas-dev/plugin-profile` | [rules/AGENTS.md](./packages/profile/rules/AGENTS.md) | [README.md](./packages/profile/README.md) | [plugin.json](./packages/profile/plugin.json) |
 
 ## Architecture & Conventions
 

@@ -64,14 +64,16 @@ agent-mesh/
 | `@tupynambalucas-dev/plugin-appsheet` | `plugins/packages/appsheet` | [`README.md`](./plugins/packages/appsheet/README.md) | [`rules/AGENTS.md`](./plugins/packages/appsheet/rules/AGENTS.md) | AppSheet relational schema design, REST API v2 operations, and Studio automation. |
 | `@tupynambalucas-dev/plugin-atelier` | `plugins/packages/atelier` | [`README.md`](./plugins/packages/atelier/README.md) | [`rules/AGENTS.md`](./plugins/packages/atelier/rules/AGENTS.md) | Agent context routers, skills, rules, lifecycle hooks, plugin manifests, and plans. |
 | `@tupynambalucas-dev/plugin-docusaurus` | `plugins/packages/docusaurus` | [`README.md`](./plugins/packages/docusaurus/README.md) | [`rules/AGENTS.md`](./plugins/packages/docusaurus/rules/AGENTS.md) | Diátaxis documentation architecture, MDX v3 compliance, and Crowdin isolation. |
-| `@tupynambalucas-dev/plugin-github-flow` | `plugins/packages/github-flow` | [`README.md`](./plugins/packages/github-flow/README.md) | [`rules/AGENTS.md`](./plugins/packages/github-flow/rules/AGENTS.md) | Single-Branch GitHub Flow, SSH commit signing, Conventional Commits, and CI triage. |
+| `@tupynambalucas-dev/plugin-github-actions` | `plugins/packages/github-actions` | [`README.md`](./plugins/packages/github-actions/README.md) | [`rules/AGENTS.md`](./plugins/packages/github-actions/rules/AGENTS.md) | GitHub Actions CI/CD automation, composite action modularization, runner diagnostics, and workflow triage. |
+| `@tupynambalucas-dev/plugin-github-flow` | `plugins/packages/github-flow` | [`README.md`](./plugins/packages/github-flow/README.md) | [`rules/AGENTS.md`](./plugins/packages/github-flow/rules/AGENTS.md) | Single-Branch GitHub Flow, SSH commit signing, Conventional Commits, and PR management. |
 | `@tupynambalucas-dev/plugin-github-org` | `plugins/packages/github-org` | [`README.md`](./plugins/packages/github-org/README.md) | [`rules/AGENTS.md`](./plugins/packages/github-org/rules/AGENTS.md) | Organization RBAC, repository rulesets, GitHub App manifest provisioning, and security audits. |
+| `@tupynambalucas-dev/plugin-github-releases` | `plugins/packages/github-releases` | [`README.md`](./plugins/packages/github-releases/README.md) | [`rules/AGENTS.md`](./plugins/packages/github-releases/rules/AGENTS.md) | SemVer versioning, Release Please Manifest Mode, git-cliff single-changelogs, and package distribution. |
+| `@tupynambalucas-dev/plugin-github-repo` | `plugins/packages/github-repo` | [`README.md`](./plugins/packages/github-repo/README.md) | [`rules/AGENTS.md`](./plugins/packages/github-repo/rules/AGENTS.md) | Repository governance, README architecture & auditing, monorepo catalogs, TSConfig solution architecture, and Mani multi-repository orchestration. |
 | `@tupynambalucas-dev/plugin-gwork` | `plugins/packages/gwork` | [`README.md`](./plugins/packages/gwork/README.md) | [`rules/AGENTS.md`](./plugins/packages/gwork/rules/AGENTS.md) | Google Drive management, 1NF Sheets synthesis, and Google Docs publishing. |
-| `@tupynambalucas-dev/plugin-repo` | `plugins/packages/repo` | [`README.md`](./plugins/packages/repo/README.md) | [`rules/AGENTS.md`](./plugins/packages/repo/rules/AGENTS.md) | Enterprise README architecture & auditing, monorepo catalogs, licensing, community health, and Mani. |
+| `@tupynambalucas-dev/plugin-profile` | `plugins/packages/profile` | [`README.md`](./plugins/packages/profile/README.md) | [`rules/AGENTS.md`](./plugins/packages/profile/rules/AGENTS.md) | Developer GitHub profile README architecture, career positioning, and LinkedIn talent discovery. |
 | `@tupynambalucas-dev/plugin-research` | `plugins/packages/research` | [`README.md`](./plugins/packages/research/README.md) | [`rules/AGENTS.md`](./plugins/packages/research/rules/AGENTS.md) | Upstream SDK documentation lookup via Context7 and web extraction via Firecrawl. |
 | `@tupynambalucas-dev/plugin-secrets` | `plugins/packages/secrets` | [`README.md`](./plugins/packages/secrets/README.md) | [`rules/AGENTS.md`](./plugins/packages/secrets/rules/AGENTS.md) | Infisical Cloud secret governance, Universal Auth identities, and zero-downtime secret rotation. |
 | `@tupynambalucas-dev/plugin-web` | `plugins/packages/web` | [`README.md`](./plugins/packages/web/README.md) | [`rules/AGENTS.md`](./plugins/packages/web/rules/AGENTS.md) | Multi-mode Playwright browser automation (extension pairing + headless) and Firecrawl scraping. |
-| `@tupynambalucas-dev/plugin-profile` | `plugins/packages/profile` | [`README.md`](./plugins/packages/profile/README.md) | [`rules/AGENTS.md`](./plugins/packages/profile/rules/AGENTS.md) | Developer GitHub profile README architecture, career positioning, and LinkedIn talent discovery. |
 
 ### Layer-3 Sovereign MCP Packages (`mcp/*`)
 
@@ -111,7 +113,7 @@ agent-mesh/
      "entries": [
        {
          "path": "node_modules/@tupynambalucas-dev/agent-mesh/plugins/packages",
-         "include_only": ["repo", "github-flow", "secrets", "research", "web"]
+         "include_only": ["github-repo", "github-flow", "secrets", "research", "web"]
        }
      ]
    }
@@ -119,11 +121,11 @@ agent-mesh/
 3. **Scenario C — CLI Global Installation & Claude Code Marketplace**:
    ```bash
    # Antigravity CLI
-   agy plugin install https://github.com/tupynambalucas-dev/agent-mesh --path plugins/packages/repo
+   agy plugin install https://github.com/tupynambalucas-dev/agent-mesh --path plugins/packages/github-repo
 
    # Claude Code Marketplace
    /plugin marketplace add tupynambalucas-dev/agent-mesh
-   /plugin install repo@tupynambalucas-dev
+   /plugin install github-repo@tupynambalucas-dev
    ```
 
 ### B. Sovereign MCP Bundling & Two-Tier Launcher Architecture

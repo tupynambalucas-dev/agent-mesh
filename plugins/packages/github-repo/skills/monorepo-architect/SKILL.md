@@ -52,7 +52,7 @@ $$\text{Package Name} = \text{@<scope>} \,/\, \text{[<discriminator>-]} \, \text
 | Package Category | Directory Pattern | Formula | Deterministic Examples |
 | :--- | :--- | :--- | :--- |
 | **Root Monorepo** | `/` | `@<scope>/<repo-slug>` | `@tupynambalucas-dev/platform`<br />`@tupynambalucas-dev/agent-mesh`<br />`@tupynambalucas-dev/workstation`<br />`@acme/core-system` |
-| **Domain Plugin** | `**/plugins/packages/<slug>` | `@<scope>/plugin-<slug>` | `@tupynambalucas-dev/plugin-repo`<br />`@tupynambalucas-dev/plugin-atelier`<br />`@acme/plugin-billing` |
+| **Domain Plugin** | `**/plugins/packages/<slug>` | `@<scope>/plugin-<slug>` | `@tupynambalucas-dev/plugin-github-repo`<br />`@tupynambalucas-dev/plugin-atelier`<br />`@acme/plugin-billing` |
 | **MCP Server** | `**/mcp/servers/<slug>` | `@<scope>/mcp-<slug>` | `@tupynambalucas-dev/mcp-playwright`<br />`@tupynambalucas-dev/mcp-github-flow`<br />`@acme/mcp-database` |
 | **Bounded Context Service** | `<context>/services/<slug>` | `@<scope>/<context>-<slug>` | `@tupynambalucas-dev/corporate-api`<br />`@tupynambalucas-dev/cortex-memory-api`<br />`@acme/auth-service` |
 | **Bounded Context Library** | `<context>/packages/<slug>` | `@<scope>/<context>-<slug>` | `@tupynambalucas-dev/corporate-core`<br />`@tupynambalucas-dev/cortex-memory-core`<br />`@acme/auth-client` |

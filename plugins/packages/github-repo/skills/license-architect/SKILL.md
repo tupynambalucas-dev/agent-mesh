@@ -57,7 +57,7 @@ Every publishable package must declare a valid SPDX license identifier in its `p
 
 ```json
 {
-  "name": "@tupynambalucas-dev/plugin-repo",
+  "name": "@tupynambalucas-dev/plugin-github-repo",
   "license": "Apache-2.0"
 }
 ```
