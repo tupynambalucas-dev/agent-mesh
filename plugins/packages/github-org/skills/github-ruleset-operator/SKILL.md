@@ -1,4 +1,4 @@
----
+﻿---
 name: github-ruleset-operator
 description: Defines, audits, and enforces branch protection rulesets and tag rules across repositories in the organization.
 ---
@@ -15,11 +15,15 @@ Activate this skill when:
 - Restricting force pushes and branch deletions.
 - Configuring ruleset bypass actors (e.g. organization admins, automated bots).
 - Setting up pull request review requirements and merge queues.
+- Protecting release tags (`refs/tags/v*`) and auditing that production tags are immutable.
 
 ## Enforcement Standard
 
 - When operating within `tupynambalucas-dev` or signed-commit organizations, repositories MUST enforce cryptographic commit signing (`git commit -S`).
 - Direct pushes to protected branches (`main`, `master`) MUST be blocked; changes must flow via Pull Requests with required passing status checks.
+
+- Production release tags (`refs/tags/v*`) MUST be immutable via `enterprise-release-tags`; exclude `refs/tags/v*-rc.*` so failed dry runs can be superseded.
+- Audit tag protection read-only: `gh api repos/{owner}/{repo}/rulesets --jq '.[] | {name, target, enforcement}'`. An empty result is a compliance finding.
 
 ## Script Helpers & Runbooks
 

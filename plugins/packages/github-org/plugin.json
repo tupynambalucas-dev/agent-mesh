@@ -1,7 +1,7 @@
-{
+﻿{
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "github-org",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "GitHub organization management, team RBAC, branch protection rulesets, security scanning, and GitHub App provisioning.",
   "author": {
     "name": "Tupynamba Lucas Development Team",

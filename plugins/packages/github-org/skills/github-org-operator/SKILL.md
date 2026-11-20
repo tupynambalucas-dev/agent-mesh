@@ -15,6 +15,7 @@ Activate this skill when:
 - Adding or modifying team memberships and repository permissions.
 - Changing repository visibility (public/private).
 - Executing repository transfer procedures.
+- Auditing organization starter workflow templates (`workflow-templates/`) and global release notes configurations (`.github/release.yml`) in `tupynambalucas-dev/.github`.
 
 ## Operational Standards
 

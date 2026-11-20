@@ -58,6 +58,42 @@ function main() {
           return;
         }
       }
+
+      // 4. Release Engineering: tag creation must be signed and annotated
+      if (/git\s+tag\b/.test(cmd) && !/\s-(?:d|l|v)\b|--(?:delete|list|verify)\b/.test(cmd)) {
+        if (!/\s(-s|--sign)\b/.test(cmd) || !/\s(-a|--annotate)\b|\s-sa\b/.test(cmd)) {
+          process.stdout.write(JSON.stringify({
+            decision: 'deny',
+            reason: 'Release Invariant: tags must be signed and annotated (git tag -s -a vX.Y.Z -m "release: vX.Y.Z").'
+          }));
+          return;
+        }
+      }
+
+      // 5. Release Engineering: deleting or force-moving release tags is prohibited
+      if (/git\s+tag\s+(?:-\S+\s+)*(?:-d|--delete)\b/.test(cmd) && /\bv\d/.test(cmd)) {
+        process.stdout.write(JSON.stringify({
+          decision: 'deny',
+          reason: 'Release Invariant: production tags are immutable. Roll forward with the next PATCH instead of deleting or moving a tag.'
+        }));
+        return;
+      }
+
+      // 6. Release Engineering: pushing version tags and mutating releases require human confirmation
+      if (/git\s+push\b[^\n]*(?:\bv\d+\.\d+\.\d+\S*|--tags\b)/.test(cmd)) {
+        process.stdout.write(JSON.stringify({
+          decision: 'ask',
+          reason: 'Release Confirmation Gate: pushing a version tag triggers production publication. Confirm version, commit range, and changelog first.'
+        }));
+        return;
+      }
+      if (/gh\s+release\s+(?:create|edit|delete|upload)\b/.test(cmd)) {
+        process.stdout.write(JSON.stringify({
+          decision: 'ask',
+          reason: 'Release Confirmation Gate: creating, editing, deleting, or uploading to a GitHub Release is production-impacting. Confirm before proceeding.'
+        }));
+        return;
+      }
     }
 
     process.stdout.write(JSON.stringify({ decision: 'allow' }));

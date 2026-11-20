@@ -44,8 +44,10 @@ trigger: always_on
 7. Organization-Wide .github Directory & Workflow Taxonomy Standard:
    - In the `tupynambalucas-dev` organization, all repositories MUST declare local `.github/CODEOWNERS` mapping `*` to `@tupynambalucas-dev/core-maintainers`. Child repositories preserve native organizational inheritance from `tupynambalucas-dev/.github` without local issue template shadowing.
    - In external repositories, inspect existing CODEOWNERS, root maintainers, or repository configuration to set appropriate ownership and issue templates without hardcoding organizational team handles.
-   - Monorepos must standardize `.github/actions/` composite action primitives (`setup-pnpm-env`, domain validations) for unified runtime setup and step modularity.
+   - Monorepos must standardize `.github/actions/` composite action primitives (`setup-pnpm-env`, `setup-go-env`, domain validations) for unified runtime setup and step modularity. Monolithic inline bash routines in workflows are prohibited.
    - Workflows must declare least-privilege token permissions, strict concurrency cancellation groups (`concurrency.cancel-in-progress: true` for CI), and third-party action SHA pinning with semver comments.
+   - Organization Automation Centralization: Starter workflows (`workflow-templates/` with companion `.properties.json`) and global release notes configurations (`.github/release.yml`) reside in `tupynambalucas-dev/.github` for zero-boilerplate repository bootstrapping and unified release categorization.
+   - Dual Changelog Taxonomy: Multi-package library monorepos (e.g., `agent-mesh`) must use intent-based Changesets (`@changesets/cli`) with per-package `CHANGELOG.md` files; product and binary monorepos (e.g., `workstation`) must use Conventional Commits, a centralized root `CHANGELOG.md` (Keep a Changelog format), and dynamically stamped GitHub Release Notes containing cryptographic SHA-256 integrity matrices.
    - Monorepo publishing must execute natively via `pnpm -r publish --access public --no-git-checks --report-summary` with Zero-Script overhead.
    - Monorepo `.npmrc` files committed to Git must declare registry and scope routing without embedding secrets or environment variables (`${NODE_AUTH_TOKEN}`).
 

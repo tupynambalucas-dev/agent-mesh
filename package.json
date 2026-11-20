@@ -1,6 +1,6 @@
 {
   "name": "@tupynambalucas-dev/agent-mesh",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "private": false,
   "description": "Universal enterprise AI agent mesh: governance, MCP servers, domain plugins, and modular skills.",
   "packageManager": "pnpm@10.33.2",
