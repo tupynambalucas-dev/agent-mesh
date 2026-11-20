@@ -16,10 +16,28 @@
       "source": "./plugins/packages/github-org"
     },
     {
+      "name": "github-repo",
+      "description": "Enterprise repository governance, root file standards, README architecture, licensing, monorepo catalogs, TSConfig solution architecture, and Mani multi-repository orchestration.",
+      "version": "1.1.0",
+      "source": "./plugins/packages/github-repo"
+    },
+    {
       "name": "github-flow",
       "description": "Developer GitHub assistant for Git workflows, Conventional Commits, Pull Requests, and Actions CI/CD triage.",
       "version": "1.0.0",
       "source": "./plugins/packages/github-flow"
+    },
+    {
+      "name": "github-actions",
+      "description": "GitHub Actions CI/CD automation engine, workflow authoring, composite actions, runner diagnostics, and security hardening.",
+      "version": "1.1.0",
+      "source": "./plugins/packages/github-actions"
+    },
+    {
+      "name": "github-releases",
+      "description": "Enterprise release engineering, SemVer, Release Please, Changesets, git-cliff, Keep a Changelog curation, and package publishing.",
+      "version": "1.1.0",
+      "source": "./plugins/packages/github-releases"
     },
     {
       "name": "secrets",
@@ -32,12 +50,6 @@
       "description": "Authoritative AI Agent Atelier for crafting context routers, modular skills, lifecycle hooks, rules, and plugin manifests.",
       "version": "1.0.0",
       "source": "./plugins/packages/atelier"
-    },
-    {
-      "name": "repo",
-      "description": "Enterprise repository governance, root file standards, README architecture, licensing, and community health files.",
-      "version": "1.0.0",
-      "source": "./plugins/packages/repo"
     },
     {
       "name": "docusaurus",

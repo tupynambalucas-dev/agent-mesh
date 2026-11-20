@@ -3,7 +3,7 @@
     {
       "path": "../plugins/packages",
       "include_only": [
-        "repo",
+        "github-repo",
         "github-flow",
         "secrets",
         "research",

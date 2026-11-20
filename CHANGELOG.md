@@ -5,6 +5,17 @@ All notable changes to the tupynambalucas-dev Agent Mesh monorepo will be docume
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-11-20
+
+### Features & Capabilities
+
+- [feat(github-repo): consolidate plugin-repo and plugin-github-repo into unified @tupynambalucas-dev/plugin-github-repo v1.1.0 #69](https://github.com/tupynambalucas-dev/agent-mesh/pull/69)
+- [feat(github-releases): codify dual release archetypes (git-cliff single-changelog and Release Please Manifest Mode) and Docusaurus PR links #69](https://github.com/tupynambalucas-dev/agent-mesh/pull/69)
+- [feat(github-actions): integrate automated release workflow templates (release-cliff.yml and release-please.yml) #69](https://github.com/tupynambalucas-dev/agent-mesh/pull/69)
+- [refactor(presets): update backend-api, docs-portal, and frontend-web presets to reference github-repo #69](https://github.com/tupynambalucas-dev/agent-mesh/pull/69)
+
+---
+
 ## [1.3.0] - 2026-11-20
 
 ### Modular Plugin Ecosystem Upgrades

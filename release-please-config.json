@@ -61,10 +61,6 @@
       "release-type": "node",
       "package-name": "@tupynambalucas-dev/plugin-profile"
     },
-    "plugins/packages/repo": {
-      "release-type": "node",
-      "package-name": "@tupynambalucas-dev/plugin-repo"
-    },
     "plugins/packages/research": {
       "release-type": "node",
       "package-name": "@tupynambalucas-dev/plugin-research"

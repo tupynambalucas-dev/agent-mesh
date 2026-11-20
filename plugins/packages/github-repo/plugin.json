@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "github-repo",
-  "version": "1.0.0",
-  "description": "Repository infrastructure and governance, CODEOWNERS, local templates, dependabot.yml, release.yml, branch and tag protection rulesets, environments, and labels.",
+  "version": "1.1.0",
+  "description": "Unified GitHub repository infrastructure, governance, CODEOWNERS, rulesets, monorepo orchestration, pnpm catalogs, package manifest scoping, TypeScript project references, licensing compliance, and recursive README navigation architecture.",
   "author": {
     "name": "Tupynamba Lucas Development Team",
     "url": "https://tupynambalucas.dev"
@@ -13,10 +13,18 @@
   "keywords": [
     "github",
     "repository",
+    "governance",
     "codeowners",
     "dependabot",
     "rulesets",
-    "environments",
-    "labels"
+    "monorepo",
+    "mani",
+    "multi-repo",
+    "pnpm",
+    "tsconfig",
+    "readme",
+    "community-health",
+    "licensing",
+    "agent-mesh"
   ]
 }

@@ -1,7 +1,7 @@
 {
   "name": "@tupynambalucas-dev/plugin-github-repo",
-  "version": "1.0.0",
-  "description": "Repository infrastructure and governance, CODEOWNERS, local templates, dependabot.yml, release.yml, branch and tag protection rulesets, environments, and labels.",
+  "version": "1.1.0",
+  "description": "Unified GitHub repository infrastructure, governance, CODEOWNERS, rulesets, monorepo orchestration, pnpm catalogs, licensing compliance, and recursive README navigation architecture.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "Apache-2.0",
   "homepage": "https://docs.tupynambalucas.dev",
@@ -25,6 +25,7 @@
     "plugin.json",
     "rules",
     "skills",
+    "references",
     "CHANGELOG.md",
     "mcp.json",
     "mcp_config.json",

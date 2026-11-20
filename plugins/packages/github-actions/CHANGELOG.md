@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- changelog-start -->
 
+## [1.1.0] - 2026-11-20
+
+### Features & Capabilities
+
+- [feat(actions): introduce automated release pipeline workflows for git-cliff and release-please #69](https://github.com/tupynambalucas-dev/agent-mesh/pull/69)
+
+---
+
 ## [1.0.0] - 2026-11-20
 
 ### Added
