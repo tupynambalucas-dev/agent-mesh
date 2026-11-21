@@ -1,6 +1,6 @@
 {
   "name": "@tupynambalucas-dev/mcp-github-flow",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Domain-scoped Model Context Protocol server for developer Git workflows, branches, pull requests, and GitHub Actions diagnostics.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "Apache-2.0",

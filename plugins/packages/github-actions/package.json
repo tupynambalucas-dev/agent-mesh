@@ -1,6 +1,6 @@
 {
   "name": "@tupynambalucas-dev/plugin-github-actions",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "GitHub Actions CI/CD automation engine, workflow orchestration, custom and composite actions, runner diagnostics, and security hardening.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "Apache-2.0",

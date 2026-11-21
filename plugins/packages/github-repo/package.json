@@ -1,6 +1,6 @@
 {
   "name": "@tupynambalucas-dev/plugin-github-repo",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Unified GitHub repository infrastructure, governance, CODEOWNERS, rulesets, monorepo orchestration, pnpm catalogs, licensing compliance, and recursive README navigation architecture.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "Apache-2.0",
