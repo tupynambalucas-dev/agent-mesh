@@ -1,6 +1,6 @@
 {
   "name": "@tupynambalucas-dev/plugin-appsheet",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Enterprise AppSheet application development: relational schema modeling, REST API v2 operations, UI architecture, and headless Playwright automation.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "Apache-2.0",

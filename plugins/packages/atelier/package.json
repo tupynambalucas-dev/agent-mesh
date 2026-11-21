@@ -1,6 +1,6 @@
 {
   "name": "@tupynambalucas-dev/plugin-atelier",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Authoritative AI Agent Atelier for crafting context routers, modular skills, lifecycle hooks, rules, and plugin manifests.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "Apache-2.0",

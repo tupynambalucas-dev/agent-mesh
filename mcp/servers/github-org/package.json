@@ -1,6 +1,6 @@
 {
   "name": "@tupynambalucas-dev/mcp-github-org",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Domain-scoped Model Context Protocol server for GitHub organization governance, teams, rulesets, and security auditing via Tier 1 GitHub App authentication.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "Apache-2.0",
