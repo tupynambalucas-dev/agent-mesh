@@ -82,31 +82,61 @@ pnpm -r publish --access public --no-git-checks --report-summary
 
 ## 4. Changelog Formatting Standard
 
-All changelog entries MUST adhere to the Keep a Changelog v1.1.0 and Docusaurus PR link syntax with author attribution:
+All `CHANGELOG.md` files MUST strictly adhere to the Scoped Header, Isolated Docusaurus PR Link, and Committers Footer standard:
 
-### Single-Changelog Repositories & Atomic Workspace Changelogs:
+### A. Scoped Header Invariant (No Boilerplate Paragraphs):
+Every `CHANGELOG.md` (both root and atomic workspace changelogs) MUST start strictly with `# Changelog - <scope>` where `<scope>` is the `package.json` `"name"` (or `<org>/<repo>` if no `package.json` exists). Do NOT include the Keep a Changelog introductory text (`All notable changes to...`).
+
+```markdown
+# Changelog - @tupynambalucas-dev/agent-mesh
+
+<!-- changelog-start -->
+```
+
+For atomic workspace packages (e.g. `plugins/packages/github-org/CHANGELOG.md`):
+```markdown
+# Changelog - @tupynambalucas-dev/plugin-github-org
+
+<!-- changelog-start -->
+```
+
+### B. Single-Changelog Repositories & Atomic Workspace Changelogs:
+Only `[#<pr>]` (or `[<sha>]`) is hyperlinked; the commit headline remains plain text:
 ```markdown
 ### Features & Capabilities
 
-- [feat(distro): introduce socket-activated Docker engine #6](https://github.com/tupynambalucas-dev/workstation/pull/6) ([@tupynambalucas](https://github.com/tupynambalucas))
+- [#6](https://github.com/tupynambalucas-dev/foundation/pull/6) feat(distro): introduce socket-activated Docker engine ([@tupynambalucas](https://github.com/tupynambalucas))
 
 ### Bug Fixes & Corrections
 
-- [fix(core): bump detect-port to v2.1 #12](https://github.com/tupynambalucas-dev/platform/pull/12) ([@tupynambalucas](https://github.com/tupynambalucas))
+- [#12](https://github.com/tupynambalucas-dev/platform/pull/12) fix(core): bump detect-port to v2.1 ([@tupynambalucas](https://github.com/tupynambalucas))
+
+### Dependencies
+
+- [#19](https://github.com/tupynambalucas-dev/platform/pull/19) chore(deps): bump actions/checkout from 6.0.1 to 6.0.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+### Maintenance
+
+- [#21](https://github.com/tupynambalucas-dev/platform/pull/21) chore(ci): enforce concurrency groups across workflows ([@tupynambalucas](https://github.com/tupynambalucas))
+
+### Committers: 1
+
+- Tupynamba Lucas ([@tupynambalucas](https://github.com/tupynambalucas))
 ```
 
-### Multi-Workspace Monorepo Root Changelogs:
-Root changelogs in multi-workspace monorepos group entries by workspace or package name above the indented pull request reference and author attribution:
+### C. Multi-Workspace Monorepo Root Changelogs:
+Root changelogs in multi-workspace monorepos group entries by workspace or package name (and `- Other` for root/non-package changes) above the indented pull request reference and author attribution:
 ```markdown
 ### Features & Capabilities
 
 - `@tupynambalucas-dev/plugin-github-flow`
-  - [feat(github-flow): codify release engineering standard #69](https://github.com/tupynambalucas-dev/agent-mesh/pull/69) ([@tupynambalucas](https://github.com/tupynambalucas))
+  - [#69](https://github.com/tupynambalucas-dev/agent-mesh/pull/69) feat(github-flow): codify release engineering standard ([@tupynambalucas](https://github.com/tupynambalucas))
+- Other
+  - [#72](https://github.com/tupynambalucas-dev/agent-mesh/pull/72) feat(ci): configure ci-bot token minting for release pipeline ([@tupynambalucas](https://github.com/tupynambalucas))
 
-### Bug Fixes & Corrections
+### Committers: 1
 
-- `@tupynambalucas-dev/corporate-api`
-  - [fix(auth): enforce strict session token rotation #34](https://github.com/tupynambalucas-dev/platform/pull/34) ([@tupynambalucas](https://github.com/tupynambalucas))
+- Tupynamba Lucas ([@tupynambalucas](https://github.com/tupynambalucas))
 ```
 
-Internal development commits (`chore`, `test`, `ci`, `style`) must be hidden from user release notes. Emojis are strictly forbidden.
+Release metadata commits (`chore(release)`, `chore: release ...`) and formatting commits (`style`) must be hidden from user release notes. Emojis are strictly forbidden.

@@ -41,10 +41,44 @@ const PROFILES = {
       secret_scanning_alerts: 'write',
       dependabot_alerts: 'write',
     },
+    events: [],
   },
-  assistant: {
-    appName: 'tupynambalucas-github-assistant',
-    description: 'Developer productivity assistant for daily workflows in tupynambalucas-dev.',
+  automation: {
+    appName: 'tupynambalucas-automation',
+    description: 'Autonomous CI/CD, continuous delivery, and repository automation identity for tupynambalucas-dev.',
+    permissions: {
+      actions: 'write',
+      checks: 'write',
+      contents: 'write',
+      deployments: 'write',
+      issues: 'write',
+      metadata: 'read',
+      packages: 'write',
+      pull_requests: 'write',
+      statuses: 'write',
+      workflows: 'write',
+      attestations: 'write',
+    },
+    events: [],
+  },
+  guardian: {
+    appName: 'tupynambalucas-guardian',
+    description: 'Autonomous policy enforcement, security compliance auditing, and Pull Request quality gate guardian for tupynambalucas-dev.',
+    permissions: {
+      checks: 'read',
+      contents: 'read',
+      issues: 'write',
+      metadata: 'read',
+      pull_requests: 'write',
+      security_events: 'read',
+      statuses: 'read',
+      vulnerability_alerts: 'read',
+    },
+    events: ['pull_request', 'pull_request_review', 'check_suite', 'check_run'],
+  },
+  'developer-tools': {
+    appName: 'tupynambalucas-developer-tools',
+    description: 'Developer workstation identity, CLI extensions (gh-tl), and autonomous agent workflows for tupynambalucas-dev.',
     permissions: {
       contents: 'write',
       pull_requests: 'write',
@@ -52,6 +86,7 @@ const PROFILES = {
       actions: 'read',
       packages: 'read',
     },
+    events: [],
   },
 };
 
@@ -59,16 +94,16 @@ const selected = PROFILES[profile] || PROFILES.manager;
 
 const MANIFEST = {
   name: selected.appName,
-  url: 'https://docs.tupynambalucas.dev',
+  url: 'https://apps.tupynambalucas.dev',
   description: selected.description,
   hook_attributes: {
-    url: 'https://docs.tupynambalucas.dev/webhook',
+    url: 'https://apps.tupynambalucas.dev/webhooks/github',
     active: false,
   },
   redirect_url: `http://localhost:${PORT}/callback`,
   public: false,
   default_permissions: selected.permissions,
-  default_events: [],
+  default_events: selected.events || [],
 };
 
 function openBrowser(url) {

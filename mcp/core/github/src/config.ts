@@ -19,7 +19,35 @@ export const githubConfigSchema = z.object({
   GITHUB_ORG_MANAGER_APP_PRIVATE_KEY_BASE64: z.string().optional().default(''),
   GITHUB_ORG_MANAGER_APP_PRIVATE_KEY_PATH: z.string().optional().default(''),
 
-  // Tier 2: tupynambalucas-ci-bot
+  // Tier 2A: tupynambalucas-automation (Execution & Delivery Plane)
+  AUTOMATION_APP_ID: z.string().optional().default(''),
+  AUTOMATION_APP_CLIENT_ID: z.string().optional().default(''),
+  AUTOMATION_APP_INSTALLATION_ID: z.string().optional().default(''),
+  AUTOMATION_APP_PRIVATE_KEY: z.string().optional().default(''),
+  AUTOMATION_APP_PRIVATE_KEY_BASE64: z.string().optional().default(''),
+  AUTOMATION_APP_PRIVATE_KEY_PATH: z.string().optional().default(''),
+  GITHUB_AUTOMATION_APP_ID: z.string().optional().default(''),
+  GITHUB_AUTOMATION_APP_CLIENT_ID: z.string().optional().default(''),
+  GITHUB_AUTOMATION_APP_INSTALLATION_ID: z.string().optional().default(''),
+  GITHUB_AUTOMATION_APP_PRIVATE_KEY: z.string().optional().default(''),
+  GITHUB_AUTOMATION_APP_PRIVATE_KEY_BASE64: z.string().optional().default(''),
+  GITHUB_AUTOMATION_APP_PRIVATE_KEY_PATH: z.string().optional().default(''),
+
+  // Tier 2B: tupynambalucas-guardian (Protection, Policy & Approval Plane)
+  GUARDIAN_APP_ID: z.string().optional().default(''),
+  GUARDIAN_APP_CLIENT_ID: z.string().optional().default(''),
+  GUARDIAN_APP_INSTALLATION_ID: z.string().optional().default(''),
+  GUARDIAN_APP_PRIVATE_KEY: z.string().optional().default(''),
+  GUARDIAN_APP_PRIVATE_KEY_BASE64: z.string().optional().default(''),
+  GUARDIAN_APP_PRIVATE_KEY_PATH: z.string().optional().default(''),
+  GITHUB_GUARDIAN_APP_ID: z.string().optional().default(''),
+  GITHUB_GUARDIAN_APP_CLIENT_ID: z.string().optional().default(''),
+  GITHUB_GUARDIAN_APP_INSTALLATION_ID: z.string().optional().default(''),
+  GITHUB_GUARDIAN_APP_PRIVATE_KEY: z.string().optional().default(''),
+  GITHUB_GUARDIAN_APP_PRIVATE_KEY_BASE64: z.string().optional().default(''),
+  GITHUB_GUARDIAN_APP_PRIVATE_KEY_PATH: z.string().optional().default(''),
+
+  // Legacy Tier 2 Aliases: tupynambalucas-ci-bot
   CI_BOT_APP_ID: z.string().optional().default(''),
   CI_BOT_APP_CLIENT_ID: z.string().optional().default(''),
   CI_BOT_APP_INSTALLATION_ID: z.string().optional().default(''),

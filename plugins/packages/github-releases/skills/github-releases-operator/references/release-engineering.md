@@ -13,7 +13,7 @@ Organization-wide release policy consumed by `github-flow-operator`, `github-act
 | Release branch | Only just-in-time maintenance branch `release/<major>.<minor>`, cut from a shipped tag, receiving `git cherry-pick -x` fixes only. |
 | Versioning | SemVer 2.0.0 derived from Conventional Commits: `feat` MINOR, `fix` PATCH, `!` or `BREAKING CHANGE` MAJOR. |
 | Release Engines | **Dual Release Standard**: `git-cliff` for single-changelog repos; Google Release Please Manifest Mode for multi-workspace monorepos. |
-| Changelog Format | Docusaurus-style pull request links with author attribution: `- [type(scope): description #PR](url) ([@author](url))` following Keep a Changelog taxonomy. Multi-workspace monorepo root changelogs group by workspace above indented PR links. |
+| Changelog Format | Docusaurus-style pull request links with author attribution: `- [#PR](url) type(scope): description ([@author](url))` following Keep a Changelog taxonomy. Multi-workspace monorepo root changelogs group by workspace above indented PR links. |
 | Dry run | Prerelease tag `vX.Y.Z-rc.N`. Prereleases are excluded from `releases/latest`. |
 | Rollback | Roll forward with the next PATCH. If harm is immediate, mark the release as prerelease. Never delete or move a production tag. |
 
@@ -40,12 +40,7 @@ repo = "<repo-name>"
 
 [changelog]
 header = """
-# Changelog - tupynambalucas-dev/<repo-name>
-
-All notable changes to the `<repo-name>` repository will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+# Changelog - <package-name-or-repo-scope>
 
 <!-- changelog-start -->
 """
@@ -61,12 +56,21 @@ body = """
         {%- set raw_first = commit.raw_message | split(pat="\n") | first | trim -%}
         {%- if commit.remote.pr_number -%}
             {%- set clean_msg = raw_first | replace(from=" (#" ~ commit.remote.pr_number ~ ")", to="") -%}
-        - [{{ clean_msg }} #{{ commit.remote.pr_number }}](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/pull/{{ commit.remote.pr_number }}){% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
+        - [#{{ commit.remote.pr_number }}](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/pull/{{ commit.remote.pr_number }}) {{ clean_msg }}{% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
         {%- else -%}
-        - [{{ raw_first }} ({{ commit.id | truncate(length=7, end="") }})](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/commit/{{ commit.id }}){% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
+        - [{{ commit.id | truncate(length=7, end="") }}](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/commit/{{ commit.id }}) {{ raw_first }}{% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
         {%- endif %}
     {% endfor %}
-{% endfor %}
+{% endfor -%}
+{%- set committers = commits | filter(attribute="remote.username") | group_by(attribute="remote.username") -%}
+{%- if committers | length > 0 %}
+
+### Committers: {{ committers | length }}
+{% for username, user_commits in committers %}
+{%- set last_commit = user_commits | last -%}
+- {{ last_commit.author.name }} ([@{{ username }}](https://github.com/{{ username }}))
+{% endfor -%}
+{%- endif %}
 """
 trim = true
 
@@ -82,12 +86,11 @@ commit_parsers = [
     { message = "^docs", group = "Documentation & Specifications" },
     { message = "^security", group = "Security & Vulnerability Patches" },
     { message = "^revert", group = "Reverts & Rollbacks" },
+    { message = "^chore\\(deps.*\\)", group = "Dependencies" },
     { message = "^chore\\(release\\)", skip = true },
-    { message = "^chore", skip = true },
-    { message = "^test", skip = true },
-    { message = "^ci", skip = true },
+    { message = "^chore: release", skip = true },
+    { message = "^(chore|build|ci|test)", group = "Maintenance" },
     { message = "^style", skip = true },
-    { message = "^build", skip = true },
 ]
 protect_breaking_commits = false
 filter_commits = false
@@ -98,7 +101,7 @@ sort_commits = "oldest"
 
 ### Archetype 1B: Monorepo Single-File Grouping via `git-cliff`
 
-For monorepos employing `git-cliff` while preserving Docusaurus package grouping under category headers:
+For monorepos employing `git-cliff` while preserving Docusaurus package grouping (`- <package>` and `- Other` for root/unscoped commits) and the `### Committers: <N>` footer:
 
 ```toml
 body = """
@@ -110,30 +113,31 @@ body = """
 {% for group, commits in commits | group_by(attribute="group") %}
     ### {{ group }}
     {% for scope, scoped_commits in commits | group_by(attribute="scope") %}
-    {%- if scope %}
+    {%- if scope and scope not in ["ci", "deps", "deps-dev", "repo", "monorepo", "root"] %}
     - `{{ scope }}`
-        {%- for commit in scoped_commits %}
-            {%- set raw_first = commit.raw_message | split(pat="\n") | first | trim -%}
-            {%- if commit.remote.pr_number -%}
-                {%- set clean_msg = raw_first | replace(from=" (#" ~ commit.remote.pr_number ~ ")", to="") -%}
-            - [{{ clean_msg }} #{{ commit.remote.pr_number }}](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/pull/{{ commit.remote.pr_number }}){% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
-            {%- else -%}
-            - [{{ raw_first }} ({{ commit.id | truncate(length=7, end="") }})](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/commit/{{ commit.id }}){% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
-            {%- endif %}
-        {%- endfor %}
     {%- else %}
+    - Other
+    {%- endif %}
         {%- for commit in scoped_commits %}
             {%- set raw_first = commit.raw_message | split(pat="\n") | first | trim -%}
             {%- if commit.remote.pr_number -%}
                 {%- set clean_msg = raw_first | replace(from=" (#" ~ commit.remote.pr_number ~ ")", to="") -%}
-            - [{{ clean_msg }} #{{ commit.remote.pr_number }}](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/pull/{{ commit.remote.pr_number }}){% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
+      - [#{{ commit.remote.pr_number }}](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/pull/{{ commit.remote.pr_number }}) {{ clean_msg }}{% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
             {%- else -%}
-            - [{{ raw_first }} ({{ commit.id | truncate(length=7, end="") }})](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/commit/{{ commit.id }}){% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
+      - [{{ commit.id | truncate(length=7, end="") }}](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/commit/{{ commit.id }}) {{ raw_first }}{% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
             {%- endif %}
         {%- endfor %}
-    {%- endif %}
     {% endfor %}
-{% endfor %}
+{% endfor -%}
+{%- set committers = commits | filter(attribute="remote.username") | group_by(attribute="remote.username") -%}
+{%- if committers | length > 0 %}
+
+### Committers: {{ committers | length }}
+{% for username, user_commits in committers %}
+{%- set last_commit = user_commits | last -%}
+- {{ last_commit.author.name }} ([@{{ username }}](https://github.com/{{ username }}))
+{% endfor -%}
+{%- endif %}
 """
 ```
 
@@ -142,8 +146,8 @@ body = """
 Targeted at multi-package monorepos with independent packages, services, or plugins:
 - Repositories: `platform`, `agent-mesh`, `omnichannel`, `elo-organico`, `tessel`, `docs`.
 - Engine: Google Release Please in Manifest Mode (`release-please-config.json` and `.release-please-manifest.json`).
-- Workflow: `.github/workflows/release-please.yml` executing `google-github-actions/release-please-action@v4`.
-- Changelog: Dual topology with atomic per-package `CHANGELOG.md` and consolidated root `CHANGELOG.md`.
+- Workflow: `.github/workflows/release-please.yml` executing `googleapis/release-please-action@v4`.
+- Changelog: Dual topology with atomic per-package `CHANGELOG.md` (`# Changelog - @tupynambalucas-dev/<pkg>`) and consolidated root `CHANGELOG.md` (`# Changelog - @tupynambalucas-dev/<repo>`). Because Release Please (`src/updaters/changelog.ts`) slices existing files at the first `\n###? v?[0-9[]` regex match, initializing each `CHANGELOG.md` with `# Changelog - <package-name>` (and zero boilerplate paragraphs) guarantees that the scoped header is permanently preserved across all automated releases.
 
 ```json
 {
@@ -152,6 +156,27 @@ Targeted at multi-package monorepos with independent packages, services, or plug
   "bump-minor-pre-major": false,
   "bump-patch-for-minor-pre-major": false,
   "changelog-path": "CHANGELOG.md",
+  "include-commit-authors": true,
+  "component-no-space": true,
+  "group-pull-request-title-pattern": "chore(release): release main",
+  "pull-request-title-pattern": "chore(release): release ${component} ${version}",
+  "changelog-sections": [
+    { "type": "feat", "section": "Features & Capabilities", "hidden": false },
+    { "type": "fix", "section": "Bug Fixes & Corrections", "hidden": false },
+    { "type": "perf", "section": "Performance Optimizations", "hidden": false },
+    { "type": "refactor", "section": "Refactoring & Internal Architecture", "hidden": false },
+    { "type": "docs", "section": "Documentation & Specifications", "hidden": false },
+    { "type": "security", "section": "Security & Vulnerability Patches", "hidden": false },
+    { "type": "revert", "section": "Reverts & Rollbacks", "hidden": false },
+    { "type": "chore", "scope": "deps", "section": "Dependencies", "hidden": false },
+    { "type": "chore", "scope": "deps-dev", "section": "Dependencies", "hidden": false },
+    { "type": "chore", "scope": "release", "section": "Release", "hidden": true },
+    { "type": "chore", "section": "Maintenance", "hidden": false },
+    { "type": "build", "section": "Maintenance", "hidden": false },
+    { "type": "ci", "section": "Maintenance", "hidden": false },
+    { "type": "test", "section": "Maintenance", "hidden": false },
+    { "type": "style", "section": "Styling & Linting", "hidden": true }
+  ],
   "packages": {
     ".": {
       "release-type": "node",
@@ -161,7 +186,10 @@ Targeted at multi-package monorepos with independent packages, services, or plug
       "release-type": "node",
       "package-name": "@tupynambalucas-dev/platform-core"
     }
-  }
+  },
+  "plugins": [
+    "node-workspace"
+  ]
 }
 ```
 

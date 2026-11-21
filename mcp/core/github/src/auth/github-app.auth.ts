@@ -4,7 +4,13 @@ import { Octokit } from '@octokit/core';
 import { createAppAuth } from '@octokit/auth-app';
 import { config } from '../config.js';
 
-export type GitHubIdentityTier = 'org-manager' | 'ci-bot' | 'developer-tools' | 'auto';
+export type GitHubIdentityTier =
+  | 'org-manager'
+  | 'automation'
+  | 'guardian'
+  | 'ci-bot'
+  | 'developer-tools'
+  | 'auto';
 
 let cachedGhCliToken: string | null = null;
 
@@ -80,34 +86,79 @@ async function createOrgManagerOctokit(): Promise<Octokit | null> {
   return new Octokit({ auth: installationAuth.token });
 }
 
-async function createCiBotOctokit(): Promise<Octokit | null> {
+async function createAutomationOctokit(): Promise<Octokit | null> {
   const appId =
+    config.AUTOMATION_APP_ID ||
+    config.GITHUB_AUTOMATION_APP_ID ||
     config.CI_BOT_APP_ID ||
     config.GITHUB_CI_BOT_APP_ID ||
     config.CI_APP_ID;
 
   const privateKey = resolvePrivateKey({
     keyPath:
+      config.AUTOMATION_APP_PRIVATE_KEY_PATH ||
+      config.GITHUB_AUTOMATION_APP_PRIVATE_KEY_PATH ||
       config.CI_BOT_APP_PRIVATE_KEY_PATH ||
       config.GITHUB_CI_BOT_APP_PRIVATE_KEY_PATH ||
       config.CI_APP_PRIVATE_KEY_PATH,
     keyBase64:
+      config.AUTOMATION_APP_PRIVATE_KEY_BASE64 ||
+      config.GITHUB_AUTOMATION_APP_PRIVATE_KEY_BASE64 ||
       config.CI_BOT_APP_PRIVATE_KEY_BASE64 ||
       config.GITHUB_CI_BOT_APP_PRIVATE_KEY_BASE64 ||
       config.CI_APP_PRIVATE_KEY_BASE64,
     rawKey:
+      config.AUTOMATION_APP_PRIVATE_KEY ||
+      config.GITHUB_AUTOMATION_APP_PRIVATE_KEY ||
       config.CI_BOT_APP_PRIVATE_KEY ||
       config.GITHUB_CI_BOT_APP_PRIVATE_KEY ||
       config.CI_APP_PRIVATE_KEY,
   });
 
   const installationIdStr =
+    config.AUTOMATION_APP_INSTALLATION_ID ||
+    config.GITHUB_AUTOMATION_APP_INSTALLATION_ID ||
     config.CI_BOT_APP_INSTALLATION_ID ||
     config.GITHUB_CI_BOT_APP_INSTALLATION_ID ||
     config.CI_APP_INSTALLATION_ID;
 
   if (!appId || !privateKey || !installationIdStr) {
     return null;
+  }
+
+  const auth = createAppAuth({
+    appId,
+    privateKey,
+    installationId: parseInt(installationIdStr, 10),
+  });
+
+  const installationAuth = await auth({ type: 'installation' });
+  return new Octokit({ auth: installationAuth.token });
+}
+
+async function createGuardianOctokit(): Promise<Octokit | null> {
+  const appId =
+    config.GUARDIAN_APP_ID ||
+    config.GITHUB_GUARDIAN_APP_ID;
+
+  const privateKey = resolvePrivateKey({
+    keyPath:
+      config.GUARDIAN_APP_PRIVATE_KEY_PATH ||
+      config.GITHUB_GUARDIAN_APP_PRIVATE_KEY_PATH,
+    keyBase64:
+      config.GUARDIAN_APP_PRIVATE_KEY_BASE64 ||
+      config.GITHUB_GUARDIAN_APP_PRIVATE_KEY_BASE64,
+    rawKey:
+      config.GUARDIAN_APP_PRIVATE_KEY ||
+      config.GITHUB_GUARDIAN_APP_PRIVATE_KEY,
+  });
+
+  const installationIdStr =
+    config.GUARDIAN_APP_INSTALLATION_ID ||
+    config.GITHUB_GUARDIAN_APP_INSTALLATION_ID;
+
+  if (!appId || !privateKey || !installationIdStr) {
+    return createAutomationOctokit();
   }
 
   const auth = createAppAuth({
@@ -153,8 +204,9 @@ function createTokenOctokit(includeGhCli = false): Octokit | null {
  * Resolves an authenticated Octokit client adhering strictly to Separation of Duties (SoD)
  * and the No-Privilege-Escalation Fallback Invariant:
  * - 'org-manager' (Tier 1): Explicit sovereign governance identity; never used as an implicit fallback.
- * - 'ci-bot' (Tier 2): Autonomous CI/CD and repository automation identity.
- * - 'developer-tools' / 'auto' (Tier 3): Workstation token / gh CLI identity with Tier 2 ('ci-bot') fallback.
+ * - 'automation' / 'ci-bot' (Tier 2A): Autonomous CI/CD, release generation, and repository automation identity.
+ * - 'guardian' (Tier 2B): Autonomous policy enforcement, quality gate verification, and PR review identity.
+ * - 'developer-tools' / 'auto' (Tier 3): Workstation token / gh CLI identity with Tier 2A ('automation') fallback.
  */
 export async function getOctokitClient(tier: GitHubIdentityTier = 'auto'): Promise<Octokit> {
   if (tier === 'org-manager') {
@@ -169,10 +221,22 @@ export async function getOctokitClient(tier: GitHubIdentityTier = 'auto'): Promi
     return new Octokit();
   }
 
-  if (tier === 'ci-bot') {
-    const ciClient = await createCiBotOctokit();
-    if (ciClient) {
-      return ciClient;
+  if (tier === 'guardian') {
+    const guardianClient = await createGuardianOctokit();
+    if (guardianClient) {
+      return guardianClient;
+    }
+    const tokenClient = createTokenOctokit(false);
+    if (tokenClient) {
+      return tokenClient;
+    }
+    return new Octokit();
+  }
+
+  if (tier === 'automation' || tier === 'ci-bot') {
+    const automationClient = await createAutomationOctokit();
+    if (automationClient) {
+      return automationClient;
     }
     const tokenClient = createTokenOctokit(false);
     if (tokenClient) {
@@ -187,9 +251,9 @@ export async function getOctokitClient(tier: GitHubIdentityTier = 'auto'): Promi
     return devTokenClient;
   }
 
-  const ciFallbackClient = await createCiBotOctokit();
-  if (ciFallbackClient) {
-    return ciFallbackClient;
+  const automationFallbackClient = await createAutomationOctokit();
+  if (automationFallbackClient) {
+    return automationFallbackClient;
   }
 
   return new Octokit();
