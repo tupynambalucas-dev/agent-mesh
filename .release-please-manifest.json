@@ -13,6 +13,7 @@
   "plugins/packages/research": "1.1.0",
   "plugins/packages/secrets": "1.1.0",
   "plugins/packages/web": "1.1.0",
+  "mcp/core/github": "1.0.0",
   "mcp/servers/appsheet": "1.1.0",
   "mcp/servers/firecrawl": "1.1.0",
   "mcp/servers/github-flow": "1.1.0",
