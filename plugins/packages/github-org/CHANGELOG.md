@@ -1,4 +1,4 @@
-﻿# Changelog - @tupynambalucas-dev/plugin-github-org
+# Changelog - @tupynambalucas-dev/plugin-github-org
 
 All notable changes to `@tupynambalucas-dev/plugin-github-org` will be documented in this file.
 

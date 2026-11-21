@@ -1,4 +1,4 @@
-﻿# Release Engineering Standard
+# Release Engineering Standard
 
 Organization-wide release policy consumed by `github-flow-operator`, `github-actions-operator`, `github-releases-operator`, and `github-ruleset-operator`. Repository-specific plans under `<repo>/.agents/plans/` extend, but never contradict, this standard.
 

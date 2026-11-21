@@ -1,4 +1,4 @@
-﻿# GitHub Flow Domain Plugin (`@tupynambalucas-dev/plugin-github-flow`)
+# GitHub Flow Domain Plugin (`@tupynambalucas-dev/plugin-github-flow`)
 
 Enterprise Antigravity and Claude Code domain plugin for single-branch Git developer workflows, Conventional Commits v1.0.0, cryptographic SSH commit signing, and Pull Request lifecycle automation.
 

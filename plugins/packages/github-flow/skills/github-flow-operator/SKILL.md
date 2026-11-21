@@ -1,4 +1,4 @@
-﻿---
+---
 name: github-flow-operator
 description: Guides and assists developers with Git workflows, branch conventions, Conventional Commits, Pull Request creation, and GitHub CLI operations.
 ---

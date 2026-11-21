@@ -1,4 +1,4 @@
-﻿# GitHub Repository Ruleset Schemas
+# GitHub Repository Ruleset Schemas
 
 Authoritative ruleset configurations enforced across `tupynambalucas-dev` repositories.
 
