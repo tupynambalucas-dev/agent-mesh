@@ -73,6 +73,10 @@
       "release-type": "node",
       "package-name": "@tupynambalucas-dev/plugin-web"
     },
+    "mcp/core/github": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/mcp-core-github"
+    },
     "mcp/servers/appsheet": {
       "release-type": "node",
       "package-name": "@tupynambalucas-dev/mcp-appsheet"

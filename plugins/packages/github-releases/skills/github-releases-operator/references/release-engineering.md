@@ -28,10 +28,10 @@ Every repository across the organization belongs to one of two archetypes:
 ### Archetype 1: Single-Changelog Repositories (`git-cliff`)
 
 Targeted at governance repositories, meta-repositories, and standalone binary systems:
-- Repositories: `.github`, `.github-private`, `org-core`, `org-ecosystem`, `workstation`.
+- Repositories: `.github`, `.github-private`, `org-core`, `org-ecosystem`, `foundation`.
 - Engine: `git-cliff` with declarative root `cliff.toml`.
-- Workflow: `.github/workflows/release-cliff.yml` executing `orhun/git-cliff-action@v4`.
-- Changelog: Unified root `CHANGELOG.md` with Docusaurus-style PR links.
+- Workflow: CLI preview and bump (`npx -y git-cliff --unreleased`, `npx -y git-cliff --bump -o CHANGELOG.md`) and `.github/workflows/release-cliff.yml` (or `release.yml`).
+- Changelog: Unified root `CHANGELOG.md` strictly conforming to Keep a Changelog and Docusaurus-style PR links.
 
 ```toml
 [remote.github]
@@ -40,29 +40,100 @@ repo = "<repo-name>"
 
 [changelog]
 header = """
-# Changelog
+# Changelog - tupynambalucas-dev/<repo-name>
 
-All notable changes to this project will be documented in this file.
+All notable changes to the `<repo-name>` repository will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+<!-- changelog-start -->
 """
 body = """
 {% if version %}\
     ## [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
 {% else %}\
-    ## [unreleased]
+    ## [Unreleased]
 {% endif %}\
 {% for group, commits in commits | group_by(attribute="group") %}
     ### {{ group }}
     {% for commit in commits %}
-        {% if commit.remote.pr_number %}\
-        - [{{ commit.message | split(pat="\n") | first | trim }} #{{ commit.remote.pr_number }}](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/pull/{{ commit.remote.pr_number }}){% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
-        {% else %}\
-        - [{{ commit.message | split(pat="\n") | first | trim }} ({{ commit.id | truncate(length=7, end="") }})](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/commit/{{ commit.id }}){% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
-        {% endif %}\
+        {%- set raw_first = commit.raw_message | split(pat="\n") | first | trim -%}
+        {%- if commit.remote.pr_number -%}
+            {%- set clean_msg = raw_first | replace(from=" (#" ~ commit.remote.pr_number ~ ")", to="") -%}
+        - [{{ clean_msg }} #{{ commit.remote.pr_number }}](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/pull/{{ commit.remote.pr_number }}){% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
+        {%- else -%}
+        - [{{ raw_first }} ({{ commit.id | truncate(length=7, end="") }})](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/commit/{{ commit.id }}){% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
+        {%- endif %}
     {% endfor %}
-{% endfor %}\n
+{% endfor %}
+"""
+trim = true
+
+[git]
+conventional_commits = true
+filter_unconventional = true
+split_commits = false
+commit_parsers = [
+    { message = "^feat", group = "Features & Capabilities" },
+    { message = "^fix", group = "Bug Fixes & Corrections" },
+    { message = "^perf", group = "Performance Optimizations" },
+    { message = "^refactor", group = "Refactoring & Internal Architecture" },
+    { message = "^docs", group = "Documentation & Specifications" },
+    { message = "^security", group = "Security & Vulnerability Patches" },
+    { message = "^revert", group = "Reverts & Rollbacks" },
+    { message = "^chore\\(release\\)", skip = true },
+    { message = "^chore", skip = true },
+    { message = "^test", skip = true },
+    { message = "^ci", skip = true },
+    { message = "^style", skip = true },
+    { message = "^build", skip = true },
+]
+protect_breaking_commits = false
+filter_commits = false
+tag_pattern = "v[0-9].*"
+topo_order = false
+sort_commits = "oldest"
+```
+
+### Archetype 1B: Monorepo Single-File Grouping via `git-cliff`
+
+For monorepos employing `git-cliff` while preserving Docusaurus package grouping under category headers:
+
+```toml
+body = """
+{% if version %}\
+    ## [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
+{% else %}\
+    ## [Unreleased]
+{% endif %}\
+{% for group, commits in commits | group_by(attribute="group") %}
+    ### {{ group }}
+    {% for scope, scoped_commits in commits | group_by(attribute="scope") %}
+    {%- if scope %}
+    - `{{ scope }}`
+        {%- for commit in scoped_commits %}
+            {%- set raw_first = commit.raw_message | split(pat="\n") | first | trim -%}
+            {%- if commit.remote.pr_number -%}
+                {%- set clean_msg = raw_first | replace(from=" (#" ~ commit.remote.pr_number ~ ")", to="") -%}
+            - [{{ clean_msg }} #{{ commit.remote.pr_number }}](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/pull/{{ commit.remote.pr_number }}){% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
+            {%- else -%}
+            - [{{ raw_first }} ({{ commit.id | truncate(length=7, end="") }})](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/commit/{{ commit.id }}){% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
+            {%- endif %}
+        {%- endfor %}
+    {%- else %}
+        {%- for commit in scoped_commits %}
+            {%- set raw_first = commit.raw_message | split(pat="\n") | first | trim -%}
+            {%- if commit.remote.pr_number -%}
+                {%- set clean_msg = raw_first | replace(from=" (#" ~ commit.remote.pr_number ~ ")", to="") -%}
+            - [{{ clean_msg }} #{{ commit.remote.pr_number }}](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/pull/{{ commit.remote.pr_number }}){% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
+            {%- else -%}
+            - [{{ raw_first }} ({{ commit.id | truncate(length=7, end="") }})](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/commit/{{ commit.id }}){% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
+            {%- endif %}
+        {%- endfor %}
+    {%- endif %}
+    {% endfor %}
+{% endfor %}
 """
 ```
 

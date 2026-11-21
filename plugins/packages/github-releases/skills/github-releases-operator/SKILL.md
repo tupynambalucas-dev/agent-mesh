@@ -27,7 +27,7 @@ Repositories across the organization strictly map to one of two release archetyp
 
 | Archetype | Release Engine | Configuration Files | Target Repositories | Changelog Topology |
 | :--- | :--- | :--- | :--- | :--- |
-| **Single-Changelog Repositories** | `git-cliff` | `cliff.toml`, `.github/workflows/release-cliff.yml` | `.github`, `.github-private`, `org-core`, `org-ecosystem`, `workstation` | Single root `CHANGELOG.md` |
+| **Single-Changelog Repositories** | `git-cliff` | `cliff.toml`, `.github/workflows/release-cliff.yml` | `.github`, `.github-private`, `org-core`, `org-ecosystem`, `foundation` | Single root `CHANGELOG.md` |
 | **Multi-Workspace Monorepos** | Release Please (Manifest Mode) | `release-please-config.json`, `.release-please-manifest.json`, `.github/workflows/release-please.yml` | `platform`, `agent-mesh`, `omnichannel`, `elo-organico`, `tessel`, `docs` | Atomic per-package + Root `CHANGELOG.md` |
 
 ---
@@ -38,11 +38,11 @@ Repositories across the organization strictly map to one of two release archetyp
 
 1. **Preview Changes**:
    ```bash
-   git cliff --unreleased
+   npx -y git-cliff --unreleased
    ```
 2. **Generate / Bump Changelog**:
    ```bash
-   git cliff --bump -o CHANGELOG.md
+   npx -y git-cliff --bump -o CHANGELOG.md
    ```
 3. **Commit & Pull Request**:
    - Create branch `chore/release-vX.Y.Z`.
