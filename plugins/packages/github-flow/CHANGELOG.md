@@ -1,4 +1,4 @@
-﻿# Changelog - @tupynambalucas-dev/plugin-github-flow
+# Changelog - @tupynambalucas-dev/plugin-github-flow
 
 All notable changes to `@tupynambalucas-dev/plugin-github-flow` will be documented in this file.
 

@@ -1,4 +1,4 @@
-﻿---
+---
 name: github-ruleset-operator
 description: Defines, audits, and enforces branch protection rulesets and tag rules across repositories in the organization.
 ---
