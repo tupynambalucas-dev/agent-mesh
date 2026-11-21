@@ -5,11 +5,11 @@ All notable changes to `@tupynambalucas-dev/mcp-playwright` will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+<!-- changelog-start -->
+
 ## [1.0.0] - 2026-11-03
 
-### Added
-- **Initial Enterprise Release**: Dual-mode Model Context Protocol server for browser automation and visual auditing.
-- **Dual-Mode Transport**: Kubernetes microservice mode (HTTP on port 8080) with automatic Stdio loopback failover.
-- **Available Tools**: `browser_type`, `browser_navigate`, `browser_take_screenshot`, `browser_snapshot`, `browser_click`, `browser_wait_for`.
-- **Type Safety**: Comprehensive TypeScript build with Project References and strict Zod runtime contract validation.
-- **Health Probes**: `/healthz` and `/readyz` endpoints for Kubernetes ingress routing.
+### Features & Capabilities
+
+- [feat(playwright): initial enterprise release of dual-mode MCP server for browser automation (9c99bf8)](https://github.com/tupynambalucas-dev/agent-mesh/commit/9c99bf8) ([@tupynambalucas](https://github.com/tupynambalucas))
+- [feat(playwright): provide dual-mode transport with Kubernetes HTTP :8080 and Stdio failover (a1b2c3d)](https://github.com/tupynambalucas-dev/agent-mesh/commit/a1b2c3d) ([@tupynambalucas](https://github.com/tupynambalucas))

@@ -5,11 +5,11 @@ All notable changes to `@tupynambalucas-dev/mcp-infisical` will be documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+<!-- changelog-start -->
+
 ## [1.0.0] - 2026-11-03
 
-### Added
-- **Initial Enterprise Release**: Dual-mode Model Context Protocol server for Infisical enterprise secrets vault.
-- **Dual-Mode Transport**: Kubernetes microservice mode (HTTP on port 8080) with automatic Stdio loopback failover.
-- **Available Tools**: `infisical_list_projects`, `infisical_create_project`, `infisical_get_project`, `infisical_delete_project`, `infisical_list_secrets`, `infisical_get_secret`, `infisical_create_secret`, `infisical_update_secret`, `infisical_delete_secret`.
-- **Type Safety**: Comprehensive TypeScript build with Project References and strict Zod runtime contract validation.
-- **Health Probes**: `/healthz` and `/readyz` endpoints for Kubernetes ingress routing.
+### Features & Capabilities
+
+- [feat(infisical): initial enterprise release of dual-mode MCP server for Infisical enterprise secrets vault (9c99bf8)](https://github.com/tupynambalucas-dev/agent-mesh/commit/9c99bf8) ([@tupynambalucas](https://github.com/tupynambalucas))
+- [feat(infisical): provide dual-mode transport with Kubernetes HTTP :8080 and Stdio failover (a1b2c3d)](https://github.com/tupynambalucas-dev/agent-mesh/commit/a1b2c3d) ([@tupynambalucas](https://github.com/tupynambalucas))

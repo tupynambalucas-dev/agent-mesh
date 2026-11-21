@@ -11,13 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features & Capabilities
 
-- [feat(actions): introduce automated release pipeline workflows for git-cliff and release-please #69](https://github.com/tupynambalucas-dev/agent-mesh/pull/69)
+- [feat(actions): introduce automated release pipeline workflows for git-cliff and release-please #69](https://github.com/tupynambalucas-dev/agent-mesh/pull/69) ([@tupynambalucas](https://github.com/tupynambalucas))
 
 ---
 
 ## [1.0.0] - 2026-11-20
 
-### Added
-- [FEAT] Initial release of the dedicated GitHub Actions domain plugin decoupled from `github-flow`.
-- [FEAT] Autonomous skill `github-actions-operator` for workflow authoring, composite actions, and runner diagnostics.
-- [FEAT] Domain rules enforcing composite action modularity and full SHA action pinning.
+### Features & Capabilities
+
+- [feat(actions): initial release of dedicated GitHub Actions domain plugin decoupled from github-flow (49ae855)](https://github.com/tupynambalucas-dev/agent-mesh/commit/49ae855) ([@tupynambalucas](https://github.com/tupynambalucas))
+- [feat(actions): autonomous skill github-actions-operator for workflow authoring and runner diagnostics (531ad0d)](https://github.com/tupynambalucas-dev/agent-mesh/commit/531ad0d) ([@tupynambalucas](https://github.com/tupynambalucas))
+- [feat(actions): domain rules enforcing composite action modularity and full SHA action pinning (dbcba51)](https://github.com/tupynambalucas-dev/agent-mesh/commit/dbcba51) ([@tupynambalucas](https://github.com/tupynambalucas))

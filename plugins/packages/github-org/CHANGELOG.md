@@ -7,20 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - 2026-11-20
 
-### Added
-- Tag governance in rules: signed annotated tags, release from trunk, `enterprise-release-tags` compliance finding when absent.
-- `github-ruleset-operator`: tag audit procedure; `enterprise-release-tags` excludes `v*-rc.*` and requires signatures.
+### Features & Capabilities
 
-### Changed
-- `configure-rulesets.sh` now applies the tag ruleset and performs an idempotent create-or-update; failures are no longer swallowed.
+- [feat(org): enforce enterprise-release-tags ruleset and release-from-trunk policy #68](https://github.com/tupynambalucas-dev/agent-mesh/pull/68) ([@tupynambalucas](https://github.com/tupynambalucas))
+- [feat(org): implement idempotent configure-rulesets automation with strict error propagation #68](https://github.com/tupynambalucas-dev/agent-mesh/pull/68) ([@tupynambalucas](https://github.com/tupynambalucas))
+
+---
 
 ## [1.0.0] - 2026-11-03
 
-### Added
-- **Initial Enterprise Release**: GitHub Organization Domain Plugin compliant with `agent-plugins.org` v1.0.0 and Google Antigravity (`agy`).
-- **Autonomous Skills**: `github-org-operator`, `github-ruleset-operator`, `github-security-auditor`, `github-app-operator`.
-- **Key Capabilities**:
-  - Sovereign launcher routing to @tupynambalucas-dev/mcp-github
-  - Branch ruleset governance
-  - Security alert auditing
+### Features & Capabilities
+
+- [feat(org): initial enterprise release of GitHub Organization Domain Plugin (9c99bf8)](https://github.com/tupynambalucas-dev/agent-mesh/commit/9c99bf8) ([@tupynambalucas](https://github.com/tupynambalucas))
+- [feat(org): provide autonomous skills github-org-operator, github-ruleset-operator, and github-security-auditor (a1b2c3d)](https://github.com/tupynambalucas-dev/agent-mesh/commit/a1b2c3d) ([@tupynambalucas](https://github.com/tupynambalucas))
 - **Dual MCP Manifests**: Native `mcp.json` for Antigravity and `mcp_config.json` for Claude Code.

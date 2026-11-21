@@ -13,7 +13,7 @@ Organization-wide release policy consumed by `github-flow-operator`, `github-act
 | Release branch | Only just-in-time maintenance branch `release/<major>.<minor>`, cut from a shipped tag, receiving `git cherry-pick -x` fixes only. |
 | Versioning | SemVer 2.0.0 derived from Conventional Commits: `feat` MINOR, `fix` PATCH, `!` or `BREAKING CHANGE` MAJOR. |
 | Release Engines | **Dual Release Standard**: `git-cliff` for single-changelog repos; Google Release Please Manifest Mode for multi-workspace monorepos. |
-| Changelog Format | Docusaurus-style pull request links: `- [type(scope): description #PR](url)` following Keep a Changelog taxonomy. |
+| Changelog Format | Docusaurus-style pull request links with author attribution: `- [type(scope): description #PR](url) ([@author](url))` following Keep a Changelog taxonomy. Multi-workspace monorepo root changelogs group by workspace above indented PR links. |
 | Dry run | Prerelease tag `vX.Y.Z-rc.N`. Prereleases are excluded from `releases/latest`. |
 | Rollback | Roll forward with the next PATCH. If harm is immediate, mark the release as prerelease. Never delete or move a production tag. |
 
@@ -34,6 +34,10 @@ Targeted at governance repositories, meta-repositories, and standalone binary sy
 - Changelog: Unified root `CHANGELOG.md` with Docusaurus-style PR links.
 
 ```toml
+[remote.github]
+owner = "tupynambalucas-dev"
+repo = "<repo-name>"
+
 [changelog]
 header = """
 # Changelog
@@ -52,7 +56,11 @@ body = """
 {% for group, commits in commits | group_by(attribute="group") %}
     ### {{ group }}
     {% for commit in commits %}
-        - [{{ commit.message | split(pat="\n") | first | trim }}]({{ commit.remote_url | default(value="#") }})\
+        {% if commit.remote.pr_number %}\
+        - [{{ commit.message | split(pat="\n") | first | trim }} #{{ commit.remote.pr_number }}](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/pull/{{ commit.remote.pr_number }}){% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
+        {% else %}\
+        - [{{ commit.message | split(pat="\n") | first | trim }} ({{ commit.id | truncate(length=7, end="") }})](https://github.com/tupynambalucas-dev/{{ remote.github.repo }}/commit/{{ commit.id }}){% if commit.remote.username %} ([@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }})){% endif %}
+        {% endif %}\
     {% endfor %}
 {% endfor %}\n
 """
