@@ -5,11 +5,11 @@ All notable changes to `@tupynambalucas-dev/mcp-firecrawl` will be documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+<!-- changelog-start -->
+
 ## [1.0.0] - 2026-11-03
 
-### Added
-- **Initial Enterprise Release**: Dual-mode Model Context Protocol server for Firecrawl web extraction and deep search.
-- **Dual-Mode Transport**: Kubernetes microservice mode (HTTP on port 8080) with automatic Stdio loopback failover.
-- **Available Tools**: `scrape`, `crawl`, `search`, `map`, `extract`, `batch_scrape`.
-- **Type Safety**: Comprehensive TypeScript build with Project References and strict Zod runtime contract validation.
-- **Health Probes**: `/healthz` and `/readyz` endpoints for Kubernetes ingress routing.
+### Features & Capabilities
+
+- [feat(firecrawl): initial enterprise release of dual-mode MCP server for web scraping and search (9c99bf8)](https://github.com/tupynambalucas-dev/agent-mesh/commit/9c99bf8) ([@tupynambalucas](https://github.com/tupynambalucas))
+- [feat(firecrawl): provide dual-mode transport with Kubernetes HTTP :8080 and Stdio failover (a1b2c3d)](https://github.com/tupynambalucas-dev/agent-mesh/commit/a1b2c3d) ([@tupynambalucas](https://github.com/tupynambalucas))

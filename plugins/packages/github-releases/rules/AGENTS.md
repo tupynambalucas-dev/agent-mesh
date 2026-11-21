@@ -18,10 +18,22 @@ trigger: always_on
      - **Multi-Workspace Monorepos** (monorepos with independent packages, services, or plugins like `platform`, `agent-mesh`, `omnichannel`, `elo-organico`, `tessel`, `docs`): Standardized on Google Release Please in Manifest Mode (`release-please-config.json` and `.release-please-manifest.json`) paired with `.github/workflows/release-please.yml`.
    - Hybrid or ad-hoc release scripts in repositories are strictly prohibited.
 
-3. Keep a Changelog & Docusaurus Link Invariant:
-   - All `CHANGELOG.md` files MUST follow the Keep a Changelog specification and Docusaurus pull request linking format:
-     `- [<type>(<scope>): <description> #<pr>](https://github.com/<owner>/<repo>/pull/<pr>)`
-   - Symmetrical category headers MUST be used:
+3. Keep a Changelog, Author Attribution & Docusaurus Hierarchy Invariant:
+   - All `CHANGELOG.md` files MUST adhere to Keep a Changelog v1.1.0 and Semantic Versioning 2.0.0.
+   - **Single-Changelog Repositories & Atomic Workspace Changelogs**:
+     Entries MUST reference the pull request and the commit/PR author handle:
+     `- [<type>(<scope>): <description> #<pr>](https://github.com/<owner>/<repo>/pull/<pr>) ([@<author>](https://github.com/<author>))`
+     For commits merged directly or without an associated PR, reference the 7-character commit SHA:
+     `- [<type>(<scope>): <description> (<sha>)](https://github.com/<owner>/<repo>/commit/<sha>) ([@<author>](https://github.com/<author>))`
+   - **Multi-Workspace Monorepo Root Changelogs**:
+     Root changelogs in multi-workspace monorepos (`agent-mesh`, `platform`, `docs`, `omnichannel`, `elo-organico`, `tessel`) MUST group entries under the category header by workspace or package name above the indented pull request reference and author attribution, conforming to the Docusaurus enterprise hierarchy:
+     ```markdown
+     ### Features & Capabilities
+
+     - `<workspace-or-package-name>`
+       - [<type>(<scope>): <description> #<pr>](https://github.com/<owner>/<repo>/pull/<pr>) ([@<author>](https://github.com/<author>))
+     ```
+   - **Symmetrical Category Headers**:
      - `### Features & Capabilities` (`feat`)
      - `### Bug Fixes & Corrections` (`fix`)
      - `### Performance Optimizations` (`perf`)

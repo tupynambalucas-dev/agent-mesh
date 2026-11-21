@@ -1,14 +1,18 @@
-# Changelog
+# Changelog - @tupynambalucas-dev/plugin-profile
 
 All notable changes to `@tupynambalucas-dev/plugin-profile` will be documented in this file.
 
-## 1.0.0
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### Minor Changes
+<!-- changelog-start -->
 
-- Initial release of the developer profile and professional career domain plugin.
-- Implemented `developer-profile-architect` for elite GitHub profile README authoring and systems narrative modeling.
-- Implemented `developer-advancement-strategist` for dual-presence synchronization and contractor career elevation.
-- Integrated `linkedin-profile-architect`, `linkedin-job-operator`, `linkedin-application-auditor`, and `linkedin-outreach-operator` skills.
-- Integrated sovereign launcher binding `@tupynambalucas-dev/mcp-linkedin` and upstream `uvx mcp-server-linkedin`.
-- Added PreToolUse safety gating hook `confirm-application-submission.cjs`.
+## [1.0.0] - 2026-11-20
+
+### Features & Capabilities
+
+- [feat(profile): introduce developer professional positioning and LinkedIn Playwright automation #68](https://github.com/tupynambalucas-dev/agent-mesh/pull/68) ([@tupynambalucas](https://github.com/tupynambalucas))
+- [feat(skills): implement developer-profile-architect and developer-advancement-strategist #68](https://github.com/tupynambalucas-dev/agent-mesh/pull/68) ([@tupynambalucas](https://github.com/tupynambalucas))
+- [feat(skills): integrate linkedin-job-operator, linkedin-application-auditor, and linkedin-outreach-operator #68](https://github.com/tupynambalucas-dev/agent-mesh/pull/68) ([@tupynambalucas](https://github.com/tupynambalucas))
+- [feat(mcp): integrate sovereign launcher binding @tupynambalucas-dev/mcp-linkedin #68](https://github.com/tupynambalucas-dev/agent-mesh/pull/68) ([@tupynambalucas](https://github.com/tupynambalucas))
+- [feat(hooks): enforce PreToolUse Zero-Accidental-Submission confirmation gate #68](https://github.com/tupynambalucas-dev/agent-mesh/pull/68) ([@tupynambalucas](https://github.com/tupynambalucas))

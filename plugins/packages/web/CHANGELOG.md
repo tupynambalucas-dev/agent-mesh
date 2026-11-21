@@ -5,13 +5,12 @@ All notable changes to `@tupynambalucas-dev/plugin-web` will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+<!-- changelog-start -->
+
 ## [1.0.0] - 2026-11-03
 
-### Added
-- **Initial Enterprise Release**: Web Domain Plugin compliant with `agent-plugins.org` v1.0.0 and Google Antigravity (`agy`).
-- **Autonomous Skills**: `browser-operator`, `browser-auditor`, `web-extractor`.
-- **Key Capabilities**:
-  - Sovereign launcher routing to @tupynambalucas-dev/mcp-playwright and @tupynambalucas-dev/mcp-firecrawl
-  - Accessibility snapshot tree navigation
-  - Developer pairing mode
-- **Dual MCP Manifests**: Native `mcp.json` for Antigravity and `mcp_config.json` for Claude Code.
+### Features & Capabilities
+
+- [feat(web): initial enterprise release of Web browser automation domain plugin (9c99bf8)](https://github.com/tupynambalucas-dev/agent-mesh/commit/9c99bf8) ([@tupynambalucas](https://github.com/tupynambalucas))
+- [feat(web): provide autonomous skills browser-operator, browser-auditor, and web-extractor (a1b2c3d)](https://github.com/tupynambalucas-dev/agent-mesh/commit/a1b2c3d) ([@tupynambalucas](https://github.com/tupynambalucas))
+- [feat(web): sovereign launcher routing to @tupynambalucas-dev/mcp-playwright and Playwright CDP extension (e4f5a6b)](https://github.com/tupynambalucas-dev/agent-mesh/commit/e4f5a6b) ([@tupynambalucas](https://github.com/tupynambalucas))

@@ -82,15 +82,31 @@ pnpm -r publish --access public --no-git-checks --report-summary
 
 ## 4. Changelog Formatting Standard
 
-All changelog entries MUST adhere to the Docusaurus PR link syntax:
+All changelog entries MUST adhere to the Keep a Changelog v1.1.0 and Docusaurus PR link syntax with author attribution:
+
+### Single-Changelog Repositories & Atomic Workspace Changelogs:
 ```markdown
 ### Features & Capabilities
 
-- [feat(distro): introduce socket-activated Docker engine #6](https://github.com/tupynambalucas-dev/workstation/pull/6)
+- [feat(distro): introduce socket-activated Docker engine #6](https://github.com/tupynambalucas-dev/workstation/pull/6) ([@tupynambalucas](https://github.com/tupynambalucas))
 
 ### Bug Fixes & Corrections
 
-- [fix(core): bump detect-port to v2.1 #12](https://github.com/tupynambalucas-dev/platform/pull/12)
+- [fix(core): bump detect-port to v2.1 #12](https://github.com/tupynambalucas-dev/platform/pull/12) ([@tupynambalucas](https://github.com/tupynambalucas))
+```
+
+### Multi-Workspace Monorepo Root Changelogs:
+Root changelogs in multi-workspace monorepos group entries by workspace or package name above the indented pull request reference and author attribution:
+```markdown
+### Features & Capabilities
+
+- `@tupynambalucas-dev/plugin-github-flow`
+  - [feat(github-flow): codify release engineering standard #69](https://github.com/tupynambalucas-dev/agent-mesh/pull/69) ([@tupynambalucas](https://github.com/tupynambalucas))
+
+### Bug Fixes & Corrections
+
+- `@tupynambalucas-dev/corporate-api`
+  - [fix(auth): enforce strict session token rotation #34](https://github.com/tupynambalucas-dev/platform/pull/34) ([@tupynambalucas](https://github.com/tupynambalucas))
 ```
 
 Internal development commits (`chore`, `test`, `ci`, `style`) must be hidden from user release notes. Emojis are strictly forbidden.
