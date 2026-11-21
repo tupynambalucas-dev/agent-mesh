@@ -1,5 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "group-pull-request-title-pattern": "chore(release): release main",
+  "pull-request-title-pattern": "chore(release): release ${component} ${version}",
   "changelog-sections": [
     { "type": "feat", "section": "Features & Capabilities", "hidden": false },
     { "type": "fix", "section": "Bug Fixes & Corrections", "hidden": false },
@@ -8,9 +10,13 @@
     { "type": "docs", "section": "Documentation & Specifications", "hidden": false },
     { "type": "security", "section": "Security & Vulnerability Patches", "hidden": false },
     { "type": "revert", "section": "Reverts & Rollbacks", "hidden": false },
-    { "type": "chore", "section": "Maintenance & Operational Chores", "hidden": true },
-    { "type": "test", "section": "Testing & Test Harness", "hidden": true },
-    { "type": "ci", "section": "Continuous Integration", "hidden": true },
+    { "type": "chore", "scope": "deps", "section": "Dependencies", "hidden": false },
+    { "type": "chore", "scope": "deps-dev", "section": "Dependencies", "hidden": false },
+    { "type": "chore", "scope": "release", "section": "Releases", "hidden": true },
+    { "type": "chore", "section": "Maintenance", "hidden": false },
+    { "type": "build", "section": "Maintenance", "hidden": false },
+    { "type": "ci", "section": "Maintenance", "hidden": false },
+    { "type": "test", "section": "Maintenance", "hidden": false },
     { "type": "style", "section": "Styling & Linting", "hidden": true }
   ],
   "include-commit-authors": true,

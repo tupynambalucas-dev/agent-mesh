@@ -18,20 +18,22 @@ trigger: always_on
      - **Multi-Workspace Monorepos** (monorepos with independent packages, services, or plugins like `platform`, `agent-mesh`, `omnichannel`, `elo-organico`, `tessel`, `docs`): Standardized on Google Release Please in Manifest Mode (`release-please-config.json` and `.release-please-manifest.json`) paired with `.github/workflows/release-please.yml`.
    - Hybrid or ad-hoc release scripts in repositories are strictly prohibited.
 
-3. Keep a Changelog, Author Attribution & Docusaurus Hierarchy Invariant:
-   - All `CHANGELOG.md` files MUST adhere to Keep a Changelog v1.1.0 and Semantic Versioning 2.0.0.
+3. Scoped Header, Author Attribution, Committers & Docusaurus Hierarchy Invariant:
+   - **Scoped Title-Only Header Invariant**: Every `CHANGELOG.md` MUST begin strictly with `# Changelog - <scope>` (matching `package.json` `"name"` such as `# Changelog - @tupynambalucas-dev/agent-mesh` or `# Changelog - @tupynambalucas-dev/plugin-github-org`, or `<org>/<repo>` such as `# Changelog - tupynambalucas-dev/org-core` for non-npm repositories). Boilerplate introductory paragraphs (`All notable changes to ... will be documented in this file. The format is based on Keep a Changelog...`) are strictly prohibited.
    - **Single-Changelog Repositories & Atomic Workspace Changelogs**:
-     Entries MUST reference the pull request and the commit/PR author handle:
-     `- [<type>(<scope>): <description> #<pr>](https://github.com/<owner>/<repo>/pull/<pr>) ([@<author>](https://github.com/<author>))`
+     Entries MUST isolate the hyperlink strictly on the pull request number (or 7-character commit SHA when merged without a PR), keeping the commit message in plain text followed by the author handle:
+     `- [#<pr>](https://github.com/<owner>/<repo>/pull/<pr>) <type>(<scope>): <description> ([@<author>](https://github.com/<author>))`
      For commits merged directly or without an associated PR, reference the 7-character commit SHA:
-     `- [<type>(<scope>): <description> (<sha>)](https://github.com/<owner>/<repo>/commit/<sha>) ([@<author>](https://github.com/<author>))`
+     `- [<sha>](https://github.com/<owner>/<repo>/commit/<sha>) <type>(<scope>): <description> ([@<author>](https://github.com/<author>))`
    - **Multi-Workspace Monorepo Root Changelogs**:
-     Root changelogs in multi-workspace monorepos (`agent-mesh`, `platform`, `docs`, `omnichannel`, `elo-organico`, `tessel`) MUST group entries under the category header by workspace or package name above the indented pull request reference and author attribution, conforming to the Docusaurus enterprise hierarchy:
+     Root changelogs in multi-workspace monorepos (`agent-mesh`, `platform`, `docs`, `omnichannel`, `elo-organico`, `tessel`) MUST group entries under the category header by workspace or package name (or `- Other` for root/repository-wide changes outside individual packages) above the indented pull request reference and author attribution, conforming to the Docusaurus `lerna-changelog` enterprise hierarchy:
      ```markdown
      ### Features & Capabilities
 
      - `<workspace-or-package-name>`
-       - [<type>(<scope>): <description> #<pr>](https://github.com/<owner>/<repo>/pull/<pr>) ([@<author>](https://github.com/<author>))
+       - [#<pr>](https://github.com/<owner>/<repo>/pull/<pr>) <type>(<scope>): <description> ([@<author>](https://github.com/<author>))
+     - Other
+       - [#<pr>](https://github.com/<owner>/<repo>/pull/<pr>) <type>(<scope>): <description> ([@<author>](https://github.com/<author>))
      ```
    - **Symmetrical Category Headers**:
      - `### Features & Capabilities` (`feat`)
@@ -40,8 +42,12 @@ trigger: always_on
      - `### Refactoring & Internal Architecture` (`refactor`)
      - `### Documentation & Specifications` (`docs`)
      - `### Security & Vulnerability Patches` (`security`)
+     - `### Dependencies` (`chore(deps)`, `chore(deps-dev)`)
+     - `### Maintenance` (`chore(ci)`, `chore(monorepo)`, `build`, `test`)
      - `### Reverts & Rollbacks` (`revert`)
-   - Internal development commits (`chore`, `test`, `ci`, `style`) must be hidden from user release notes.
+   - **Release Committers Footer (`### Committers: <N>`)**:
+     Every released version block MUST conclude with a `### Committers: <N>` section listing all unique human contributors in alphabetical order: `- <Full Name> ([@<username>](https://github.com/<username>))`.
+   - Automated release metadata commits (`chore(release)`, `chore: release ...`) and formatting commits (`style`) must be hidden from user release notes.
 
 4. Zero-Emoji Invariant & Standard ASCII Tags:
    - Emojis are strictly forbidden across release titles, release descriptions, and changelogs.
