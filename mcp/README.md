@@ -21,8 +21,8 @@ The `mcp/` subsystem enforces **Subsystem-Internal Partitioning** and **Self-Con
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | [servers/appsheet/](./servers/appsheet/README.md) | `@tupynambalucas-dev/mcp-appsheet` | `scripts/launcher.cjs`<br>`dist/bin.cjs` / `dist/index.cjs` | `:8080` | Production Active | Relational schema modeling and REST API v2 CRUD automation. |
 | [servers/firecrawl/](./servers/firecrawl/README.md) | `@tupynambalucas-dev/mcp-firecrawl` | `scripts/launcher.cjs`<br>`dist/bin.cjs` / `dist/index.cjs` | `:8080` | Production Active | Deep web scraping, crawling, site mapping, and markdown extraction. |
-| [servers/github-flow/](./servers/github-flow/README.md) | `@tupynambalucas-dev/mcp-github-flow` | `scripts/launcher.cjs`<br>`dist/bin.cjs` / `dist/index.cjs` | `:8080` | Production Active | Tier 3 developer Git workflows, branches, pull requests, and Actions diagnostics. |
-| [servers/github-org/](./servers/github-org/README.md) | `@tupynambalucas-dev/mcp-github-org` | `scripts/launcher.cjs`<br>`dist/bin.cjs` / `dist/index.cjs` | `:8080` | Production Active | Tier 1 GitHub App authenticated organization RBAC, teams, rulesets, and security auditing. |
+| [servers/github-delivery/](./servers/github-delivery/README.md) | `@tupynambalucas-dev/mcp-github-delivery` | `scripts/launcher.cjs`<br>`dist/bin.cjs` / `dist/index.cjs` | `:8080` | Production Active | Tier 2/3 developer Git workflows, branches, pull requests, quality gates, and Actions/releases diagnostics. |
+| [servers/github-governance/](./servers/github-governance/README.md) | `@tupynambalucas-dev/mcp-github-governance` | `scripts/launcher.cjs`<br>`dist/bin.cjs` / `dist/index.cjs` | `:8080` | Production Active | Tier 1 GitHub App authenticated organization RBAC, teams, rulesets, GitHub Apps, and security auditing. |
 | [servers/gwork/](./servers/gwork/README.md) | `@tupynambalucas-dev/mcp-gwork` | `scripts/launcher.cjs`<br>`dist/bin.cjs` / `dist/index.cjs` | `:8080` | Production Active | Drive folder taxonomy, Sheets synthesis, and Docs publishing. |
 | [servers/infisical/](./servers/infisical/README.md) | `@tupynambalucas-dev/mcp-infisical` | `scripts/launcher.cjs`<br>`dist/bin.cjs` / `dist/index.cjs` | `:8080` | Production Active | Universal Auth machine tokens, secret CRUD, and vault management. |
 | [servers/memory/](./servers/memory/README.md) | `@tupynambalucas-dev/mcp-memory` | `scripts/launcher.cjs`<br>`dist/bin.cjs` / `dist/index.cjs` | `:8080` | Production Active | Semantic RAG vector store, episodic memory, and chat history. |
@@ -35,7 +35,7 @@ The `mcp/` subsystem enforces **Subsystem-Internal Partitioning** and **Self-Con
 
 | Core Directory | NPM Package Name | Entrypoint | Consumed & Bundled By | Primary Capabilities |
 | :--- | :--- | :--- | :--- | :--- |
-| [core/github/](./core/github/README.md) | `@tupynambalucas-dev/mcp-core-github` | `dist/index.js` | `mcp-github-org`, `mcp-github-flow` | Three-Tier GitHub App authentication, Octokit client factory, and shared Zod schemas. |
+| [core/github/](./core/github/README.md) | `@tupynambalucas-dev/mcp-core-github` | `dist/index.js` | `mcp-github-governance`, `mcp-github-delivery` | Three-Tier GitHub App authentication, Octokit client factory, and shared Zod schemas. |
 
 ---
 
@@ -60,8 +60,8 @@ pnpm mcp:clean
 pnpm mcp:core-github:build
 pnpm mcp:appsheet:build
 pnpm mcp:firecrawl:build
-pnpm mcp:github-flow:build
-pnpm mcp:github-org:build
+pnpm mcp:github-delivery:build
+pnpm mcp:github-governance:build
 pnpm mcp:gwork:build
 pnpm mcp:infisical:build
 pnpm mcp:linkedin:build

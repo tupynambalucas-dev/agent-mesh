@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Sovereign MCP Launcher - @tupynambalucas-dev/mcp-github-flow
+ * Sovereign MCP Launcher - @tupynambalucas-dev/mcp-github-governance
  * Enterprise Standard for @tupynambalucas-dev
  */
 
@@ -9,7 +9,7 @@ const { spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-const SERVER_NAME = 'github-flow';
+const SERVER_NAME = 'github-governance';
 
 function loadEnvCascade() {
   const candidates = [

@@ -91,13 +91,13 @@
       "release-type": "node",
       "package-name": "@tupynambalucas-dev/mcp-firecrawl"
     },
-    "mcp/servers/github-flow": {
+    "mcp/servers/github-delivery": {
       "release-type": "node",
-      "package-name": "@tupynambalucas-dev/mcp-github-flow"
+      "package-name": "@tupynambalucas-dev/mcp-github-delivery"
     },
-    "mcp/servers/github-org": {
+    "mcp/servers/github-governance": {
       "release-type": "node",
-      "package-name": "@tupynambalucas-dev/mcp-github-org"
+      "package-name": "@tupynambalucas-dev/mcp-github-governance"
     },
     "mcp/servers/gwork": {
       "release-type": "node",

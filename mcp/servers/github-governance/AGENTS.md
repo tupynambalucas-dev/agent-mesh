@@ -2,17 +2,17 @@
   <parent src="../../AGENTS.md" type="bounded-context-rules" />
   <parent src="../../../AGENTS.md" type="global-rules" />
   <system-instruction>
-    AGENT: You are operating in the @tupynambalucas-dev/mcp-github-org package context. If you have not read the parent mcp/AGENTS.md and root AGENTS.md in this session, read them first.
+    AGENT: You are operating in the @tupynambalucas-dev/mcp-github-governance package context. If you have not read the parent mcp/AGENTS.md and root AGENTS.md in this session, read them first.
   </system-instruction>
 </context-hierarchy>
 
-# GitHub Organization MCP Server Agent Context (`@tupynambalucas-dev/mcp-github-org`)
+# GitHub Governance MCP Server Agent Context (`@tupynambalucas-dev/mcp-github-governance`)
 
-This bounded context encapsulates the domain-scoped Model Context Protocol server providing Tier 1 (`tupynambalucas-org-manager`) GitHub App authenticated organization RBAC, team discovery, ruleset auditing, and security alert interrogation.
+This bounded context encapsulates the domain-scoped Model Context Protocol server providing Tier 1 (`tupynambalucas-org-manager`) GitHub App authenticated organization RBAC, team discovery, ruleset auditing, GitHub Apps auditing, and security alert interrogation.
 
 ## Directory Layout
 
-- [scripts/launcher.cjs](./scripts/launcher.cjs): Sovereign MCP launcher (`bin: mcp-github-org`) loading `.env` in cascade and executing `dist/bin.cjs` or routing to the Cortex Gateway.
+- [scripts/launcher.cjs](./scripts/launcher.cjs): Sovereign MCP launcher (`bin: mcp-github-governance`) loading `.env` in cascade and executing `dist/bin.cjs` or routing to the Cortex Gateway.
 - [mcp.json](./mcp.json): Agent Plugins 1.0.0 stdio server configuration targeting `./scripts/launcher.cjs`.
 - [tsup.config.ts](./tsup.config.ts): Declarative `tsup` configuration bundling all dependencies (`noExternal`) into `dist/bin.cjs` and `dist/index.cjs`.
 - [src/bin.ts](./src/bin.ts): Stdio transport entrypoint executing the MCP server over standard input/output.
@@ -22,6 +22,7 @@ This bounded context encapsulates the domain-scoped Model Context Protocol serve
 - [src/tools/teams.tool.ts](./src/tools/teams.tool.ts): `list_org_teams` - Organization team RBAC discovery tool.
 - [src/tools/rulesets.tool.ts](./src/tools/rulesets.tool.ts): `list_rulesets`, `get_ruleset` - Branch and tag protection ruleset interrogation.
 - [src/tools/security.tool.ts](./src/tools/security.tool.ts): `list_dependabot_alerts`, `list_secret_scanning_alerts` - Security audit tools.
+- [src/tools/apps.tool.ts](./src/tools/apps.tool.ts): `audit_github_apps` - GitHub Apps metadata and installation auditing.
 - [README.md](./README.md): Developer architecture, credentials, and tool reference.
 
 ## Architecture & Conventions
@@ -39,4 +40,4 @@ This bounded context encapsulates the domain-scoped Model Context Protocol serve
 
 - **`github-security-auditor`**: Active when querying Dependabot and Secret Scanning alerts.
 - **`github-ruleset-operator`**: Active when auditing branch protection rulesets.
-- **`github-org-operator`**: Active when managing organization teams and repositories.
+- **`github-org-operator`**: Active when managing organization teams, repositories, and GitHub Apps.

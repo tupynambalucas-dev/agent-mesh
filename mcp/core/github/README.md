@@ -7,8 +7,8 @@ Shared TypeScript core library providing Three-Tier GitHub App authentication, O
 ## 1. Overview
 
 `@tupynambalucas-dev/mcp-core-github` centralizes authentication and schema primitives across domain-scoped GitHub MCP servers:
-- [`@tupynambalucas-dev/mcp-github-org`](../../servers/github-org/README.md): Consumes `getOctokitClient('org-manager')` for Tier 1 administrative governance, rulesets, and security auditing.
-- [`@tupynambalucas-dev/mcp-github-flow`](../../servers/github-flow/README.md): Consumes `getOctokitClient('developer-tools')` for Tier 3 developer workflows, branches, pull requests, and GitHub Actions diagnostics.
+- [`@tupynambalucas-dev/mcp-github-governance`](../../servers/github-governance/README.md): Consumes `getOctokitClient('org-manager')` for Tier 1 administrative governance, rulesets, and security auditing.
+- [`@tupynambalucas-dev/mcp-github-delivery`](../../servers/github-delivery/README.md): Consumes `getOctokitClient('developer-tools' | 'guardian' | 'automation')` for Tier 2/3 developer workflows, branches, pull requests, quality gates, and GitHub Actions diagnostics.
 
 ---
 

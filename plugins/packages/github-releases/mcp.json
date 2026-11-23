@@ -3,7 +3,7 @@
     "github-releases": {
       "type": "stdio",
       "command": "node",
-      "args": ["./scripts/launcher.cjs", "github-flow"]
+      "args": ["./scripts/launcher.cjs", "github-delivery"]
     }
   }
 }
