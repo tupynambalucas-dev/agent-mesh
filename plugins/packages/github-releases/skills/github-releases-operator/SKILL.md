@@ -27,7 +27,7 @@ Repositories across the organization strictly map to one of two release archetyp
 
 | Archetype | Release Engine | Configuration Files | Target Repositories | Changelog Topology |
 | :--- | :--- | :--- | :--- | :--- |
-| **Single-Changelog Repositories** | `git-cliff` | `cliff.toml`, `.github/workflows/release-cliff.yml` | `.github`, `.github-private`, `org-core`, `org-ecosystem`, `foundation` | Single root `CHANGELOG.md` |
+| **Single-Changelog Repositories** | `git-cliff` | `cliff.toml`, `.github/workflows/release-cliff.yml` | `.github`, `.github-private`, `org`, `ecosystem`, `foundation` | Single root `CHANGELOG.md` |
 | **Multi-Workspace Monorepos** | Release Please (Manifest Mode) | `release-please-config.json`, `.release-please-manifest.json`, `.github/workflows/release-please.yml` | `platform`, `agent-mesh`, `omnichannel`, `elo-organico`, `tessel`, `docs` | Atomic per-package + Root `CHANGELOG.md` |
 
 ---

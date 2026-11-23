@@ -1,11 +1,11 @@
 ---
 name: readme-auditor
-description: Audits and validates README.md files across meta-repositories (org-core, org-ecosystem), monorepos, subsystems, and packages against the Enterprise README Standard, verifying numbered section sequences, relative link integrity, manifest script truthfulness, AGENTS-README co-existence, and zero-emoji compliance.
+description: Audits and validates README.md files across meta-repositories (org, ecosystem), monorepos, subsystems, and packages against the Enterprise README Standard, verifying numbered section sequences, relative link integrity, manifest script truthfulness, AGENTS-README co-existence, and zero-emoji compliance.
 ---
 
 # Enterprise README Auditor
 
-This skill provides a deterministic 7-gate audit framework to inspect, validate, and remediate `README.md` files across `org-core`, `org-ecosystem`, and all child monorepos and packages.
+This skill provides a deterministic 7-gate audit framework to inspect, validate, and remediate `README.md` files across `org`, `ecosystem`, and all child monorepos and packages.
 
 ---
 

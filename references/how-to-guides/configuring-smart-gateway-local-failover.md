@@ -35,7 +35,7 @@ When an AI agent invokes an MCP tool, the launcher inspects the active runtime p
 Both plugin launchers and MCP server launchers automatically scan for `.env` files across the workspace hierarchy via `loadEnvCascade()`:
 1. `process.cwd()/.env` (consumer repository root, e.g., `omnichannel/.env`)
 2. `process.cwd()/../.env`
-3. Package-local and parent monorepo `.env` files (`agent-mesh/.env`, `org-core/.env`)
+3. Package-local and parent monorepo `.env` files (`agent-mesh/.env`, `org/.env`)
 
 Variables already defined in `process.env` are never overwritten.
 

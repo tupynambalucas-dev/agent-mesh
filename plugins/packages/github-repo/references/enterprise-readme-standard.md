@@ -1,6 +1,6 @@
 # Enterprise README.md Architecture & Template Standard
 
-This document establishes the authoritative enterprise specification for authoring, structuring, and auditing `README.md` files across all meta-repositories (`org-core`, `org-ecosystem`), monorepos, governance repositories, subsystems, and packages in the `tupynambalucas-dev` organization and external consumer workspaces.
+This document establishes the authoritative enterprise specification for authoring, structuring, and auditing `README.md` files across all meta-repositories (`org`, `ecosystem`), monorepos, governance repositories, subsystems, and packages in the `tupynambalucas-dev` organization and external consumer workspaces.
 
 ---
 
@@ -22,7 +22,7 @@ Every `README.md` file across all repository layers MUST obey the following non-
 1. **Canonical H1 Title (`#`)**:
    - Format: `# <Human-Readable Title> (\`<canonical-identifier>\`)`
    - For npm/pnpm monorepos and packages, `<canonical-identifier>` MUST match the `"name"` field in `package.json` (e.g., `# Core Platform Monorepo (\`@tupynambalucas-dev/platform\`)`).
-   - For Mani meta-repositories, Go monorepos, or GitHub administrative repositories without a root `package.json`, `<canonical-identifier>` MUST match `<org>/<repo>` (e.g., `# Umbrella Meta-Repository (\`tupynambalucas-dev/org-core\`)`).
+   - For Mani meta-repositories, Go monorepos, or GitHub administrative repositories without a root `package.json`, `<canonical-identifier>` MUST match `<org>/<repo>` (e.g., `# Umbrella Meta-Repository (\`tupynambalucas-dev/org\`)`).
 2. **Executive Summary Paragraph**:
    - Immediately following the H1 heading, provide a concise 1–2 sentence executive summary explaining **what** the repository/module is, **what problem** it solves, and **what core technologies** power it.
    - Do NOT prefix the executive summary with a blockquote (`> `). Reserve blockquotes strictly for GitHub Flavored Markdown (GFM) alerts (`> [!NOTE]`, `> [!IMPORTANT]`, `> [!TIP]`, `> [!WARNING]`, `> [!CAUTION]`).
@@ -47,7 +47,7 @@ Every `README.md` file across all repository layers MUST obey the following non-
 
 Every repository or package belongs to one of four structural archetypes. Agents MUST select the matching archetype template below when authoring or refactoring a `README.md`.
 
-### Archetype A: Meta-Repository / Mani Orchestrator Root (`org-core`, `org-ecosystem`)
+### Archetype A: Meta-Repository / Mani Orchestrator Root (`org`, `ecosystem`)
 
 Use this template for umbrella repositories that orchestrate multiple independent Git repositories via `mani.yaml` and `.code-workspace`.
 
@@ -269,7 +269,7 @@ Use this template for specialized GitHub organization governance repositories.
 
 | Repository / Portal | Location | Role |
 | :--- | :--- | :--- |
-| **Umbrella Meta-Repository** | [`tupynambalucas-dev/org-core`](https://github.com/tupynambalucas-dev/org-core) | Multi-repository Mani orchestrator and canonical multi-root workspace. |
+| **Umbrella Meta-Repository** | [`tupynambalucas-dev/org`](https://github.com/tupynambalucas-dev/org) | Multi-repository Mani orchestrator and canonical multi-root workspace. |
 
 ---
 

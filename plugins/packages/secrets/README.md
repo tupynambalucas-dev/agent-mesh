@@ -62,7 +62,7 @@ The underlying MCP servers consumed by this plugin require the following environ
 }
 ```
 
-### Antigravity (`agy`) — Meta-Repository Root (`org-core`)
+### Antigravity (`agy`) — Meta-Repository Root (`org`)
 
 ```json
 {

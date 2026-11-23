@@ -69,7 +69,7 @@ The plugin dynamically configures Playwright based on environment variables load
 }
 ```
 
-### Antigravity (`agy`) — Meta-Repository Root (`org-core`)
+### Antigravity (`agy`) — Meta-Repository Root (`org`)
 
 ```json
 {

@@ -28,7 +28,7 @@ Every repository across the organization belongs to one of two archetypes:
 ### Archetype 1: Single-Changelog Repositories (`git-cliff`)
 
 Targeted at governance repositories, meta-repositories, and standalone binary systems:
-- Repositories: `.github`, `.github-private`, `org-core`, `org-ecosystem`, `workstation`.
+- Repositories: `.github`, `.github-private`, `org`, `ecosystem`, `workstation`.
 - Engine: `git-cliff` with declarative root `cliff.toml`.
 - Workflow: `.github/workflows/release-cliff.yml` executing `orhun/git-cliff-action@v4`.
 - Changelog: Unified root `CHANGELOG.md` with Docusaurus-style PR links.

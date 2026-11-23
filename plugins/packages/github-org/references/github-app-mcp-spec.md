@@ -11,7 +11,7 @@ Fetches repository metadata, visibility, default branch, topics, and permissions
 ```json
 {
   "owner": "tupynambalucas-dev",
-  "repo": "org-core"
+  "repo": "org"
 }
 ```
 
