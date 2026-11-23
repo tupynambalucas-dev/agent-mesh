@@ -96,8 +96,8 @@ agent-mesh/
 
 ### A. Dual Consumption Topologies
 
-1. **Scenario A — Meta-Repository Root Integration (`org-core`)**:
-   Configure `org-core/.agents/plugins.json` using direct relative paths:
+1. **Scenario A — Meta-Repository Root Integration (`org`)**:
+   Configure `org/.agents/plugins.json` using direct relative paths:
    ```json
    {
      "entries": [

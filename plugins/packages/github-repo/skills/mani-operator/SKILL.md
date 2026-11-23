@@ -5,13 +5,13 @@ description: Orchestrates multi-repository workspaces, executes batch tasks acro
 
 # Mani Multi-Repository Operator
 
-This skill provides comprehensive operational runbooks and standards for managing multi-repository workspaces using the [Mani CLI](https://manicli.com) (`mani`) across any multi-repository environment, with production reference configurations from the `tupynambalucas-dev` organization (`org-core`, `org-ecosystem`).
+This skill provides comprehensive operational runbooks and standards for managing multi-repository workspaces using the [Mani CLI](https://manicli.com) (`mani`) across any multi-repository environment, with production reference configurations from the `tupynambalucas-dev` organization (`org`, `ecosystem`).
 
 ---
 
 ## 1. Overview and Core Philosophy
 
-In our architecture, meta-repositories (such as `org-core`, `org-ecosystem`, or any multi-repo workspace) use **Mani** rather than Git submodules (`160000` gitlinks) or monolithic monorepos. This provides:
+In our architecture, meta-repositories (such as `org`, `ecosystem`, or any multi-repo workspace) use **Mani** rather than Git submodules (`160000` gitlinks) or monolithic monorepos. This provides:
 - **Independent Git Histories**: Each repository maintains sovereign branches, commits, tags, and PR lifecycles.
 - **Unified Workspace Experience**: Developers and AI agents can execute cross-cutting batch queries, status checks, and branch operations from a single terminal or IDE workspace.
 - **Selective Tag Targeting**: Workflows can target subsets of repositories (e.g. `commercial`, `internal`, `core`, `governance`) without checking out unneeded code.
@@ -156,7 +156,7 @@ mani describe projects
 
 ## 4. Multi-Root IDE Integration Standard
 
-Meta-repositories must pair `mani.yaml` with a domain-specific multi-root workspace file (`tupynambalucas-dev-<domain>.code-workspace`, e.g., `tupynambalucas-dev-core.code-workspace` for `org-core` and `tupynambalucas-dev-ecosystem.code-workspace` for `org-ecosystem`) and `.vscode/settings.json`:
+Meta-repositories must pair `mani.yaml` with a domain-specific multi-root workspace file (`tupynambalucas-dev-<domain>.code-workspace`, e.g., `tupynambalucas-dev.code-workspace` for `org` and `tupynambalucas-dev-ecosystem.code-workspace` for `ecosystem`) and `.vscode/settings.json`:
 
 1. **Workspace Folders**: Explicitly bind root and each managed repository child path.
 2. **VS Code Tasks**: Declare tasks matching the primary Mani workflows (`Mani: Sync Repositories`, `Mani: Check Git Status`, `Mani: Pull All Main`).

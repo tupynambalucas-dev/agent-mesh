@@ -45,7 +45,7 @@ Enterprise Antigravity and Claude Code domain plugin for technical documentation
 }
 ```
 
-### Antigravity (`agy`) — Meta-Repository Root (`org-core`)
+### Antigravity (`agy`) — Meta-Repository Root (`org`)
 
 ```json
 {

@@ -50,8 +50,8 @@ Activate this skill when:
    gh pr checks
    ```
 
-### Workflow C: Multi-Repository Orchestration with Mani (`org-core`)
-When operating across repositories in the `org-core` workspace:
+### Workflow C: Multi-Repository Orchestration with Mani (`org`)
+When operating across repositories in the `org` workspace:
 1. Verify status across all sovereign repositories:
    ```bash
    mani run status

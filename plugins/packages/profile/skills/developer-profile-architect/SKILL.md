@@ -12,7 +12,7 @@ Specialized agent skill for authoring, auditing, and structuring elite GitHub pr
 ## 1. When to Use
 
 Activate this skill when:
-- Designing, authoring, or refactoring a GitHub special profile repository (`<user>/<user>` or `<user>/profile`, such as `tupynambalucas/tupynambalucas` or `personal/profile`).
+- Designing, authoring, or refactoring a GitHub special profile repository (`<user>/<user>` or `<user>/profile`, such as `tupynambalucas/tupynambalucas` or `user/profile`).
 - Structuring an elite technical positioning narrative for senior, lead, staff, or principal engineers.
 - Configuring dynamic GitHub profile cards, SVG templates, light/dark mode `<picture>` wrappers, or GraphQL metrics compilation pipelines.
 - Articulating architectural competencies across distributed systems, cloud-native GitOps, autonomous AI substrates, contract-driven full-stack engineering, and cryptographic governance.
@@ -80,7 +80,7 @@ Conclude with a clean, borderless HTML table featuring the developer's mark or a
 4. Format the final output to 2-space indentation and max 100-character line width.
 
 ### Workflow C: Document Generation Pipeline Integration
-When operating in repositories featuring dynamic compilation pipelines (like `@profile/renderer` in `personal/profile`):
+When operating in repositories featuring dynamic compilation pipelines (like `@profile/renderer` in `user/profile`):
 1. Maintain source templates under `renderer/src/pipelines/readme/readme.template.md`.
 2. Ensure GraphQL schema inputs, stats calculations, and SVG templates remain synchronized with the rendered output.
 3. Trigger generation scripts (`pnpm generate` or `pnpm renderer:generate`) to update `README.md` deterministically.

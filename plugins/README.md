@@ -38,8 +38,8 @@ Each domain plugin in `plugins/packages/*` is a self-contained unit bundling:
 
 1. **External Repositories & Child Monorepos (`omnichannel`, `platform`, `docs`)**:
    Install `@tupynambalucas-dev/agent-mesh` via `pnpm-workspace.yaml` (`'github:tupynambalucas-dev/agent-mesh'`) and reference `"node_modules/@tupynambalucas-dev/agent-mesh/plugins/packages"` in `.agents/plugins.json` (with optional `"include_only"` filtering).
-2. **Meta-Repository Root (`org-core`)**:
-   Reference `"agent-mesh/plugins/packages"` directly in `org-core/.agents/plugins.json`.
+2. **Meta-Repository Root (`org`)**:
+   Reference `"agent-mesh/plugins/packages"` directly in `org/.agents/plugins.json`.
 
 ---
 

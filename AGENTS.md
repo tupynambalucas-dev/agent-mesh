@@ -42,7 +42,7 @@ The `agent-mesh` repository is structured as a pnpm monorepo managed with Turbor
 
 ## Umbrella Meta-Repository Alignment
 
-When opened as part of the `tupynambalucas-dev/org-core` multi-root workspace orchestrated via Mani, this repository operates as an autonomous sovereign repository while adhering to the cross-repository context defined in `org-core/AGENTS.md`.
+When opened as part of the `tupynambalucas-dev/org` multi-root workspace orchestrated via Mani, this repository operates as an autonomous sovereign repository while adhering to the cross-repository context defined in `org/AGENTS.md`.
 
 ## Architectural Plans & Artifact Dual-Storage Standard
 

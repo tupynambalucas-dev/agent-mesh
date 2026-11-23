@@ -1,11 +1,11 @@
 ---
 name: readme-architect
-description: Authors, scaffolds, and refactors enterprise-grade README.md files across meta-repositories (org-core, org-ecosystem), monorepos, governance repositories, subsystems, and packages, enforcing deterministic archetype templates, recursive directory navigation, GitHub Flavored Markdown standards, and the AGENTS-README co-existence invariant.
+description: Authors, scaffolds, and refactors enterprise-grade README.md files across meta-repositories (org, ecosystem), monorepos, governance repositories, subsystems, and packages, enforcing deterministic archetype templates, recursive directory navigation, GitHub Flavored Markdown standards, and the AGENTS-README co-existence invariant.
 ---
 
 # Enterprise README Architect
 
-This skill defines the authoritative architectural standard and deterministic templates for authoring and refactoring `README.md` files across all meta-repositories (`org-core`, `org-ecosystem`), monorepos, subsystems, and packages.
+This skill defines the authoritative architectural standard and deterministic templates for authoring and refactoring `README.md` files across all meta-repositories (`org`, `ecosystem`), monorepos, subsystems, and packages.
 
 ---
 
@@ -14,7 +14,7 @@ This skill defines the authoritative architectural standard and deterministic te
 Activate this skill when:
 - Creating, scaffolding, or refactoring a root `README.md` file in any meta-repository, monorepo, service, or governance repository.
 - Authoring or updating Layer-2 subsystem or Layer-3 package `README.md` files.
-- Standardizing `README.md` headings, architecture diagrams, subsystem navigation tables, or pipeline script tables across `org-core` and `org-ecosystem`.
+- Standardizing `README.md` headings, architecture diagrams, subsystem navigation tables, or pipeline script tables across `org` and `ecosystem`.
 - Synchronizing `README.md` navigation tables after adding, renaming, or removing workspaces, packages, or `AGENTS.md` routers.
 
 ---
@@ -30,7 +30,7 @@ Activate this skill when:
 
 > [!IMPORTANT]
 > **Invariant 2 — Canonical H1 Title & Executive Summary:**
-> - Every `README.md` MUST begin with `# <Human-Readable Title> (\`<canonical-identifier>\`)`, where `<canonical-identifier>` matches the `"name"` in `package.json` (e.g., `@tupynambalucas-dev/platform`, `@tupynambalucas-dev/agent-mesh`) or `<org>/<repo>` when no root `package.json` exists (e.g., `tupynambalucas-dev/org-core`, `tupynambalucas-dev/workstation`).
+> - Every `README.md` MUST begin with `# <Human-Readable Title> (\`<canonical-identifier>\`)`, where `<canonical-identifier>` matches the `"name"` in `package.json` (e.g., `@tupynambalucas-dev/platform`, `@tupynambalucas-dev/agent-mesh`) or `<org>/<repo>` when no root `package.json` exists (e.g., `tupynambalucas-dev/org`, `tupynambalucas-dev/workstation`).
 > - Immediately following the H1 title, provide a concise 1–2 sentence executive summary explaining **what** the project is, **what problem** it solves, and **what core stack** powers it.
 
 > [!IMPORTANT]
@@ -49,7 +49,7 @@ Activate this skill when:
 
 Select the matching archetype for the target directory before authoring or refactoring a `README.md`:
 
-### Archetype A: Meta-Repository / Mani Orchestrator Root (`org-core`, `org-ecosystem`)
+### Archetype A: Meta-Repository / Mani Orchestrator Root (`org`, `ecosystem`)
 1. `# <Meta-Repository Title> (\`<org>/<repo>\`)` + Executive Summary
 2. `## 1. Architecture Overview` — Ecosystem topology explanation + Mermaid `flowchart TD` diagram.
 3. `## 2. Managed Repositories & Navigation` — Table with columns: `Repository`, `Path / Namespace`, `Branch`, `Documentation`, `Agent Context`, `Purpose` + Multi-Root IDE `.code-workspace` instructions.
