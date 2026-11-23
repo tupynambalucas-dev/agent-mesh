@@ -1,6 +1,6 @@
 # Getting Started with Agent Mesh
 
-This tutorial provides step-by-step instructions for setting up the `tupynambalucas-dev/agent-mesh` capability workspace, building the self-contained dual-transport Model Context Protocol (MCP) servers, validating domain plugins, and integrating capabilities into both `org-core` and external consumer workspaces.
+This tutorial provides step-by-step instructions for setting up the `tupynambalucas-dev/agent-mesh` capability workspace, building the self-contained dual-transport Model Context Protocol (MCP) servers, validating domain plugins, and integrating capabilities into both `org` and external consumer workspaces.
 
 ---
 
@@ -76,9 +76,9 @@ All 10 plugins must report `Validation passed` with zero errors.
 
 ## Step 4: Integrate Plugins into Consumer Workspaces
 
-### 4.1 Inside `org-core` (Local Relative Path)
+### 4.1 Inside `org` (Local Relative Path)
 
-At the root of the `org-core` meta-repository (`org-core/.agents/plugins.json`), reference the local `plugins/packages` directory directly:
+At the root of the `org` meta-repository (`org/.agents/plugins.json`), reference the local `plugins/packages` directory directly:
 
 ```json
 {

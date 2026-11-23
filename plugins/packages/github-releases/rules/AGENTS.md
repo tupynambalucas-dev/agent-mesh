@@ -14,12 +14,12 @@ trigger: always_on
 
 2. Dual Release Engine Invariant:
    - Repositories across the organization MUST strictly follow one of two standardized release archetypes:
-     - **Single-Changelog Repositories** (governance repositories, meta-repositories, and single-artifact binary projects like `.github`, `.github-private`, `org-core`, `org-ecosystem`, `workstation`): Standardized on `git-cliff` with declarative root `cliff.toml` and `.github/workflows/release-cliff.yml`.
+     - **Single-Changelog Repositories** (governance repositories, meta-repositories, and single-artifact binary projects like `.github`, `.github-private`, `org`, `ecosystem`, `workstation`): Standardized on `git-cliff` with declarative root `cliff.toml` and `.github/workflows/release-cliff.yml`.
      - **Multi-Workspace Monorepos** (monorepos with independent packages, services, or plugins like `platform`, `agent-mesh`, `omnichannel`, `elo-organico`, `tessel`, `docs`): Standardized on Google Release Please in Manifest Mode (`release-please-config.json` and `.release-please-manifest.json`) paired with `.github/workflows/release-please.yml`.
    - Hybrid or ad-hoc release scripts in repositories are strictly prohibited.
 
 3. Scoped Header, Author Attribution, Committers & Docusaurus Hierarchy Invariant:
-   - **Scoped Title-Only Header Invariant**: Every `CHANGELOG.md` MUST begin strictly with `# Changelog - <scope>` (matching `package.json` `"name"` such as `# Changelog - @tupynambalucas-dev/agent-mesh` or `# Changelog - @tupynambalucas-dev/plugin-github-org`, or `<org>/<repo>` such as `# Changelog - tupynambalucas-dev/org-core` for non-npm repositories). Boilerplate introductory paragraphs (`All notable changes to ... will be documented in this file. The format is based on Keep a Changelog...`) are strictly prohibited.
+   - **Scoped Title-Only Header Invariant**: Every `CHANGELOG.md` MUST begin strictly with `# Changelog - <scope>` (matching `package.json` `"name"` such as `# Changelog - @tupynambalucas-dev/agent-mesh` or `# Changelog - @tupynambalucas-dev/plugin-github-org`, or `<org>/<repo>` such as `# Changelog - tupynambalucas-dev/org` for non-npm repositories). Boilerplate introductory paragraphs (`All notable changes to ... will be documented in this file. The format is based on Keep a Changelog...`) are strictly prohibited.
    - **Single-Changelog Repositories & Atomic Workspace Changelogs**:
      Entries MUST isolate the hyperlink strictly on the pull request number (or 7-character commit SHA when merged without a PR), keeping the commit message in plain text followed by the author handle:
      `- [#<pr>](https://github.com/<owner>/<repo>/pull/<pr>) <type>(<scope>): <description> ([@<author>](https://github.com/<author>))`

@@ -18,7 +18,7 @@ apply_repo_permissions() {
   )
 
   case "${target_repo}" in
-    "org-core")
+    "org")
       PERMS["lead-architects"]="admin"
       PERMS["security-managers"]="pull"
       PERMS["infra-ops"]="maintain"
@@ -67,7 +67,7 @@ apply_repo_permissions() {
 if [[ -n "${REPO}" ]]; then
   apply_repo_permissions "${REPO}"
 else
-  REPOS=("org-core" "agent-mesh" "platform" "docs" ".github" "tessel")
+  REPOS=("org" "agent-mesh" "platform" "docs" ".github" "tessel")
   for R in "${REPOS[@]}"; do
     apply_repo_permissions "${R}"
   done

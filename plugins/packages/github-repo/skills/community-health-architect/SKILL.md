@@ -62,5 +62,5 @@ GitHub evaluates community health files in the following order:
 3. Centralized organization repository named `.github` (which provides fallback defaults for any repo lacking a local file).
 
 When auditing a repository:
-- Check whether the repository overrides the organization default or inherits it from `org-core/.github`.
+- Check whether the repository overrides the organization default or inherits it from `org/.github`.
 - If an override is required (e.g., custom `SECURITY.md` for platform infrastructure), author it locally using these templates.

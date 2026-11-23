@@ -65,7 +65,7 @@ The plugin consumes the following environment variables:
 }
 ```
 
-### Antigravity (`agy`) — Meta-Repository Root (`org-core`)
+### Antigravity (`agy`) — Meta-Repository Root (`org`)
 
 ```json
 {

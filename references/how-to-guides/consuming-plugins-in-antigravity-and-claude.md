@@ -1,14 +1,14 @@
 # How to Consume Plugins in Antigravity and Claude Code
 
-This guide provides step-by-step instructions for integrating and consuming `agent-mesh` domain plugins and sovereign Model Context Protocol (MCP) servers across all organizational environments: the `org-core` meta-repository, external standalone repositories (`omnichannel`), child monorepos (`platform`, `docs`), machine-wide global configurations, and Anthropic Claude Code sessions.
+This guide provides step-by-step instructions for integrating and consuming `agent-mesh` domain plugins and sovereign Model Context Protocol (MCP) servers across all organizational environments: the `org` meta-repository, external standalone repositories (`omnichannel`), child monorepos (`platform`, `docs`), machine-wide global configurations, and Anthropic Claude Code sessions.
 
 ---
 
-## 1. Scenario A: Meta-Repository Root Integration (`org-core`)
+## 1. Scenario A: Meta-Repository Root Integration (`org`)
 
-When operating at the umbrella `org-core` layer, all core repositories (`agent-mesh`, `platform`, `docs`, `gh-tl`, `.github`) are orchestrated locally on disk via Mani.
+When operating at the umbrella `org` layer, all core repositories (`agent-mesh`, `platform`, `docs`, `gh-tl`, `.github`) are orchestrated locally on disk via Mani.
 
-In `org-core/.agents/plugins.json`, plugins are referenced directly via relative filesystem paths with zero network overhead:
+In `org/.agents/plugins.json`, plugins are referenced directly via relative filesystem paths with zero network overhead:
 
 ```json
 {
@@ -29,7 +29,7 @@ In `org-core/.agents/plugins.json`, plugins are referenced directly via relative
 
 ## 2. Scenario B: External Repositories and Child Monorepos (Hybrid Umbrella Standard)
 
-For standalone repositories outside `org-core` (such as the `omnichannel` messaging gateway) or child monorepos (`platform`, `docs`) that must operate independently in isolated clones, Docker builds, or CI/CD runners, all plugins and MCP servers are consumed through the single public umbrella package `@tupynambalucas-dev/agent-mesh`.
+For standalone repositories outside `org` (such as the `omnichannel` messaging gateway) or child monorepos (`platform`, `docs`) that must operate independently in isolated clones, Docker builds, or CI/CD runners, all plugins and MCP servers are consumed through the single public umbrella package `@tupynambalucas-dev/agent-mesh`.
 
 ### 2.1 Choose Installation Channel
 
