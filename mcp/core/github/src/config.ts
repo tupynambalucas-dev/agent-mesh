@@ -85,6 +85,11 @@ export const githubConfigSchema = z.object({
   GITHUB_TOKEN: z.string().optional().default(''),
   GITHUB_ORG: z.string().default('tupynambalucas-dev'),
   NODE_ENV: z.string().default('development'),
+
+  // Token Broker Integration (Zero-Secret Distribution Architecture)
+  TOKEN_BROKER_URL: z.string().optional().default(''),
+  TOKEN_BROKER_CALLER_ID: z.string().optional().default(''),
+  TOKEN_BROKER_API_KEY: z.string().optional().default(''),
 });
 
 export type GitHubConfig = z.infer<typeof githubConfigSchema>;

@@ -91,15 +91,20 @@ function resolveMcpLauncher(pkgName, monorepoDir) {
 }
 
 const SERVICE_CONFIGS = {
-  'github-flow': {
-    pkg: '@tupynambalucas-dev/mcp-github-flow',
+  'github-delivery': {
+    pkg: '@tupynambalucas-dev/mcp-github-delivery',
     upstream: '@modelcontextprotocol/server-github',
-    monorepoDir: 'github-flow'
+    monorepoDir: 'github-delivery'
+  },
+  'github-flow': {
+    pkg: '@tupynambalucas-dev/mcp-github-delivery',
+    upstream: '@modelcontextprotocol/server-github',
+    monorepoDir: 'github-delivery'
   },
   github: {
-    pkg: '@tupynambalucas-dev/mcp-github-flow',
+    pkg: '@tupynambalucas-dev/mcp-github-delivery',
     upstream: '@modelcontextprotocol/server-github',
-    monorepoDir: 'github-flow'
+    monorepoDir: 'github-delivery'
   }
 };
 

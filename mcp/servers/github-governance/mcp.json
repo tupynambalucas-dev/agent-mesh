@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "github-flow": {
+    "github-governance": {
       "type": "stdio",
       "command": "node",
       "args": ["./scripts/launcher.cjs"]

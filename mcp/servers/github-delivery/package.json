@@ -1,7 +1,7 @@
 {
-  "name": "@tupynambalucas-dev/mcp-github-org",
+  "name": "@tupynambalucas-dev/mcp-github-delivery",
   "version": "1.0.0",
-  "description": "Domain-scoped Model Context Protocol server for GitHub organization governance, teams, rulesets, and security auditing via Tier 1 GitHub App authentication.",
+  "description": "Domain-scoped Model Context Protocol server for developer Git workflows, branches, pull requests, quality gates evaluation, CI/CD diagnostics, and releases via Tier 2/3 GitHub App authentication.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "Apache-2.0",
   "homepage": "https://docs.tupynambalucas.dev",
@@ -16,7 +16,8 @@
   "type": "module",
   "main": "dist/index.cjs",
   "bin": {
-    "mcp-github-org": "./scripts/launcher.cjs"
+    "mcp-github-delivery": "./scripts/launcher.cjs",
+    "mcp-github-flow": "./scripts/launcher.cjs"
   },
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",

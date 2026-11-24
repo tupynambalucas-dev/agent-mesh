@@ -3,7 +3,7 @@
     "github-repo": {
       "type": "stdio",
       "command": "node",
-      "args": ["./scripts/launcher.cjs", "github-org"]
+      "args": ["./scripts/launcher.cjs", "github-governance"]
     }
   }
 }

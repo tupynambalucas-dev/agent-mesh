@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "github-org": {
+    "github-delivery": {
       "type": "stdio",
       "command": "node",
       "args": ["./scripts/launcher.cjs"]

@@ -19,6 +19,14 @@ import {
   getWorkflowRunToolDefinition,
   handleGetWorkflowRun,
 } from './actions.tool.js';
+import {
+  evaluatePullRequestGatesToolDefinition,
+  handleEvaluatePullRequestGates,
+} from './gates.tool.js';
+import {
+  listReleasesToolDefinition,
+  handleListReleases,
+} from './releases.tool.js';
 
 export const allTools = [
   getRepoInfoToolDefinition,
@@ -27,6 +35,8 @@ export const allTools = [
   getPullRequestToolDefinition,
   listWorkflowRunsToolDefinition,
   getWorkflowRunToolDefinition,
+  evaluatePullRequestGatesToolDefinition,
+  listReleasesToolDefinition,
 ];
 
 export function registerToolHandlers(server: Server) {
@@ -51,6 +61,10 @@ export function registerToolHandlers(server: Server) {
           return await handleListWorkflowRuns(args);
         case 'get_workflow_run':
           return await handleGetWorkflowRun(args);
+        case 'evaluate_pull_request_gates':
+          return await handleEvaluatePullRequestGates(args);
+        case 'list_releases':
+          return await handleListReleases(args);
         default:
           throw new Error(`Unknown tool requested: ${name}`);
       }

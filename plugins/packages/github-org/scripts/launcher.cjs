@@ -91,15 +91,20 @@ function resolveMcpLauncher(pkgName, monorepoDir) {
 }
 
 const SERVICE_CONFIGS = {
-  'github-org': {
-    pkg: '@tupynambalucas-dev/mcp-github-org',
+  'github-governance': {
+    pkg: '@tupynambalucas-dev/mcp-github-governance',
     upstream: '@modelcontextprotocol/server-github',
-    monorepoDir: 'github-org'
+    monorepoDir: 'github-governance'
+  },
+  'github-org': {
+    pkg: '@tupynambalucas-dev/mcp-github-governance',
+    upstream: '@modelcontextprotocol/server-github',
+    monorepoDir: 'github-governance'
   },
   github: {
-    pkg: '@tupynambalucas-dev/mcp-github-org',
+    pkg: '@tupynambalucas-dev/mcp-github-governance',
     upstream: '@modelcontextprotocol/server-github',
-    monorepoDir: 'github-org'
+    monorepoDir: 'github-governance'
   }
 };
 

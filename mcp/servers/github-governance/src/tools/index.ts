@@ -23,6 +23,10 @@ import {
   listOrgTeamsToolDefinition,
   handleListOrgTeams,
 } from './teams.tool.js';
+import {
+  auditGithubAppsToolDefinition,
+  handleAuditGithubApps,
+} from './apps.tool.js';
 
 export const allTools = [
   getRepoInfoToolDefinition,
@@ -32,6 +36,7 @@ export const allTools = [
   getRulesetToolDefinition,
   listDependabotAlertsToolDefinition,
   listSecretScanningAlertsToolDefinition,
+  auditGithubAppsToolDefinition,
 ];
 
 export function registerToolHandlers(server: Server) {
@@ -58,6 +63,8 @@ export function registerToolHandlers(server: Server) {
           return await handleListDependabotAlerts(args);
         case 'list_secret_scanning_alerts':
           return await handleListSecretScanningAlerts(args);
+        case 'audit_github_apps':
+          return await handleAuditGithubApps(args);
         default:
           throw new Error(`Unknown tool requested: ${name}`);
       }

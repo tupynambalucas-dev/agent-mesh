@@ -8,7 +8,7 @@
 
 # GitHub Core MCP Library Agent Context (`@tupynambalucas-dev/mcp-core-github`)
 
-This bounded context encapsulates the shared authentication, Octokit client factory, and Zod schema primitives consumed by the domain-scoped GitHub MCP servers (`@tupynambalucas-dev/mcp-github-org` and `@tupynambalucas-dev/mcp-github-flow`).
+This bounded context encapsulates the shared authentication, Octokit client factory, and Zod schema primitives consumed by the domain-scoped GitHub MCP servers (`@tupynambalucas-dev/mcp-github-governance` and `@tupynambalucas-dev/mcp-github-delivery`).
 
 ## Directory Layout
 

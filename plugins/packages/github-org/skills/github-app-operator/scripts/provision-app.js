@@ -92,18 +92,44 @@ const PROFILES = {
 
 const selected = PROFILES[profile] || PROFILES.manager;
 
+function tryLoadDeclarativeManifest(profileName) {
+  const mapping = {
+    manager: 'org-manager',
+    'org-manager': 'org-manager',
+    automation: 'automation',
+    guardian: 'guardian',
+    'developer-tools': 'developer-tools',
+  };
+  const dirName = mapping[profileName] || profileName;
+  const candidatePaths = [
+    path.resolve(process.cwd(), 'foundation', 'identity', 'apps', 'github', dirName, 'manifest.json'),
+    path.resolve(__dirname, '../../../../../../foundation/identity/apps/github', dirName, 'manifest.json'),
+    path.resolve(process.cwd(), '..', 'foundation', 'identity', 'apps', 'github', dirName, 'manifest.json'),
+  ];
+  for (const p of candidatePaths) {
+    if (fs.existsSync(p)) {
+      try {
+        return JSON.parse(fs.readFileSync(p, 'utf8'));
+      } catch {}
+    }
+  }
+  return null;
+}
+
+const declarative = tryLoadDeclarativeManifest(profile);
+
 const MANIFEST = {
-  name: selected.appName,
-  url: 'https://apps.tupynambalucas.dev',
-  description: selected.description,
-  hook_attributes: {
+  name: declarative?.name || selected.appName,
+  url: declarative?.url || 'https://apps.tupynambalucas.dev',
+  description: declarative?.description || selected.description,
+  hook_attributes: declarative?.hook_attributes || {
     url: 'https://apps.tupynambalucas.dev/webhooks/github',
     active: false,
   },
   redirect_url: `http://localhost:${PORT}/callback`,
-  public: false,
-  default_permissions: selected.permissions,
-  default_events: selected.events || [],
+  public: declarative?.public ?? false,
+  default_permissions: declarative?.default_permissions || selected.permissions,
+  default_events: declarative?.default_events || selected.events || [],
 };
 
 function openBrowser(url) {

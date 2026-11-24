@@ -12,7 +12,19 @@ export type GitHubIdentityTier =
   | 'developer-tools'
   | 'auto';
 
+interface CachedToken {
+  token: string;
+  expiresAt: number;
+}
+
+const TOKEN_CACHE_TTL_MS = 55 * 60 * 1000; // 55 minutes
+const tokenCache = new Map<string, CachedToken>();
 let cachedGhCliToken: string | null = null;
+
+export function clearTokenCache(): void {
+  tokenCache.clear();
+  cachedGhCliToken = null;
+}
 
 export function resolvePrivateKey(options: {
   keyPath?: string;
@@ -46,97 +58,113 @@ export function resolvePrivateKey(options: {
   return '';
 }
 
-async function createOrgManagerOctokit(): Promise<Octokit | null> {
-  const appId =
-    config.ORG_MANAGER_APP_ID ||
-    config.GITHUB_ORG_MANAGER_APP_ID ||
-    config.GITHUB_APP_ID;
-
-  const privateKey = resolvePrivateKey({
-    keyPath:
-      config.ORG_MANAGER_APP_PRIVATE_KEY_PATH ||
-      config.GITHUB_ORG_MANAGER_APP_PRIVATE_KEY_PATH ||
-      config.GITHUB_APP_PRIVATE_KEY_PATH,
-    keyBase64:
-      config.ORG_MANAGER_APP_PRIVATE_KEY_BASE64 ||
-      config.GITHUB_ORG_MANAGER_APP_PRIVATE_KEY_BASE64 ||
-      config.GITHUB_APP_PRIVATE_KEY_BASE64,
-    rawKey:
-      config.ORG_MANAGER_APP_PRIVATE_KEY ||
-      config.GITHUB_ORG_MANAGER_APP_PRIVATE_KEY ||
-      config.GITHUB_APP_PRIVATE_KEY,
-  });
-
-  const installationIdStr =
-    config.ORG_MANAGER_APP_INSTALLATION_ID ||
-    config.GITHUB_ORG_MANAGER_APP_INSTALLATION_ID ||
-    config.GITHUB_APP_INSTALLATION_ID;
-
-  if (!appId || !privateKey || !installationIdStr) {
+/**
+ * Attempts to retrieve an installation access token from the centralized Token Broker
+ * if TOKEN_BROKER_URL is configured.
+ */
+async function fetchTokenFromBroker(tier: string, repository?: string): Promise<string | null> {
+  if (!config.TOKEN_BROKER_URL) {
     return null;
   }
 
-  const auth = createAppAuth({
-    appId,
-    privateKey,
-    installationId: parseInt(installationIdStr, 10),
-  });
+  try {
+    const brokerUrl = `${config.TOKEN_BROKER_URL.replace(/\/+$/, '')}/v1/github/token`;
+    const res = await fetch(brokerUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(config.TOKEN_BROKER_API_KEY ? { Authorization: `Bearer ${config.TOKEN_BROKER_API_KEY}` } : {}),
+        'X-Caller-ID': config.TOKEN_BROKER_CALLER_ID || 'mcp-server',
+      },
+      body: JSON.stringify({ tier, repository }),
+    });
 
-  const installationAuth = await auth({ type: 'installation' });
-  return new Octokit({ auth: installationAuth.token });
-}
+    if (!res.ok) {
+      process.stderr.write(`[github-app.auth] Token Broker returned HTTP ${res.status}: ${res.statusText}\n`);
+      return null;
+    }
 
-async function createAutomationOctokit(): Promise<Octokit | null> {
-  const appId =
-    config.AUTOMATION_APP_ID ||
-    config.GITHUB_AUTOMATION_APP_ID ||
-    config.CI_BOT_APP_ID ||
-    config.GITHUB_CI_BOT_APP_ID ||
-    config.CI_APP_ID;
-
-  const privateKey = resolvePrivateKey({
-    keyPath:
-      config.AUTOMATION_APP_PRIVATE_KEY_PATH ||
-      config.GITHUB_AUTOMATION_APP_PRIVATE_KEY_PATH ||
-      config.CI_BOT_APP_PRIVATE_KEY_PATH ||
-      config.GITHUB_CI_BOT_APP_PRIVATE_KEY_PATH ||
-      config.CI_APP_PRIVATE_KEY_PATH,
-    keyBase64:
-      config.AUTOMATION_APP_PRIVATE_KEY_BASE64 ||
-      config.GITHUB_AUTOMATION_APP_PRIVATE_KEY_BASE64 ||
-      config.CI_BOT_APP_PRIVATE_KEY_BASE64 ||
-      config.GITHUB_CI_BOT_APP_PRIVATE_KEY_BASE64 ||
-      config.CI_APP_PRIVATE_KEY_BASE64,
-    rawKey:
-      config.AUTOMATION_APP_PRIVATE_KEY ||
-      config.GITHUB_AUTOMATION_APP_PRIVATE_KEY ||
-      config.CI_BOT_APP_PRIVATE_KEY ||
-      config.GITHUB_CI_BOT_APP_PRIVATE_KEY ||
-      config.CI_APP_PRIVATE_KEY,
-  });
-
-  const installationIdStr =
-    config.AUTOMATION_APP_INSTALLATION_ID ||
-    config.GITHUB_AUTOMATION_APP_INSTALLATION_ID ||
-    config.CI_BOT_APP_INSTALLATION_ID ||
-    config.GITHUB_CI_BOT_APP_INSTALLATION_ID ||
-    config.CI_APP_INSTALLATION_ID;
-
-  if (!appId || !privateKey || !installationIdStr) {
+    const data = (await res.json()) as { token?: string };
+    if (data.token) {
+      return data.token;
+    }
+    return null;
+  } catch (err: unknown) {
+    process.stderr.write(`[github-app.auth] Token Broker request failed: ${(err as Error).message}\n`);
     return null;
   }
-
-  const auth = createAppAuth({
-    appId,
-    privateKey,
-    installationId: parseInt(installationIdStr, 10),
-  });
-
-  const installationAuth = await auth({ type: 'installation' });
-  return new Octokit({ auth: installationAuth.token });
 }
 
-async function createGuardianOctokit(): Promise<Octokit | null> {
+function resolveAppCredentials(tier: 'org-manager' | 'automation' | 'guardian') {
+  if (tier === 'org-manager') {
+    const appId =
+      config.ORG_MANAGER_APP_ID ||
+      config.GITHUB_ORG_MANAGER_APP_ID ||
+      config.GITHUB_APP_ID;
+
+    const privateKey = resolvePrivateKey({
+      keyPath:
+        config.ORG_MANAGER_APP_PRIVATE_KEY_PATH ||
+        config.GITHUB_ORG_MANAGER_APP_PRIVATE_KEY_PATH ||
+        config.GITHUB_APP_PRIVATE_KEY_PATH,
+      keyBase64:
+        config.ORG_MANAGER_APP_PRIVATE_KEY_BASE64 ||
+        config.GITHUB_ORG_MANAGER_APP_PRIVATE_KEY_BASE64 ||
+        config.GITHUB_APP_PRIVATE_KEY_BASE64,
+      rawKey:
+        config.ORG_MANAGER_APP_PRIVATE_KEY ||
+        config.GITHUB_ORG_MANAGER_APP_PRIVATE_KEY ||
+        config.GITHUB_APP_PRIVATE_KEY,
+    });
+
+    const installationIdStr =
+      config.ORG_MANAGER_APP_INSTALLATION_ID ||
+      config.GITHUB_ORG_MANAGER_APP_INSTALLATION_ID ||
+      config.GITHUB_APP_INSTALLATION_ID;
+
+    return { appId, privateKey, installationIdStr };
+  }
+
+  if (tier === 'automation') {
+    const appId =
+      config.AUTOMATION_APP_ID ||
+      config.GITHUB_AUTOMATION_APP_ID ||
+      config.CI_BOT_APP_ID ||
+      config.GITHUB_CI_BOT_APP_ID ||
+      config.CI_APP_ID;
+
+    const privateKey = resolvePrivateKey({
+      keyPath:
+        config.AUTOMATION_APP_PRIVATE_KEY_PATH ||
+        config.GITHUB_AUTOMATION_APP_PRIVATE_KEY_PATH ||
+        config.CI_BOT_APP_PRIVATE_KEY_PATH ||
+        config.GITHUB_CI_BOT_APP_PRIVATE_KEY_PATH ||
+        config.CI_APP_PRIVATE_KEY_PATH,
+      keyBase64:
+        config.AUTOMATION_APP_PRIVATE_KEY_BASE64 ||
+        config.GITHUB_AUTOMATION_APP_PRIVATE_KEY_BASE64 ||
+        config.CI_BOT_APP_PRIVATE_KEY_BASE64 ||
+        config.GITHUB_CI_BOT_APP_PRIVATE_KEY_BASE64 ||
+        config.CI_APP_PRIVATE_KEY_BASE64,
+      rawKey:
+        config.AUTOMATION_APP_PRIVATE_KEY ||
+        config.GITHUB_AUTOMATION_APP_PRIVATE_KEY ||
+        config.CI_BOT_APP_PRIVATE_KEY ||
+        config.GITHUB_CI_BOT_APP_PRIVATE_KEY ||
+        config.CI_APP_PRIVATE_KEY,
+    });
+
+    const installationIdStr =
+      config.AUTOMATION_APP_INSTALLATION_ID ||
+      config.GITHUB_AUTOMATION_APP_INSTALLATION_ID ||
+      config.CI_BOT_APP_INSTALLATION_ID ||
+      config.GITHUB_CI_BOT_APP_INSTALLATION_ID ||
+      config.CI_APP_INSTALLATION_ID;
+
+    return { appId, privateKey, installationIdStr };
+  }
+
+  // guardian
   const appId =
     config.GUARDIAN_APP_ID ||
     config.GITHUB_GUARDIAN_APP_ID;
@@ -157,6 +185,87 @@ async function createGuardianOctokit(): Promise<Octokit | null> {
     config.GUARDIAN_APP_INSTALLATION_ID ||
     config.GITHUB_GUARDIAN_APP_INSTALLATION_ID;
 
+  return { appId, privateKey, installationIdStr };
+}
+
+async function createOrgManagerOctokit(): Promise<Octokit | null> {
+  const cacheKey = 'tier:org-manager';
+  const cached = tokenCache.get(cacheKey);
+  if (cached && Date.now() < cached.expiresAt) {
+    return new Octokit({ auth: cached.token });
+  }
+
+  // 1. Centralized Token Broker
+  const brokerToken = await fetchTokenFromBroker('org-manager');
+  if (brokerToken) {
+    tokenCache.set(cacheKey, { token: brokerToken, expiresAt: Date.now() + TOKEN_CACHE_TTL_MS });
+    return new Octokit({ auth: brokerToken });
+  }
+
+  // 2. Local PEM / GitHub App Auth
+  const { appId, privateKey, installationIdStr } = resolveAppCredentials('org-manager');
+  if (!appId || !privateKey || !installationIdStr) {
+    return null;
+  }
+
+  const auth = createAppAuth({
+    appId,
+    privateKey,
+    installationId: parseInt(installationIdStr, 10),
+  });
+
+  const installationAuth = await auth({ type: 'installation' });
+  tokenCache.set(cacheKey, { token: installationAuth.token, expiresAt: Date.now() + TOKEN_CACHE_TTL_MS });
+  return new Octokit({ auth: installationAuth.token });
+}
+
+async function createAutomationOctokit(): Promise<Octokit | null> {
+  const cacheKey = 'tier:automation';
+  const cached = tokenCache.get(cacheKey);
+  if (cached && Date.now() < cached.expiresAt) {
+    return new Octokit({ auth: cached.token });
+  }
+
+  // 1. Centralized Token Broker
+  const brokerToken = await fetchTokenFromBroker('automation');
+  if (brokerToken) {
+    tokenCache.set(cacheKey, { token: brokerToken, expiresAt: Date.now() + TOKEN_CACHE_TTL_MS });
+    return new Octokit({ auth: brokerToken });
+  }
+
+  // 2. Local PEM / GitHub App Auth
+  const { appId, privateKey, installationIdStr } = resolveAppCredentials('automation');
+  if (!appId || !privateKey || !installationIdStr) {
+    return null;
+  }
+
+  const auth = createAppAuth({
+    appId,
+    privateKey,
+    installationId: parseInt(installationIdStr, 10),
+  });
+
+  const installationAuth = await auth({ type: 'installation' });
+  tokenCache.set(cacheKey, { token: installationAuth.token, expiresAt: Date.now() + TOKEN_CACHE_TTL_MS });
+  return new Octokit({ auth: installationAuth.token });
+}
+
+async function createGuardianOctokit(): Promise<Octokit | null> {
+  const cacheKey = 'tier:guardian';
+  const cached = tokenCache.get(cacheKey);
+  if (cached && Date.now() < cached.expiresAt) {
+    return new Octokit({ auth: cached.token });
+  }
+
+  // 1. Centralized Token Broker
+  const brokerToken = await fetchTokenFromBroker('guardian');
+  if (brokerToken) {
+    tokenCache.set(cacheKey, { token: brokerToken, expiresAt: Date.now() + TOKEN_CACHE_TTL_MS });
+    return new Octokit({ auth: brokerToken });
+  }
+
+  // 2. Local PEM / GitHub App Auth
+  const { appId, privateKey, installationIdStr } = resolveAppCredentials('guardian');
   if (!appId || !privateKey || !installationIdStr) {
     return createAutomationOctokit();
   }
@@ -168,6 +277,7 @@ async function createGuardianOctokit(): Promise<Octokit | null> {
   });
 
   const installationAuth = await auth({ type: 'installation' });
+  tokenCache.set(cacheKey, { token: installationAuth.token, expiresAt: Date.now() + TOKEN_CACHE_TTL_MS });
   return new Octokit({ auth: installationAuth.token });
 }
 
@@ -198,6 +308,27 @@ function createTokenOctokit(includeGhCli = false): Octokit | null {
     return null;
   }
   return new Octokit({ auth: token });
+}
+
+/**
+ * Returns an Octokit instance authenticated as the GitHub App itself (using JWT),
+ * suitable for app-level API endpoints such as GET /app, GET /app/installations.
+ */
+export async function getAppJwtOctokit(
+  tier: 'org-manager' | 'automation' | 'guardian' = 'org-manager'
+): Promise<Octokit | null> {
+  const { appId, privateKey } = resolveAppCredentials(tier);
+  if (!appId || !privateKey) {
+    return null;
+  }
+
+  const auth = createAppAuth({
+    appId,
+    privateKey,
+  });
+
+  const appAuth = await auth({ type: 'app' });
+  return new Octokit({ auth: appAuth.token });
 }
 
 /**
