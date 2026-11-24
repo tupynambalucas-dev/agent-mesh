@@ -53,6 +53,18 @@ Upon execution:
 3. Captures the conversion code, exchanges it for App ID and RSA private key (`.pem`).
 4. Outputs the configuration parameters for immediate enrollment into Infisical.
 
+### 3.1. Declarative Drift Audit & Webhook Reconciliation
+
+To audit all 4 machine identities against their declarative manifests in `foundation/identity/apps/github/`:
+
+```bash
+# Run declarative drift inspection:
+node plugins/packages/github-org/skills/github-app-operator/scripts/audit-apps.js
+
+# Reconcile webhook endpoints automatically via REST API:
+node plugins/packages/github-org/skills/github-app-operator/scripts/audit-apps.js --reconcile-webhooks
+```
+
 ---
 
 ## 4. Reference Links
