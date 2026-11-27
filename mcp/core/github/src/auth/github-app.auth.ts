@@ -58,25 +58,47 @@ export function resolvePrivateKey(options: {
   return '';
 }
 
+const DEFAULT_BROKER_CALLER_BY_TIER: Record<string, string> = {
+  'org-manager': 'agent:mcp-github-governance',
+  automation: 'agent:mcp-github-delivery',
+  'ci-bot': 'agent:mcp-github-delivery',
+  guardian: 'agent:mcp-github-guardian',
+};
+
 /**
  * Attempts to retrieve an installation access token from the centralized Token Broker
- * if TOKEN_BROKER_URL is configured.
+ * if TOKEN_BROKER_URL is configured, aligned with foundation/identity/broker POST /v1/github/token.
  */
-async function fetchTokenFromBroker(tier: string, repository?: string): Promise<string | null> {
+async function fetchTokenFromBroker(
+  tier: string,
+  repositories?: string[],
+  permissions?: Record<string, string>
+): Promise<string | null> {
   if (!config.TOKEN_BROKER_URL) {
     return null;
   }
+
+  const callerId =
+    config.TOKEN_BROKER_CALLER_ID || DEFAULT_BROKER_CALLER_BY_TIER[tier] || 'agent:mcp-github-delivery';
+  const bearerCredential = config.TOKEN_BROKER_API_KEY || callerId;
+  const targetRepos = repositories && repositories.length > 0 ? repositories : tier === 'org-manager' ? [] : ['org'];
 
   try {
     const brokerUrl = `${config.TOKEN_BROKER_URL.replace(/\/+$/, '')}/v1/github/token`;
     const res = await fetch(brokerUrl, {
       method: 'POST',
+      signal: AbortSignal.timeout(2000),
       headers: {
         'Content-Type': 'application/json',
-        ...(config.TOKEN_BROKER_API_KEY ? { Authorization: `Bearer ${config.TOKEN_BROKER_API_KEY}` } : {}),
-        'X-Caller-ID': config.TOKEN_BROKER_CALLER_ID || 'mcp-server',
+        Authorization: `Bearer ${bearerCredential}`,
+        'X-Caller-ID': callerId,
       },
-      body: JSON.stringify({ tier, repository }),
+      body: JSON.stringify({
+        app: tier,
+        tier,
+        repositories: targetRepos,
+        ...(permissions ? { permissions } : {}),
+      }),
     });
 
     if (!res.ok) {

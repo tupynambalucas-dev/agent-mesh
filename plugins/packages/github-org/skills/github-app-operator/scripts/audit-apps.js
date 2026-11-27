@@ -167,6 +167,28 @@ async function audit() {
   const apps = ['org-manager', 'automation', 'guardian', 'developer-tools'];
   let totalDrifts = 0;
 
+  // Pre-fetch org installations using org-manager for public Tier 3 (developer-tools) auditing
+  let orgInstallations = [];
+  const orgCreds = resolveCredentials('org-manager');
+  const orgInstId = process.env.ORG_MANAGER_APP_INSTALLATION_ID;
+  if (orgCreds.appId && orgCreds.privateKey && orgInstId) {
+    try {
+      const orgJwt = generateAppJwt(orgCreds.appId, orgCreds.privateKey);
+      const tokenRes = await requestGithub(
+        orgJwt,
+        `/app/installations/${orgInstId}/access_tokens`,
+        'POST',
+        {}
+      );
+      if (tokenRes?.token) {
+        const instRes = await requestGithub(tokenRes.token, `/orgs/${ORG_NAME}/installations`);
+        orgInstallations = instRes?.installations || [];
+      }
+    } catch {
+      // Non-fatal fallback
+    }
+  }
+
   for (const slug of apps) {
     const manifestPath = path.join(foundationDir, slug, 'manifest.json');
     if (!fs.existsSync(manifestPath)) {
@@ -180,6 +202,48 @@ async function audit() {
     console.log(`=======================================================`);
     console.log(`Target: ${slug} (${manifest.name})`);
     console.log(`=======================================================`);
+
+    // Public Tier 3 OAuth Device-Flow client does not require a private PEM key
+    if (slug === 'developer-tools' && !privateKey) {
+      const inst = orgInstallations.find((i) => i.app_slug === manifest.name);
+      if (!inst) {
+        console.log(`Status: PENDING_PROVISIONING / NOT_INSTALLED`);
+        console.log(`Note: Public CLI app '${manifest.name}' was not found in org installations.\n`);
+        continue;
+      }
+      console.log(`App ID: ${inst.app_id} (Installation ID: ${inst.id}, Public Device-Flow Client)`);
+      const drifts = [];
+      const manifestPerms = manifest.default_permissions || {};
+      const livePerms = inst.permissions || {};
+      const permDrifts = [];
+      for (const [perm, access] of Object.entries(manifestPerms)) {
+        if (livePerms[perm] !== access) {
+          permDrifts.push(`${perm}: expected '${access}', actual '${livePerms[perm] || 'none'}'`);
+        }
+      }
+      if (permDrifts.length > 0) {
+        drifts.push({
+          field: 'permissions',
+          details: permDrifts,
+          fixUrl: `https://github.com/organizations/${ORG_NAME}/settings/apps/${inst.app_slug}/permissions`,
+        });
+      }
+      if (drifts.length === 0) {
+        console.log(`Status: IN_SYNC (Public Tier 3 Verified via Org Installations)\n`);
+      } else {
+        totalDrifts += drifts.length;
+        console.log(`Status: DRIFT_DETECTED (${drifts.length} divergence(s))\n`);
+        for (const d of drifts) {
+          console.log(`  - Field: ${d.field}`);
+          for (const item of d.details || []) {
+            console.log(`    * ${item}`);
+          }
+          console.log(`    Action: Update via ${d.fixUrl}`);
+        }
+        console.log('');
+      }
+      continue;
+    }
 
     if (!appId || !privateKey) {
       console.log(`Status: PENDING_PROVISIONING / NO_CREDENTIALS`);
@@ -237,7 +301,19 @@ async function audit() {
         });
       }
 
-      // Check Webhook
+      // Check Webhook Events
+      const expectedEvents = manifest.default_events || [];
+      const liveEvents = new Set(liveApp.events || []);
+      const missingEvents = expectedEvents.filter((ev) => !liveEvents.has(ev));
+      if (missingEvents.length > 0) {
+        drifts.push({
+          field: 'events',
+          details: missingEvents.map((ev) => `missing subscribed event '${ev}'`),
+          fixUrl: `https://github.com/organizations/${ORG_NAME}/settings/apps/${liveApp.slug}/permissions`,
+        });
+      }
+
+      // Check Webhook URL & Active Flag
       if (manifest.hook_attributes?.url) {
         try {
           const webhookConfig = await requestGithub(jwt, '/app/hook/config');
@@ -258,8 +334,27 @@ async function audit() {
               });
             }
           }
+          if (
+            typeof manifest.hook_attributes.active === 'boolean' &&
+            typeof webhookConfig.active === 'boolean' &&
+            webhookConfig.active !== manifest.hook_attributes.active
+          ) {
+            drifts.push({
+              field: 'webhook_active',
+              expected: String(manifest.hook_attributes.active),
+              actual: String(webhookConfig.active),
+              fixUrl: `https://github.com/organizations/${ORG_NAME}/settings/apps/${liveApp.slug}`,
+            });
+          }
         } catch {
-          // Webhook might be inactive
+          if (manifest.hook_attributes.active === true) {
+            drifts.push({
+              field: 'webhook_active',
+              expected: 'true',
+              actual: 'unavailable',
+              fixUrl: `https://github.com/organizations/${ORG_NAME}/settings/apps/${liveApp.slug}`,
+            });
+          }
         }
       }
 

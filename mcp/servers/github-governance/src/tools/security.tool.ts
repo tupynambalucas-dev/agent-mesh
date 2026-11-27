@@ -34,6 +34,18 @@ export const listSecretScanningAlertsToolDefinition = {
   },
 };
 
+async function requestWithGuardianFallback<T>(
+  executor: (octokit: Awaited<ReturnType<typeof getOctokitClient>>) => Promise<T>
+): Promise<T> {
+  try {
+    const guardianClient = await getOctokitClient('guardian');
+    return await executor(guardianClient);
+  } catch {
+    const orgManagerClient = await getOctokitClient('org-manager');
+    return await executor(orgManagerClient);
+  }
+}
+
 export async function handleListDependabotAlerts(args: unknown) {
   const schema = z.object({
     owner: z.string().optional().default(config.GITHUB_ORG),
@@ -42,14 +54,15 @@ export async function handleListDependabotAlerts(args: unknown) {
     severity: z.string().optional(),
   });
   const parsed = schema.parse(args);
-  const octokit = await getOctokitClient('org-manager');
 
-  const res = await octokit.request('GET /repos/{owner}/{repo}/dependabot/alerts', {
-    owner: parsed.owner,
-    repo: parsed.repo,
-    state: parsed.state as 'open' | 'fixed' | 'dismissed' | 'auto_dismissed',
-    ...(parsed.severity ? { severity: parsed.severity } : {}),
-  });
+  const res = await requestWithGuardianFallback((octokit) =>
+    octokit.request('GET /repos/{owner}/{repo}/dependabot/alerts', {
+      owner: parsed.owner,
+      repo: parsed.repo,
+      state: parsed.state as 'open' | 'fixed' | 'dismissed' | 'auto_dismissed',
+      ...(parsed.severity ? { severity: parsed.severity } : {}),
+    })
+  );
 
   return formatMcpResponse(res.data);
 }
@@ -61,13 +74,14 @@ export async function handleListSecretScanningAlerts(args: unknown) {
     state: z.string().optional().default('open'),
   });
   const parsed = schema.parse(args);
-  const octokit = await getOctokitClient('org-manager');
 
-  const res = await octokit.request('GET /repos/{owner}/{repo}/secret-scanning/alerts', {
-    owner: parsed.owner,
-    repo: parsed.repo,
-    state: parsed.state as 'open' | 'resolved',
-  });
+  const res = await requestWithGuardianFallback((octokit) =>
+    octokit.request('GET /repos/{owner}/{repo}/secret-scanning/alerts', {
+      owner: parsed.owner,
+      repo: parsed.repo,
+      state: parsed.state as 'open' | 'resolved',
+    })
+  );
 
   return formatMcpResponse(res.data);
 }
