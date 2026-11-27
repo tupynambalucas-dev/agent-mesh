@@ -84,6 +84,7 @@ export async function handleAuditGithubApps(args: unknown) {
             name: string;
             description?: string;
             permissions?: Record<string, string>;
+            events?: string[];
           } | null;
 
           if (live) {
@@ -100,6 +101,12 @@ export async function handleAuditGithubApps(args: unknown) {
                   drifts.push(`Permission drift on '${p}': live '${livePerms[p] || 'none'}' !== expected '${access}'`);
                 }
               }
+              const expectedEvents = (manifest.default_events as string[]) || [];
+              const liveEvents = new Set(live.events || []);
+              const missingEvents = expectedEvents.filter((ev) => !liveEvents.has(ev));
+              if (missingEvents.length > 0) {
+                drifts.push(`Missing webhook event(s): ${missingEvents.join(', ')}`);
+              }
             }
 
             appAudits.push({
@@ -110,6 +117,7 @@ export async function handleAuditGithubApps(args: unknown) {
               name: live.name,
               drifts,
               live_permissions: live.permissions,
+              live_events: live.events || [],
             });
           }
         } else {
