@@ -2,6 +2,7 @@
   ".": "1.3.0",
   "plugins/packages/appsheet": "1.1.0",
   "plugins/packages/atelier": "1.1.0",
+  "plugins/packages/cloudflare": "1.0.0",
   "plugins/packages/docusaurus": "1.1.0",
   "plugins/packages/github-actions": "1.1.0",
   "plugins/packages/github-flow": "1.1.0",

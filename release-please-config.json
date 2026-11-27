@@ -35,6 +35,10 @@
       "release-type": "node",
       "package-name": "@tupynambalucas-dev/plugin-atelier"
     },
+    "plugins/packages/cloudflare": {
+      "release-type": "node",
+      "package-name": "@tupynambalucas-dev/plugin-cloudflare"
+    },
     "plugins/packages/docusaurus": {
       "release-type": "node",
       "package-name": "@tupynambalucas-dev/plugin-docusaurus"
