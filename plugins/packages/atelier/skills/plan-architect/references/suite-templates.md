@@ -188,54 +188,73 @@ Runbook dedicado exclusivamente as acoes que exigem intervencao manual do manten
 
 ---
 
-## 5. Post-Execution `report.md` Template
+## 5. Robust Living & Post-Execution `report.md` Template
 
-Author this document inside `pending/<plan-slug>/report.md` immediately before moving the suite to `completed/<plan-slug>/`.
+Author a living `report.md` inside `pending/<plan-slug>/report.md` whenever automated phases pause for human-in-the-loop manual steps, and finalize it (`Status Final: Concluido e Verificado`) immediately before moving the suite to `completed/<plan-slug>/`. Reports MUST explain the actual implemented capabilities in deep technical detail (endpoints, bindings, security controls, contracts, and operational flows) — never produce a superficial summary.
 
 ```markdown
-# Relatorio de Execucao e Verificacao (`<plan-slug>`)
+# Relatorio Tecnico de Execucao e Funcionalidades Atuais (`<plan-slug>`)
 
-Relatorio forense final comprovando a execucao integral, os testes executados e o encerramento formal do plano `<plan-slug>` no repositorio `<target-repo>`.
+Relatorio forense detalhado que documenta integralmente as funcionalidades atualmente implementadas, a arquitetura tecnica ativa, os contratos de API e seguranca, as evidencias de testes/CI/CodeQL e o encerramento formal do plano `<plan-slug>` no repositorio `<target-repo>`.
 
-**Status Final**: Concluido e Verificado
-**Data de Conclusao**: YYYY-MM-DD
-**PRs / Commits Relacionados**: `#NN` (`<sha>`)
-
----
-
-## 1. Resumo Executivo da Entrega
-
-Sintese objetiva do que foi entregue, problemas resolvidos e impacto arquitetural.
+**Status**: Em Andamento (Fases 0..N concluidas) | Concluido e Verificado
+**Repositorio Alvo**: `tupynambalucas-dev/<target-repo>`
+**Ultima Atualizacao**: YYYY-MM-DD
 
 ---
 
-## 2. Matriz de Entregaveis Verificados
+## 1. Resumo Executivo e Estado Atual da Arquitetura
 
-| Fase | Entregavel / Arquivo | Status | Evidencia de Validacao |
-| :--- | :--- | :--- | :--- |
-| Fase 1 | `caminho/arquivo.ts` | Concluido | `pnpm typecheck` + testes unitarios aprovados |
-| Fase 2 | Acoes manuais (`manual-actions.md`) | Concluido | Confirmado via auditoria ao vivo (`0 drifts`) |
+Sintese objetiva do estado atual do sistema, diferenciando o que ja esta implementado/verificado em codigo do que ainda aguarda ativacao (quando aplicavel).
 
----
-
-## 3. Evidencias de Terminal e Testes
-
-```text
-# Resumo das saidas reais de build, testes, typecheck e verificacoes de API
+```mermaid
+flowchart TD
+    subgraph Implementado ["Implementado e Verificado"]
+        ModA["Subsistema A (PR #NN)"]
+        ModB["Subsistema B (PR #MM)"]
+    end
+    ModA --> ModB
 ```
 
 ---
 
-## 4. Desvios, Riscos Residuais e Licoes Aprendidas
+## 2. Funcionalidades Atuais Implementadas (Detalhamento Tecnico por Subsistema)
 
-- Documentar qualquer ajuste feito em relacao ao desenho inicial e justificativa tecnica.
-- Registrar pendencias futuras (se houver) que originaram novos planos em `pending/`.
+### 2.1. [Nome do Subsistema / Servico] (`caminho/do/modulo/` — PR `#NN`)
+- **Arquitetura e Configuracao**: Bindings, manifestos, tipos gerados, flags de runtime e observabilidade.
+- **Endpoints, Comandos e Contratos**: Rotas HTTP, ferramentas MCP, schemas de entrada/saida, tratamento de idempotencia e limites de plataforma.
+- **Controles de Seguranca e Isolamento**: Verificacao criptografica (HMAC/JWT/JWKS), segregacao de funcoes (SoD), gestao de segredos e higiene de logs.
+
+### 2.2. [Proximo Subsistema / Integracao] (`caminho/` — PR `#MM`)
+- Detalhamento objetivo das capacidades implementadas, arquivos modificados e fluxo operacional resultante.
 
 ---
 
-## 5. Encerramento Formal
+## 3. Matriz de PRs, Commits e Status de CI/CodeQL
 
-- [x] Todos os itens de [roadmap.md](./roadmap.md) concluidos.
-- [x] Todas as acoes de [manual-actions.md](./manual-actions.md) concluidas.
-- [x] Suite movida para `.agents/plans/completed/<plan-slug>/` e espelhada no Dual-Storage.
+| Fase | PR | Branch / Commit(s) | SSH Verified | CI / Testes | CodeQL |
+| :---: | :--- | :--- | :---: | :---: | :---: |
+| Fase 1 | `<repo>#NN` | `feat/<slug>` (`<sha>`) | Sim | `SUCCESS` | `SUCCESS` |
+
+---
+
+## 4. Evidencias Forenses de Testes, Build e Auditoria
+
+```text
+# Saidas reais de testes unitarios, build, typecheck, dry-run, lint e auditorias ao vivo
+```
+
+---
+
+## 5. Desvios Tecnicos, Decisoes de Engenharia e Licoes Aprendidas
+
+- Documentar ajustes feitos em relacao ao desenho inicial, limites de plataforma descobertos em documentacao oficial, alertas de seguranca corrigidos (ex: CodeQL) e justificativas tecnicas.
+
+---
+
+## 6. Pendencias Restantes e Checklist de Encerramento Formal
+
+- [ ] Todos os itens de [roadmap.md](./roadmap.md) concluidos (`100% [x]`).
+- [ ] Todas as acoes de [manual-actions.md](./manual-actions.md) concluidas.
+- [ ] Relatorio finalizado com evidencias ponta a ponta e suite movida para `completed/<plan-slug>/` com paridade Dual-Storage.
 ```

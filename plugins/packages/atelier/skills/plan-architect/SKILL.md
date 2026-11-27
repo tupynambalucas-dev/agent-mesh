@@ -71,18 +71,19 @@ Select the exact workflow matching the current phase of work. For full state-tra
    node scripts/validate-plan.cjs "<target-repo>/.agents/plans/pending/<plan-slug>" --brain "<appDataDir>/brain/<conversation-id>/<plan-slug>"
    ```
 
-### Workflow B: Incremental Execution & Living `roadmap.md` Updates
+### Workflow B: Incremental Execution, Living `roadmap.md` & Checkpoint `report.md`
 Whenever executing any phase or partial subset of a plan inside `pending/<plan-slug>/`:
 1. Read `roadmap.md` and the active numbered module (`0N-*.md`) before writing code.
 2. Execute the scoped tasks and verify with real builds/tests/API checks.
 3. **Mandatory Step-End Update**: Before concluding the turn (especially when not all phases are completed in one turn), update `roadmap.md`:
    - Flip completed items from `- [ ]` to `- [x]` with commit SHA, PR number, or verification note.
-   - Append a dated row to the **Registro de Execucao** table recording what was finished and what remains next.
-   - Sync the updated `roadmap.md` to Dual-Storage Brain.
+   - Append a dated row to the **Registro Incremental de Execucao** table recording what was finished and what remains next.
+4. **Living Technical `report.md` on Manual Handoff**: Whenever all automated engineering phases complete and execution pauses for human-in-the-loop `manual-actions.md` steps, author or update a **robust living `report.md`** inside `pending/<plan-slug>/report.md` explaining in technical depth every currently implemented capability, architecture/endpoints/contracts, PRs, CI/CodeQL evidence, and remaining manual actions.
+5. Sync updated `roadmap.md` and `report.md` to Dual-Storage Brain.
 
-### Workflow C: Finalizing a Plan (`report.md` -> `completed/`)
+### Workflow C: Finalizing a Plan (Robust `report.md` -> `completed/`)
 Once all phases in `roadmap.md` are marked `[x]` and verified:
-1. Author `report.md` inside `pending/<plan-slug>/` using the `pt-BR` template in [references/suite-templates.md](references/suite-templates.md) (executive verdict, delivered artifacts, PR/commit links, terminal verification evidence, deviations/lessons learned, and sign-off).
+1. Author or finalize a **robust, deep technical `report.md`** inside `pending/<plan-slug>/` using the `pt-BR` template in [references/suite-templates.md](references/suite-templates.md) — NEVER a thin summary. It MUST document: (1) executive verdict & active architecture Mermaid diagram, (2) deep subsystem-by-subsystem explanation of all implemented capabilities (endpoints, bindings, security controls, contracts, operational flows), (3) PR/commit/CI/CodeQL matrix, (4) forensic terminal/test evidence, (5) engineering decisions, deviations & lessons learned, and (6) formal closure sign-off.
 2. Move the entire folder from `<target-repo>/.agents/plans/pending/<plan-slug>/` to `<target-repo>/.agents/plans/completed/<plan-slug>/`.
 3. Mirror `report.md` and updated `roadmap.md` to Dual-Storage Brain and validate:
    ```bash
