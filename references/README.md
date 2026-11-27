@@ -31,6 +31,7 @@ Task-focused runbooks and recipes to accomplish specific operational goals:
 - [Configuring GitHub Apps and Credentials](./how-to-guides/configuring-github-apps-and-credentials.md): Automated manifest provisioning, manual UI setup, and Infisical secret vaulting.
 - [Pairing Desktop Browsers with Playwright MCP](./how-to-guides/pairing-desktop-browser-with-playwright.md): Connecting to active developer browser sessions via CDP or extension bridge.
 - [Configuring Sovereign Launcher & Cluster Gateway Routing](./how-to-guides/configuring-smart-gateway-local-failover.md): Routing between local self-contained `dist/bin.cjs` bundles and the Kubernetes Envoy AgentGateway.
+- [Selecting Antigravity Models & Reasoning Effort](./how-to-guides/selecting-antigravity-models-and-reasoning-effort.md): Decision matrix, effort tiers, and concrete repository workload scenarios across the meta-repo.
 
 ### 2.3 Technical Reference (Information-Oriented)
 Declarative specifications, catalogs, schemas, and matrices:
@@ -39,6 +40,7 @@ Declarative specifications, catalogs, schemas, and matrices:
 - [Domain Plugin Catalog](./reference/domain-plugin-catalog.md): Comprehensive matrix of all 11 domain plugins, included skills, rules, and sovereign launcher targets.
 - [MCP Server Catalog](./reference/mcp-server-catalog.md): Technical breakdown of all 9 self-contained MCP servers (`dist/bin.cjs` + `scripts/launcher.cjs`) and 1 shared core library.
 - [GitHub App Permissions Matrix](./reference/github-app-permissions-matrix.md): Permission scopes, token lifecycles, and Infisical project mappings.
+- [Antigravity Models & Reasoning Reference](./reference/antigravity-models-and-reasoning-reference.md): Definitive catalog of Gemini 4, Claude 5.5, and Orchestrator models, context windows, CLI flags, dual quota pools, and thinking tiers.
 
 ### 2.4 Architecture Explanation (Understanding-Oriented)
 Deep architectural context, design tradeoffs, and system mechanics:
