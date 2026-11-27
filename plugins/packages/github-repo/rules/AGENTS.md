@@ -66,12 +66,13 @@ trigger: always_on
    - The top-level `sync_gitignore` configuration in `mani.yaml` MUST always be explicitly set to `false` (`sync_gitignore: false`).
    - Meta-repositories MUST pair `mani.yaml` with `.ignore` and `.rgignore` negation rules (`!managed-repo/` and `!managed-repo/**`) to preserve search and `@` mention indexing while keeping meta-repo Git status clean.
 
-12. Workspace Plans, Analyses & Reports Artifact Invariant:
-   - Every repository across the organization MUST maintain its planning container at `<target-repo>/.agents/plans/` and ignore `.agents/plans/` in `.gitignore` to prevent working blueprints, analyses, and reports from cluttering Git history. Creating a `plans/` directory at the root of any repository (`<target-repo>/plans/`) is strictly prohibited.
-   - To guarantee that developers and AI agents can still attach and search files from `.agents/plans/` via `@`, every repository MUST declare negative negation rules in `.ignore` and `.rgignore` (`!.agents/plans/`, `!.agents/plans/**`).
-   - Dual-Storage Invariant: Whenever an agent creates an architectural plan, technical analysis, or report artifact in the Antigravity conversation directory, an identical synchronized copy MUST ALWAYS be mirrored directly in `<target-repo>/.agents/plans/<artifact-slug>/` (or `<target-repo>/.agents/plans/<artifact-slug>.md`) within the respective target repository (creating `.agents/plans/` automatically if it does not exist).
+12. Workspace Plans, Lifecycle & Reports Artifact Invariant:
+   - Every repository across the organization MUST organize `.agents/plans/` into three lifecycle folders: `pending/<plan-slug>/` (all new and in-progress plan suites), `completed/<plan-slug>/` (finished plans moved only after authoring `report.md`), and `superseded/<plan-slug>/` (obsolete or consolidated plans). Creating a root `<target-repo>/plans/` folder or loose root plan files is strictly prohibited.
+   - Every plan suite MUST be written in Brazilian Portuguese (`pt-BR`) with `README.md`, ordered technical specifications (`01-*.md`, ...), `manual-actions.md`, living `roadmap.md` (updated after every executed step), and post-execution `report.md` before transitioning to `completed/`.
+   - To guarantee that developers and AI agents can still attach and search files from `.agents/plans/` via `@`, every repository MUST ignore `.agents/plans/` in `.gitignore` and declare negative negation rules in `.ignore` and `.rgignore` (`!.agents/plans/`, `!.agents/plans/**`).
+   - Dual-Storage Invariant: Whenever an agent creates or updates a plan suite in the Antigravity conversation directory, an identical synchronized copy MUST ALWAYS be mirrored directly in `<target-repo>/.agents/plans/{pending,completed}/<plan-slug>/` within the respective target repository.
    - Bounded Context Rule: Artifact containers (`.agents/plans/`) MUST NOT declare child `AGENTS.md` context routers (strictly governed by Rule 4).
 
 13. Zero-Emoji Invariant & Language Standards:
    - Emojis are strictly forbidden across all repository documentation files, headings, callouts, tables, commit messages, and PR descriptions.
-   - All repository documentation, code comments, and technical specifications must be written strictly in en-US.
+   - All committed repository documentation, code comments, and technical specifications must be written strictly in en-US; git-ignored architectural plan suites inside `.agents/plans/` must be written strictly in Brazilian Portuguese (`pt-BR`).

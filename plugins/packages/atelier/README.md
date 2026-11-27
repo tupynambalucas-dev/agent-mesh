@@ -19,7 +19,7 @@ Enterprise Antigravity and Claude Code domain plugin for agent engineering: craf
 | [**`rule-architect`**](./skills/rule-architect/SKILL.md) | Authors and audits Antigravity and Claude Code rule files (`rules/*.md`, `rules/AGENTS.md`), configuring trigger modes (`always_on`, `model_decision`), context budgets, and autonomous domain mandates. | `rules/AGENTS.md`, `rules/*.md`. |
 | [**`hook-architect`**](./skills/hook-architect/SKILL.md) | Authors and validates lifecycle hooks (`hooks.json`), event handlers (`SessionStart`, `PreToolUse`, `PostToolUse`, `PreInvocation`, `PostInvocation`, `Stop`), matchers, and execution timeouts. | `hooks.json`. |
 | [**`plugin-architect`**](./skills/plugin-architect/SKILL.md) | Authors and validates Agent Plugin manifests (`plugin.json`), cross-vendor `agent-plugins.org` v1.0.0 standards, pnpm workspace configuration, and MCP server configuration bindings. | `plugin.json`, `mcp.json`, `mcp_config.json`. |
-| [**`plan-architect`**](./skills/plan-architect/SKILL.md) | Authors, structures, and audits master architectural plans, technical analyses, and governance/audit reports inside `<target-repo>/.agents/plans/<slug>/` for both single-artifact documents and multi-artifact suites following the enterprise dual-storage standard. | `.agents/plans/*`. |
+| [**`plan-architect`**](./skills/plan-architect/SKILL.md) | Designs, authors, validates, and manages the 3-state lifecycle (`pending/`, `completed/`, `superseded/`) of modular `pt-BR` architectural plan suites (`README.md`, ordered `01-*.md`, living `roadmap.md`, `manual-actions.md`, post-execution `report.md`) with Dual-Storage parity. | `.agents/plans/{pending,completed,superseded}/*`. |
 
 ---
 
@@ -32,7 +32,7 @@ Enterprise Antigravity and Claude Code domain plugin for agent engineering: craf
 - [skills/rule-architect/SKILL.md](./skills/rule-architect/SKILL.md): Domain rule authoring and context budgeting.
 - [skills/hook-architect/SKILL.md](./skills/hook-architect/SKILL.md): Lifecycle hook definitions.
 - [skills/plugin-architect/SKILL.md](./skills/plugin-architect/SKILL.md): Plugin manifest and workspace configuration.
-- [skills/plan-architect/SKILL.md](./skills/plan-architect/SKILL.md): Architectural plan authoring, multi-artifact suite structuring, and roadmap checklists.
+- [skills/plan-architect/SKILL.md](./skills/plan-architect/SKILL.md): Modular `pt-BR` plan suite authoring, 3-state lifecycle management (`pending/`, `completed/`, `superseded/`), living `roadmap.md` tracking, `manual-actions.md`, post-execution `report.md`, and deterministic validator (`scripts/validate-plan.cjs`).
 - [references/antigravity-customizations-and-plugins.md](./references/antigravity-customizations-and-plugins.md): Antigravity runtime customization specifications.
 - [references/agent-plugins-standard-spec.md](./references/agent-plugins-standard-spec.md): Cross-vendor Agent Plugins 1.0.0 specifications.
 - [references/claude-code-plugins-and-marketplace.md](./references/claude-code-plugins-and-marketplace.md): Claude Code plugin and marketplace reference.
@@ -83,4 +83,4 @@ agy plugin install @tupynambalucas-dev/plugin-atelier
 
 > [!IMPORTANT]
 > **Autonomous Domain Mandate (Rule 0):**
-> When requested to design, audit, or update AI agent context routers (`AGENTS.md`), agent skills (`SKILL.md`), rule files (`rules/AGENTS.md`), lifecycle hooks (`hooks.json`), or plugin manifests (`plugin.json`), the agent MUST autonomously engage the Atelier AI skills (`router-architect`, `skill-architect`, `rule-architect`, `hook-architect`, `plugin-architect`) without waiting for explicit skill invocations from the user.
+> When requested to design, audit, execute, or update AI agent context routers (`AGENTS.md`), architectural plans (`.agents/plans/`), agent skills (`SKILL.md`), rule files (`rules/AGENTS.md`), lifecycle hooks (`hooks.json`), or plugin manifests (`plugin.json`), the agent MUST autonomously engage the Atelier AI skills (`router-architect`, `skill-architect`, `rule-architect`, `hook-architect`, `plugin-architect`, `plan-architect`) without waiting for explicit skill invocations from the user.

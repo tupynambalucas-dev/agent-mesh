@@ -25,11 +25,11 @@ function main() {
       return;
     }
 
-    const toolName = payload.toolCall?.name || '';
-    if (['write_file', 'write_to_file', 'edit_file', 'replace_file_content', 'multi_replace_file_content'].includes(toolName)) {
-      const args = payload.toolCall?.args || {};
-      const filePath = args.Path || args.TargetFile || '';
-      const content = args.Content || args.Replacement || args.ReplacementContent || args.CodeContent || '';
+    const toolName = payload.toolCall?.name || payload.tool_name || '';
+    if (['write_file', 'write_to_file', 'edit_file', 'replace_file_content', 'multi_replace_file_content', 'Write', 'Edit'].includes(toolName)) {
+      const args = payload.toolCall?.args || payload.tool_input || {};
+      const filePath = args.Path || args.TargetFile || args.file_path || args.path || '';
+      const content = args.Content || args.Replacement || args.ReplacementContent || args.CodeContent || args.content || args.new_string || '';
 
       // 1. Check for 3-layer ceiling violation and root plans/ prohibition
       const normalizedPath = filePath.replace(/\\/g, '/');
@@ -43,9 +43,21 @@ function main() {
       if (isRootPlansDir) {
         process.stdout.write(JSON.stringify({
           decision: 'deny',
-          reason: 'Architectural Plan Storage Invariant: Creating or modifying artifacts inside a root "plans/" directory is strictly prohibited. All plans, analyses, and reports must reside inside "<target-repo>/.agents/plans/" of the respective repository.'
+          reason: 'Architectural Plan Storage Invariant: Creating or modifying artifacts inside a root "plans/" directory is strictly prohibited. All plans, analyses, and reports must reside inside "<target-repo>/.agents/plans/pending/<plan-slug>/" of the respective repository.'
         }));
         return;
+      }
+
+      // 1b. Enforce 3-state lifecycle folder taxonomy on new plan writes under .agents/plans/
+      if (['write_file', 'write_to_file', 'Write'].includes(toolName) && /\/\.agents\/plans\//i.test(normalizedPath)) {
+        const hasLifecycleSuite = /\/\.agents\/plans\/(pending|completed|superseded)\/[^/]+\/.+/i.test(normalizedPath);
+        if (!hasLifecycleSuite) {
+          process.stdout.write(JSON.stringify({
+            decision: 'deny',
+            reason: 'Plan Lifecycle Folder Invariant: New plan artifacts under ".agents/plans/" MUST be written inside a modular suite folder at "<target-repo>/.agents/plans/{pending,completed,superseded}/<plan-slug>/" (use pending/<plan-slug>/ for new plans).'
+          }));
+          return;
+        }
       }
 
       if ((isRouterOrReadme && isDiataxisQuadrant) || (isAgentsMd && isPlanningContainer) || isIntermediateGroupingRoot) {

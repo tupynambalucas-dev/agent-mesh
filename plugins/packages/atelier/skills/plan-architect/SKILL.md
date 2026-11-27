@@ -1,292 +1,103 @@
 ---
 name: plan-architect
-description: Authors, structures, and audits master architectural plans, technical analyses, and governance/audit reports inside <target-repo>/.agents/plans/<slug>/ (or <target-repo>/.agents/plans/<slug>.md) for both single-artifact documents and multi-artifact suites following the enterprise dual-storage standard.
+description: Designs, authors, updates, validates, and manages the full lifecycle of structured architectural plan suites inside <target-repo>/.agents/plans/{pending,completed,superseded}/<plan-slug>/ in pt-BR, enforcing ordered technical modules, living roadmap.md updates, manual-actions.md runbooks, post-execution report.md generation, and Dual-Storage synchronization. Use whenever creating, executing, auditing, updating roadmaps, finalizing, or archiving architectural plans, analyses, or execution reports.
 ---
 
-# Architectural Plan, Analysis & Report Architect
+# Architectural Plan & Lifecycle Architect (`plan-architect`)
 
-This skill guides the design, structuring, authoring, and auditing of master architectural plans, technical analyses, and governance/audit reports across any software repository or organization, adhering to the enterprise dual-storage standard established in `tupynambalucas-dev`.
+Governs the Spec-Driven Development (SDD) planning lifecycle across all sovereign repositories, enforcing deterministic folder-suite anatomy, Brazilian Portuguese (`pt-BR`) plan authoring, incremental `roadmap.md` tracking, manual-action separation, post-execution reporting, and Dual-Storage parity.
 
 ---
 
-## 1. Storage Location & Dual-Storage Invariant
+## 1. Mandatory 3-State Lifecycle Directory Taxonomy
 
-All architectural plans, technical analyses, and governance reports must reside strictly within the `.agents/plans/` directory of the **target repository** (`<target-repo>`) for which the artifact is being created:
+Every repository MUST organize `.agents/plans/` into three strict lifecycle containers. Loose files directly under `.agents/plans/` and root `<target-repo>/plans/` directories are strictly prohibited:
 
-```plaintext
-<target-repo>/.agents/plans/<artifact-slug>/
-# or for single-file artifacts:
-<target-repo>/.agents/plans/<artifact-slug>.md
+```text
+<target-repo>/.agents/plans/
+├── pending/                      # ALL newly created or actively executing plan suites
+│   └── <plan-slug>/
+├── completed/                    # Fully executed plans (MUST contain report.md before moving here)
+│   └── <plan-slug>/
+└── superseded/                   # Obsolete, abandoned, or consolidated plans kept for historical lineage
+    └── <plan-slug>/
 ```
 
-### Target Repository Resolution (Multi-Root Workspace Mandate):
-- When operating inside a multi-root meta-repository workspace, agents MUST identify the specific sovereign **target repository** (`<target-repo>`) to which the artifact belongs, and write the synchronized copy directly into `<target-repo>/.agents/plans/`.
-- Only write to a meta-repository's own `.agents/plans/` directory when the artifact governs cross-repository meta-orchestration itself.
-- **Automatic Container Creation**: If `<target-repo>/.agents/plans/` does not yet exist on disk, the agent MUST create the `<target-repo>/.agents/plans/` directory automatically before saving the artifact.
-- **Root `plans/` Prohibition**: Creating a `plans/` folder at the root of any repository (`<target-repo>/plans/`) is **strictly prohibited**.
-
-### The Three Artifact Classes:
-1. **Architectural Plans & Implementation Blueprints**: Master plans, migration strategies, execution roadmaps, and multi-artifact suites.
-2. **Architectural Analyses & Technical Deep-Dives**: Architectural trade-off reviews, RFC-style evaluations, protocol analyses, and library assessments.
-3. **Governance, Audit & Verification Reports**: Compliance audits, refactoring reports, post-mortems, security assessments, and verification logs.
-
-### The Dual-Storage Invariant for Artifacts:
-Whenever an agent creates or updates an architectural plan, technical analysis, design blueprint, or report artifact:
-1. **Internal Session Artifact**: The agent writes the artifact to the Antigravity conversation directory (`<appDataDir>/brain/<conversation-id>/`).
-2. **Workspace Mirror (Mandatory)**: An identical, synchronized copy MUST ALWAYS be authored directly in the target repository's planning container at `<target-repo>/.agents/plans/<artifact-slug>/` (or `<target-repo>/.agents/plans/<artifact-slug>.md`).
-3. **Rationale**: This guarantees that architectural artifacts are permanently persisted within the target repository's `.agents/plans/` container, accessible across different developer sessions, fully resolvable offline, and immediately available for `@` mention context resolution.
-
-### The Universal Ignore & Indexing Standard:
-Every repository across the organization MUST declare the ignore-and-index triad:
-- **`.gitignore`**: Ignores `.agents/plans/` so working blueprints, analyses, and reports never pollute Git history or trigger dirty working tree states in production.
-- **`.ignore`**: Declares negative negation rules (`!.agents/plans/`, `!.agents/plans/**`).
-- **`.rgignore`**: Declares identical negative negation rules (`!.agents/plans/`, `!.agents/plans/**`).
-- **`.vscode/settings.json`**: Sets `"search.useIgnoreFiles": false` so IDE and CLI search engines index plan files for `@` mentions.
-
-### Additional Constraints:
-- **Slug Taxonomy**: `<artifact-slug>` must be kebab-case (e.g. `github-app-architecture`, `cortex-gateway-migration`, `agent-mesh-refactoring-and-governance-report`).
-- **Layer 4+ Context Anti-Proliferation**: Planning containers (`.agents/plans/`) MUST NOT declare child `AGENTS.md` context routers. The parent repository or `.agents/AGENTS.md` context router governs the subsystem.
+### Target Repository Resolution (Multi-Root Workspaces)
+- Always resolve the **specific sovereign child repository** (`<target-repo>`) that owns the implementation (for example, `foundation/.agents/plans/pending/<slug>/` for identity/portal/broker work, `agent-mesh/.agents/plans/pending/<slug>/` for plugins/MCPs, `platform/.agents/plans/pending/<slug>/` for platform services).
+- Use `org/.agents/plans/pending/<slug>/` ONLY when a plan governs cross-repository meta-orchestration itself (`mani.yaml`, multi-root workspaces, `.gitconfig`).
+- Create `<target-repo>/.agents/plans/pending/` automatically if it does not yet exist.
 
 ---
 
-## 2. Canonical Topologies: Single-File vs Multi-Artifact Suite
+## 2. Mandatory Folder-Suite Anatomy (`pending/<plan-slug>/`)
 
-Artifacts must be authored in one of two distinct structural topologies:
+Every architectural plan MUST be authored as a **modular folder suite** (`kebab-case` slug) — never a monolithic loose file — containing ordered execution modules:
 
-| Topology | Best For | Directory & File Anatomy |
-| :--- | :--- | :--- |
-| **Topology 1: Single-File Artifact** | Atomic features, single-domain analyses, refactoring reports, self-contained runbooks | `<target-repo>/.agents/plans/<slug>.md` (or `<target-repo>/.agents/plans/<slug>/README.md`) |
-| **Topology 2: Multi-Artifact Suite** | Multi-subsystem architectures, enterprise governance frameworks, complex multi-domain workflows | `<target-repo>/.agents/plans/<slug>/` with Master `README.md` + numbered domain documents |
-
----
-
-## 3. Topology 2: Multi-Artifact Suite Standard (The Gold Standard)
-
-Multi-artifact plan suites follow the enterprise architecture exemplified by `.github/.agents/plans/github-app-architecture/`:
-
-```plaintext
-<target-repo>/.agents/plans/<plan-slug>/
-├── README.md                                             # Master Plan, Strategic Baseline & Document Suite Catalog
-├── 01-core-fundamentals-and-webhooks.md                  # Core principles, protocols, taxonomy, and comparison matrix
-├── 02-topology-and-permissions-catalog.md                # Multi-tier topology, models, exhaustive permissions matrix
-├── setup-<component-a>.md                                # Step-by-step manual/automated configuration runbook
-├── setup-<component-b>.md                                # Step-by-step manual/automated configuration runbook
-├── secrets-governance-and-workflows.md                   # Secret generation, Infisical vault storage, and CI injection
-├── ci-cd-workflow-integration-and-runner-architecture.md # Actions triggers, expressions, and runner security
-└── execution-checklist-and-roadmap.md                    # Phased execution checklist and milestones
+```text
+<target-repo>/.agents/plans/pending/<plan-slug>/
+├── README.md                     # Mandatory: Master blueprint, baseline, Mermaid diagrams, suite catalog
+├── 01-<domain-or-audit>.md       # Mandatory: Ordered technical specifications in execution sequence
+├── 02-<architecture-module>.md   # Modular domain specs (02, 03, ... as needed by complexity)
+├── manual-actions.md             # Mandatory: Explicit human-in-the-loop UI, OAuth, dashboard & vault steps
+├── roadmap.md                    # Mandatory: Living phased checklist (- [ ] / - [x]) updated after EVERY step
+└── report.md                     # Mandatory upon completion: Forensic verification report created BEFORE moving to completed/
 ```
 
-### Master `README.md` Template for Plan Suites:
-
-```markdown
-# [Domain] Enterprise Identity & Architecture Suite
-
-Master architectural plan, operational framework, and execution suite for [System/Domain] across [Organization/Project].
-
----
-
-## 1. Strategic Decisions & Architecture Baseline
-
-- **Decision 1**: Architectural rationale and trade-offs.
-- **Decision 2**: Security model, least privilege, and separation of duties.
-- **Decision 3**: Integration patterns and lifecycle guarantees.
+### Core Content Invariants
+1. **Language Mandate (`pt-BR`)**: All plan artifacts inside `.agents/plans/` (`README.md`, `01-*.md`, `roadmap.md`, `manual-actions.md`, `report.md`) MUST be written strictly in **Brazilian Portuguese (`pt-BR`)**. Code blocks, CLI commands, API paths, and identifiers remain in their exact technical notation.
+2. **Six Elements of Spec-Driven Quality**: Every plan suite MUST explicitly capture: (1) target outcomes, (2) in-scope and explicit out-of-scope boundaries, (3) constraints and assumptions, (4) architectural decisions already ratified, (5) ordered phased task breakdown in `roadmap.md`, and (6) executable verification criteria.
+3. **Zero-Emoji & Relative-Link Policy**: Strictly zero Unicode emojis anywhere. All intra-repository links MUST use relative forward-slash paths (`./`, `../`); `file:///` links are strictly prohibited inside repository files.
+4. **Dual-Storage Invariant**: Every file created or updated inside `<target-repo>/.agents/plans/{pending,completed}/<plan-slug>/` MUST be mirrored identically (byte-for-byte SHA-256 parity) in the active session brain directory (`<appDataDir>/brain/<conversation-id>/<plan-slug>/`).
+5. **Layer 4+ Anti-Proliferation & Ignore Triad**: NEVER create `AGENTS.md` inside `.agents/plans/` or any subfolder. Ensure `<target-repo>` ignores `.agents/plans/` in `.gitignore` while un-ignoring `!.agents/plans/` and `!.agents/plans/**` in `.ignore` and `.rgignore`.
 
 ---
 
-## 2. Architecture & Topology
+## 3. Conditional Operational Workflows
 
-\`\`\`mermaid
-flowchart TD
-    subgraph Tier1 ["Domain A"]
-        NodeA["Component A"]
-    end
-    subgraph Tier2 ["Domain B"]
-        NodeB["Component B"]
-    end
-    NodeA --> NodeB
-\`\`\`
+Select the exact workflow matching the current phase of work. For full state-transition rules and edge cases, read [references/lifecycle-state-machine.md](references/lifecycle-state-machine.md).
 
----
+### Workflow A: Creating a New Architectural Plan
+1. Resolve `<target-repo>` and verify existing plans in `<target-repo>/.agents/plans/pending/` so duplicate suites are not created.
+2. Read [references/suite-templates.md](references/suite-templates.md) for the exact `pt-BR` templates (`README.md`, `01-*.md`, `manual-actions.md`, `roadmap.md`).
+3. Create `<target-repo>/.agents/plans/pending/<plan-slug>/` with:
+   - `README.md` (baseline, Mermaid topology/sequence diagrams, Document Suite Catalog table, navigation).
+   - Ordered technical modules (`01-*.md`, `02-*.md`, ...) strictly in execution order.
+   - `manual-actions.md` detailing every manual UI/dashboard/secret step the user must perform (or explicitly declaring `"Nenhuma acao manual necessaria neste plano"` when 100% automated).
+   - `roadmap.md` with phased checkboxes (`- [ ]`) and an explicit progress log table.
+4. Mirror the entire folder identically to `<appDataDir>/brain/<conversation-id>/<plan-slug>/`.
+5. Run the deterministic validator:
+   ```bash
+   node scripts/validate-plan.cjs "<target-repo>/.agents/plans/pending/<plan-slug>" --brain "<appDataDir>/brain/<conversation-id>/<plan-slug>"
+   ```
 
-## 3. Defense-in-Depth / Lifecycle Execution Model
+### Workflow B: Incremental Execution & Living `roadmap.md` Updates
+Whenever executing any phase or partial subset of a plan inside `pending/<plan-slug>/`:
+1. Read `roadmap.md` and the active numbered module (`0N-*.md`) before writing code.
+2. Execute the scoped tasks and verify with real builds/tests/API checks.
+3. **Mandatory Step-End Update**: Before concluding the turn (especially when not all phases are completed in one turn), update `roadmap.md`:
+   - Flip completed items from `- [ ]` to `- [x]` with commit SHA, PR number, or verification note.
+   - Append a dated row to the **Registro de Execucao** table recording what was finished and what remains next.
+   - Sync the updated `roadmap.md` to Dual-Storage Brain.
 
-\`\`\`mermaid
-flowchart TD
-    Step1["Step 1"] --> Step2["Step 2"]
-\`\`\`
+### Workflow C: Finalizing a Plan (`report.md` -> `completed/`)
+Once all phases in `roadmap.md` are marked `[x]` and verified:
+1. Author `report.md` inside `pending/<plan-slug>/` using the `pt-BR` template in [references/suite-templates.md](references/suite-templates.md) (executive verdict, delivered artifacts, PR/commit links, terminal verification evidence, deviations/lessons learned, and sign-off).
+2. Move the entire folder from `<target-repo>/.agents/plans/pending/<plan-slug>/` to `<target-repo>/.agents/plans/completed/<plan-slug>/`.
+3. Mirror `report.md` and updated `roadmap.md` to Dual-Storage Brain and validate:
+   ```bash
+   node scripts/validate-plan.cjs "<target-repo>/.agents/plans/completed/<plan-slug>" --state completed
+   ```
 
----
-
-## 4. Document Suite Catalog
-
-| # | Document | Primary Focus | Key Audience / Consumers |
-| :-: | :--- | :--- | :--- |
-| **01** | [Core Fundamentals & Protocols](./01-core-fundamentals-and-webhooks.md) | Architectural modes, token types, and foundational invariants. | Architects, Security Engineers |
-| **02** | [Topology & Permissions Catalog](./02-topology-and-permissions-catalog.md) | Multi-tier topology, role segregation, and permissions matrix. | Lead Architects, Security Auditors |
-| **03** | [Setup Runbook: Component A](./setup-component-a.md) | Step-by-step setup guide with explicit field values. | System Administrators, Operators |
-| **04** | [Secrets Governance & Workflows](./secrets-governance-and-workflows.md) | Key generation, Infisical Cloud Vault storage, and secret hygiene. | DevOps, SecOps |
-| **05** | [Actionable Execution Checklist & Roadmap](./execution-checklist-and-roadmap.md) | Phased step-by-step checklist with verification criteria. | Implementation Leads, Reviewers |
-
----
-
-## 5. Navigation
-
-- [Parent Plans Index](../README.md)
-- [Parent .agents Context](../../README.md)
-- [Repository Root](../../../README.md)
-```
+### Workflow D: Superseding or Consolidating Obsolete Plans (`superseded/`)
+When a plan becomes obsolete, abandoned, or consolidated into a newer suite:
+1. Move the legacy file or folder into `<target-repo>/.agents/plans/superseded/`.
+2. Record its lineage inside the **Linhagem de Planos Substituidos** table of the replacing suite's `README.md` or `01-*.md`.
 
 ---
 
-## 4. Topology 1: Single-File Artifact Templates
+## 4. Reference Material & Validation Scripts (On-Demand)
 
-### Template 1A: Architectural Implementation Plan
-
-For focused, atomic features or isolated domain refactors, author a single document (`<target-repo>/.agents/plans/<plan-slug>.md` or `<target-repo>/.agents/plans/<plan-slug>/README.md`):
-
-```markdown
-# [Feature/Refactor Slug] Implementation Plan
-
-Master implementation blueprint and technical specification for [Feature Name] in [Target Repository].
-
----
-
-## 1. Executive Summary & Problem Statement
-Brief description of the objective, business value, technical problem, and desired end state.
-
----
-
-## 2. Strategic Baseline & Architectural Decisions
-- **Decision 1**: Architectural rationale, chosen pattern, and trade-offs.
-- **Decision 2**: Security considerations, least privilege, and secret hygiene.
-- **Decision 3**: Integration boundaries and API contracts.
-
----
-
-## 3. Architecture & Data Flow
-\`\`\`mermaid
-flowchart TD
-    Client["Client Interface"] --> Controller["Domain Controller"]
-    Controller --> Service["Core Workflow Engine"]
-    Service --> Storage["Persistent Storage"]
-\`\`\`
-
----
-
-## 4. Phased Implementation Roadmap
-- [ ] **Phase 1: Schemas & Types**: Foundational schemas, TypeScript types, and database models.
-- [ ] **Phase 2: Core Domain Logic**: Service layer, state machines, and business rules.
-- [ ] **Phase 3: Integration & Testing**: API routes, CLI commands, and automated test suites.
-- [ ] **Phase 4: Documentation & Verification**: Workspace configuration, ignore rules, and runbook tests.
-
----
-
-## 5. Verification & Acceptance Testing Runbook
-Step-by-step verification commands, assertion criteria, and expected terminal outputs.
-
-```bash
-# Execute verification test suite
-pnpm test
-
-# Verify type contracts
-pnpm typecheck
-```
-
----
-
-## 6. Navigation
-- [Repository Root](../../README.md)
-- [Parent .agents Context](../README.md)
-```
-
-### Template 1B: Technical Analysis & Architectural Deep-Dive
-
-For evaluating architectural alternatives, trade-offs, performance benchmarks, or migration feasibility (`<target-repo>/.agents/plans/<slug>-analysis.md`):
-
-```markdown
-# [Domain/Subsystem] Architectural Analysis & Technical Evaluation
-
-Deep architectural evaluation, risk assessment, and technical trade-off matrix for [Domain/Subsystem].
-
----
-
-## 1. Executive Overview & Problem Statement
-Detailed context, architectural friction points, and evaluation motivation.
-
----
-
-## 2. Architectural Comparison Matrix
-
-| Dimension | Pattern A ([Option 1]) | Pattern B ([Option 2]) | Selected Approach |
-| :--- | :--- | :--- | :--- |
-| **Complexity** | Low | High | Pattern A |
-| **Security / Isolation** | Isolated sandbox | Shared process | Pattern A |
-| **Performance Overhead** | Minimal | Moderate | Pattern A |
-| **Maintainability** | High | Low | Pattern A |
-
----
-
-## 3. Structural Topology & Risk Assessment
-\`\`\`mermaid
-flowchart TD
-    Current["Current State"] --> Transition["Refactoring Path"]
-    Transition --> Target["Target Architecture"]
-\`\`\`
-
----
-
-## 4. Architectural Recommendations & Next Steps
-- **Immediate Action 1**: Technical mitigation and baseline implementation.
-- **Immediate Action 2**: Policy updates and automated rule enforcement.
-```
-
-### Template 1C: Governance, Audit & Verification Report
-
-For documenting refactoring results, compliance audits, or security inspections (`<target-repo>/.agents/plans/<slug>-report.md`):
-
-```markdown
-# [Domain/Subsystem] Governance & Refactoring Audit Report
-
-Executive audit report and verification findings for [Domain/Subsystem].
-
----
-
-## 1. Audit Scope & Baseline Objectives
-Audit parameters, checked components, and organizational governance criteria.
-
----
-
-## 2. Compliance & Verification Findings
-
-| Component / File | Compliance Status | Rule Reference | Remediated Action |
-| :--- | :--- | :--- | :--- |
-| `component-a` | Compliant | Rule 1 | Verified zero drift |
-| `component-b` | Remediated | Rule 7 | Scaffolding updated |
-
----
-
-## 3. Terminal Runbook & Verification Evidence
-Terminal outputs, status checks, and cryptographic verification logs.
-
----
-
-## 4. Final Disposition & Sign-off
-Summary of remediations and sign-off criteria.
-```
-
----
-
-## 5. Quality Checklist & Verification for Artifacts
-
-Before finalizing any plan, analysis, or report artifact:
-- [ ] **Target Repository Resolution**: The artifact is saved in the `.agents/plans/` directory of the specific target repository (`<target-repo>/.agents/plans/`), never in a root `plans/` directory (`<target-repo>/plans/`).
-- [ ] **Dual-Storage Invariant**: An identical copy is persisted at `<target-repo>/.agents/plans/<artifact-slug>/` (or `<target-repo>/.agents/plans/<artifact-slug>.md`), creating `.agents/plans/` automatically if it did not exist.
-- [ ] **Universal Ignore & Indexing**: The target repository maintains `.gitignore`, `.ignore`, and `.rgignore` ignoring `.agents/plans/` in Git while preserving `@` indexing (`!.agents/plans/`, `!.agents/plans/**`).
-- [ ] **Topology Alignment**: Correctly chosen between Topology 1 (Single-File) and Topology 2 (Multi-Artifact Suite).
-- [ ] **Strategic Baseline**: Plan or analysis starts with clear Strategic Decisions and Architecture Baseline.
-- [ ] **Mermaid Visualizations**: Includes at least one Mermaid topology diagram (`flowchart TD` or `sequenceDiagram`).
-- [ ] **Document Suite Catalog**: Multi-artifact suites contain a structured catalog table indexing all child documents.
-- [ ] **Phased Roadmap / Action Items**: Implementation plans contain explicit phased checkboxes (`- [ ]`).
-- [ ] **Zero-Emoji Policy**: Strictly zero emojis across all headings, tables, code blocks, and body text.
-- [ ] **Link Integrity**: All relative markdown links point to existing files on disk.
-- [ ] **Layer 4+ Anti-Proliferation**: The plan container does NOT declare a child `AGENTS.md` context router.
+- **Authoritative `pt-BR` Templates**: Read [references/suite-templates.md](references/suite-templates.md) for canonical skeletons of `README.md`, numbered modules (`01-*.md`), `manual-actions.md`, `roadmap.md`, and `report.md`.
+- **Lifecycle Rules & Edge Cases**: Read [references/lifecycle-state-machine.md](references/lifecycle-state-machine.md) for multi-session handoffs, consolidation procedures, and Dual-Storage synchronization rules.
+- **Deterministic Validator**: Run `node scripts/validate-plan.cjs <plan-dir> [--state pending|completed|superseded] [--brain <brain-dir>]` to verify lifecycle placement, required suite files, zero emojis, relative links, Layer 4+ compliance, and Dual-Storage SHA-256 parity.
