@@ -1,0 +1,22 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "identity",
+  "version": "1.0.0",
+  "description": "Sovereign Machine Identity, GitHub App 4-Tier Manifest Architecture, Canonical Markdown Descriptions, Cloudflare Zero Trust Identity Portal, and Go Token Broker governance.",
+  "author": {
+    "name": "Tupynamba Lucas Development Team",
+    "url": "https://tupynambalucas.dev"
+  },
+  "homepage": "https://apps.tupynambalucas.dev",
+  "repository": "https://github.com/tupynambalucas-dev/agent-mesh",
+  "license": "Apache-2.0",
+  "keywords": [
+    "identity",
+    "github-apps",
+    "manifest-flow",
+    "token-broker",
+    "zero-trust",
+    "cloudflare-workflows",
+    "infisical"
+  ]
+}

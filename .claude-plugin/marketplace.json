@@ -92,6 +92,12 @@
       "description": "Enterprise Cloudflare platform engineering plugin providing 24 curated Workers, Zero Trust, storage, and AI skills paired with Cloudflare's Code Mode API MCP server.",
       "version": "1.0.0",
       "source": "./plugins/packages/cloudflare"
+    },
+    {
+      "name": "identity",
+      "description": "Sovereign Machine Identity, GitHub App 4-Tier Manifest Architecture, Canonical Markdown Descriptions, Cloudflare Zero Trust Identity Portal, and Go Token Broker governance.",
+      "version": "1.0.0",
+      "source": "./plugins/packages/identity"
     }
   ]
 }
