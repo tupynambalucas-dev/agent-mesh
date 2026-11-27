@@ -46,10 +46,10 @@ When opened as part of the `tupynambalucas-dev/org` multi-root workspace orchest
 
 ## Architectural Plans & Artifact Dual-Storage Standard
 
-Architectural blueprints, technical analyses, and master plans follow strict enterprise storage standards:
-- **Storage Location**: Blueprints, analyses, and reports reside in `<target-repo>/.agents/plans/<artifact-slug>/` (or `<target-repo>/.agents/plans/<artifact-slug>.md`) within the respective repository for which the artifact is created. Creating a `plans/` directory at the root of any repository is strictly prohibited.
-- **Topologies**: Topology 1 (Single-File Artifact) for atomic refactors, analyses, and reports; Topology 2 (Multi-Artifact Suite) for multi-domain frameworks with master `README.md` and numbered domain documents.
-- **Dual-Storage Invariant**: Whenever an agent creates an architectural plan, analysis, or report artifact in the Antigravity conversation directory (`<appDataDir>/brain/<conversation-id>/`), an identical synchronized copy MUST ALWAYS be mirrored in `<target-repo>/.agents/plans/<artifact-slug>/` (or `<target-repo>/.agents/plans/<artifact-slug>.md`).
+Architectural blueprints, technical analyses, and execution reports follow strict enterprise lifecycle and storage standards:
+- **3-Folder Lifecycle Taxonomy**: Plans reside inside `<target-repo>/.agents/plans/` partitioned into `pending/<plan-slug>/` (all new and active suites), `completed/<plan-slug>/` (finished suites moved only after authoring `report.md`), and `superseded/<plan-slug>/` (obsolete or consolidated plans). Creating a root `plans/` directory or loose plan files is strictly prohibited.
+- **Mandatory Folder-Suite Format (`pt-BR`)**: Every plan suite MUST be authored in Brazilian Portuguese (`pt-BR`) with `README.md`, ordered technical modules (`01-*.md`, ...), `manual-actions.md`, living `roadmap.md` (updated after every executed step), and post-execution `report.md` prior to archiving into `completed/`.
+- **Dual-Storage Invariant**: Whenever an agent creates or updates a plan suite in the Antigravity conversation directory (`<appDataDir>/brain/<conversation-id>/<plan-slug>/`), an identical synchronized copy MUST ALWAYS be mirrored in `<target-repo>/.agents/plans/{pending,completed}/<plan-slug>/`.
 - **Ignore & Index Triad**: All repositories ignore `.agents/plans/` in `.gitignore`, while explicitly un-ignoring it in `.ignore` and `.rgignore` (`!.agents/plans/`, `!.agents/plans/**`) and setting `"search.useIgnoreFiles": false` in `.vscode/settings.json` so files can always be attached with `@`.
 
 ## Required Skills
