@@ -86,6 +86,12 @@
       "description": "Autonomous developer profile optimization, GitHub profile README architecture, career positioning, and LinkedIn talent discovery.",
       "version": "1.0.0",
       "source": "./plugins/packages/profile"
+    },
+    {
+      "name": "cloudflare",
+      "description": "Enterprise Cloudflare platform engineering plugin providing 24 curated Workers, Zero Trust, storage, and AI skills paired with Cloudflare's Code Mode API MCP server.",
+      "version": "1.0.0",
+      "source": "./plugins/packages/cloudflare"
     }
   ]
 }

@@ -423,6 +423,15 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
+  plugins/packages/cloudflare:
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.20.5
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
   plugins/packages/docusaurus:
     devDependencies:
       '@types/node':

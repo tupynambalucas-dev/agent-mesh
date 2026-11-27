@@ -6,6 +6,7 @@
         "github-repo",
         "github-flow",
         "secrets",
+        "cloudflare",
         "research",
         "web"
       ]

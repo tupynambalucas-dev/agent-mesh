@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "cloudflare": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["./scripts/launcher.cjs", "cloudflare"]
+    }
+  }
+}

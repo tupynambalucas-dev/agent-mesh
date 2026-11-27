@@ -1,0 +1,25 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "cloudflare",
+  "version": "1.0.0",
+  "description": "Enterprise Cloudflare platform engineering plugin providing 24 curated Workers, Zero Trust, storage, and AI skills paired with Cloudflare's Code Mode API MCP server.",
+  "author": {
+    "name": "Tupynamba Lucas Development Team",
+    "url": "https://tupynambalucas.dev"
+  },
+  "homepage": "https://docs.tupynambalucas.dev",
+  "repository": "https://github.com/tupynambalucas-dev/agent-mesh",
+  "license": "Apache-2.0",
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "durable-objects",
+    "d1",
+    "r2",
+    "kv",
+    "zero-trust",
+    "wrangler",
+    "cf-cli",
+    "codemode"
+  ]
+}

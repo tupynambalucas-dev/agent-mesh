@@ -1,6 +1,6 @@
 # Domain Plugin Catalog
 
-Authoritative technical reference detailing all 11 sovereign domain plugins authored in `plugins/packages/*`, their modular skills, active rules, sovereign launcher bindings, and external umbrella consumption paths.
+Authoritative technical reference detailing all 14 sovereign domain plugins authored in `plugins/packages/*`, their modular skills, active rules, sovereign launcher bindings, and external umbrella consumption paths.
 
 ---
 
@@ -10,6 +10,7 @@ Authoritative technical reference detailing all 11 sovereign domain plugins auth
 | :--- | :--- | :--- | :--- | :--- |
 | `plugins/packages/appsheet` | `@tupynambalucas-dev/plugin-appsheet` | `appsheet-prompt-architect`<br>`appsheet-data-operator`<br>`appsheet-ui-architect` | Primary key invariants, formula typography (`UPPERCASE()`), and auto-engagement mandate. | `scripts/launcher.cjs` -> `mcp-appsheet`, `mcp-playwright` |
 | `plugins/packages/atelier` | `@tupynambalucas-dev/plugin-atelier` | `router-architect`<br>`skill-architect`<br>`rule-architect`<br>`hook-architect`<br>`plugin-architect`<br>`plan-architect` | Context hierarchy syntax, closed role vocabulary, rule budgets, dual-storage plans, and manifest validation. | *(none - pure skill/rule plugin)* |
+| `plugins/packages/cloudflare` | `@tupynambalucas-dev/plugin-cloudflare` | `cloudflare`, `cf-cli`, `wrangler`, `workers-best-practices`, `durable-objects`, `agents-sdk`, `cloudflare-one` *(24 curated skills)* | Live schema retrieval, `cf` vs. `wrangler` CLI invariants, Workers observability, and Account API Token hygiene. | `scripts/launcher.cjs` -> `mcp-remote` (`https://mcp.cloudflare.com/mcp`) |
 | `plugins/packages/docusaurus` | `@tupynambalucas-dev/plugin-docusaurus` | `docusaurus-architect`<br>`docusaurus-mdx-architect`<br>`docusaurus-auditor` | Diataxis quadrant mandates, MDX v3 parser compatibility, and Crowdin isolation. | *(none - pure skill/rule plugin)* |
 | `plugins/packages/github-actions` | `@tupynambalucas-dev/plugin-github-actions` | `github-actions-operator` | CI/CD automation engine, composite action modularization, runner diagnostics, and workflow triage. | `scripts/launcher.cjs` -> `mcp-github-flow` |
 | `plugins/packages/github-flow` | `@tupynambalucas-dev/plugin-github-flow` | `github-flow-operator` | SSH commit signing, Conventional Commits header length `<= 72`, and single-branch flow. | `scripts/launcher.cjs` -> `mcp-github-flow` |
