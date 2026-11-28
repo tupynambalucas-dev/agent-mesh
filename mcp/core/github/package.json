@@ -1,6 +1,6 @@
 {
   "name": "@tupynambalucas-dev/mcp-core-github",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Shared core library for GitHub MCP servers providing Three-Tier GitHub App authentication, Octokit client factories, and Zod schemas.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "Apache-2.0",

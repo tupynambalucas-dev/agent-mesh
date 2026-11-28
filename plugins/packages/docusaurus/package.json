@@ -1,6 +1,6 @@
 {
   "name": "@tupynambalucas-dev/plugin-docusaurus",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Enterprise Docusaurus v3 documentation architecture: Diataxis taxonomy, MDX v3 authoring, and link/schema validation.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "Apache-2.0",
