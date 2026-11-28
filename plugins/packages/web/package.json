@@ -1,6 +1,6 @@
 {
   "name": "@tupynambalucas-dev/plugin-web",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Universal web automation, headless Playwright execution, interactive desktop pairing via CDP, and clean content extraction.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "Apache-2.0",

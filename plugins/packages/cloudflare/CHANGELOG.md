@@ -2,6 +2,13 @@
 
 <!-- changelog-start -->
 
+## [1.1.0](https://github.com/tupynambalucas-dev/agent-mesh/compare/plugin-cloudflare-v1.0.0...plugin-cloudflare-v1.1.0) (2026-11-28)
+
+
+### Features & Capabilities
+
+* **cloudflare:** add Cloudflare plugin and Antigravity model docs ([#79](https://github.com/tupynambalucas-dev/agent-mesh/issues/79)) ([a233fa5](https://github.com/tupynambalucas-dev/agent-mesh/commit/a233fa51f240d2b90d1049da88e106593df92617))
+
 ## [1.0.0] - 2026-11-25
 
 ### Features & Capabilities

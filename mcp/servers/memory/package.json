@@ -1,6 +1,6 @@
 {
   "name": "@tupynambalucas-dev/mcp-memory",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Enterprise Model Context Protocol server for semantic search, knowledge graph querying, and episodic store.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "Apache-2.0",

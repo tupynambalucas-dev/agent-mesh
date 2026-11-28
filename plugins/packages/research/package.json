@@ -1,6 +1,6 @@
 {
   "name": "@tupynambalucas-dev/plugin-research",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Enterprise autonomous technical research plugin utilizing Context7 for live official API/SDK documentation and Firecrawl for deep web exploration.",
   "author": "Tupynamba Lucas Development Team <contato@tupynambalucas.dev>",
   "license": "Apache-2.0",
