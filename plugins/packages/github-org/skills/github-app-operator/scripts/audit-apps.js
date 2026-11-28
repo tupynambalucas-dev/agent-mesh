@@ -120,20 +120,22 @@ function requestGithub(jwtToken, endpoint, method = 'GET', body = null) {
   });
 }
 
-function resolveCredentials(slug) {
+function resolveCredentials(slug, secretPrefix) {
   const prefixMap = {
     'org-manager': 'ORG_MANAGER_APP',
+    'org-automation': 'AUTOMATION_APP',
     automation: 'AUTOMATION_APP',
+    'org-guardian': 'GUARDIAN_APP',
     guardian: 'GUARDIAN_APP',
     'developer-tools': 'DEVELOPER_TOOLS_APP',
   };
-  const prefix = prefixMap[slug] || slug.toUpperCase().replace(/-/g, '_');
+  const prefix = secretPrefix ? `${secretPrefix}_APP` : prefixMap[slug] || `${slug.toUpperCase().replace(/-/g, '_')}_APP`;
   let appId = process.env[`${prefix}_ID`];
   let keyB64 = process.env[`${prefix}_PRIVATE_KEY_BASE64`];
   let keyPath = process.env[`${prefix}_PRIVATE_KEY_PATH`];
 
   // Fallback for legacy CI_BOT_APP
-  if (slug === 'automation' && !appId) {
+  if ((slug === 'automation' || slug === 'org-automation') && !appId) {
     appId = process.env.CI_BOT_APP_ID;
     keyB64 = keyB64 || process.env.CI_BOT_APP_PRIVATE_KEY_BASE64;
     keyPath = keyPath || process.env.CI_BOT_APP_PRIVATE_KEY_PATH;
@@ -164,12 +166,16 @@ async function audit() {
   console.log(`Organization: ${ORG_NAME}`);
   console.log(`Manifests Source: ${foundationDir}\n`);
 
-  const apps = ['org-manager', 'automation', 'guardian', 'developer-tools'];
+  const apps = fs
+    .readdirSync(foundationDir, { withFileTypes: true })
+    .filter((e) => e.isDirectory() && fs.existsSync(path.join(foundationDir, e.name, 'manifest.json')))
+    .map((e) => e.name)
+    .sort();
   let totalDrifts = 0;
 
   // Pre-fetch org installations using org-manager for public Tier 3 (developer-tools) auditing
   let orgInstallations = [];
-  const orgCreds = resolveCredentials('org-manager');
+  const orgCreds = resolveCredentials('org-manager', 'ORG_MANAGER');
   const orgInstId = process.env.ORG_MANAGER_APP_INSTALLATION_ID;
   if (orgCreds.appId && orgCreds.privateKey && orgInstId) {
     try {
@@ -196,8 +202,18 @@ async function audit() {
       continue;
     }
 
-    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-    const { appId, privateKey } = resolveCredentials(slug);
+    const rawManifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    const manifest = rawManifest.provider === 'github' && rawManifest.github ? rawManifest.github : rawManifest;
+    const descPath = path.join(foundationDir, slug, 'description.md');
+    if (!manifest.description && fs.existsSync(descPath)) {
+      manifest.description = fs
+        .readFileSync(descPath, 'utf8')
+        .replace(/\r\n/g, '\n')
+        .replace(/^\s*<!--\s*portal-summary:\s*[\s\S]*?-->\s*\n?/i, '')
+        .replace(/^\s*<summary>\s*[\s\S]*?<\/summary>\s*\n?/i, '')
+        .trim();
+    }
+    const { appId, privateKey } = resolveCredentials(slug, rawManifest.portal?.secretPrefix);
 
     console.log(`=======================================================`);
     console.log(`Target: ${slug} (${manifest.name})`);

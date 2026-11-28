@@ -8,8 +8,8 @@ Enterprise AI Agent plugin governing the sovereign Machine Identity plane across
 
 | Skill | Responsibility |
 | :--- | :--- |
-| [app-manifest-architect](./skills/app-manifest-architect/SKILL.md) | Authors and audits 4-Tier GitHub App manifests, enforces the Canonical Markdown App Description Standard, and eliminates deprecated/unsupported GitHub manifest scopes. |
-| [identity-portal-architect](./skills/identity-portal-architect/SKILL.md) | Architects and maintains `apps.tupynambalucas.dev` (`core/`, `web/`, `api/`), Zero Trust `/api/github/*` Manifest Flow, Infisical auto-folder callback, `PrGateEvaluatorWorkflow`, and dynamic `/api/apps/status`. |
+| [app-manifest-architect](./skills/app-manifest-architect/SKILL.md) | Authors and audits 3-file app specifications (`manifest.json` Zod schema, `description.md`, Archetype D `README.md`) across GitHub (`org-*`, `developer-tools`) and Google Cloud (`org-workspace`). |
+| [identity-portal-architect](./skills/identity-portal-architect/SKILL.md) | Architects and maintains `apps.tupynambalucas.dev` (`core/` Zod SSOT, `web/` SSG prerender, `api/` Worker), Zero Trust `/api/github/*` Manifest Flow, Infisical callback, and rename-proof `PrGateEvaluatorWorkflow`. |
 | [token-broker-operator](./skills/token-broker-operator/SKILL.md) | Configures and audits the Go Security Token Service (`foundation/identity/broker`), `policies.yaml` down-scoping, OIDC JWKS validation, and `No-Privilege-Escalation` boundaries. |
 
 ---
