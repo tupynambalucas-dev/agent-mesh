@@ -173,3 +173,26 @@ agy -p "Audit .github/workflows/ against pinned action SHAs." --model gemini-pro
 Within an active Antigravity CLI session:
 - `/model`: Opens the interactive model selection interface. Navigate with `Up`/`Down`, adjust planner or effort with `Left`/`Right`, and press `Enter`.
 - `/effort`: Toggles the reasoning budget (`low`, `medium`, `high`, `xhigh`) for the active standalone model.
+- `/compact`: Compacts conversation history into a dense summary, immediately cutting per-turn input token overhead without losing active task state.
+
+---
+
+## 7. Token Economy, Context Hygiene & Anti-Drain Playbook
+
+Because Antigravity re-sends the active system prompt (loaded plugins, `always_on` rules, skill catalogs, MCP tool manifests) plus the entire uncompacted conversation history on **every turn**, quota burn scales quadratically with conversation length and model weight.
+
+### Primary Quota Drain Multipliers
+
+| Drain Multiplier | Mechanism | Concrete Mitigation |
+| :--- | :--- | :--- |
+| **1. Standalone Flagship on Tool Loops** | Running 30+ mechanical tool calls (`git`, `gh`, `pnpm build`, file edits, `roadmap.md` updates) on standalone `Gemini 4 Neon` pays flagship quota weight on every round-trip. | Default to **`Orchestrator (Carbon)`** (or **`Orchestrator (Neon)`** for deep design) so mechanical execution is automatically delegated to **`Gemini 4 Hydrogen`**. Switch via `/model` to `Hydrogen` for pure execution turns. |
+| **2. Long Multi-Milestone Sessions** | Executing multiple unrelated phases or repositories in one 40+ turn thread inflates input tokens on every follow-up prompt (even a 1-word prompt like `"Proceed"`). | Run **`/compact`** at the end of every completed phase, or open a **new conversation per phase/repository** relying on `.agents/plans/pending/<slug>/roadmap.md` for zero-loss handoff. |
+| **3. Large Research Payloads in Main Thread** | Scraping full external documentation pages (30–50 KB each via Firecrawl) directly into the primary conversation persists massive text across all subsequent turns. | Delegate multi-page doc scraping or broad codebase surveys to the **`research`** subagent so only a concise synthesis enters the main context. |
+| **4. Over-Loaded Workspace Plugins & Rules** | Opening the root `org/` meta-workspace loads all 14 plugins, ~75 skills, 16 MCP servers, and all `always_on` rules simultaneously (hitting the inline rules token budget on every turn). | Open the specific child repository (`foundation`, `docs`, `platform`) with a scoped preset (`presets/backend-api.json`, `presets/docs-portal.json`) when cross-repo orchestration is not needed. |
+
+### Recommended Phase-by-Phase Execution Cadence
+
+1. **Architecture & Planning Phase**: Start with **`Orchestrator (Neon)`** or **`Gemini 4 Neon (high)`** to design specs and write `.agents/plans/pending/<slug>/`.
+2. **Implementation & Build Phase**: Switch via `/model` to **`Orchestrator (Carbon)`** (or start a fresh session pointing at `roadmap.md`) so **`Gemini 4 Hydrogen`** handles edits, builds, and tests economically.
+3. **Verification, Git & Cleanup Phase**: Use **`Gemini 4 Hydrogen (low/medium)`** for PR merges, `roadmap.md` updates, and lint/typecheck runs.
+4. **Documentation & MDX Phase**: Pivot to **`Claude Sonnet 5.5 (medium)`** to leverage the independent Claude/GPT quota pool while preserving Gemini capacity.

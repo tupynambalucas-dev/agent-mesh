@@ -147,6 +147,15 @@ When telemetry indicates that the Claude & GPT weekly limit is constrained (for 
 3. **Reserve Claude Opus 5.5 for High-Impact Narrative Tasks**:
    Preserve remaining Claude quota strictly for nuanced career positioning (`user`), strategic investor memos, or complex legal/licensing audits.
 
+### Session & Context Hygiene Checklist (60–80% Quota Savings)
+
+Apply these four operational habits to avoid premature 5-hour or weekly quota exhaustion:
+
+1. **Compact Between Phases**: Execute `/compact` immediately after finishing a major phase, PR merge, or heavy web-scraping research block.
+2. **One Conversation Per Phase**: When working from a modular plan suite (`<repo>/.agents/plans/pending/<slug>/roadmap.md`), open a fresh conversation for the next phase instead of chaining 40+ turns in one thread.
+3. **Switch to Orchestrator or Hydrogen for Execution**: Reserve standalone `Gemini 4 Neon` for initial architecture/debugging; use `/model` to switch to `Orchestrator (Carbon)` or `Gemini 4 Hydrogen` for multi-file implementation, builds, and Git/PR workflows.
+4. **Scope the Workspace**: Open the target child repository (`foundation`, `docs`, `platform`) instead of the full `org/` meta-workspace whenever cross-repo changes are not required, minimizing fixed `always_on` rules and MCP overhead per turn.
+
 ---
 
 ## 6. Common CLI Operational Commands
