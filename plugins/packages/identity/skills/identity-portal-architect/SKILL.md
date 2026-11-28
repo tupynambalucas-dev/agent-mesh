@@ -1,6 +1,6 @@
 ---
 name: identity-portal-architect
-description: Architects, develops, and operates the Cloudflare Workers, Workflows, and Static Assets Identity Portal (apps.tupynambalucas.dev) including Zero Trust Manifest Flow provisioning, Infisical auto-folder callbacks, and 7-Gate PR evaluation.
+description: Architects, develops, and operates the Cloudflare Workers, Workflows, and Static Assets Identity Portal (apps.tupynambalucas.dev) including Zod v4 SSOT codegen, SSG prerendering, Zero Trust Manifest Flow provisioning, Infisical auto-folder callbacks, and rename-proof 7-Gate PR evaluation.
 ---
 
 # Identity Portal Architect (`apps.tupynambalucas.dev`)
@@ -12,10 +12,9 @@ Governs the serverless Identity Portal (`foundation/identity/portal/`) hosted on
 ## 1. When to Use
 
 Activate this skill when:
-- Modifying routes, webhooks, Cloudflare Workflows, or Infisical integration in `foundation/identity/portal/`.
-- Configuring Cloudflare Access Zero Trust rules protecting `/api/github/*`.
-- Refactoring the portal into isolated `core/`, `web/` (React + FSD), and `api/` (Cloudflare Worker) workspaces.
-- Debugging Cloudflare Worker exceptions (`Error 1101`) using Cloudflare Observability Telemetry.
+- Modifying Zod schemas (`core/src/schemas/`), compliance documents (`compliance.schema.ts`), or `generate-registry.ts` in `foundation/identity/portal/core/`.
+- Updating `<AppDetailView />`, `RouterProvider`, or `scripts/prerender.ts` in `foundation/identity/portal/web/`.
+- Modifying routes, webhooks, `PrGateEvaluatorWorkflow`, `wrangler.jsonc`, or Infisical integration in `foundation/identity/portal/api/`.
 
 ---
 
@@ -23,18 +22,18 @@ Activate this skill when:
 
 | Route | Protection Layer | Responsibility |
 | :--- | :--- | :--- |
-| `/`, `/privacy`, `/terms`, `/rclone`, `/workspace` | Public Static Assets (`public/_headers`) | Institutional catalog and OAuth compliance pages required by GitHub and Google auditors. |
+| `/`, `/privacy`, `/terms`, `/apps/<slug>`, `/workspace`, `/rclone` | Public Static Assets (`html_handling: "drop-trailing-slash"`) | Pre-rendered SSG HTML (`HTTP 200` zero-redirect, zero Worker CPU) for Google OAuth crawlers and React 19 `hydrateRoot` SPA. |
 | `/api/health` | Public Worker JSON | Liveness check confirming `workflowsBound: true`. |
-| `/api/apps/status` | Public Worker JSON (60s edge cache) | Live provisioning state discovery via `GET https://api.github.com/apps/{slug}`. |
-| `/api/github/provision` | Cloudflare Access Zero Trust (`/api/github/*`) | Validates `Cf-Access-Jwt-Assertion`, signs HMAC `state`, renders auto-submit Manifest Flow form. |
-| `/api/github/callback` | Cloudflare Access Zero Trust (`/api/github/*`) | Validates Access JWT + HMAC `state`, converts GitHub manifest `code`, ensures Infisical folders, upserts secrets (`dev`/`prod`), redirects to GitHub App installation. |
-| `/webhooks/github` | Open edge + Constant-time HMAC-SHA256 | Verifies `X-Hub-Signature-256`, sanitizes dotfile repo names for Workflow IDs, dispatches `PrGateEvaluatorWorkflow`. |
+| `/api/apps/status` | Public Worker JSON (60s edge cache) | Live provisioning state discovery via `GET https://api.github.com/apps/{name}` using Guardian IAT for private apps. |
+| `/api/github/provision` | Cloudflare Access Zero Trust (`/api/github/*`) | Validates `Cf-Access-Jwt-Assertion`, signs HMAC `state`, renders auto-submit Manifest Flow form from `GITHUB_MANIFESTS_BY_SLUG`. |
+| `/api/github/callback` | Cloudflare Access Zero Trust (`/api/github/*`) | Validates Access JWT + HMAC `state`, converts GitHub manifest `code`, ensures Infisical folders, upserts secrets (`dev`/`prod`), redirects to installation. |
+| `/webhooks/github` | Open edge + Constant-time HMAC-SHA256 | Validates payloads via Zod schemas, extracts immutable `authorId`/`authorType`, dispatches `PrGateEvaluatorWorkflow`. |
 
 ---
 
 ## 3. Critical Engineering Invariants
 
-1. **Modular Separation (`core/` + `web/` + `api/`)**: Keep React FSD frontend (`web/`) strictly decoupled from Cloudflare Worker/Workflow runtime (`api/`), sharing contracts via `core/` and serving `../web/dist` through `wrangler.jsonc` Static Assets.
-2. **Infisical Auto-Folder Provisioning**: Always call `POST /api/v1/folders` idempotently before `POST/PATCH /api/v3/secrets/raw/{key}` so new paths (`/protection`, `/governance`, `/delivery`, `/workstation`) never fail with `404 SecretPathNotFound`.
-3. **Cloudflare Workflows Limits**: Sanitize Workflow Instance IDs to `^[a-zA-Z0-9_][a-zA-Z0-9-_]*$` (max 100 chars) to support dotfile repositories (`.github`, `.github-private`), never return secrets from `step.do()`, and keep per-step CPU under 10ms using Web Crypto `crypto.subtle` + native `fetch()`.
-4. **Cloudflare Access with Static Assets**: Always validate `Cf-Access-Jwt-Assertion` against team JWKS (`CF_ACCESS_TEAM_DOMAIN` + `CF_ACCESS_AUD`) in Worker code because Static Assets Workers do not populate `ctx.access`.
+1. **Zod v4 SSOT (`core/src/schemas/`)**: All contracts (`manifest.schema.ts`, `app.schema.ts`, `compliance.schema.ts`, `webhook.schema.ts`) reside in `core` and are shared across `core`, `web`, and `api`.
+2. **Rename-Proof PR Governance**: `gates.ts` and `pr-gate-evaluator.ts` MUST validate bot actors via immutable `Bot User ID` arrays (`AUTHORIZED_BOT_USER_IDS`, `GUARDIAN_BOT_USER_IDS`) and SSOT-derived logins — never hardcode bot login strings.
+3. **SSG Zero-Redirect for OAuth Crawlers**: Keep `"html_handling": "drop-trailing-slash"` in `wrangler.jsonc` and run `scripts/prerender.ts` after `vite build` so every public route serves full semantic HTML with `<a href="https://apps.tupynambalucas.dev/privacy">` without JS execution.
+4. **Infisical Auto-Folder & Cloudflare Workflows Limits**: Call `POST /api/v1/folders` idempotently before upserting secrets; sanitize Workflow Instance IDs to `^[a-zA-Z0-9_][a-zA-Z0-9-_]*$` (max 100 chars), never return secrets from `step.do()`, and validate `Cf-Access-Jwt-Assertion` in Worker code.
