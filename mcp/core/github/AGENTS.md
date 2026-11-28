@@ -13,7 +13,7 @@ This bounded context encapsulates the shared authentication, Octokit client fact
 ## Directory Layout
 
 - [src/index.ts](./src/index.ts): Public library barrel exporting configuration, authentication resolvers, Octokit client factories, and common Zod schemas.
-- [src/config.ts](./src/config.ts): Unified Zod configuration parser supporting Tier 1 (`ORG_MANAGER_APP_*`), Tier 2 (`CI_BOT_APP_*`), Tier 3 (`DEVELOPER_TOOLS_APP_*`), and legacy fallback environment variables.
+- [src/config.ts](./src/config.ts): Unified Zod configuration parser supporting Tier 1 (`ORG_MANAGER_APP_*`), Tier 2A (`AUTOMATION_APP_*`), Tier 2B (`GUARDIAN_APP_*`), Tier 3 (`DEVELOPER_TOOLS_APP_*`), and legacy fallback environment variables.
 - [src/auth/github-app.auth.ts](./src/auth/github-app.auth.ts): Multi-tier Octokit client factory (`getOctokitClient`) and PEM/Base64/File private key resolver (`resolvePrivateKey`).
 - [src/schemas/common.schema.ts](./src/schemas/common.schema.ts): Shared repository parameter schemas (`ownerRepoSchema`) and standardized MCP response/error formatters.
 - [README.md](./README.md): Package overview, exported APIs, authentication priority cascade, and build instructions.
