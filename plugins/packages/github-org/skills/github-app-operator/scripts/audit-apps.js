@@ -271,8 +271,9 @@ async function audit() {
         });
       }
 
-      // Check Description
-      if (manifest.description && liveApp.description !== manifest.description) {
+      // Check Description (normalize CRLF/LF because GitHub Web UI stores \r\n)
+      const norm = (s) => String(s || '').replace(/\r\n/g, '\n').trim();
+      if (manifest.description && norm(liveApp.description) !== norm(manifest.description)) {
         drifts.push({
           field: 'description',
           expected: manifest.description,
